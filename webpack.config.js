@@ -7,7 +7,7 @@ const path = require('path');
 const port = process.env.PORT || 3000;
 
 module.exports = {
-    mode: "development",
+    mode: "production",
 
     resolve: {
         fallback: {
