@@ -1,4 +1,34 @@
 import React from 'react';
+import { Registry, Client } from 'azure-iothub';
+
+
+var connectionString = 'HostName=EspTest.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=1KTLsTs2R80sKTPlK9TP+5u/yGcQBuni43NRTxU4vpQ=';
+var registry = Registry.fromConnectionString(connectionString);
+var client = Client.fromConnectionString(connectionString);
+var deviceToReboot = 'E-6';
+
+var state = 0;
+
+var startRebootDevice = function(twin) {
+
+  var methodName = "End Maintenance";
+
+  var methodParams = {
+      methodName: methodName,
+      payload: null,
+      timeoutInSeconds: 60,
+      connectTimeoutInSeconds: 30
+  };
+
+  client.invokeDeviceMethod(deviceToReboot, methodParams, function(err, result) {
+      if (err) {
+          console.error("Direct method error: "+err.message);
+      } else {
+          console.log("Successfully invoked the device to reboot.");
+          console.log(result);
+      }
+  });
+};
 
 function HomePage() {
   const buttonStyle = {
@@ -16,13 +46,14 @@ function HomePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100vh' }}>
       <h1 style={{ color: 'yellow', fontSize: '4rem', marginBottom: '1rem' }}>Janta Remote Control</h1>
-      <button style={buttonStyle}>Restart</button>
+      <button style={buttonStyle} >Restart</button>
       <button style={buttonStyle}>East</button>
       <button style={buttonStyle}>West</button>
       <button style={buttonStyle}>Stop</button>
       <button style={buttonStyle}>Maintenance</button>
       <button style={buttonStyle}>End Maintenance</button>
       <button style={buttonStyle}>Reset</button>
+      <h3>{state}</h3>
     </div>
   );
 }
