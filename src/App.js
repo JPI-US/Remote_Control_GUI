@@ -11,7 +11,7 @@ var state = 0;
 
 var startRebootDevice = function(twin) {
 
-  var methodName = "End Maintenance";
+  var methodName = "Restart";
 
   var methodParams = {
       methodName: methodName,
@@ -30,7 +30,26 @@ var startRebootDevice = function(twin) {
   });
 };
 
+var queryTwinLastReboot = function() {
+
+  registry.getTwin(deviceToReboot, function(err, twin){
+
+      if (twin.properties.reported.towerState != null)
+      {
+          if (err) {
+              console.error('Could not query twins: ' + err.constructor.name + ': ' + err.message);
+          } else {
+              var state = twin.properties.reported.towerState;
+              console.log('Tower State: ' + state);
+          }
+      } else 
+          console.log('Waiting for state.');
+  });
+};
+
 function HomePage() {
+  setInterval(queryTwinLastReboot, 2000);
+
   const buttonStyle = {
     alignSelf: 'flex-start',
     marginLeft: '2rem',
@@ -46,7 +65,7 @@ function HomePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100vh' }}>
       <h1 style={{ color: 'yellow', fontSize: '4rem', marginBottom: '1rem' }}>Janta Remote Control</h1>
-      <button style={buttonStyle} >Restart</button>
+      <button style={buttonStyle} onClick={startRebootDevice} >Restart</button>
       <button style={buttonStyle}>East</button>
       <button style={buttonStyle}>West</button>
       <button style={buttonStyle}>Stop</button>
