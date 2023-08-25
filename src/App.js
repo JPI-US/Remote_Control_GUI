@@ -67,7 +67,7 @@ function HomePage() {
       <h1 style={{ color: 'yellow', fontSize: '4rem', marginBottom: '1rem' }}>Janta Remote Control</h1>
       <button style={buttonStyle} onClick={startRebootDevice} >Restart</button>
       <button style={buttonStyle}>East</button>
-      <button style={buttonStyle}>West</button>
+      
       <button style={buttonStyle}>Stop</button>
       <button style={buttonStyle}>Maintenance</button>
       <button style={buttonStyle}>End Maintenance</button>
