@@ -47,7 +47,6 @@ var queryTwinLastReboot = function() {
   });
 };
 
-/*
 function HomePage() {
   setInterval(queryTwinLastReboot, 2000);
 
@@ -77,51 +76,5 @@ function HomePage() {
     </div>
   );
 }
-*/
-
-function HomePage() {
-  const [state, setState] = useState(0);
-
-  const options = [
-    { label: 'Restart', action: startRebootDevice },
-    { label: 'East', action: () => console.log('East action') },
-    { label: 'West', action: () => console.log('West action') },
-    { label: 'Stop', action: () => console.log('Stop action') },
-    { label: 'Maintenance', action: () => console.log('Maintenance action') },
-    { label: 'End Maintenance', action: () => console.log('End Maintenance action') },
-    { label: 'Reset', action: () => console.log('Reset action') },
-  ];
-
-  const handleOptionClick = (action) => {
-    setState(action);
-  };
-
-  const optionStyle = {
-    padding: '0.5rem 1rem',
-    border: '2px solid #333',
-    backgroundColor: 'white',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    marginBottom: '0.5rem',
-  };
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100vh' }}>
-      <h1 style={{ color: 'yellow', fontSize: '4rem', marginBottom: '1rem' }}>Janta Remote Control</h1>
-      <div style={{ overflowY: 'scroll', maxHeight: '400px', width: '200px' }}>
-        {options.map((option, index) => (
-          <div key={index} style={optionStyle} onClick={() => handleOptionClick(option.action)}>
-            {option.label}
-          </div>
-        ))}
-      </div>
-      <h3>Selected Option: {state}</h3>
-    </div>
-  );
-}
-
-// Rest of your code...
-
 
 export default HomePage;
