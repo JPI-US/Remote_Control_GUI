@@ -73,7 +73,7 @@ export const HomePage = () => {
       setInterval(queryTwinLastReboot, 5000);
       setQuerying(true);
     }
-  }, [registry]);
+  }, [registry, deviceID, querying]);
   console.log(method);
   return <>
     <h1>Janta Remote Control</h1>
