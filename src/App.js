@@ -88,7 +88,7 @@ export const HomePage = () => {
         <option value="Reset">Reset</option>
       </select>
       <label className='buttons' htmlFor="fname">Device ID:</label>
-      <input className='buttons' onChange={e => {setDeviceID(e.target.value)}} type="text" id="fname" name="fname"/> 
+      <input defaultValue={"E-3"} className='buttons' onChange={e => {setDeviceID(e.target.value)}} type="text" id="fname" name="fname"/> 
       <button className="buttons" onClick={directMethod} >Submit</button>
       <h3 className='state'>Tower State: {state}</h3>
     </div>
