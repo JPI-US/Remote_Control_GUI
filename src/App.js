@@ -6,7 +6,7 @@ import "./App.css";
 export const HomePage = () => {
   const [state, setState] = useState("Startup");
   const [method, setMethod] = useState("Restart");
-  const [deviceID, setDeviceID] = useState("E-6")
+  const [deviceID, setDeviceID] = useState("E-3")
   const [querying, setQuerying] = useState(false);
 
   var connectionString = 'HostName=EspTest.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=1KTLsTs2R80sKTPlK9TP+5u/yGcQBuni43NRTxU4vpQ=';
@@ -87,7 +87,7 @@ export const HomePage = () => {
         <option value="End Maintenance">End Maintenance</option>
         <option value="Reset">Reset</option>
       </select>
-      <label className='buttons' for="fname">Device ID:</label>
+      <label className='buttons' htmlFor="fname">Device ID:</label>
       <input className='buttons' onChange={e => {setDeviceID(e.target.value)}} type="text" id="fname" name="fname"/> 
       <button className="buttons" onClick={directMethod} >Submit</button>
       <h3 className='state'>Tower State: {state}</h3>
