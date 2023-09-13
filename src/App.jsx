@@ -28,11 +28,13 @@ export const HomePage = () => {
 
     client.invokeDeviceMethod(deviceID, methodParams, function(err, result) {
         if (err) {
-            setResponse("Connection Unstable, Please try again.")
+            setResponse("Connection Failed, Please try again.")
+            setTimeout(() => {setResponse("None")}, 5000)
             setLoading(false);
             console.error("Direct method error: "+err.message);
         } else {
             setResponse("Success!")
+            setTimeout(() => {setResponse("None")}, 5000)
             setLoading(false);
             console.log("Successfully invoked the device to reboot.");
             console.log(result);
