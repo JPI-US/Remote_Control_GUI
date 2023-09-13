@@ -99,11 +99,11 @@ export const HomePage = () => {
     <div className='d-flex flex-row flex-wrap justify-content-center'>
       <Card className='me-5 ms-5 mb-5'>
         <CardHeader>
-          <CardTitle>
+          <CardTitle className='text-center'>
             Choose which tower you want to control:
           </CardTitle>
         </CardHeader>
-        <CardBody>
+        <CardBody className='d-flex justify-content-center'>
           <Dropdown isOpen={dropdownOpen} toggle={toggle} className='w-25 d-inline-block'>
             <DropdownToggle caret color="warning">
               {deviceID}
@@ -122,18 +122,18 @@ export const HomePage = () => {
           </Dropdown>
         </CardBody>
         <CardFooter>
-          <CardTitle>
+          <CardTitle className='text-center'>
             Tower State: {state}
           </CardTitle>
         </CardFooter>
       </Card>
       <Card className='ms-5 me-5 mb-5'>
         <CardHeader>
-          <CardTitle>
+          <CardTitle className='text-center'>
             Choose what action should be performed:
           </CardTitle>
         </CardHeader>
-        <CardBody>
+        <CardBody className='d-flex justify-content-center'>
           <UncontrolledDropdown className='d-inline-block' group>
             {!loading && <Button color="warning" onClick={() => {setLoading(true); directMethod()}}>
               Submit
@@ -175,7 +175,7 @@ export const HomePage = () => {
           </UncontrolledDropdown>
         </CardBody>
         <CardFooter>
-          <CardTitle>
+          <CardTitle className='text-center'>
             Response: {response}
           </CardTitle>
         </CardFooter>
