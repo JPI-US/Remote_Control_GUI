@@ -22,7 +22,7 @@ export const Error = {
     // Sensor Errors
     "1200": "Incorrect Flux Values",
     "1201": "Flux Values Fluctuating",
-    "1202": "Inverted Limit Switch Values",
+    "1202": "Incorrect Switch Readings",
 
     // Panel Errors
     "1300": "Low Power Output",

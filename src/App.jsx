@@ -59,6 +59,7 @@ export const HomePage = () => {
     }
 
     var queryTwinLastReboot = () => {
+      
 
       registry.getTwin(deviceID, function(err, twin){
   
@@ -129,6 +130,8 @@ export const HomePage = () => {
         return "The component is fully operational, no errors were found during the health check."
       case 1200:
         return "This is a code 1200. The light sensor is returning incorrect values given the current time."
+      case 1202:
+        return "This is a code 1202. One or more limit switches are reading incorrectly."
       default:
         return "Unknown component status."
     }
@@ -141,6 +144,9 @@ export const HomePage = () => {
       case 1200:
         return "The issue could be any number of things, please investigate both the wiring and the light sensors themselves to come to a conclusion. "+
         "The wires or the sensors may need replacing. There might also be some kind of obstruction or external situation causing the error."
+      case 1202:
+        return "The issue is either the wiring or the switch itself. Please check both to be sure of the issue. The wiring of the switch or the switch itself "+
+        "may need to be replaced."
       default:
         return "Unknown component status."
     }
