@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Registry, Client } from 'azure-iothub';
-import { Card, CardBody, CardHeader, CardFooter, CardTitle, UncontrolledDropdown, Dropdown, DropdownToggle, Button, DropdownItem, DropdownMenu, Spinner } from 'reactstrap';
+import { Card, CardBody, CardHeader, CardFooter, CardTitle, UncontrolledDropdown, Dropdown, DropdownToggle, Button, DropdownItem, DropdownMenu, Spinner, ListGroup, ListGroupItem, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import "./App.css";
+import { Error } from "./errors"
 
 export const HomePage = () => {
   const [state, setState] = useState("Startup");
@@ -12,6 +13,9 @@ export const HomePage = () => {
   const [querying, setQuerying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [code, setCode] = useState(0);
+  const [healthStatus, setHealthStatus] = useState([Error.NoError, Error.NoError, Error.NoError, Error.NoError, Error.NoError, Error.NoError])
 
   var connectionString = 'HostName=EspTest.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=1KTLsTs2R80sKTPlK9TP+5u/yGcQBuni43NRTxU4vpQ=';
   var registry = Registry.fromConnectionString(connectionString);
@@ -32,40 +36,28 @@ export const HomePage = () => {
             setTimeout(() => {setResponse("None")}, 5000)
             setLoading(false);
             console.error("Direct method error: "+err.message);
+            setHealthStatus([healthStatus[0], healthStatus[1], healthStatus[2], healthStatus[3], healthStatus[4], Error.NoMessage])
         } else {
             setResponse("Success!")
             setTimeout(() => {setResponse("None")}, 5000)
             setLoading(false);
-            console.log("Successfully invoked the device to reboot.");
+            console.log("Successfully sent command.");
             console.log(result);
+            if (method === "Health Check") {
+              let resp = result.payload.Response
+              setHealthStatus([resp.LightSensor, resp.LimitSwitches, resp.Relay, resp.Motor, resp.Panels, Error.NoError])
+            }
         }
     });
   };
 
-  var getState = (val) => {
-    switch (val) {
-      case 0:
-        return "Startup";
-      case 1:
-        return "Connection";
-      case 2:
-        return "Health Check";
-      case 3:
-        return "Sun Tracking";
-      case 4:
-        return "Cloudy"
-      case 5:
-        return "Idle";
-      case 6:
-        return "Night";
-      case 7:
-        return "Maintenance";
-      default:
-        return "Idle";
-    }
-  }
-
   useEffect(() => {
+    const states = ["Startup", "Connection", "Health Check", "Sun Tracking", "Cloudy", "Idle", "Night", "Maintenance"];
+
+    var getState = (val) => {
+      return states[val];
+    }
+
     var queryTwinLastReboot = () => {
 
       registry.getTwin(deviceID, function(err, twin){
@@ -76,7 +68,6 @@ export const HomePage = () => {
                   console.error('Could not query twins: ' + err.constructor.name + ': ' + err.message);
               } else {
                   setState(getState(twin.properties.reported.towerState));
-                  console.log(state);
                   //console.log(twin.properties.reported.towerState)
               }
           } else 
@@ -88,11 +79,72 @@ export const HomePage = () => {
       setQuerying(true);
     }
   }, [registry, deviceID, querying, state]);
-  console.log(method);
 
   const toggle = () => {
-    setDropdownOpen((prevState) => !prevState);
+    setDropdownOpen(!dropdownOpen);
   };
+
+  const toggleM = (code) => {
+    setCode(code);
+    setModal(!modal)
+  }
+
+  const errorToColor = (index) => {
+    switch (healthStatus[index]) {
+      case Error.NoError:
+        return "success"
+      case Error.LowMotorVoltage:
+        return "warning"
+      case Error.BadLimitSw:
+        return "warning"
+      case Error.RTCDesync:
+        return "warning"
+      case Error.LowPowerOutput:
+        return "warning"
+      case Error.FlashUnwritable:
+        return "warning"
+      case Error.MemoryCorruption:
+        return "warning"
+      case Error.LowEspVoltage:
+        return "warning"
+      case Error.EOL:
+        return "warning"
+      case Error.NoMessage:
+        return "warning"
+      default:
+        return "danger"
+    }
+  }
+
+  const connectionToValue = () => {
+    if (healthStatus[5] === 0)
+      return "Stable";
+    else
+      return "Unstable";
+  }
+
+  const getInfo = () => {
+    switch (code) {
+      case 0:
+        return "The component is fully operational, no errors were found during the health check."
+      case 1200:
+        return "This is a code 1200. The light sensor is returning incorrect values given the current time."
+      default:
+        return "Unknown component status."
+    }
+  }
+
+  const getTroubleshootingInfo = () => {
+    switch (code) {
+      case 0:
+        return "No steps need to be taken."
+      case 1200:
+        return "The issue could be any number of things, please investigate both the wiring and the light sensors themselves to come to a conclusion. "+
+        "The wires or the sensors may need replacing. There might also be some kind of obstruction or external situation causing the error."
+      default:
+        return "Unknown component status."
+    }
+  }
 
   return <>
     <img src="logo_mixed_black.png" className='im-logo' alt="Janta Power Mid-sized Logo"/>
@@ -103,20 +155,20 @@ export const HomePage = () => {
             Choose which tower you want to control:
           </CardTitle>
         </CardHeader>
-        <CardBody className='d-flex justify-content-center'>
+        <CardBody className='d-flex justify-content-center align-items-center'>
           <Dropdown isOpen={dropdownOpen} toggle={toggle} className='w-25 d-inline-block'>
             <DropdownToggle caret color="warning">
               {deviceID}
             </DropdownToggle>
             <DropdownMenu>
-              <DropdownItem onClick={() => {setDeviceID("E-1")}}>
-                E-1
-              </DropdownItem>
-              <DropdownItem onClick={() => {setDeviceID("E-2")}}>
-                E-2
-              </DropdownItem>
               <DropdownItem onClick={() => {setDeviceID("E-3")}}>
                 E-3
+              </DropdownItem>
+              <DropdownItem onClick={() => {setDeviceID("E-6")}}>
+                E-6
+              </DropdownItem>
+              <DropdownItem onClick={() => {setDeviceID("E-9")}}>
+                E-9
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -127,13 +179,15 @@ export const HomePage = () => {
           </CardTitle>
         </CardFooter>
       </Card>
+
+
       <Card className='ms-5 me-5 mb-5'>
         <CardHeader>
           <CardTitle className='text-center'>
             Choose what action should be performed:
           </CardTitle>
         </CardHeader>
-        <CardBody className='d-flex justify-content-center'>
+        <CardBody className='d-flex justify-content-center align-items-center'>
           <UncontrolledDropdown className='d-inline-block' group>
             {!loading && <Button color="warning" onClick={() => {setLoading(true); directMethod()}}>
               Submit
@@ -171,6 +225,9 @@ export const HomePage = () => {
               <DropdownItem onClick={() => {setMethod("Reset")}}>
                 Reset
               </DropdownItem>
+              <DropdownItem onClick={() => {setMethod("Health Check")}}>
+                Health Check
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </CardBody>
@@ -180,25 +237,52 @@ export const HomePage = () => {
           </CardTitle>
         </CardFooter>
       </Card>
+
+      <Card className='me-5 ms-5 mb-5'>
+        <CardHeader>
+          <CardTitle className='text-center'>
+            Tower Health {"(Click to get more information)"}:
+          </CardTitle>
+        </CardHeader>
+        <CardBody className='d-flex justify-content-center'>
+          <ListGroup className='w-100'>
+            <ListGroupItem color={errorToColor(5)} className='text-center'>
+              Connection: <span className='fw-bold'>{connectionToValue()}</span>
+            </ListGroupItem>
+            <ListGroupItem color={errorToColor(0)} className='text-center' action onClick={()=>{toggleM(healthStatus[0])}}>
+              Light Sensor: <span className='fw-bold'>{Error[healthStatus[0]]}</span>
+            </ListGroupItem>
+            <ListGroupItem color={errorToColor(1)} className='text-center' action onClick={()=>{toggleM(healthStatus[1])}}>
+              Limit Switches: <span className='fw-bold'>{Error[healthStatus[1]]}</span>
+            </ListGroupItem>
+            <ListGroupItem color={errorToColor(2)} className='text-center' action onClick={()=>{toggleM(healthStatus[2])}}>
+              Relays: <span className='fw-bold'>{Error[healthStatus[2]]}</span>
+            </ListGroupItem>
+            <ListGroupItem color={errorToColor(3)} className='text-center' action onClick={()=>{toggleM(healthStatus[3])}}>
+              Motor: <span className='fw-bold'>{Error[healthStatus[3]]}</span>
+            </ListGroupItem>
+            <ListGroupItem color={errorToColor(4)} className='text-center' action onClick={()=>{toggleM(healthStatus[4])}}>
+              Panels: <span className='fw-bold'>{Error[healthStatus[4]]}</span>
+            </ListGroupItem>
+          </ListGroup>
+          <Modal isOpen={modal} toggle={toggleM}>
+            <ModalHeader toggle={toggleM}>
+              Additional Information
+            </ModalHeader>
+            <ModalBody>
+              <span className='fw-bold w-100'>{getInfo()}</span>
+              <br/>
+            </ModalBody>
+            <ModalHeader>
+              Troubleshooting
+            </ModalHeader>
+            <ModalFooter>
+            <span className='fw-bold w-100'>{getTroubleshootingInfo()}</span>
+              <br/>
+            </ModalFooter>
+          </Modal>
+        </CardBody>
+      </Card>
     </div>
-    {/*
-    <h1>Janta Remote Control</h1>
-    <div className="content">
-      <select onChange={e => {setMethod(e.target.value)}} className="buttons" name="controls" id="controls">
-        <option value="Restart">Restart</option>
-        <option value="East">East</option>
-        <option value="West">West</option>
-        <option value="Stop">Stop</option>
-        <option value="Maintenance">Maintenance</option>
-        <option value="End Maintenance">End Maintenance</option>
-        <option value="Reset">Reset</option>
-      </select>
-      <label className='buttons' htmlFor="fname">Device ID:</label>
-      <input defaultValue={"E-3"} className='buttons' onChange={e => {setDeviceID(e.target.value)}} type="text" id="fname" name="fname"/> 
-      <button className="buttons" onClick={directMethod} >Submit</button>
-<h  3 className='state'>Tower State: {state}</h3>
-  </div>*/}
   </>;
 }
-
-//export default HomePage;
