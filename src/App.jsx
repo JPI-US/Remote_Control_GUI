@@ -10,7 +10,6 @@ export const HomePage = () => {
   const [method, setMethod] = useState("Restart");
   const [deviceID, setDeviceID] = useState("E-3")
   const [response, setResponse] = useState("None")
-  const [querying, setQuerying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modal, setModal] = useState(false);
@@ -69,9 +68,6 @@ export const HomePage = () => {
                   console.error('Could not query twins: ' + err.constructor.name + ': ' + err.message);
               } else {
                   setState(getState(twin.properties.reported.towerState));
-                  if (deviceID == 'E-3') {
-                    setHealthStatus([Error.NoError, Error.NoError, Error.NoError, Error.NoError, Error.NoError, Error.NoError]);
-                  }
                   if (twin.properties.reported.LightSensor != null) {
                     let reported = twin.properties.reported;
                     setHealthStatus([reported.LightSensor, reported.LimitSwitches, reported.Relay, reported.Motor, reported.Panels, Error.NoError])
@@ -82,12 +78,8 @@ export const HomePage = () => {
               console.log('Waiting for state.');
       });
     };
-    /* if (!querying) {
-      setInterval(queryTwinLastReboot, 5000);
-      setQuerying(true);
-    } */
     setTimeout(queryTwinLastReboot, 2000);
-  }, [registry, deviceID, querying, state]);
+  }, [registry, deviceID, state]);
 
   const toggle = () => {
     setDropdownOpen(!dropdownOpen);
