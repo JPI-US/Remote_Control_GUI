@@ -69,16 +69,24 @@ export const HomePage = () => {
                   console.error('Could not query twins: ' + err.constructor.name + ': ' + err.message);
               } else {
                   setState(getState(twin.properties.reported.towerState));
-                  //console.log(twin.properties.reported.towerState)
+                  if (deviceID == 'E-3') {
+                    setHealthStatus([Error.NoError, Error.NoError, Error.NoError, Error.NoError, Error.NoError, Error.NoError]);
+                  }
+                  if (twin.properties.reported.LightSensor != null) {
+                    let reported = twin.properties.reported;
+                    setHealthStatus([reported.LightSensor, reported.LimitSwitches, reported.Relay, reported.Motor, reported.Panels, Error.NoError])
+                  }
               }
-          } else 
+          }
+          else
               console.log('Waiting for state.');
       });
     };
-    if (!querying) {
+    /* if (!querying) {
       setInterval(queryTwinLastReboot, 5000);
       setQuerying(true);
-    }
+    } */
+    setTimeout(queryTwinLastReboot, 2000);
   }, [registry, deviceID, querying, state]);
 
   const toggle = () => {
@@ -262,7 +270,7 @@ export const HomePage = () => {
               Limit Switches: <span className='fw-bold'>{Error[healthStatus[1]]}</span>
             </ListGroupItem>
             <ListGroupItem color={errorToColor(2)} className='text-center' action onClick={()=>{toggleM(healthStatus[2])}}>
-              Relays: <span className='fw-bold'>{Error[healthStatus[2]]}</span>
+              Relay: <span className='fw-bold'>{Error[healthStatus[2]]}</span>
             </ListGroupItem>
             <ListGroupItem color={errorToColor(3)} className='text-center' action onClick={()=>{toggleM(healthStatus[3])}}>
               Motor: <span className='fw-bold'>{Error[healthStatus[3]]}</span>
