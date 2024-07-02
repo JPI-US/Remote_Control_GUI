@@ -1,4 +1,4 @@
-export const Error = {
+export const Errors = {
     // Global Errors
     "0": "Fully Functional",
     "1": "End of Life (EOL)",
