@@ -68,7 +68,7 @@ export const HomePage = () => {
   // The Health Status for the tower represented as error codes
   const [healthStatus, setHealthStatus] = useState([Errors.NoError, Errors.NoError, Errors.NoError, Errors.NoError, Errors.NoError, Errors.NoError])
 
-  const endpoint = 'http://localhost:4000/api/'
+  const endpoint = 'http://192.168.68.78:4000/api/'
   const client = new GraphQLClient(endpoint)
 
   const options = {
