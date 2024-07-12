@@ -5,7 +5,7 @@ h1 {
     text-align: center;
 }
 
-.content { 
+.content {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -19,7 +19,7 @@ h1 {
     padding: 0.5rem 1rem;
     border: 2px solid #333;
     background-color: transparent;
-    border-color: #A69A88;
+    border-color: #a69a88;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
@@ -39,4 +39,7 @@ h1 {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.test {
 }
