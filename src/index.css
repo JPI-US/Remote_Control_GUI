@@ -1,6 +1,8 @@
 @font-face {
     font-family: "Nunito";
-    src: local("Nunito"), url("./fonts/Nunito.ttf") format("truetype");
+    src:
+        local("Nunito"),
+        url("./fonts/Nunito.ttf") format("truetype");
 }
 
 body {
@@ -9,9 +11,65 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #202324;
+    overflow-x: hidden;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
+}
+
+iframe {
+    display: none;
+}
+
+input:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.input-color {
+    background-color: #fff5eb !important;
+    border-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.input-color:hover {
+    background-color: rgba(255, 193, 106, 0.5) !important;
+}
+
+.button-color {
+    background-color: #ffc16a !important;
+    border-color: rgba(0, 0, 0, 1) !important;
+}
+
+.button-color:hover {
+    filter: brightness(105%);
+    background-color: #ffc16a !important;
+}
+
+.dropdown-item-color {
+    background-color: #fff5eb !important;
+}
+
+.round-left {
+    border-top-left-radius: 1em !important;
+    border-bottom-left-radius: 1em !important;
+}
+
+.round-right {
+    border-top-right-radius: 1em !important;
+    border-bottom-right-radius: 1em !important;
+}
+
+.janta-white {
+    background-color: #fffcf9 !important;
+}
+
+.card-title {
+    font-family: "Nunito" sans-serif !important;
+    text-align: center;
+    font-size: 1.3em;
 }

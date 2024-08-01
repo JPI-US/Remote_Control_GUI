@@ -1,10 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { HomePage } from './App.jsx';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import './index.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import './fonts/Nunito.ttf';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { HomePage } from "./App.jsx";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.css";
+import "./fonts/Nunito.ttf";
 
-ReactDOM.render(<HomePage />, document.getElementById('root'));
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<HomePage />);
 serviceWorkerRegistration.register();

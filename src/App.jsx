@@ -33,9 +33,16 @@ import {
   Filler,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
 import "./CSS/App.css";
 import { OpenScreen } from "./Components/OpenScreen";
+import { SolarGraph } from "./Components/SolarGraph";
+import { DPicker } from "./Components/DPicker";
+import { ValueCard } from "./Components/ValueCard";
+import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import store from "store2";
+import { AngleCard } from "./Components/AngleCard";
+import { BottomControls } from "./Components/BottomControls";
 
 ChartJS.register(
   CategoryScale,
@@ -48,10 +55,7 @@ ChartJS.register(
   Legend,
 );
 
-// Fix the nodejs error implementation
-//require("error-polyfill");
-
-// HomePage compoenent, may need to be expanded as the functionality increases
+// HomePage component, may need to be expanded as the functionality increases
 export const HomePage = () => {
   // State
   const [state, setState] = useState("Startup");
@@ -63,6 +67,20 @@ export const HomePage = () => {
   const [response, setResponse] = useState("None");
   // bool for Loading spinner
   const [loading, setLoading] = useState(false);
+  const [startupFinished, setStartupFinished] = useState(
+    store.get("startupFinished", false),
+  );
+  const [appReady, setAppReady] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [peakPower, setPeakPower] = useState(0.0);
+  const [currentPower, setCurrentPower] = useState(0.0);
+  const [angle, setAngle] = useState(0.0);
+  const [temperature, setTemperature] = useState(0.0);
+  const [humidity, setHumidity] = useState(0.0);
+  const [pressure, setPressure] = useState(0.0);
+  const [solarFlux, setSolarFlux] = useState(0.0);
+  const [dailyEnergy, setDailyEnergy] = useState(0.0);
+  const [towerInfo, setTowerInfo] = useState({});
   // Dropdown state
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // Modal state
@@ -77,11 +95,12 @@ export const HomePage = () => {
         fill: true,
         label: "Power Output",
         data: [],
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        borderColor: "rgb(255, 193, 106)",
+        backgroundColor: "rgba(255, 193, 106, 0.5)",
       },
     ],
   });
+
   // Labels for data
   //const [labels, setLabels] = useState([]);
   // The Health Status for the tower represented as error codes
@@ -96,19 +115,6 @@ export const HomePage = () => {
 
   const endpoint = "http://97.98.26.32:4000/api/";
   const client = new GraphQLClient(endpoint);
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Janta Power Curve",
-      },
-    },
-  };
 
   const toggle = () => {
     setDropdownOpen(!dropdownOpen);
@@ -186,9 +192,6 @@ export const HomePage = () => {
     }
   };
 
-  // Invoke the direct method saved in method
-  var directMethod = (twin) => {};
-
   // Handle the background tasks for the webpage
   useEffect(() => {
     const states = [
@@ -207,127 +210,252 @@ export const HomePage = () => {
     };
 
     var queryBackend = async () => {
-      const morning = new Date();
-      morning.setHours(6);
-      morning.setMinutes(0);
-      const current = new Date();
-      const document = gql`{
-        telemetry(after: "${morning.toISOString()}", before: "${current.toISOString()}"){
-          date_time
-          power_output
+      if (startupFinished) {
+        setAppReady(true);
+        const morning = startDate;
+        morning.setHours(6);
+        morning.setMinutes(0);
+        const current = new Date();
+        if (
+          startDate.getDate() === current.getDate() &&
+          startDate.getMonth() === current.getMonth() &&
+          startDate.getFullYear() === current.getFullYear()
+        ) {
+        } else {
+          current.setHours(21);
+          current.setMinutes(0);
+          current.setFullYear(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            startDate.getDate(),
+          );
         }
-      }`;
-      const stuff = (await client.request(document)).telemetry;
-      console.log(stuff);
-      const labels = stuff.map((item) => {
-        let date = new Date(item.date_time);
-        return date.getHours() + ":" + date.getMinutes();
-      });
-      const loaded_data = stuff.map((item) => item.power_output);
-      console.log(labels);
-      setData({
-        labels,
-        datasets: [
+        const dayCurve = gql`{
+          telemetry(after: "${morning.toISOString()}", before: "${current.toISOString()}"){
+            date_time
+            power_output
+          }
+        }`;
+
+        const latestSensor = gql`
           {
-            fill: true,
-            label: "Power Output",
-            data: loaded_data,
-            borderColor: "rgb(255, 193, 106)",
-            backgroundColor: "rgba(255, 193, 106, 0.5)",
-          },
-        ],
-      });
+            latestTelemetry(tower_id: 0) {
+              power_output
+              temperature
+              humidity
+              pressure
+              solar_flux
+              angle
+            }
+          }
+        `;
+
+        const energyNow = gql`{
+          energy(tower_id: 0, day: ${startDate.getDate()}, month: ${startDate.getMonth()}, year: ${startDate.getFullYear()}) {
+            energy
+          }
+        }`;
+
+        const towerQuery = gql`
+          {
+            tower(id: 0) {
+              state
+              error_state
+            }
+          }
+        `;
+        const componentQuery = gql`
+          {
+            components(id: 0) {
+              motor
+              panels
+              relay
+              wiper
+              l_sensor
+              h_sensor
+              t_sensor
+              p_sensor
+              l_switch
+              compass
+            }
+          }
+        `;
+        var powerData = [];
+        var sensorData = [];
+        var energyData = [];
+        var tInfo = {};
+        var cInfo = {};
+        try {
+          powerData = (await client.request(dayCurve)).telemetry;
+          sensorData = (await client.request(latestSensor)).latestTelemetry;
+          energyData = (await client.request(energyNow)).energy;
+          tInfo = (await client.request(towerQuery)).tower;
+          cInfo = (await client.request(componentQuery)).components;
+        } catch (exception) {
+          powerData = null;
+          console.log(exception);
+        }
+        if (powerData !== null) {
+          const labels = powerData.map((item) => {
+            let date = new Date(item.date_time);
+            return date.getHours() + ":" + date.getMinutes();
+          });
+          const loaded_data = powerData.map((item) => item.power_output);
+
+          setPeakPower(Math.max(...loaded_data));
+          setCurrentPower(sensorData.power_output);
+          setAngle(sensorData.angle);
+          setTemperature(sensorData.temperature);
+          setHumidity(sensorData.humidity);
+          setPressure(sensorData.pressure);
+          setSolarFlux(sensorData.solarFlux);
+          setDailyEnergy(energyData[0].energy);
+
+          setTowerInfo({ ...tInfo, ...cInfo });
+          // console.log(labels);
+          // console.log(energyData);
+          /*const blob = new Blob([JSON.stringify(stuff)], {
+          type: "application/json",
+        });
+        console.log(URL.createObjectURL(blob));*/
+          setData({
+            labels,
+            datasets: [
+              {
+                fill: true,
+                label: "Power Output",
+                data: loaded_data,
+                borderColor: "rgb(255, 193, 106)",
+                backgroundColor: "rgba(255, 193, 106, 0.5)",
+              },
+            ],
+          });
+        }
+      }
     };
 
-    setTimeout(queryBackend, 3000);
-  }, [client]);
+    setTimeout(queryBackend, 2500);
+  }, [client, startDate, startupFinished, peakPower]);
 
   return (
     <>
-      <OpenScreen></OpenScreen>
-      <Card className="me-5 ms-5 mb-5 test">
-        <CardHeader>
-          <CardTitle className="text-center">
-            Tower Health {"(Click to get more information)"}:
-          </CardTitle>
-        </CardHeader>
-        <CardBody className="d-flex justify-content-center">
-          <ListGroup className="w-100">
-            <ListGroupItem color={errorToColor(5)} className="text-center">
-              Connection: <span className="fw-bold">{connectionToValue()}</span>
-            </ListGroupItem>
-            <ListGroupItem
-              color={errorToColor(0)}
-              className="text-center"
-              action
-              onClick={() => {
-                toggleM(healthStatus[0]);
+      <AnimatePresence>
+        {!startupFinished && (
+          <motion.div
+            key="screen"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 3 }}
+          >
+            <OpenScreen
+              onTowerSelection={() => {
+                setStartupFinished(true);
+                store.set("startupFinished", true);
               }}
-            >
-              Light Sensor:{" "}
-              <span className="fw-bold">{Errors[healthStatus[0]]}</span>
-            </ListGroupItem>
-            <ListGroupItem
-              color={errorToColor(1)}
-              className="text-center"
-              action
-              onClick={() => {
-                toggleM(healthStatus[1]);
-              }}
-            >
-              Limit Switches:{" "}
-              <span className="fw-bold">{Errors[healthStatus[1]]}</span>
-            </ListGroupItem>
-            <ListGroupItem
-              color={errorToColor(2)}
-              className="text-center"
-              action
-              onClick={() => {
-                toggleM(healthStatus[2]);
-              }}
-            >
-              Relay: <span className="fw-bold">{Errors[healthStatus[2]]}</span>
-            </ListGroupItem>
-            <ListGroupItem
-              color={errorToColor(3)}
-              className="text-center"
-              action
-              onClick={() => {
-                toggleM(healthStatus[3]);
-              }}
-            >
-              Motor: <span className="fw-bold">{Errors[healthStatus[3]]}</span>
-            </ListGroupItem>
-            <ListGroupItem
-              color={errorToColor(4)}
-              className="text-center"
-              action
-              onClick={() => {
-                toggleM(healthStatus[4]);
-              }}
-            >
-              Panels: <span className="fw-bold">{Errors[healthStatus[4]]}</span>
-            </ListGroupItem>
-          </ListGroup>
-          <Modal isOpen={modal} toggle={toggleM}>
-            <ModalHeader toggle={toggleM}>Additional Information</ModalHeader>
-            <ModalBody>
-              <span className="fw-bold w-100">{getInfo()}</span>
-              <br />
-            </ModalBody>
-            <ModalHeader>Troubleshooting</ModalHeader>
-            <ModalFooter>
-              <span className="fw-bold w-100">{getTroubleshootingInfo()}</span>
-              <br />
-            </ModalFooter>
-          </Modal>
-        </CardBody>
-      </Card>
-      {/*<img
-        src="logo_mixed_black.png"
-        className="im-logo"
-        alt="Janta Power Mid-sized Logo"
-      />
+            ></OpenScreen>
+          </motion.div>
+        )}
+        {startupFinished && !appReady && (
+          <motion.div
+            key="startup-transition"
+            className="startup-transition"
+            animate={{
+              zIndex: [0, 1],
+              scale: [0, 1],
+              borderRadius: [
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                "100%",
+                0,
+              ],
+              width: ["0vw", "50vw", "100vw"],
+              height: ["0vw", "50vw", "100vw"],
+            }}
+            transition={{ duration: 0.9 }}
+            exit={{
+              mask: [
+                "radial-gradient(circle at center, transparent 1%, white 1%)",
+                "radial-gradient(circle at center, transparent 100%, white 1%)",
+              ],
+            }}
+          >
+            <motion.img
+              src="logos/logo_mix_blue.png"
+              alt="Janta Blue Logo"
+              className="st-img"
+            />
+          </motion.div>
+        )}
+        {startupFinished && (
+          <motion.div
+            animate={{ opacity: [0, 100] }}
+            transition={{ duration: 3.5 }}
+          >
+            <motion.img
+              src="logos/logo_mixed_black.png"
+              className="app-logo"
+              alt="Janta Power Mid-sized Logo"
+            />
+
+            <motion.div className="d-flex flex-wrap">
+              <motion.div className="flex-column flex-fill">
+                <SolarGraph data={data} />
+              </motion.div>
+              <motion.div className="flex-column">
+                <DPicker
+                  chooseDate={(date) => {
+                    setStartDate(date);
+                  }}
+                />
+                <ValueCard
+                  title={"Current Power (W)"}
+                  value={currentPower.toString() + "W"}
+                  iconName={"icons/lightning-bolt.svg"}
+                  altText={"lightning bolt"}
+                />
+                <AngleCard
+                  title={"Current Angle °"}
+                  value={angle.toFixed(2)}
+                  iconName={""}
+                />
+              </motion.div>
+              <motion.div className="flex-column">
+                <ValueCard
+                  title={"Daily Peak (W)"}
+                  value={peakPower.toString() + "W"}
+                  iconName={"icons/lightning-bolt.svg"}
+                  altText={"lightning bolt"}
+                />
+                <ValueCard
+                  title={"Daily Energy (kWh)"}
+                  value={dailyEnergy.toFixed(2) + " kWh"}
+                  iconName={"icons/lightning-bolt.svg"}
+                  altText={"lightning bolt"}
+                />
+                <ValueCard
+                  title={"Current Temp. (F°)"}
+                  value={temperature.toFixed(2) + "°"}
+                  iconName={"icons/thermometer.svg"}
+                />
+                <ValueCard
+                  title={"Current Humidity (%)"}
+                  value={humidity.toFixed(2) + "%"}
+                  iconName={"icons/water-droplet.svg"}
+                />
+              </motion.div>
+            </motion.div>
+            <BottomControls />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/*
       <div className="d-flex flex-row flex-wrap justify-content-center">
         <Line options={options} data={data} className="" />
         <Card className="me-5 ms-5 mb-5 shadow">
