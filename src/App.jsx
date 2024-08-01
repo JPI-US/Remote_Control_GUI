@@ -70,7 +70,7 @@ export const HomePage = () => {
   const [startupFinished, setStartupFinished] = useState(
     store.get("startupFinished", false),
   );
-  const [appReady, setAppReady] = useState(false);
+  const [appReady, setAppReady] = useState(true);
   const [startDate, setStartDate] = useState(new Date());
   const [peakPower, setPeakPower] = useState(0.0);
   const [currentPower, setCurrentPower] = useState(0.0);
@@ -125,33 +125,6 @@ export const HomePage = () => {
     setModal(!modal);
   };
 
-  // Get the severity of an error code based on color
-  const errorToColor = (index) => {
-    switch (healthStatus[index]) {
-      case Errors.NoError:
-        return "success";
-      case Errors.LowMotorVoltage:
-        return "warning";
-      case Errors.BadLimitSw:
-        return "warning";
-      case Errors.RTCDesync:
-        return "warning";
-      case Errors.LowPowerOutput:
-        return "warning";
-      case Errors.FlashUnwritable:
-        return "warning";
-      case Errors.MemoryCorruption:
-        return "warning";
-      case Errors.LowEspVoltage:
-        return "warning";
-      case Errors.EOL:
-        return "warning";
-      case Errors.NoMessage:
-        return "warning";
-      default:
-        return "danger";
-    }
-  };
   // Connection mapper
   const connectionToValue = () => {
     if (healthStatus[5] === 0) return "Stable";

@@ -20,8 +20,8 @@ export const DPicker = ({ chooseDate }) => {
 
   return (
     <>
-      <Card className="date shadow janta-white">
-        <CardHeader className="janta-white card-title">Date</CardHeader>
+      <Card className="date shadow janta-bg-white">
+        <CardHeader className="janta-bg-white card-title">Date</CardHeader>
         <CardBody>
           <Input
             id="exampleDate"

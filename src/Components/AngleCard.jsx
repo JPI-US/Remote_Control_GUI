@@ -7,12 +7,12 @@ import ".././CSS/AngleCard.css";
 export const AngleCard = ({ title, value, iconName, altText }) => {
   return (
     <>
-      <Card className="janta-white shadow vc">
-        <CardHeader className="janta-white text-center card-title">
+      <Card className="janta-bg-white shadow vc">
+        <CardHeader className="janta-bg-white text-center card-title">
           {/*<img src={iconName} alt={altText} className="v-icon" >*/}
           {title}
         </CardHeader>
-        <CardBody className="janta-white vc-body">
+        <CardBody className="janta-bg-white vc-body">
           <div className="angle-holder">
             <img
               src="icons/Angle-Shower-2.svg"

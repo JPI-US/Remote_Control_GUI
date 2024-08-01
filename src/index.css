@@ -64,8 +64,12 @@ input:focus {
     border-bottom-right-radius: 1em !important;
 }
 
-.janta-white {
+.janta-bg-white {
     background-color: #fffcf9 !important;
+}
+
+.janta-green {
+    color: #108d1d;
 }
 
 .card-title {

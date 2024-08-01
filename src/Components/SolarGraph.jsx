@@ -31,7 +31,7 @@ const options = {
 export const SolarGraph = ({ data }) => {
   return (
     <>
-      <Card className="graph shadow janta-white">
+      <Card className="graph shadow janta-bg-white">
         <CardBody>
           <Line options={options} data={data} className="" />
         </CardBody>
