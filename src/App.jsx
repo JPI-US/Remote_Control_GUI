@@ -34,15 +34,16 @@ import {
   Legend,
 } from "chart.js";
 import "./CSS/App.css";
-import { OpenScreen } from "./Components/OpenScreen";
-import { SolarGraph } from "./Components/SolarGraph";
-import { DPicker } from "./Components/DPicker";
-import { ValueCard } from "./Components/ValueCard";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import store from "store2";
-import { AngleCard } from "./Components/AngleCard";
+import { OpenScreen } from "./Components/OpenScreen";
+import { SolarGraph } from "./Components/SolarGraph";
 import { BottomControls } from "./Components/BottomControls";
+import { DatePicker } from "./Components/DatePicker";
+import { ValueCard } from "./Components/ValueCard";
+import { AngleCard } from "./Components/AngleCard";
+import { WeatherCard } from "./Components/WeatherCard";
 
 ChartJS.register(
   CategoryScale,
@@ -70,7 +71,7 @@ export const HomePage = () => {
   const [startupFinished, setStartupFinished] = useState(
     store.get("startupFinished", false),
   );
-  const [appReady, setAppReady] = useState(true);
+  const [appReady, setAppReady] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [peakPower, setPeakPower] = useState(0.0);
   const [currentPower, setCurrentPower] = useState(0.0);
@@ -81,10 +82,7 @@ export const HomePage = () => {
   const [solarFlux, setSolarFlux] = useState(0.0);
   const [dailyEnergy, setDailyEnergy] = useState(0.0);
   const [towerInfo, setTowerInfo] = useState({});
-  // Dropdown state
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  // Modal state
-  const [modal, setModal] = useState(false);
+  const [weather, setWeather] = useState(null);
   // Error code for use in the modal
   const [code, setCode] = useState(0);
   // Data from the database
@@ -113,17 +111,8 @@ export const HomePage = () => {
     Errors.NoError,
   ]);
 
-  const endpoint = "http://97.98.26.32:4000/api/";
+  const endpoint = "https://api.jantaus.com/api/";
   const client = new GraphQLClient(endpoint);
-
-  const toggle = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
-  const toggleM = (code) => {
-    setCode(code);
-    setModal(!modal);
-  };
 
   // Connection mapper
   const connectionToValue = () => {
@@ -131,60 +120,10 @@ export const HomePage = () => {
     else return "Unstable";
   };
 
-  // Get error code info for the modal, will be expanded to another file at some point
-  const getInfo = () => {
-    switch (code) {
-      case 0:
-        return "The component is fully operational, no errors were found during the health check.";
-      case 1200:
-        return "This is a code 1200. The light sensor is returning incorrect values given the current time.";
-      case 1202:
-        return "This is a code 1202. One or more limit switches are reading incorrectly.";
-      default:
-        return "Unknown component status.";
-    }
-  };
-
-  // Get the troubleshooting information for the modal, should be to same file as the regular code info
-  const getTroubleshootingInfo = () => {
-    switch (code) {
-      case 0:
-        return "No steps need to be taken.";
-      case 1200:
-        return (
-          "The issue could be any number of things, please investigate both the wiring and the light sensors themselves to come to a conclusion. " +
-          "The wires or the sensors may need replacing. There might also be some kind of obstruction or external situation causing the error."
-        );
-      case 1202:
-        return (
-          "The issue is either the wiring or the switch itself. Please check both to be sure of the issue. The wiring of the switch or the switch itself " +
-          "may need to be replaced."
-        );
-      default:
-        return "Unknown component status.";
-    }
-  };
-
   // Handle the background tasks for the webpage
   useEffect(() => {
-    const states = [
-      "Startup",
-      "Connection",
-      "Health Check",
-      "Sun Tracking",
-      "Cloudy",
-      "Idle",
-      "Night",
-      "Maintenance",
-    ];
-
-    var getState = (val) => {
-      return states[val];
-    };
-
     var queryBackend = async () => {
       if (startupFinished) {
-        setAppReady(true);
         const morning = startDate;
         morning.setHours(6);
         morning.setMinutes(0);
@@ -258,12 +197,22 @@ export const HomePage = () => {
         var energyData = [];
         var tInfo = {};
         var cInfo = {};
+        var weatherData = {};
         try {
           powerData = (await client.request(dayCurve)).telemetry;
           sensorData = (await client.request(latestSensor)).latestTelemetry;
           energyData = (await client.request(energyNow)).energy;
           tInfo = (await client.request(towerQuery)).tower;
           cInfo = (await client.request(componentQuery)).components;
+          if (weather == null) {
+            var temp = await fetch(
+              "https://api.weather.gov/points/32.7978,-96.8356",
+            ).then((response) => response.json());
+            weatherData = await fetch(temp.properties.forecastHourly).then(
+              (response) => response.json(),
+            );
+            setWeather(weatherData.properties.periods[0].shortForecast);
+          }
         } catch (exception) {
           powerData = null;
           console.log(exception);
@@ -283,7 +232,6 @@ export const HomePage = () => {
           setPressure(sensorData.pressure);
           setSolarFlux(sensorData.solarFlux);
           setDailyEnergy(energyData[0].energy);
-
           setTowerInfo({ ...tInfo, ...cInfo });
           // console.log(labels);
           // console.log(energyData);
@@ -307,8 +255,8 @@ export const HomePage = () => {
       }
     };
 
-    setTimeout(queryBackend, 2500);
-  }, [client, startDate, startupFinished, peakPower]);
+    setInterval(queryBackend, 1000);
+  }, []);
 
   return (
     <>
@@ -349,7 +297,7 @@ export const HomePage = () => {
                 0,
               ],
               width: ["0vw", "50vw", "100vw"],
-              height: ["0vw", "50vw", "100vw"],
+              height: ["0vw", "50vw", "130vw"],
             }}
             transition={{ duration: 0.9 }}
             exit={{
@@ -357,6 +305,13 @@ export const HomePage = () => {
                 "radial-gradient(circle at center, transparent 1%, white 1%)",
                 "radial-gradient(circle at center, transparent 100%, white 1%)",
               ],
+            }}
+            onAnimationComplete={() => {
+              console.log("we in");
+              setTimeout(1000, () => {
+                console.log("wow");
+                setAppReady(true);
+              });
             }}
           >
             <motion.img
@@ -380,13 +335,14 @@ export const HomePage = () => {
             <motion.div className="d-flex flex-wrap">
               <motion.div className="flex-column flex-fill">
                 <SolarGraph data={data} />
-              </motion.div>
-              <motion.div className="flex-column">
-                <DPicker
+                <DatePicker
                   chooseDate={(date) => {
                     setStartDate(date);
                   }}
                 />
+              </motion.div>
+              <motion.div className="flex-column flex-shrink">
+                <WeatherCard weather={weather} />
                 <ValueCard
                   title={"Current Power (W)"}
                   value={currentPower.toString() + "W"}
@@ -424,58 +380,11 @@ export const HomePage = () => {
                 />
               </motion.div>
             </motion.div>
-            <BottomControls />
+            <BottomControls towerInfo={towerInfo} client={client} />
           </motion.div>
         )}
       </AnimatePresence>
       {/*
-      <div className="d-flex flex-row flex-wrap justify-content-center">
-        <Line options={options} data={data} className="" />
-        <Card className="me-5 ms-5 mb-5 shadow">
-          <CardHeader>
-            <CardTitle className="text-center">
-              Choose which tower you want to control:
-            </CardTitle>
-          </CardHeader>
-          <CardBody className="d-flex justify-content-center align-items-center">
-            <Dropdown
-              isOpen={dropdownOpen}
-              toggle={toggle}
-              className="w-25 d-inline-block"
-            >
-              <DropdownToggle caret color="warning">
-                {deviceID}
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem
-                  onClick={() => {
-                    setDeviceID("E-3");
-                  }}
-                >
-                  E-3
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => {
-                    setDeviceID("E-6");
-                  }}
-                >
-                  E-6
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => {
-                    setDeviceID("E-9");
-                  }}
-                >
-                  E-9
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </CardBody>
-          <CardFooter>
-            <CardTitle className="text-center">Tower State: {state}</CardTitle>
-          </CardFooter>
-        </Card>
-
         <Card className="ms-5 me-5 mb-5 shadow">
           <CardHeader>
             <CardTitle className="text-center">
@@ -643,20 +552,6 @@ export const HomePage = () => {
                 <span className="fw-bold">{Errors[healthStatus[4]]}</span>
               </ListGroupItem>
             </ListGroup>
-            <Modal isOpen={modal} toggle={toggleM}>
-              <ModalHeader toggle={toggleM}>Additional Information</ModalHeader>
-              <ModalBody>
-                <span className="fw-bold w-100">{getInfo()}</span>
-                <br />
-              </ModalBody>
-              <ModalHeader>Troubleshooting</ModalHeader>
-              <ModalFooter>
-                <span className="fw-bold w-100">
-                  {getTroubleshootingInfo()}
-                </span>
-                <br />
-              </ModalFooter>
-            </Modal>
           </CardBody>
         </Card>
       </div>*/}

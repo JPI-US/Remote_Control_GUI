@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9487ac75.css",
+    "main.js": "/static/js/main.0fb26a99.js",
+    "static/media/Nunito.ttf": "/static/media/Nunito.c0f0807a40aebdc41b40.ttf",
+    "service-worker.js": "/service-worker.js",
+    "index.html": "/index.html",
+    "main.9487ac75.css.map": "/static/css/main.9487ac75.css.map",
+    "main.0fb26a99.js.map": "/static/js/main.0fb26a99.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9487ac75.css",
+    "static/js/main.0fb26a99.js"
+  ]
+}

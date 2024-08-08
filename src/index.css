@@ -41,13 +41,13 @@ input:focus {
 }
 
 .button-color {
-    background-color: #ffc16a !important;
-    border-color: rgba(0, 0, 0, 1) !important;
+    background-image: linear-gradient(#ffc16a, #ffd79f) !important;
+    border-color: #7a756f !important;
 }
 
 .button-color:hover {
+    background-image: linear-gradient(#ffc16a, #ffd79f) !important;
     filter: brightness(105%);
-    background-color: #ffc16a !important;
 }
 
 .dropdown-item-color {
@@ -76,4 +76,8 @@ input:focus {
     font-family: "Nunito" sans-serif !important;
     text-align: center;
     font-size: 1.3em;
+}
+
+.clickable {
+    cursor: pointer;
 }

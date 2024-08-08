@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardBody, CardHeader, Input } from "reactstrap";
 import ".././CSS/DatePicker.css";
 
-export const DPicker = ({ chooseDate }) => {
+export const DatePicker = ({ chooseDate }) => {
   const [startDate, setStartDate] = useState(new Date());
 
   const getProperDate = () => {
@@ -21,7 +21,6 @@ export const DPicker = ({ chooseDate }) => {
   return (
     <>
       <Card className="date shadow janta-bg-white">
-        <CardHeader className="janta-bg-white card-title">Date</CardHeader>
         <CardBody>
           <Input
             id="exampleDate"
