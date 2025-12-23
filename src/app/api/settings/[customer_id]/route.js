@@ -1,0 +1,82 @@
+import prisma from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+
+export async function GET(request, context){
+    try{
+        if (!context || !context.params) {
+            console.error('Missing context or params');
+            return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+        }
+        await (context.params);
+
+        const idParam = (await (context.params)).customer_id;
+        const customerId = parseInt(idParam);
+
+        if (isNaN(customerId)) {
+            console.error('Invalid customer ID:', idParam);
+            return NextResponse.json({ error: 'Invalid customer ID' }, { status: 400 });
+        }
+
+        const settings = await prisma.settings.findUnique({
+            where: { customer_id: customerId },
+            select: {
+                theme: true,
+                time_zone: true,
+                text_size: true,
+                bold_text: true,
+                update_frequency: true,
+                last_login_device: true,
+                last_login: true,
+                email_recovery: true,
+                phone_recovery: true,
+            },
+        });
+
+        if (!settings) {
+            console.warn(`Settings not found for ID ${customerId}`);
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        return NextResponse.json(settings);
+
+    } catch (error){
+        console.error('Unexpected error in /api/settings/[customer_id]:', error);
+        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    }
+}
+
+export async function PUT(req, context) {
+    const { params } = context;
+    const customerId = parseInt(params.customer_id);
+
+    console.log("Customer ID:", customerId);
+
+    try {
+        const body = await req.json();
+
+        console.log("Request body:", body);
+
+        if (isNaN(customerId)) {
+            return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+        }
+
+        const updatedSettings = await prisma.settings.update({
+            where: { customer_id: customerId },
+            data: {
+                theme: body.theme,
+                text_size: body.text_size,
+                bold_text: body.bold_text,
+                update_frequency: body.update_frequency,
+                last_login_device: body.last_login_device,
+                last_login: body.last_login,
+                phone_recovery: body.phone_recovery,
+                email_recovery: body.email_recovery,
+            },
+        });
+
+        return NextResponse.json( updatedSettings );
+    } catch (error) {
+        console.error('Prisme update error:', error);
+        return NextResponse.json({ error: 'Update failed' }, { status: 500 });
+    }
+}

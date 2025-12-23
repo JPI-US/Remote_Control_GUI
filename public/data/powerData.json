@@ -1,0 +1,18 @@
+[
+    { "id": 1, "name": "Alpha", "angle": 105.78, "power": 9500, "efficiency": 38.3, "today": 92.4, "month": 1940.4, "year": 20345.4, "status": "Tracking", "total": 23100 },
+    { "id": 2, "name": "Beta", "angle": 139.12, "power": 8700, "efficiency": 35.6, "today": 85.1, "month": 1787.1, "year": 19872.2, "status": "Tracking", "total": 21275 },
+    { "id": 3, "name": "Charlie", "angle": 111.45, "power": 9200, "efficiency": 36.9, "today": 89.3, "month": 1875.3, "year": 21003.1, "status": "Tracking", "total": 22325 },
+    { "id": 4, "name": "Delta", "angle": 148.90, "power": 9800, "efficiency": 39.1, "today": 95.7, "month": 2010, "year": 21500.8, "status": "Tracking", "total": 23925 },
+    { "id": 5, "name": "Echo", "angle": 123.67, "power": 8900, "efficiency": 34.2, "today": 82.9, "month": 1740.9, "year": 19450.0, "status": "Warning", "total": 20725 },
+    { "id": 6, "name": "Foxtrot", "angle": 110.21, "power": 9100, "efficiency": 37.4, "today": 88.5, "month": 1858.5, "year": 20777.7, "status": "Tracking", "total": 22125 },
+    { "id": 7, "name": "Golf", "angle": 134.56, "power": 9500, "efficiency": 35.4, "today": 87.5, "month": 1837.5, "year": 20345.3, "status": "Tracking", "total": 21875 },
+    { "id": 8, "name": "Hotel", "angle": 41.03, "power": 9200, "efficiency": 35.4, "today": 87.5, "month": 1837.5, "year": 20925.6, "status": "Fault", "total": 21875 },
+    { "id": 9, "name": "India", "angle": null, "power": 9000, "efficiency": 45.4, "today": 86.3, "month": 1812.3, "year": 20975.1, "status": "Offline", "total": 21575 },
+    { "id": 10, "name": "Juliet", "angle": 128.0, "power": 9100, "efficiency": 38.2, "today": 85.7, "month": 1799.7, "year": 20487.4, "status": "Tracking", "total": 21425 },
+    { "id": 11, "name": "Kilo", "angle": 117.55, "power": 9400, "efficiency": 36.5, "today": 88.2, "month": 1852.2, "year": 21105.9, "status": "Tracking", "total": 22050 },
+    { "id": 12, "name": "Lima", "angle": 145.23, "power": 8700, "efficiency": 42.3, "today": 84.9, "month": 1782.9, "year": 19834.7, "status": "Warning", "total": 21225 },
+    { "id": 13, "name": "Mike", "angle": 122.99, "power": 9600, "efficiency": 39.0, "today": 89.1, "month": 1871.1, "year": 21567.3, "status": "Tracking", "total": 22275 },
+    { "id": 14, "name": "November", "angle": 116.34, "power": 8900, "efficiency": 44.1, "today": 83.6, "month": 1755.6, "year": 20125.8, "status": "Warning", "total": 20900 },
+    { "id": 15, "name": "Oscar", "angle": 130.40, "power": 9300, "efficiency": 37.8, "today": 86.9, "month": 1824.9, "year": 21012.4, "status": "Tracking", "total": 21725 }
+  ]
+  

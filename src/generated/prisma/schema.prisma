@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id            Int    @id @default(autoincrement())
+  name          String
+  email         String @unique
+  address_id    Int
+  country_code  Int
+  phone_number  Int?   @unique
+  customer_type String
+  password_hash String
+
+  setting      Settings?
+  notification Notifications?
+  tower        Towers?
+
+  @@map("customers") // This tells Prisma the actual table in the DB is named "customers"
+}
+
+model Settings {
+  settings_id        Int       @id @default(autoincrement())
+  customer_id        Int       @unique
+  theme              String    @default("Light")
+  time_zone          String    @default("Central Time (CT)")
+  text_size          String    @default("Medium")
+  bold_text          Boolean   @default(false)
+  update_frequency   String    @default("15 minutes")
+  region             String    @default("North America")
+  language           String    @default("en")
+  twentyfourhourtime Boolean   @default(false)
+  last_login_device  String    @default("N/A")
+  last_login         DateTime?
+  email_recovery     String? // Once unique value added in database add @unique 
+  phone_recovery     String? // Once unique value added in database add @unique
+
+  customer Customer @relation(fields: [customer_id], references: [id]) // Relation field
+
+  @@map("settings") // This tells Prisma the actual table in the DB is named "customers"
+}
+
+model Notifications {
+  notifications_id Int @id @default(autoincrement())
+  customer_id      Int @unique
+
+  push_notifications_enabled Boolean @default(false)
+  push_notify_login          Boolean @default(false)
+  notification_tone          String  @default("Chime")
+
+  email_marketing        Boolean @default(false)
+  email_account_activity Boolean @default(false)
+  email_newsletter       Boolean @default(false)
+  sms_password_changes   Boolean @default(false)
+  sms_login_attempts     Boolean @default(false)
+
+  customer Customer @relation(fields: [customer_id], references: [id]) // Relation field
+
+  @@map("notifications") // This tells Prisma the actual table in the DB is named "customers"
+}
+
+model Towers {
+  id    Int @id @default(autoincrement())
+  model Int @default(0)
+
+  latitude         Decimal
+  longitude        Decimal
+  customer_id      Int     @unique
+  order_id         Int     @unique
+  state            Int
+  c_group          Int
+  error_state      Int
+  length           Int
+  height           Int
+  width            Int
+  software_version String
+
+  telemetry Telemetry?
+
+  customer Customer @relation(fields: [customer_id], references: [id]) // Relation field
+
+  @@map("towers") // This tells Prisma the actual table in the DB is named "customers"
+}
+
+model Telemetry {
+  id        Int      @id @default(autoincrement())
+  date_time DateTime @default(now())
+
+  tower_id     Int     @unique
+  humidity     Float
+  temperature  Float
+  pressure     Float   @default(335.75)
+  status       Int
+  power_output Int
+  clouds       Boolean @default(false)
+  solar_flux   Int
+  angle        Float
+
+  towers Towers @relation(fields: [tower_id], references: [id]) // Relation field
+
+  @@map("telemetry") // This tells Prisma the actual table in the DB is named "customers"
+}
