@@ -110,6 +110,7 @@ export default function Settings(){
                                             onChange={(e) => setPhone(e.target.value)}
                                         />
                                     </div>
+                                    {/* Optional additions: Organization / Company name, Time zone, Address / location,*/}
                                     <div className='pt-4 py-2'>
                                         <button type='submit' value="Save" className='w-20 border-2 p-1 cursor-pointer rounded-sm hover:focus hover:opacity-75 bg-orange-400'>Save</button>
                                     </div>
@@ -125,8 +126,34 @@ export default function Settings(){
             return (
                 <>
                     <div className='pt-8'>  
-                        <p>User settings</p>
+                        <p className='text-4xl font-bold'>User settings</p>
                     </div>
+                    <div className='flex items-center justify-center text-lg'>
+                        <div className="flex flex-col">
+                            <form>
+                                <div className='flex pt-6 items-center py-2'>
+                                    <p className='pr-2'>Notification preferences:</p>
+                                    <p className='pr-2'>System alerts</p>
+                                    <p className='pr-2'>Email or sms notifications</p>
+                                </div>
+                                <div className='flex pt-6 items-center py-2'>
+                                    <p className='pr-2'>Energy units (kWh, MWh):</p>
+                                    <p className='pr-2'>Currency</p>
+                                    <p className='pr-2'>Date & time formats</p>
+                                </div>
+                                <div className='flex pt-6 items-center py-2'>
+                                    <p className='pr-2'>Session & security:</p>
+                                    <p className='pr-2'>Active sessions</p>
+                                    <p className='pr-2'>Password change</p>
+                                    <p className='pr-2'>Two-factor authentication (2FA)</p>
+                                </div>
+                                <div className='pt-4 py-2 hidden'>
+                                    <button type='submit' value="Save" className='w-20 border-2 p-1 cursor-pointer rounded-sm hover:focus hover:opacity-75 bg-orange-400'>Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
                 </>
             )
         }
@@ -134,7 +161,29 @@ export default function Settings(){
             return (
                 <>
                     <div className='pt-8'>  
-                        <p> Pv System</p>
+                        <p className='text-4xl font-bold'> PV System</p>
+                    </div>
+                    <div className='flex items-center justify-center text-lg'>
+                        <div className="flex flex-col">
+                            <form>
+                                <div className='flex pt-6 items-center py-2'>
+                                    <p className='pr-2'>System Name</p>
+                                    <p className='pr-2'>Installation address</p>
+                                    
+                                </div>
+                                <div className='flex pt-6 items-center py-2'>
+                                    <p className='pr-2'>Maintenance & lifecycle</p>
+                                    <p className='pr-2'>Commissioning date</p>
+                                    <p className='pr-2'>Warranty details</p>
+                                </div>
+                                <div className='flex pt-6 items-center py-2'>
+                                    <p className='pr-2'>Last data update</p>
+                                </div>
+                                <div className='pt-4 py-2 hidden'>
+                                    <button type='submit' value="Save" className='w-20 border-2 p-1 cursor-pointer rounded-sm hover:focus hover:opacity-75 bg-orange-400'>Save</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </>
             )
