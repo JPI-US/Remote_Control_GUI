@@ -431,3 +431,216 @@
                     </div>
                 ))}
             </div> 
+
+
+
+
+<div className="grid grid-cols-2 w-2/3 mx-auto gap-8 mb-10">
+                <div className="flex justify-center items-center w-full -ml-10">                
+                    <div className="bg-white p-10 rounded-md shadow-black shadow-md border-t-1 border-black">
+                        <svg width="200" height="200" viewBox="0 0 100 100">
+                            {/* Current power output ring */}
+                            <circle
+                                cx="50"
+                                cy="50"
+                                r={RADIUS}
+                                fill="transparent"
+                                stroke="#e5e7eb"
+                                strokeWidth="8"
+                            />
+
+                            {/* Power ring */}
+                            <circle
+                                cx="50"
+                                cy="50"
+                                r={RADIUS}
+                                fill="transparent"
+                                stroke="url(#powerGradient)"
+                                strokeWidth="8"
+                                strokeDasharray={CIRCUMFERENCE}
+                                strokeDashoffset={dashOffset}
+                                strokeLinecap="round"
+                                className="transition-all duration-1000 ease-in-out"
+                                transform="rotate(-90 50 50)" // start from top
+                            />
+
+                            <defs>
+                                <linearGradient
+                                    id="powerGradient"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="100%"
+                                    y2="100%"
+                                >
+                                    <stop offset="0%" stopColor="#fbbf24" />
+                                    <stop offset="50%" stopColor="#f59e0b" />
+                                    <stop offset="100%" stopColor="#d97706" />
+                                </linearGradient>
+                            </defs>
+
+                            {/* Center value */}
+                            <text
+                                x="50"
+                                y="48"
+                                textAnchor="middle"
+                                fontSize="14"
+                                fontWeight="600"
+                                fill="#111827"
+                            >
+                                {pvPowerKw.toFixed(2)}
+                            </text>
+                            <text
+                                x="50"
+                                y="62"
+                                textAnchor="middle"
+                                fontSize="10"
+                                fill="#6b7280"
+                            >
+                                kW
+                            </text>
+                        </svg>
+
+                        <p className="pt-4 text-lg text-black font-bold">
+                            Live PV Power
+                        </p>
+                    </div>
+                </div>
+                {/* Directional reading */}
+                <div className='bg-white p-10 rounded-md shadow-black shadow-md border-t-1 border-black'>
+                    <p className='text-lg text-black font-bold pb-4'>Current Tower angle</p>
+                    <div className="flex flex-col items-center gap-3">
+                        {/* Compass Face */}
+                        <div className="relative w-48 h-48 rounded-full border-4 border-gray-300 bg-gray-50">
+                            
+                            {/* Direction Labels */}
+                            <span className="absolute top-2 left-1/2 -translate-x-1/2 text-md font-semibold">N</span>
+                            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-md">E</span>
+                            <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-md">S</span>
+                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-md">W</span>
+
+                            {/* Arrow */}
+                            <div
+                                className="absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-out"
+                                style={{ transform: `rotate(160deg)` }}
+                            >
+                                <svg
+                                    width="16"
+                                    height="80"
+                                    viewBox="0 0 24 80"
+                                    className="text-red-500"
+                                >
+                                    {/* Arrow Head */}
+                                    <polygon
+                                        points="12,0 24,20 0,20"
+                                        fill="currentColor"
+                                    />
+                                    {/* Arrow Shaft */}
+                                    <rect
+                                        x="9"
+                                        y="20"
+                                        width="6"
+                                        height="70"
+                                        rx="3"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </div>
+
+                            {/* Center Dot */}
+                            <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-gray-700 rounded-full -translate-x-1/2 -translate-y-1/2" />
+                        </div>
+
+                        {/* Numeric Readout */}
+                        <div className="text-md text-gray-800">
+                            Heading: <span className="font-medium">160°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+<div className="grid grid-cols-[3fr_1fr] w-2/3 mx-auto gap-8 mb-10">
+                {/* Component Diagnostics */}
+                <div className='flex flex-col bg-white rounded-md shadow-black shadow-md border-t-1 border-black'>
+                    <h1 className='mx-auto pt-4 text-xl text-black font-bold'>Component Diagnostics</h1>
+                    <ul className="grid grid-cols-2 gap-3 p-4 text-black">
+                        <li className="flex justify-between items-center border rounded-md px-3 py-2">
+                            <span className="font-medium">Tower</span>
+                            <span className="text-green-600 font-semibold">Online</span>
+                        </li>
+
+                        <li className="flex justify-between items-center border rounded-md px-3 py-2">
+                            <span className="font-medium">Motor</span>
+                            <span className="text-green-600 font-semibold">Online</span>
+                        </li>
+
+                        <li className="flex justify-between items-center border rounded-md px-3 py-2">
+                            <span className="font-medium">Relay</span>
+                            <span className="text-green-600 font-semibold">Online</span>
+                        </li>
+
+                        <li className="flex justify-between items-center border rounded-md px-3 py-2">
+                            <span className="font-medium">Limit Switch</span>
+                            <span className="text-green-600 font-semibold">Online</span>
+                        </li>
+                        <li className="flex justify-between items-center border rounded-md px-3 py-2">
+                            <span className="font-medium">Communication Protocol</span>
+                            <span className="text-green-600 font-semibold">Online</span>
+                        </li>
+                        {/* Fault/offline: text-red-600; warning: text-yellow-500   */}
+                    </ul>
+                </div>
+                
+                
+            </div>
+
+
+
+<div className="">
+                    {/* Monthly energy production in Bar Chart */}
+                    {dailyProduction && (
+                        <div className="flex w-full h-full flex-col bg-white p-4 flex-1 rounded-md shadow-black shadow-md border-t-1 border-black">
+                            <h3 className="text-black font-bold text-lg mb-4">
+                                Monthly Energy Production for {fullMonthName} (kWh)
+                            </h3>
+
+                            <div className="flex-1">
+                            <Bar
+                                data={{
+                                    labels: dailyProduction.labels,
+                                    datasets: [
+                                        {
+                                            label: "Energy Output",
+                                            data: dailyProduction.values,
+                                            backgroundColor: "#f59e0b",
+                                            borderColor: "#f59e0b",
+                                            borderWidth: 2,
+                                            borderRadius: 4,
+                                            barPercentage: 0.8,
+                                            categoryPercentage: 0.9,
+                                        },
+                                    ],
+                                }}
+                                options={{
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    //aspectRatio: 3,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: {
+                                                display: true,
+                                                text: "kWh",
+                                            },
+                                        },
+                                    },
+                                    plugins: {
+                                        legend: { display: false },
+                                    },
+                                }}
+                                className="h-full"
+                            /> 
+                            </div>
+                        </div>
+                    )}
+                </div>

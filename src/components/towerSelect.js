@@ -7,20 +7,35 @@ import { Menu, Search, Signal, TriangleAlert, ShieldAlert, ShieldX, Sigma, X } f
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import "@/lib/chart";
-import { Bar } from "react-chartjs-2";
+import "@/lib/line";
+import { Bar, Line } from "react-chartjs-2";
+import 'chartjs-adapter-date-fns'; // FOR USING CATEGORY TIME
+import 'chartjs-adapter-luxon'; // Timezone-aware adapter
+import { DateTime } from "luxon";
 
 const SYSTEM_ID = "49bfa0cf-3479-4852-bf3a-91ad30ac50cc";
-const MAX_PV_POWER = 19000;    
-const RADIUS = 45;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const MAX_PV_POWER = 11500;    
+const chartDayCT = DateTime.now().setZone("America/Chicago").startOf("day");
+const towerAngle = 160;
+const lat = 31.4705888;
+const lon = -97.3148795;
+
+const RADIUS = 45; // Static
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // Static
 
 export default function TowerSelect(){
     const router = useRouter();
     const { user, userId, loading } = useAuth(); //Retrieving user data    
 
     const [pvPower, setPvPower] = useState(0); //Retrieves the live power generation
+    const [maxHourlyPower, setMaxHourlyPower] = useState(0);
     const [dailyProduction, setDailyProduction] = useState(null); // Retrieves the monthly power generation
+    const [hourlyProduction, setHourlyProduction] = useState(null); // Retrieves the hourly power generation
     const intervalRef = useRef(null); //Interval time for refreshes
+    const intervalRef1 = useRef(null); //Interval time for refreshes
+    
+    // Get full month name
+    const fullMonthName = chartDayCT.toFormat("LLLL");
 
     // Useeffect for retrieving the live power generation data
     useEffect(() => {
@@ -46,7 +61,7 @@ export default function TowerSelect(){
         }
 
         fetchLive();
-        intervalRef.current = setInterval(fetchLive, 10000);
+        intervalRef.current = setInterval(fetchLive, 10000); // Call every 10 seconds
         return () => clearInterval(intervalRef.current);
     }, []); 
 
@@ -73,7 +88,6 @@ export default function TowerSelect(){
                 if (!res.ok) return;
 
                 const json = await res.json();
-                console.log("Fronius API response:", json);
                 setDailyProduction(json.data?.production ?? null);
             } catch (error) {
                 console.error('Daily production error:', error);
@@ -82,6 +96,312 @@ export default function TowerSelect(){
 
         fetchDailyProduction();
     }, []); 
+
+    const weeklyProduction = useMemo(() => {
+        if (!dailyProduction?.labels?.length) return null;
+
+        const totalDays = dailyProduction.labels.length;
+
+        // Take last 7 days (or fewer if <7)
+        const startIndex = Math.max(0, totalDays - 7);
+
+        return {
+            labels: dailyProduction.labels.slice(startIndex),
+            values: dailyProduction.values.slice(startIndex),
+        };
+    }, [dailyProduction]);
+
+    // Useeffect for retrieving the hourly power generation data /api/fronius/dailyProduction?systemId=${SYSTEM_ID}
+    useEffect(() => {
+        async function fetchHourlyProduction() {
+            try {
+                // Fetch power data
+                const res = await fetch(
+                    `/api/fronius?systemId=${SYSTEM_ID}`, 
+                    { cache: "no-store" }
+                );
+
+                if (!res.ok) return;
+
+                const json = await res.json();
+                
+                // Extract energy data safely
+                const energyData = json.data?.energy ?? null;
+
+                setHourlyProduction(energyData);
+
+                // Compute maximum power immediately
+                if (energyData?.values?.length) {
+                    const maxPower = Math.max(...energyData.values)/1000;
+                    setMaxHourlyPower(Math.round(maxPower)); // round for display
+                } else {
+                    setMaxHourlyPower(0);
+                }
+            } catch (error) {
+                console.error('Daily production error:', error);
+            }
+        }
+
+        fetchHourlyProduction();
+        intervalRef1.current = setInterval(fetchHourlyProduction, 300000); // Call every 5 minutes
+        return () => clearInterval(intervalRef1.current);
+    }, []);
+
+    // Generate full day 5-minute interval labels (00:00 → 23:55)
+    const fullDayLabels = [];
+    for (let h = 0; h < 24; h++) {
+        for (let m = 0; m < 60; m += 5) {
+            const hh = h.toString().padStart(2, "0");
+            const mm = m.toString().padStart(2, "0");
+            fullDayLabels.push(`${hh}:${mm}`);
+        }
+    }
+
+    // Convert labels to Date objects for time scale
+    const fullDayDates = fullDayLabels.map(label => {
+        const [hh, mm] = label.split(':').map(Number);
+
+        // Build time in CT
+        const ctTime = chartDayCT.plus({ hours: hh, minutes: mm });
+
+        // Convert to JS Date (UTC internally)
+        return ctTime.toUTC().toJSDate();
+    });
+
+    const datasetPoints = (hourlyProduction?.labels ?? []).map((utcLabel, i) => {
+    const [hh, mm] = utcLabel.split(':').map(Number);
+
+    // Construct a UTC Date for today at hh:mm
+    const utcDate = DateTime.utc().set({ hour: hh, minute: mm, second: 0, millisecond: 0 });
+
+    // Convert to CT
+    const ctDate = utcDate.setZone('America/Chicago');
+        return {
+            x: ctDate.toJSDate(), // CT-aligned Date
+            y: hourlyProduction.values[i],
+        };
+    });   
+
+    const [activeTab, setActiveTab] = useState("historical"); // Active tab state
+    const [generationView, setGenerationView] = useState("daily"); // Active chart generation state
+    
+
+    const [weather, setWeather] = useState(null);
+    const [weatherLoading, setweatherLoading] = useState(true);
+    const [weatherError, SetweatherError] = useState(null);
+    useEffect(() => {
+        if (!lat || !lon) return;
+
+        const controller = new AbortController();
+
+        async function fetchWeather() {
+            try {
+                setweatherLoading(true);
+                SetweatherError(null);
+
+                const res = await fetch(
+                    `/api/weather?lat=${lat}&lon=${lon}`,
+                    { signal: controller.signal }
+                );
+
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || "Failed to fetch weather data");
+                }
+
+                const data = await res.json();
+                if (!data || !data.current) {
+                    throw new Error("Weather data missing current values");
+                }
+
+                console.log("API RESPONSE:", data);
+                setWeather(data);
+            } catch (err) {
+                if (err.name !== "AbortError") {
+                    console.error("Weather API call error:", err);
+                    SetweatherError(err.message);
+                }
+            } finally {
+                setweatherLoading(false);
+            }
+        }
+
+        fetchWeather();
+
+        // Cleanup on unmount or lat/lon change
+        return () => controller.abort();
+    }, []);
+
+    const tempStats = useMemo(() => {
+        if (!weather?.current) return [];
+
+        return [
+            {
+                label: 'Humidity',
+                value: `${weather.current.humidity}%`,
+                icon: '/images/water-droplet.svg',
+                description: 'Environmental humidity level',
+                color: 'blue',
+            },
+            {
+                label: 'Temperature',
+                value: `${weather.current.temp}°C`,
+                icon: '/images/thermometer.svg',
+                description: 'Current ambient temperature',
+                color: 'red',
+            },
+            {
+                label: 'Current Power',
+                value: `${(pvPowerKw/(MAX_PV_POWER/1000)*100).toFixed(2)}%`,
+                icon: '/images/lightning-bolt.svg',
+                description: 'Real-time power generation',
+                color: 'yellow'
+            },
+            {
+                label: 'System Efficiency',
+                value: `72%`,
+                icon: '/images/Sun.svg',
+                description: 'Overall system performance',
+                color: 'green'
+            },
+            {
+                label: 'Daily Peak Power',
+                value: `${maxHourlyPower} kW`,
+                icon: '/images/Sun.svg',
+                description: 'Maximum power achieved today',
+                color: 'orange'
+            },
+            {
+                label: 'Carbon Saved',
+                value: `1250 kg CO₂`,
+                icon: '/images/Wind.svg',
+                description: 'Environmental impact reduction',
+                color: 'emerald'
+            }
+        ];
+    }, [weather]);
+
+    /* const tempStats = [
+        {
+            label: 'Humidity',
+            value: `${weather.current.humidity}%`,
+            icon: '/images/water-droplet.svg',
+            description: 'Environmental humidity level',
+            color: 'blue'
+        },
+        {
+            label: 'Temperature',
+            value: `${weather.current.temp}°C`,
+            icon: '/images/thermometer.svg',
+            description: 'Current ambient temperature',
+            color: 'red'
+        },
+        {
+            label: 'Current Power',
+            value: `85%`,
+            icon: '/images/lightning-bolt.svg',
+            description: 'Real-time power generation',
+            color: 'yellow'
+        },
+        {
+            label: 'System Efficiency',
+            value: `72%`,
+            icon: '/images/Sun.svg',
+            description: 'Overall system performance',
+            color: 'green'
+        },
+        {
+            label: 'Daily Peak Power',
+            value: `3900 kW`,
+            icon: '/images/Sun.svg',
+            description: 'Maximum power achieved today',
+            color: 'orange'
+        },
+        {
+            label: 'Carbon Saved',
+            value: `1250 kg CO₂`,
+            icon: '/images/Wind.svg',
+            description: 'Environmental impact reduction',
+            color: 'emerald'
+        }
+    ]; */
+
+    const weatherUI = {
+        Sunny: {
+            icon: '☀️',
+            title: 'Clear Sky',
+            message: 'Perfect for solar generation',
+        },
+        'Mostly Sunny': {
+            icon: '🌤️',
+            title: 'Mostly Sunny',
+            message: 'Great solar conditions',
+        },
+        'Partly Sunny': {
+            icon: '🌤️',
+            title: 'Partly Sunny',
+            message: 'Moderate solar conditions',
+        },
+        'Partly Cloudy': {
+            icon: '⛅',
+            title: 'Partly Cloudy',
+            message: 'Moderate solar output expected',
+        },
+        'Mostly Cloudy': {
+            icon: '⛅',
+            title: 'Mostly Cloudy',
+            message: 'Reduced solar output expected',
+        },
+        Cloudy: {
+            icon: '☁️',
+            title: 'Cloudy',
+            message: 'Reduced solar efficiency',
+        },
+        'Slight Chance Rain Showers': {
+            icon: '☁️',
+            title: 'Cloudy',
+            message: 'Reduced solar efficiency',
+        },
+        Rain: {
+            icon: '🌧️',
+            title: 'Rainy',
+            message: 'Low solar generation expected',
+        },
+        Thunderstorms: {
+            icon: '⛈️',
+            title: 'Stormy',
+            message: 'Solar generation disrupted',
+        },
+        default: {
+            icon: '🌡️',
+            title: 'Weather Update',
+            message: 'Conditions are changing',
+        },
+    };
+
+    const condition = weather?.current?.condition;
+    console.log(`Condition: ${condition}`);// Chance Rain Showers
+    const weatherDisplay = weatherUI[condition] || weatherUI.default;
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -252,157 +572,513 @@ export default function TowerSelect(){
                 )}
             </div>
 
-            <div className='mt-8'>
-                {/* Page title */}
-                <h1 className='md:pb-20 pb-8 text-4xl font-bold'>Your Tower Dashboard</h1>
+            {/* Page title */}
+            <div className='my-8'>    
+                <h1 className='text-4xl font-bold'>Your Tower Dashboard</h1>
             </div>
 
+            {/* New dashboard design */}
+            <div className="card mx-10 px-4 py-4 mb-10 relative overflow-hidden bg-white rounded-md shadow-black shadow-md border-t-1 border-black">
+                {/* Header */}
+                <h2 className="font-bold uppercase tracking-wide mb-4 flex items-center">
+                    <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                    Live Tower Status
+                </h2>
 
+                {/* Status Banner */}
+                <div className="mb-4 p-3 bg-green-500/10 border border-green-500 rounded-lg">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <div className="relative">
+                                <div className="w-12 h-12 rounded-full border-4 flex items-center justify-center">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-blue-400 flex items-center justify-center">
+                                        <span className="text-sm font-bold">●</span>
+                                    </div>
+                                </div>
+                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                            </div>
+                            
+                            <div>
+                                <p className="text-sm font-medium">Tower Status</p>
+                                <p className="text-xs">Online & Operational</p>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-xs">Status</div>
+                            <div className="text-sm font-medium text-green-700">Online</div>
+                        </div>
+                    </div>
+                </div>
 
+                {/* Main Content */}
+                <div className="flex flex-col lg:flex-row items-center justify-around p-4 relative">
+                    {/* Power Output Ring */}
+                    <div className="relative w-64 h-64 flex flex-col items-center justify-center">
+                        <div className="relative w-64 h-64 flex items-center justify-center">
+                            <div className="absolute text-4xl font-bold z-10 animate-pulse">
+                                <span className="accent-orange">{pvPowerKw.toFixed(2)}</span> kW
+                            </div>
 
+                            <svg
+                                className="w-64 h-64 absolute"
+                                viewBox="0 0 100 100"
+                            >
+                                {/* Background */}
+                                <circle
+                                    cx="50"
+                                    cy="50"
+                                    r={RADIUS}
+                                    fill="transparent"
+                                    stroke="#d1d5db"
+                                    strokeWidth="8"
+                                />
 
+                                {/* Power Ring */}
+                                <circle
+                                    cx="50"
+                                    cy="50"
+                                    r={RADIUS}
+                                    fill="transparent"
+                                    stroke="url(#powerGradient)"
+                                    strokeWidth="8"
+                                    strokeDasharray={CIRCUMFERENCE}
+                                    strokeDashoffset={dashOffset}
+                                    strokeLinecap="round"
+                                    transform="rotate(-90 50 50)"
+                                    className="transition-all duration-1000 ease-in-out"
+                                />
 
-
-
-
-            {/* New dashboard design  flex justify-center */}
-            <div className="grid grid-cols-3 gap-4">
-                <div className="flex justify-center">                
-                    <div className="bg-white rounded-md shadow-lg  p-10 flex flex-col items-center h-full">
-                        <svg width="200" height="200" viewBox="0 0 100 100">
-                            {/* Background ring */}
-                            <circle
-                                cx="50"
-                                cy="50"
-                                r={RADIUS}
-                                fill="transparent"
-                                stroke="#e5e7eb"
-                                strokeWidth="8"
-                            />
-
-                            {/* Power ring */}
-                            <circle
-                                cx="50"
-                                cy="50"
-                                r={RADIUS}
-                                fill="transparent"
-                                stroke="url(#powerGradient)"
-                                strokeWidth="8"
-                                strokeDasharray={CIRCUMFERENCE}
-                                strokeDashoffset={dashOffset}
-                                strokeLinecap="round"
-                                className="transition-all duration-1000 ease-in-out"
-                                transform="rotate(-90 50 50)" // start from top
-                            />
-
-                            <defs>
-                                <linearGradient
-                                    id="powerGradient"
-                                    x1="0%"
-                                    y1="0%"
-                                    x2="100%"
-                                    y2="100%"
-                                >
+                                <defs>
+                                    <linearGradient id="powerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor="#fbbf24" />
                                     <stop offset="50%" stopColor="#f59e0b" />
                                     <stop offset="100%" stopColor="#d97706" />
-                                </linearGradient>
-                            </defs>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <p className="mt-6 text-lg font-bold text-center">
+                            Current Power Output
+                        </p>
+                    </div>
 
-                            {/* Center value */}
-                            <text
-                                x="50"
-                                y="48"
-                                textAnchor="middle"
-                                fontSize="14"
-                                fontWeight="600"
-                                fill="#111827"
-                            >
-                                {pvPowerKw.toFixed(2)}
-                            </text>
-                            <text
-                                x="50"
-                                y="62"
-                                textAnchor="middle"
-                                fontSize="10"
-                                fill="#6b7280"
-                            >
-                                kW
-                            </text>
-                        </svg>
+                    {/* Tower + Angle */}
+                    <div className="flex flex-col items-center">
+                        <div className="relative">
+                            <img
+                                src="/images/Tower-Drawing.svg"
+                                className="w-72 h-72 mb-4 logo-invert drop-shadow-lg transition-all duration-300 hover:scale-105"
+                            />
+                            <div className="absolute inset-0 w-72 h-72 bg-white/5 rounded-full blur-xl -z-10"/>
+                        </div>
 
-                        <p className="pt-4 text-lg text-black font-bold">
-                            Live PV Power
+                        {/* Angle Indicator */}
+                        <div className="flex flex-col items-center mb-3 ml-12">
+                            <div className="flex items-center space-x-3">
+                                <div className="relative w-8 h-8"/>
+                                    <div
+                                        className="absolute inset-0 rounded-full"
+                                        style={{ transform: `rotate(${towerAngle}deg)` }}
+                                    >
+                                        <div className="w-1 h-3 rounded-full"/>
+                                    </div>
+                                </div>
+                                <p className="text-2xl font-bold leading-none">
+                                    <span className="text-blue-600">{Math.floor(towerAngle)}</span>°
+                                </p>
+                        </div>
+                        <p className="mt-1 text-sm ml-12 font-medium">
+                            Tower Angle
                         </p>
                     </div>
                 </div>
-                <div className="flex">
-                    {/* Bar Chart */}
-                    {dailyProduction && (
-                        <div className="bg-white rounded-xl p-4 shadow-lg flex-1 h-full flex flex-col">
-                            <h3 className="text-black font-bold text-lg mb-4">
-                                Monthly Production (kWh)
-                            </h3>
+            </div>
+            <div className="card mx-10 mb-10 px-4 py-4 relative overflow-hidden bg-white rounded-md shadow-black shadow-md border-t-1 border-black">
+                <h2 className="text-base font-bold uppercase tracking-wide mb-4 flex items-center">
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full mr-2"></span>
+                    Daily Performance Metrics
+                </h2>
+                
+                {/* Status Overview Bar */}
+                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                    <div className="p-3 status-success rounded-lg bg-green-500/10 border border-green-500">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"/>
+                                <span className="text-sm font-medium">Tower Online</span>
+                            </div>
+                            <div className="text-xs">
+                                Last updated: {new Date().toLocaleTimeString()}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Weather Widget */}
+                    <div className="p-3 border border-gray-300 rounded-lg">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                                <div className="text-2xl">{weatherDisplay.icon}</div>
+                                <div>
+                                    <p className="text-sm text-blue-600 font-medium text-left">{weatherDisplay.title}</p>
+                                    <p className="text-xs text-left">{weatherDisplay.message}</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                {weather?.current ? (
+                                    <>
+                                        <div className="text-sm font-bold">
+                                            {weather.current.temp}°C
+                                        </div>
+                                        <div className="text-xs">
+                                            Humidity: {weather.current.humidity}%
+                                        </div>
+                                    </>
+                                    ) : (
+                                    <div>Loading...</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {tempStats.map((stat, index) => (
+                        <div key={index} className="stat-card flex items-center p-3 space-x-3 relative overflow-hidden group border-1 border-gray-300 rounded-md shadow-md">
+                            <div className="flex-shrink-0">
+                                <img 
+                                    src={stat.icon} 
+                                    alt={stat.label}
+                                    className="w-6 h-6 opacity-90 drop-shadow-sm"
+                                />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <p className="text-xs uppercase font-medium mb-1">{stat.label}</p>
+                                <p className="text-lg font-bold mb-1 drop-shadow-sm">
+                                    <span className={`${
+                                        stat.label === 'Humidity' ? 'text-blue-600' :
+                                        stat.label === 'Temperature' ? 'text-red-500' :
+                                        stat.label === 'Current Power' ? 'text-orange-600' :
+                                        stat.label === 'System Efficiency' ? 'text-green-600' :
+                                        stat.label === 'Daily Peak Power' ? 'text-orange-600' :
+                                        'text-green-600'
+                                    }`}>{stat.value}</span>
+                                </p>
+                                <p className="text-xs">{stat.description}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
 
-                            <div className="flex-1">
-                            <Bar
-                                data={{
-                                    labels: dailyProduction.labels,
-                                    datasets: [
-                                        {
-                                            label: "Energy Output",
-                                            data: dailyProduction.values,
-                                            backgroundColor: "#f59e0b",
-                                            borderColor: "#f59e0b",
-                                            borderWidth: 2,
-                                            borderRadius: 4,
-                                            barPercentage: 0.8,
-                                            categoryPercentage: 0.9,
-                                        },
-                                    ],
-                                }}
-                                options={{
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    //aspectRatio: 3,
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            title: {
-                                                display: true,
-                                                text: "kWh",
-                                            },
-                                        },
-                                    },
-                                    plugins: {
-                                        legend: { display: false },
-                                    },
-                                }}
-                                className="h-full"
-                            /> 
+            <div className="card mx-10 mb-10 px-4 py-4 relative overflow-hidden bg-white rounded-md shadow-black shadow-md border-t-1 border-black">
+                {/* Toggle Switch*/}
+                <div className="flex space-x-6 mx-auto text-lg mb-8">
+                    <button
+                        className={`tab border-b-2 hover:cursor-pointer
+                        ${activeTab === "historical"
+                            ? "border-black"
+                            : "border-transparent hover:border-gray-400"}
+                        `}
+                        onClick={() => setActiveTab("historical")}
+                    >
+                        Historical
+                    </button>
+                    <button
+                        className={`tab border-b-2 hover:cursor-pointer
+                        ${activeTab === "diagnostics"
+                            ? "border-black"
+                            : "border-transparent hover:border-gray-400"}
+                        `}
+                        onClick={() => setActiveTab("diagnostics")}
+                    >
+                        Diagnostics
+                    </button>
+                    <button
+                        className={`tab border-b-2 hover:cursor-pointer
+                        ${activeTab === "control"
+                            ? "border-black"
+                            : "border-transparent hover:border-gray-400"}
+                        `}
+                        onClick={() => setActiveTab("control")}
+                    >
+                        Control
+                    </button>
+                </div>
+                {/* Content Area */}
+                <div className="min-h-[200px]">
+                    {activeTab === "historical" && (
+                        <div>
+                            <h4 className="text-2xl text-black font-bold tracking-wide my-4">Historical Power Data</h4> 
+                            {/* Generation Timeframe Toggle */}
+                            <div className="flex justify-start mb-4">
+                                <div className="inline-flex space-x-2 bg-gray-100 rounded-md p-2">
+                                    {[
+                                        { id: "daily", label: "Daily" },
+                                        { id: "weekly", label: "Weekly" },
+                                        { id: "monthly", label: "Monthly" },
+                                    ].map((option) => (
+                                    <button
+                                        key={option.id}
+                                        onClick={() => setGenerationView(option.id)}
+                                        className={`px-3 py-1.5 text-sm font-medium transition-all duration-300 rounded-md
+                                        ${
+                                            generationView === option.id
+                                            ? "bg-blue-600 text-white shadow-sm"
+                                            : "text-gray-600 hover:text-black hover:cursor-pointer"
+                                        }`}
+                                    >
+                                        {option.label}
+                                    </button>
+                                    ))}
+                                </div>
+                            </div>
+                            {/* Historical charts go here */}
+                            <div className='w-full h-450px p-4'>
+                                {generationView === "daily" && hourlyProduction && (
+                                    <div className="">
+                                        {/* Daily line chart */}
+                                        {hourlyProduction && (
+                                            <div style={{ height: "250px" }}>
+                                                <Line
+                                                    data={{
+                                                        //labels: x,
+                                                        datasets: [
+                                                            {
+                                                                label: "Power Output",
+                                                                data: datasetPoints,
+                                                                //data: hourlyProduction.values,
+                                                                borderColor: "#f59e0b",
+                                                                fill: 'start',
+                                                                backgroundColor: "#f59e0b",
+                                                                borderWidth: 2,
+                                                                pointRadius: 0,
+                                                                pointHoverRadius: 4,
+                                                                pointHitRadius: 10,
+                                                                spanGaps: true,
+                                                                tension: 0.2,
+                                                                cubicInterpolationMode: 'monotone',
+                                                            },
+                                                        ],
+                                                    }}
+                                                    options={{
+                                                        responsive: true,
+                                                        maintainAspectRatio: false,
+                                                        //aspectRatio: 3,
+                                                        scales: {
+                                                            x: {
+                                                                type: 'time',
+                                                                adapters: {
+                                                                    date: {
+                                                                        zone: 'America/Chicago', // CT
+                                                                    },
+                                                                },
+                                                                min: fullDayDates[0],
+                                                                max: fullDayDates[fullDayDates.length - 1],
+                                                                time: {
+                                                                    unit: 'hour',
+                                                                    tooltipFormat: 'HH:mm',
+                                                                    displayFormats: {
+                                                                        hour: 'HH:mm',
+                                                                    },
+                                                                },
+                                                                grid: {
+                                                                    display: false, // removes all X-axis grid lines
+                                                                    drawTicks: false,
+                                                                },
+                                                                ticks: {
+                                                                    autoSkip: false,
+                                                                    maxRotation: 0,
+                                                                    align: 'center',
+                                                                },
+                                                            },
+                                                            y: {
+                                                                beginAtZero: true,
+                                                                title: {
+                                                                    display: true,
+                                                                    text: "watts",
+                                                                    fontSize: 44,
+                                                                },
+                                                            },
+                                                        },
+                                                        plugins: {
+                                                            legend: { display: false },
+                                                            tooltip: {
+                                                                callbacks: {
+                                                                    title: items => items[0].label,
+                                                                },
+                                                            },
+                                                            legend: { display: false },
+                                                        },
+                                                    }}
+                                                /> 
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {generationView === "weekly" && (
+                                    <div className="">
+                                        {/* Weekly aggregated line chart */}
+                                        {weeklyProduction && (
+                                            <div style={{ height: "250px" }}>
+                                                <Bar
+                                                data={{
+                                                    labels: weeklyProduction.labels,
+                                                    datasets: [
+                                                    {
+                                                        label: "Weekly Energy Output",
+                                                        data: weeklyProduction.values,
+                                                        backgroundColor: "#f59e0b",
+                                                        borderColor: "#f59e0b",
+                                                        borderRadius: 4,
+                                                        barPercentage: 0.7,
+                                                        categoryPercentage: 0.8,
+                                                    },
+                                                    ],
+                                                }}
+                                                options={{
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        title: {
+                                                        display: true,
+                                                        text: "kWh",
+                                                        },
+                                                    },
+                                                    },
+                                                    plugins: {
+                                                    legend: { display: false },
+                                                    },
+                                                }}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {generationView === "monthly" && (
+                                    <div className="" style={{ height: "250px" }}>
+                                        {/* Monthly bar chart */}
+                                        <Bar
+                                            data={{
+                                                labels: dailyProduction.labels,
+                                                datasets: [
+                                                    {
+                                                        label: "Energy Output",
+                                                        data: dailyProduction.values,
+                                                        backgroundColor: "#f59e0b",
+                                                        borderColor: "#f59e0b",
+                                                        borderWidth: 2,
+                                                        borderRadius: 4,
+                                                        barPercentage: 0.8,
+                                                        categoryPercentage: 0.9,
+                                                    },
+                                                ],
+                                            }}
+                                            options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                //aspectRatio: 3,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        title: {
+                                                            display: true,
+                                                            text: "kWh",
+                                                        },
+                                                    },
+                                                },
+                                                plugins: {
+                                                    legend: { display: false },
+                                                },
+                                            }}
+                                            className="h-full"
+                                        /> 
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "diagnostics" && (
+                        <div>
+                            <h4 className="text-2xl text-black font-bold tracking-wide my-4">System Diagnostics</h4>
+                            {/* Diagnostics content */}
+                            <div className='flex flex-col'>
+                                <ul className="grid grid-cols-2 gap-3 p-4 text-black">
+                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Tower</span>
+                                        <span className="text-green-600 font-semibold">Online</span>
+                                    </li>
+
+                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Motor</span>
+                                        <span className="text-green-600 font-semibold">Online</span>
+                                    </li>
+
+                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Relay</span>
+                                        <span className="text-green-600 font-semibold">Online</span>
+                                    </li>
+
+                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Limit Switch</span>
+                                        <span className="text-green-600 font-semibold">Online</span>
+                                    </li>
+                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Communication Protocol</span>
+                                        <span className="text-green-600 font-semibold">Online</span>
+                                    </li>
+                                    {/* Fault/offline: text-red-600; warning: text-yellow-500   */}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "control" && (
+                        <div>
+                            <h4 className="text-2xl text-black font-bold tracking-wide my-4">Control Panel</h4>
+                            {/* Control actions */}
+                            <div className='flex flex-col'>
+                                <ul className="grid grid-cols-2 gap-3 p-4 text-black">
+                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Restart</span>
+                                        <span className="text-xs">Reboot tower systems and all components</span>
+                                    </li>
+
+                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Reset</span>
+                                        <span className="text-xs">Reset to default factory settings</span>
+                                    </li>
+
+                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Go Home</span>
+                                        <span className="text-xs">Return tower to home position</span>
+                                    </li>
+
+                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Enter Maintenance</span>
+                                        <span className="text-xs">Enable maintenance mode for repairs</span>
+                                    </li>
+
+                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Leave Maintenance</span>
+                                        <span className="text-xs">Exit maintenance mode and resume operation</span>
+                                    </li>
+
+                                    
+                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Stop Command</span>
+                                        <span className="text-xs">Emergency stop all operations</span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-
-
-
-
-
-
-
-
-            {/*
-
-            
-            
-    
-            */}
-
-
-
-
         </div>
     ) 
 }
