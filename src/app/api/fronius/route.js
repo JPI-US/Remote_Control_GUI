@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 import { DateTime } from 'luxon';
+import jwt from "jsonwebtoken";
 
 const BASE_URL = "https://api.solarweb.com/swqapi/pvsystems";
 
@@ -8,8 +10,6 @@ const headers = {
     AccessKeyId: process.env.SOLAR_KEY_ID,
     AccessKeyValue: process.env.SOLAR_KEY_VALUE,
 };
-
-const deviceTimezoneOffset = -6;
 
 /**
  * Generic SolarWeb fetch helper
@@ -30,14 +30,21 @@ async function fetchSolar(url, label) {
 
 export async function GET(request) {
     try {
+        const token = request.cookies.get("session")?.value;
+        
+        if (!token) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const customerId = decoded.sub;
+
         if (!headers.AccessKeyId || !headers.AccessKeyValue) {
             throw new Error("Missing SolarWeb API credentials");
         }
 
         const { searchParams } = new URL(request.url);
         const systemId = searchParams.get("systemId");
-        const year = searchParams.get("year");
-        const month = searchParams.get("month");
 
         if (!systemId) {
             return NextResponse.json(
@@ -46,31 +53,46 @@ export async function GET(request) {
             );
         }
 
-        const timezoneOffsetHours = -5; // customer Timezone offset Update from postgres
-        const now = new Date(); //Get current datetime from current location
-        console.log(`Current date: ${now}`);
+        // Fetch system from DB
+        const system = await prisma.systems.findUnique({
+            where: { id: 2 },
+            select: { timezone: true },
+        });
 
-        // Current location date
-        const y = String(year ?? now.getFullYear());
-        const m = String(month ?? now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
+        if (!system) {
+            return NextResponse.json({ error: "System not found" }, { status: 404 });
+        }
 
-        // Build From & today at
-        const current_loc_date = `${y}-${m}-${d}`;
-        console.log(`Current location date: ${current_loc_date}`);
+        // Get System timezone
+        const systemTZ = system.timezone ?? "America/Chicago";
 
-        // Current location time
-        const hrs = String(now.getHours()).padStart(2, '0'); 
-        const mins = String(now.getMinutes()).padStart(2, '0'); 
+        // Get current time based on system timezone
+        const nowSystem = DateTime.now().setZone(systemTZ);
 
-        // Hour & minute calculation with 30 minute subtract
-        const tempDate = new Date(); // Create date object
-        tempDate.setHours(parseInt(hrs, 10)); // Set hours
-        tempDate.setMinutes(parseInt(mins, 10)); // Set mins
-        tempDate.setMinutes(tempDate.getMinutes() - 30); //Subtract 30 minutes for delay
-        const calc_hour = tempDate.getHours(); // Get the hours after delay
-        const hour_actual = String(calc_hour-(timezoneOffsetHours)).padStart(2, '0');// Perfom timezone offset calculation
-        const minute_actual = tempDate.getMinutes().toString().padStart(2, '0'); //Get the minutes after delay
+        // Get year, month, and day for current timezone
+        const y = nowSystem.year;// 2026
+        const m = nowSystem.month;// 1–12
+        const d = nowSystem.day;// 1–31
+
+        // Apply the same 30-minute delay
+        const delayedSystemTime = nowSystem.minus({ minutes: 30 });
+
+        // Start of today in system timezone
+        const fromSystem = nowSystem.startOf("day");
+
+        // Convert both to UTC which fronius uses
+        const dalayedHour = delayedSystemTime.hour;     // 0-23
+        const dalayedMinute = delayedSystemTime.minute; // 0-59
+
+        // Convert both to UTC
+        const fromUTC = fromSystem.toUTC();
+        const toUTC   = delayedSystemTime.toUTC();
+
+        //Fronius formatting
+        const fromISO = fromUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        const toISO   = toUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+ 
+        /* 
 
         if (m < 1 || m > 12) {
             return NextResponse.json(
@@ -78,17 +100,20 @@ export async function GET(request) {
                 { status: 400 }
             );
         }
+        */
 
-        // Solar web endpoints
         const endpoints = {
             live: `${BASE_URL}/${systemId}/LiveData`,
-            dailyproductionforMonth: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/${m}/days`,
-            dailyProduction:`${BASE_URL}/${systemId}/histdata` +
-                `?From=${current_loc_date}T06%3A00%3A00Z` +
-                `&To=${current_loc_date}T${hour_actual}%3A${minute_actual}%3A00Z` + 
+            dailyProduction: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/${m}/days`,
+            monthlyProduction: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/`,
+            yearlyProduction: `${BASE_URL}/${systemId}/aggdata/years/`,
+            hourlyProduction:`${BASE_URL}/${systemId}/histdata` +
+                `?From=${encodeURIComponent(fromISO)}` +
+                `&To=${encodeURIComponent(toISO)}` + 
                 `&Channel=EnergyProductionTotal&Limit=10000&Offset=0`,
-        };
-        // ${y} 
+            total: `${BASE_URL}/${systemId}/aggdata`,
+        }; 
+
         const results = await Promise.allSettled(
             Object.entries(endpoints).map(([key, url]) =>
                 fetchSolar(url, key).then(data => [key, data])
@@ -107,16 +132,23 @@ export async function GET(request) {
             if (result.status === "fulfilled") {
                 const [key, data] = result.value;
 
-                if (key === "dailyproductionforMonth") {
-                    response.data.production = normalizeMonthlyProduction(data);
+                if (key === "hourlyProduction") {
+                    response.data.hourlyproduction = normalizeHourlyProduction(data);
                 }
-
-                if (key === "dailyProduction") {
-                    response.data.energy = normalizeDailyProduction(data);
+                else if (key === "dailyProduction") {
+                    response.data.dailyproduction = normalizeDailyProduction(data, systemTZ);
                 }
-
-                if (key === "live") {
+                else if (key === "monthlyProduction") {
+                    response.data.monthlyproduction = normalizeMonthlyProduction(data);
+                }
+                else if (key === "yearlyProduction") {
+                    response.data.yearlyproduction = normalizeYearlyProduction(data);
+                }
+                else if (key === "live") {
                     response.data.live = normalizeLiveData(data);
+                }
+                else if (key === "total") {
+                    response.data.total = normalizetotalData(data);
                 }
             } else {
                 response.errors.push(result.reason.message);
@@ -135,9 +167,9 @@ export async function GET(request) {
     }
 }
 /**
- * Normalize daily aggregated energy values (kWh)
+ * Normalize hourly aggregated energy values (kWh)
  */
-function normalizeDailyProduction(data) {
+function normalizeHourlyProduction(data) {
     const entries = data?.data;
 
     if (!Array.isArray(entries)) {
@@ -187,7 +219,7 @@ function normalizeDailyProduction(data) {
 /**
  * Normalize daily aggregated energy values for the month (kWh)
  */
-function normalizeMonthlyProduction(data) {
+function normalizeDailyProduction(data, systemTZ) {
     const channels = data?.data?.channels;
 
     if (!Array.isArray(channels)) {
@@ -202,13 +234,24 @@ function normalizeMonthlyProduction(data) {
         return { labels: [], values: [] };
     }
 
-    const entries = Object.entries(channel.values)
-        .sort(([a], [b]) => Number(a) - Number(b));
+    // Convert channel.values to a Map for easy lookup
+    const dayMap = new Map(
+        Object.entries(channel.values).map(([day, value]) => [Number(day), value])
+    );
 
-    return {
-        labels: entries.map(([day]) => `Day ${day}`),
-        values: entries.map(([, value]) => value / 1000), // Wh → kWh
-    };
+    // Determine month and number of days based on system timezone
+    const nowSystem = DateTime.now().setZone(systemTZ);
+    const daysInMonth = nowSystem.daysInMonth;
+
+    const labels = [];
+    const values = [];
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        labels.push(day);
+        values.push((dayMap.get(day) ?? 0) / 1000); // Wh → kWh
+    }
+
+    return { labels, values };
 }
 
 /**
@@ -231,5 +274,78 @@ function normalizeLiveData(data) {
         timestamp: new Date().toISOString(),
         pvPower: channels.PowerPV ?? 0, 
         online: data.status?.isOnline ?? false,
+    };
+}
+//Normalized total data
+function normalizetotalData(data){
+    if (!data?.data?.channels){
+        return 0;
+    }
+
+    const channel = data.data.channels.find(
+        ch => ch.channelName === "EnergyProductionTotal"
+    );
+
+    if (!channel?.values?.total) return 0;
+    
+    return channel.values.total / 1000; // convert Wh -> kWh
+}
+
+/**
+ * Normalize daily aggregated energy values for the month (kWh)
+ */
+function normalizeMonthlyProduction(data) {
+    const channels = data?.data?.channels;
+
+    if (!Array.isArray(channels)) {
+        return { labels: [], values: [] };
+    }
+
+    const channel = channels.find(
+        c => c.channelName === "EnergyOutput"
+    );
+
+    if (!channel?.values) {
+        return { labels: [], values: [] };
+    }
+
+    const monthMap = channel.values;
+    const labels = [];
+    const values = [];
+
+    for (let month = 1; month <= 12; month++) {
+        labels.push(month); // keep numeric months for consistency
+
+        const raw = monthMap[String(month)] ?? 0;  // fill missing months
+        values.push(raw / 1000);                   // Wh → kWh
+    }
+
+    return { labels, values };
+}
+
+/**
+ * Normalize yearly aggregated energy values for the month (kWh)
+ */
+function normalizeYearlyProduction(data) {
+    const channels = data?.data?.channels;
+
+    if (!Array.isArray(channels)) {
+        return { labels: [], values: [] };
+    }
+
+    const channel = channels.find(
+        c => c.channelName === "EnergyOutput"
+    );
+
+    if (!channel?.values) {
+        return { labels: [], values: [] };
+    }
+
+    const entries = Object.entries(channel.values)
+        .sort(([a], [b]) => Number(a) - Number(b));
+
+    return {
+        labels: entries.map(([year]) => Number(year)),
+        values: entries.map(([, value]) => (value / 1000000).toFixed(2)), // Wh → MWh
     };
 }

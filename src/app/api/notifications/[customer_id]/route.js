@@ -9,12 +9,25 @@ export async function GET(request, context){
         }
         await (context.params);
 
+        const token = request.cookies.get('session')?.value;
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const authUserId = decoded.sub;
+
         const idParam = (await (context.params)).customer_id;
         const customerId = parseInt(idParam);
 
         if (isNaN(customerId)) {
             console.error('Invalid customer ID:', idParam);
             return NextResponse.json({ error: 'Invalid customer ID' }, { status: 400 });
+        }
+
+        // Only allow the user to access their own data
+        if (userId !== authUserId) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
         const notifications = await prisma.notifications.findUnique({

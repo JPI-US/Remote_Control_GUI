@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -9,100 +10,202 @@ datasource db {
 }
 
 model Customer {
-  id            Int    @id @default(autoincrement())
-  name          String
-  email         String @unique
-  address_id    Int
-  country_code  Int
-  phone_number  Int?   @unique
-  customer_type String
-  password_hash String
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(255)
+  email            String             @unique(map: "customers_unique") @db.VarChar(255)
+  address_id       Int?
+  country_code     String?            @db.VarChar(255)
+  phone_number     String?            @db.VarChar(255)
+  customer_type    String             @db.VarChar(255)
+  password_hash    String             @db.VarChar(255)
+  notification     Notifications[]
+  orders           orders[]
+  setting          Settings[]
+  software_tickets software_tickets[]
+  systems          Systems[]
+  tower_logs       tower_logs[]
+  tower            Towers[]
 
-  setting      Settings?
-  notification Notifications?
-  tower        Towers?
-
-  @@map("customers") // This tells Prisma the actual table in the DB is named "customers"
+  @@map("customers")
 }
 
 model Settings {
-  settings_id        Int       @id @default(autoincrement())
-  customer_id        Int       @unique
-  theme              String    @default("Light")
-  time_zone          String    @default("Central Time (CT)")
-  text_size          String    @default("Medium")
-  bold_text          Boolean   @default(false)
-  update_frequency   String    @default("15 minutes")
-  region             String    @default("North America")
-  language           String    @default("en")
-  twentyfourhourtime Boolean   @default(false)
-  last_login_device  String    @default("N/A")
-  last_login         DateTime?
-  email_recovery     String? // Once unique value added in database add @unique 
-  phone_recovery     String? // Once unique value added in database add @unique
+  settings_id        Int      @id @default(autoincrement())
+  customer_id        Int      @unique
+  theme              String?  @db.VarChar(10)
+  time_zone          String?  @db.VarChar(100)
+  text_size          String   @default("Medium") @db.VarChar(20)
+  bold_text          Boolean?
+  update_frequency   String?  @db.VarChar(50)
+  region             String?  @db.VarChar(100)
+  language           String?  @db.VarChar(5)
+  twentyfourhourtime Boolean?
+  last_login_device  String   @default("N/A") @db.VarChar(100)
+  last_login         DateTime @default(now()) @db.Timestamptz(0)
+  email_recovery     String?  @db.VarChar(255)
+  phone_recovery     String?  @db.VarChar(20)
+  customer           Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_settings_customer")
 
-  customer Customer @relation(fields: [customer_id], references: [id]) // Relation field
+  @@map("settings")
+}
 
-  @@map("settings") // This tells Prisma the actual table in the DB is named "customers"
+model Systems {
+  id                Int       @id @default(autoincrement())
+  system_name       String    @db.VarChar(100)
+  inverter_type     String?   @db.VarChar(100)
+  customer_id       Int?
+  timezone          String?   @db.VarChar(50)
+  installation_date DateTime? @db.Date
+  status            String?   @default("ACTIVE") @db.VarChar(50)
+  total_towers      Int?      @default(0)
+  max_pv_kw         Decimal?  @default(0) @db.Decimal(10, 2)
+  software_version  String?   @db.VarChar(50)
+  api_key           String?   @db.VarChar(200)
+  latitude          Decimal   @default(0) @db.Decimal(9, 7)
+  longitude         Decimal   @default(0) @db.Decimal(10, 7)
+  customer          Customer? @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_system_customer")
+  towers            Towers[]
+
+  @@map("systems")
 }
 
 model Notifications {
-  notifications_id Int @id @default(autoincrement())
-  customer_id      Int @unique
+  notifications_id           Int       @id @default(autoincrement())
+  customer_id                Int?
+  push_notifications_enabled Boolean?
+  push_notify_login          Boolean?
+  notification_tone          String?   @db.VarChar(100)
+  email_marketing            Boolean?
+  email_account_activity     Boolean?
+  email_newsletter           Boolean?
+  sms_password_changes       Boolean?
+  sms_login_attempts         Boolean?
+  customer                   Customer? @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_notification_customer")
 
-  push_notifications_enabled Boolean @default(false)
-  push_notify_login          Boolean @default(false)
-  notification_tone          String  @default("Chime")
-
-  email_marketing        Boolean @default(false)
-  email_account_activity Boolean @default(false)
-  email_newsletter       Boolean @default(false)
-  sms_password_changes   Boolean @default(false)
-  sms_login_attempts     Boolean @default(false)
-
-  customer Customer @relation(fields: [customer_id], references: [id]) // Relation field
-
-  @@map("notifications") // This tells Prisma the actual table in the DB is named "customers"
+  @@map("notifications")
 }
 
 model Towers {
-  id    Int @id @default(autoincrement())
-  model Int @default(0)
-
-  latitude         Decimal
-  longitude        Decimal
-  customer_id      Int     @unique
-  order_id         Int     @unique
-  state            Int
+  id               Int          @id @default(autoincrement())
+  model            String       @db.VarChar(255)
+  latitude         Decimal      @db.Decimal(8, 6)
+  longitude        Decimal      @db.Decimal(9, 6)
+  customer_id      Int
+  order_id         Int
+  state            Int?
   c_group          Int
   error_state      Int
   length           Int
   height           Int
   width            Int
-  software_version String
+  software_version String?
+  current_angle    Decimal?     @db.Decimal(5, 2)
+  system_id        Int?
+  tower_logs       tower_logs[]
+  customer         Customer     @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_customer")
+  orders           orders       @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_order")
+  system           Systems?     @relation(fields: [system_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_systems")
 
-  telemetry Telemetry?
-
-  customer Customer @relation(fields: [customer_id], references: [id]) // Relation field
-
-  @@map("towers") // This tells Prisma the actual table in the DB is named "customers"
+  @@map("towers")
 }
 
 model Telemetry {
-  id        Int      @id @default(autoincrement())
-  date_time DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  date_time    DateTime @default(now()) @db.Timestamptz(6)
+  tower_id     Int
+  humidity     Float?
+  temperature  Float?
+  pressure     Float?
+  status       Int?
+  power_output Float
+  clouds       Boolean?
+  solar_flux   Int?
+  angle        Float?
 
-  tower_id     Int     @unique
-  humidity     Float
-  temperature  Float
-  pressure     Float   @default(335.75)
-  status       Int
-  power_output Int
-  clouds       Boolean @default(false)
-  solar_flux   Int
-  angle        Float
+  @@map("telemetry")
+}
 
-  towers Towers @relation(fields: [tower_id], references: [id]) // Relation field
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model addresses {
+  id              Int
+  line_1          String? @db.VarChar(255)
+  line_2          String? @db.VarChar(255)
+  line_3          String? @db.VarChar(255)
+  line_4          String? @db.VarChar(255)
+  city            String? @db.VarChar(255)
+  county_province String? @db.VarChar(255)
+  zip_postcode    String? @db.VarChar(255)
+  country         String? @db.VarChar(255)
+  other           String? @db.VarChar(1000)
 
-  @@map("telemetry") // This tells Prisma the actual table in the DB is named "customers"
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model components {
+  id       Int
+  l_sensor Int
+  h_sensor Int
+  t_sensor Int
+  p_sensor Int
+  l_switch Int
+  compass  Int
+  motor    Int
+  panels   Int
+  relay    Int
+  wiper    Int
+
+  @@ignore
+}
+
+model energy {
+  day    Int
+  month  Int
+  year   Int
+  tower  Int
+  energy Float?
+  id     Int    @id @default(autoincrement())
+}
+
+model orders {
+  id               Int      @id @default(autoincrement())
+  customer_id      Int
+  tower_count      Int
+  address_id       Int
+  price            Int
+  currency         String   @db.VarChar(255)
+  state            String   @db.VarChar(255)
+  date_time        DateTime @db.Timestamptz(6)
+  payment_received Boolean
+  customers        Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orders_customer")
+  towers           Towers[]
+}
+
+model software_tickets {
+  id          Int      @id @default(autoincrement())
+  customer_id Int
+  email       String   @db.VarChar(255)
+  subject     String   @db.VarChar(255)
+  message     String   @db.VarChar(3000)
+  date_time   DateTime @default(now()) @db.Timestamptz(6)
+  handled     Boolean
+  customers   Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_stickets_customer")
+}
+
+model tower_logs {
+  id          Int      @id
+  customer_id Int
+  type        String   @db.VarChar(255)
+  message     String   @db.VarChar(3000)
+  date_time   DateTime @default(now()) @db.Timestamptz(6)
+  tower_id    Int?
+  closed      Boolean
+  customers   Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tlogs_customer")
+  towers      Towers?  @relation(fields: [tower_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tlogs_tower")
+}
+
+model users {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
 }

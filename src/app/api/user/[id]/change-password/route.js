@@ -3,9 +3,28 @@ import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma'; // adjust path as needed
 
 export async function PUT(req, context) {
-    const { params } = context;
-    const userId = parseInt(params.id);
     try {
+        await (context.params);
+        const token = request.cookies.get('session')?.value;
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const authUserId = decoded.sub;
+    
+        const idParam = (await (context.params)).id;
+        const userId = parseInt(idParam);
+        
+        if (isNaN(userId)) {
+            return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+        }
+
+        // Only allow the user to update their own data
+        if (userId !== authUserId) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
         const { currentPassword, newPassword } = await req.json();
 
         const user = await prisma.customer.findUnique({

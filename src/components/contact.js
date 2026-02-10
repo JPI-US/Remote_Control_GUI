@@ -4,7 +4,7 @@ import { ArrowLeft} from "lucide-react";
 
 export default function Contact(){
     return(
-        <div className='w-screen max-w-screen overflow-hidden h-screen pb-4 text-center bg-[#f7e2cc] text-black'>
+        <div className='w-screen max-w-full overflow-hidden min-h-screen md:h-screen pb-4 text-center bg-[#dfe0e2] text-black'>
             <div className='py-8 relative w-full h-32'>
                 {/* Back Button */}
                 <Link href="/towerselect" className="absolute top-7 left-8">

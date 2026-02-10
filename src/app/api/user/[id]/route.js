@@ -42,7 +42,7 @@ export async function GET(request, context){
         
       return NextResponse.json(user);
     } catch (error) {
-      console.error('Unexpected error in /api/user/[id]:', err);
+      console.error('Unexpected error in /api/user/[id]:', error);
       return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }
@@ -70,13 +70,14 @@ export async function PUT(request, context) {
     }
 
     const body = await request.json();
+    console.log("Update setttings body: ")
 
     const updated = await prisma.customer.update({
       where: { id: authUserId },
       data: {
         name: body.name,
         email: body.email,
-        phone_number: body.phone_number,
+        phone_number: body.phone,
       },
     });
 

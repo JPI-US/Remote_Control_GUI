@@ -1,10 +1,8 @@
-/* import { signJwt } from '@/lib/jwt'; */
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
-import Settings from '@/components/general';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is not set');
@@ -43,12 +41,17 @@ export async function POST(request) {
     }
 
     // Update last_login timestamp
-    if (user.setting) {
+    /* if (user.setting) {
       await prisma.settings.update({
         where: { settings_id: user.setting.settings_id },
         data: { last_login: new Date() },
       });
-    }
+    } */
+    await prisma.settings.upsert({
+      where: { customer_id: user.id },
+      update: { last_login: new Date() },
+      create: { customer_id: user.id, last_login: new Date() },
+    });
 
     // Generate JWT
     const token = jwt.sign(

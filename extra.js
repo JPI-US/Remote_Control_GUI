@@ -644,3 +644,64 @@
                         </div>
                     )}
                 </div>
+
+
+            /* const tempStats = [
+        {
+            label: 'Humidity',
+            value: `${weather.current.humidity}%`,
+            icon: '/images/water-droplet.svg',
+            description: 'Environmental humidity level',
+            color: 'blue'
+        },
+        {
+            label: 'Temperature',
+            value: `${weather.current.temp}°C`,
+            icon: '/images/thermometer.svg',
+            description: 'Current ambient temperature',
+            color: 'red'
+        },
+        {
+            label: 'Current Power',
+            value: `85%`,
+            icon: '/images/lightning-bolt.svg',
+            description: 'Real-time power generation',
+            color: 'yellow'
+        },
+        {
+            label: 'System Efficiency',
+            value: `72%`,
+            icon: '/images/Sun.svg',
+            description: 'Overall system performance',
+            color: 'green'
+        },
+        {
+            label: 'Daily Peak Power',
+            value: `3900 kW`,
+            icon: '/images/Sun.svg',
+            description: 'Maximum power achieved today',
+            color: 'orange'
+        },
+        {
+            label: 'Carbon Saved',
+            value: `1250 kg CO₂`,
+            icon: '/images/Wind.svg',
+            description: 'Environmental impact reduction',
+            color: 'emerald'
+        }
+    ]; */
+
+
+    /* const weeklyProduction = useMemo(() => {
+            if (!dailyProduction?.labels?.length) return null;
+    
+            const totalDays = dailyProduction.labels.length;
+    
+            // Take last 7 days (or fewer if <7)
+            const startIndex = Math.max(0, totalDays - 7);
+    
+            return {
+                labels: dailyProduction.labels.slice(startIndex),
+                values: dailyProduction.values.slice(startIndex),
+            };
+        }, [dailyProduction]); */

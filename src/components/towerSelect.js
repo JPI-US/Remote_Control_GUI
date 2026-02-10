@@ -3,9 +3,10 @@ import React from 'react';
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from 'next/navigation';
 import { motion } from "framer-motion";
-import { Menu, Search, Signal, TriangleAlert, ShieldAlert, ShieldX, Sigma, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
+import { useSystem } from '@/hooks/useSystem';
 import "@/lib/chart";
 import "@/lib/line";
 import { Bar, Line } from "react-chartjs-2";
@@ -14,28 +15,36 @@ import 'chartjs-adapter-luxon'; // Timezone-aware adapter
 import { DateTime } from "luxon";
 
 const SYSTEM_ID = "49bfa0cf-3479-4852-bf3a-91ad30ac50cc";
-const MAX_PV_POWER = 11500;    
-const chartDayCT = DateTime.now().setZone("America/Chicago").startOf("day");
-const towerAngle = 160;
-const lat = 31.4705888;
-const lon = -97.3148795;
+//const MAX_PV_POWER = 11500;    
+//const chartDayCT = DateTime.now().setZone("America/Chicago").startOf("day");
+//const lat = 31.4705888;
+//const lon = -97.3148795;
 
 const RADIUS = 45; // Static
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // Static
 
 export default function TowerSelect(){
     const router = useRouter();
-    const { user, userId, loading } = useAuth(); //Retrieving user data    
+    const { user, userId, loading } = useAuth(); //Retrieving user data  
+    const { system, loading: systemloading } = useSystem(); //Retrieving system data    
+
+    const MAX_PV_POWER = system?.max_pv_kw; 
+    const system_tz = system?.timezone;
+    const chartDayCT = DateTime.now().setZone(system_tz).startOf("day");
+    const chartDay = DateTime.now().setZone(system_tz).startOf("day");
+
+    const lat = system?.latitude;
+    const lon = system?.longitude;
 
     const [pvPower, setPvPower] = useState(0); //Retrieves the live power generation
     const [maxHourlyPower, setMaxHourlyPower] = useState(0);
-    const [dailyProduction, setDailyProduction] = useState(null); // Retrieves the monthly power generation
+    const [dailyProduction, setDailyProduction] = useState(null); // Retrieves the daily power generation
     const [hourlyProduction, setHourlyProduction] = useState(null); // Retrieves the hourly power generation
+    const [monthlyProduction, setMonthlyProduction] = useState(null); // Retrieves the monthly power generation
+    const [yearlyProduction, setYearlyProduction] = useState(null); // Retrieves the monthly power generation
+    const [totalProduction, setTotalProduction] = useState(null); // Retrieves the total power generation
     const intervalRef = useRef(null); //Interval time for refreshes
     const intervalRef1 = useRef(null); //Interval time for refreshes
-    
-    // Get full month name
-    const fullMonthName = chartDayCT.toFormat("LLLL");
 
     // Useeffect for retrieving the live power generation data
     useEffect(() => {
@@ -88,7 +97,7 @@ export default function TowerSelect(){
                 if (!res.ok) return;
 
                 const json = await res.json();
-                setDailyProduction(json.data?.production ?? null);
+                setDailyProduction(json.data?.dailyproduction ?? null);
             } catch (error) {
                 console.error('Daily production error:', error);
             }
@@ -97,19 +106,70 @@ export default function TowerSelect(){
         fetchDailyProduction();
     }, []); 
 
-    const weeklyProduction = useMemo(() => {
-        if (!dailyProduction?.labels?.length) return null;
+    // Retrieving Todays total power generation
+    const todaysProduction = useMemo(() => {
+        if (!dailyProduction || !system_tz) return null;
 
-        const totalDays = dailyProduction.labels.length;
+        const systemDay = DateTime.now().setZone(system_tz).day;
+        const index = systemDay - 1;
 
-        // Take last 7 days (or fewer if <7)
-        const startIndex = Math.max(0, totalDays - 7);
+        return dailyProduction.values[index] ?? null;
+    }, [dailyProduction, system_tz]);
 
-        return {
-            labels: dailyProduction.labels.slice(startIndex),
-            values: dailyProduction.values.slice(startIndex),
-        };
-    }, [dailyProduction]);
+
+    // Useeffect for retrieving the monthly energy generation data /api/fronius/dailyproductionforMonth?systemId=${SYSTEM_ID}
+    useEffect(() => {
+        async function fetchMonthlyProduction() {
+            try {
+                // Fetch power data
+                const res = await fetch(
+                    `/api/fronius?systemId=${SYSTEM_ID}`, 
+                    { cache: "no-store" }
+                );
+
+                if (!res.ok) return;
+
+                const json = await res.json();
+                setMonthlyProduction(json.data?.monthlyproduction ?? null);
+            } catch (error) {
+                console.error('Monthly production error:', error);
+            }
+        }
+
+        fetchMonthlyProduction();
+    }, []);
+     
+    const MONTH_NAMES = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    const monthLabels = monthlyProduction?.labels
+        ? monthlyProduction.labels.map(m => MONTH_NAMES[m - 1])
+        : MONTH_NAMES; // fallback while loading
+
+
+    // Useeffect for retrieving the yearly energy generation data /api/fronius/dailyproductionforMonth?systemId=${SYSTEM_ID}
+    useEffect(() => {
+        async function fetchYearlyProduction() {
+            try {
+                // Fetch power data
+                const res = await fetch(
+                    `/api/fronius?systemId=${SYSTEM_ID}`, 
+                    { cache: "no-store" }
+                );
+
+                if (!res.ok) return;
+
+                const json = await res.json();
+                setYearlyProduction(json.data?.yearlyproduction ?? null);
+            } catch (error) {
+                console.error('Monthly production error:', error);
+            }
+        }
+
+        fetchYearlyProduction();
+    }, []);
+
 
     // Useeffect for retrieving the hourly power generation data /api/fronius/dailyProduction?systemId=${SYSTEM_ID}
     useEffect(() => {
@@ -126,7 +186,7 @@ export default function TowerSelect(){
                 const json = await res.json();
                 
                 // Extract energy data safely
-                const energyData = json.data?.energy ?? null;
+                const energyData = json.data?.hourlyproduction ?? null;
 
                 setHourlyProduction(energyData);
 
@@ -151,44 +211,70 @@ export default function TowerSelect(){
     const fullDayLabels = [];
     for (let h = 0; h < 24; h++) {
         for (let m = 0; m < 60; m += 5) {
-            const hh = h.toString().padStart(2, "0");
-            const mm = m.toString().padStart(2, "0");
-            fullDayLabels.push(`${hh}:${mm}`);
+            fullDayLabels.push(`${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`);
         }
     }
 
-    // Convert labels to Date objects for time scale
+    // Build Date objects in system timezone → convert to UTC for Chart.js
     const fullDayDates = fullDayLabels.map(label => {
-        const [hh, mm] = label.split(':').map(Number);
+        const [hh, mm] = label.split(":").map(Number);
 
-        // Build time in CT
-        const ctTime = chartDayCT.plus({ hours: hh, minutes: mm });
-
-        // Convert to JS Date (UTC internally)
-        return ctTime.toUTC().toJSDate();
+        return chartDay
+            .plus({ hours: hh, minutes: mm })
+            .toUTC()
+            .toJSDate();
     });
 
     const datasetPoints = (hourlyProduction?.labels ?? []).map((utcLabel, i) => {
-    const [hh, mm] = utcLabel.split(':').map(Number);
+        const [hh, mm] = utcLabel.split(":").map(Number);
 
-    // Construct a UTC Date for today at hh:mm
-    const utcDate = DateTime.utc().set({ hour: hh, minute: mm, second: 0, millisecond: 0 });
+        const utcTime = chartDay
+            .setZone("utc", { keepLocalTime: true })
+            .set({
+                hour: hh,
+                minute: mm,
+                second: 0,
+                millisecond: 0,
+            });
 
-    // Convert to CT
-    const ctDate = utcDate.setZone('America/Chicago');
+        const systemTime = utcTime.setZone(system_tz);
+
         return {
-            x: ctDate.toJSDate(), // CT-aligned Date
+            x: systemTime.toJSDate(),
             y: hourlyProduction.values[i],
         };
-    });   
+    });
+
 
     const [activeTab, setActiveTab] = useState("historical"); // Active tab state
     const [generationView, setGenerationView] = useState("daily"); // Active chart generation state
-    
 
+    //Fetching the toatal lifetime generation
+    useEffect(() => {
+        async function fetchtotalProduction() {
+            try {
+                // Fetch power data
+                const res = await fetch(
+                    `/api/fronius?systemId=${SYSTEM_ID}`, 
+                    { cache: "no-store" }
+                );
+
+                if (!res.ok) return;
+
+                const json = await res.json();
+                setTotalProduction(json.data?.total ?? null);
+            } catch (error) {
+                console.error('Daily production error:', error);
+            }
+        }
+
+        fetchtotalProduction();
+    }, []); 
+    
     const [weather, setWeather] = useState(null);
     const [weatherLoading, setweatherLoading] = useState(true);
     const [weatherError, SetweatherError] = useState(null);
+    //Fetching the live weather readings for the systems location
     useEffect(() => {
         if (!lat || !lon) return;
 
@@ -214,7 +300,7 @@ export default function TowerSelect(){
                     throw new Error("Weather data missing current values");
                 }
 
-                console.log("API RESPONSE:", data);
+                console.log("Weather API RESPONSE:", data);
                 setWeather(data);
             } catch (err) {
                 if (err.name !== "AbortError") {
@@ -227,10 +313,12 @@ export default function TowerSelect(){
         }
 
         fetchWeather();
-
-        // Cleanup on unmount or lat/lon change
-        return () => controller.abort();
-    }, []);
+        const interval = setInterval(fetchWeather, 10 * 60 * 1000); // every 10 minutes
+        return () => {
+            clearInterval(interval); //clearing interval timer
+            controller.abort(); // Cleanup on unmount or lat/lon change
+        };
+    }, [lat, lon]);
 
     const tempStats = useMemo(() => {
         if (!weather?.current) return [];
@@ -258,13 +346,6 @@ export default function TowerSelect(){
                 color: 'yellow'
             },
             {
-                label: 'System Efficiency',
-                value: `72%`,
-                icon: '/images/Sun.svg',
-                description: 'Overall system performance',
-                color: 'green'
-            },
-            {
                 label: 'Daily Peak Power',
                 value: `${maxHourlyPower} kW`,
                 icon: '/images/Sun.svg',
@@ -272,59 +353,21 @@ export default function TowerSelect(){
                 color: 'orange'
             },
             {
+                label: 'Todays Total Power Generation',
+                value: `${(todaysProduction).toFixed(2)} kW`,
+                icon: '/images/Sun.svg',
+                description: 'Total power achieved today',
+                color: 'orange'
+            },
+            {
                 label: 'Carbon Saved',
-                value: `1250 kg CO₂`,
+                value: `${(totalProduction*0.37).toFixed(2)} kg CO₂`, //Total carbon saved = Inverter total in kwh * EF(Grid emission factor) 
                 icon: '/images/Wind.svg',
                 description: 'Environmental impact reduction',
                 color: 'emerald'
             }
         ];
-    }, [weather]);
-
-    /* const tempStats = [
-        {
-            label: 'Humidity',
-            value: `${weather.current.humidity}%`,
-            icon: '/images/water-droplet.svg',
-            description: 'Environmental humidity level',
-            color: 'blue'
-        },
-        {
-            label: 'Temperature',
-            value: `${weather.current.temp}°C`,
-            icon: '/images/thermometer.svg',
-            description: 'Current ambient temperature',
-            color: 'red'
-        },
-        {
-            label: 'Current Power',
-            value: `85%`,
-            icon: '/images/lightning-bolt.svg',
-            description: 'Real-time power generation',
-            color: 'yellow'
-        },
-        {
-            label: 'System Efficiency',
-            value: `72%`,
-            icon: '/images/Sun.svg',
-            description: 'Overall system performance',
-            color: 'green'
-        },
-        {
-            label: 'Daily Peak Power',
-            value: `3900 kW`,
-            icon: '/images/Sun.svg',
-            description: 'Maximum power achieved today',
-            color: 'orange'
-        },
-        {
-            label: 'Carbon Saved',
-            value: `1250 kg CO₂`,
-            icon: '/images/Wind.svg',
-            description: 'Environmental impact reduction',
-            color: 'emerald'
-        }
-    ]; */
+    }, [weather, pvPowerKw, MAX_PV_POWER, maxHourlyPower, totalProduction, todaysProduction]);
 
     const weatherUI = {
         Sunny: {
@@ -380,84 +423,11 @@ export default function TowerSelect(){
     };
 
     const condition = weather?.current?.condition;
-    console.log(`Condition: ${condition}`);// Chance Rain Showers
+    //console.log(`Condition: ${condition}`);// Chance Rain Showers
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //Hamburger menu
     const [menuOpen, setMenuOpen] = useState(false);
-    
-    
-    //accessing the json files for the page component 
-    const [powerData, setPowerData] = useState([]);
-
-    const [userTelemetry, setuserTelemetry] = useState([]);// new
-    
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                // Fetch power data
-                const powerResponse = await fetch('/api/powerData', {
-                    credentials: 'include',
-                });
-                const powerJson = await powerResponse.json();
-                setPowerData(powerJson);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        fetchData();
-    }, []); 
-
-    /* useEffect(() => {
-        if (!userId) return; // Don't fetch until ID is set
-
-        async function fetchTelemetry() {
-            try{
-                const telemetryResponse = await fetch(`/api/telemetry/${userId}`);
-                const telemetryData = await telemetryResponse.json();
-                setuserTelemetry(telemetryData);
-            } catch (error){
-                console.log("Fetch error:", error)
-                // router.push('/login');
-            }
-        }
-        fetchTelemetry();
-    }, [userId]); */
-
-    // Count items with status 'Online'
-    const onlineCount = powerData.filter(item => item.status === 'Tracking').length;
-
-    // Count items with status 'Warning'
-    const warningCount = powerData.filter(item => item.status === 'Warning').length;
-
-    // Count items with status 'Fault'
-    const faultCount = powerData.filter(item => item.status === 'Fault').length;
-
-    // Count items with status 'Offline'
-    const offlineCount = powerData.filter(item => item.status === 'Offline').length;
 
     
 
@@ -494,7 +464,7 @@ export default function TowerSelect(){
     const [query, setQuery] = useState("");
 
     // A set for holding the selected status
-    const [activeStatuses, setActiveStatuses] = useState(new Set());
+    const [activeStatuses, setActiveStatuses] = useState(new Set());/* 
 
     const displayedCards = useMemo(() => {
         return powerData.filter((item) => {
@@ -502,7 +472,7 @@ export default function TowerSelect(){
             const matchesStatus = activeStatuses.size === 0 || activeStatuses.has(item.status);
             return matchesQuery && matchesStatus;
         });
-    }, [query, activeStatuses, powerData]);
+    }, [query, activeStatuses, powerData]); */
 
     // Function for adding and eleting a status from the set
     const handleStatusChange = (status) => {
@@ -523,7 +493,17 @@ export default function TowerSelect(){
 
     const value = 125;
   
-    //if (!powerData || !user || !userId) {
+    // Case 1: still loading
+    if (systemloading) {
+        return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
+    } 
+    // Case 2: no system found
+    if (!system) {
+        return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">No system data found...</p>;
+    } 
+    console.log(JSON.stringify(system)); // prints full object as JSON string
+    const angle = system?.towers?.[0]?.current_angle ?? "N/A";
+    console.log(`This is the tower angle: ${angle}`);
     if (loading) {
         return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
     }
@@ -574,7 +554,7 @@ export default function TowerSelect(){
 
             {/* Page title */}
             <div className='my-8'>    
-                <h1 className='text-4xl font-bold'>Your Tower Dashboard</h1>
+                <h1 className='text-4xl font-bold'>{/* Your Tower Dashboard  */}{system.system_name} </h1>
             </div>
 
             {/* New dashboard design */}
@@ -678,13 +658,13 @@ export default function TowerSelect(){
                                 <div className="relative w-8 h-8"/>
                                     <div
                                         className="absolute inset-0 rounded-full"
-                                        style={{ transform: `rotate(${towerAngle}deg)` }}
+                                        style={{ transform: `rotate(${angle}deg)` }}
                                     >
                                         <div className="w-1 h-3 rounded-full"/>
                                     </div>
                                 </div>
                                 <p className="text-2xl font-bold leading-none">
-                                    <span className="text-blue-600">{Math.floor(towerAngle)}</span>°
+                                    <span className="text-blue-600">{Math.floor(angle)}</span>°
                                 </p>
                         </div>
                         <p className="mt-1 text-sm ml-12 font-medium">
@@ -814,8 +794,9 @@ export default function TowerSelect(){
                                 <div className="inline-flex space-x-2 bg-gray-100 rounded-md p-2">
                                     {[
                                         { id: "daily", label: "Daily" },
-                                        { id: "weekly", label: "Weekly" },
                                         { id: "monthly", label: "Monthly" },
+                                        { id: "yearly", label: "Yearly" },
+                                        { id: "total", label: "Total" },
                                     ].map((option) => (
                                     <button
                                         key={option.id}
@@ -833,12 +814,12 @@ export default function TowerSelect(){
                                 </div>
                             </div>
                             {/* Historical charts go here */}
-                            <div className='w-full h-450px p-4'>
+                            <div className='w-full h-500px p-4'>
                                 {generationView === "daily" && hourlyProduction && (
                                     <div className="">
                                         {/* Daily line chart */}
                                         {hourlyProduction && (
-                                            <div style={{ height: "250px" }}>
+                                            <div style={{ height: "300px" }}>
                                                 <Line
                                                     data={{
                                                         //labels: x,
@@ -869,7 +850,7 @@ export default function TowerSelect(){
                                                                 type: 'time',
                                                                 adapters: {
                                                                     date: {
-                                                                        zone: 'America/Chicago', // CT
+                                                                        zone: system_tz, 
                                                                     },
                                                                 },
                                                                 min: fullDayDates[0],
@@ -916,50 +897,8 @@ export default function TowerSelect(){
                                     </div>
                                 )}
 
-                                {generationView === "weekly" && (
-                                    <div className="">
-                                        {/* Weekly aggregated line chart */}
-                                        {weeklyProduction && (
-                                            <div style={{ height: "250px" }}>
-                                                <Bar
-                                                data={{
-                                                    labels: weeklyProduction.labels,
-                                                    datasets: [
-                                                    {
-                                                        label: "Weekly Energy Output",
-                                                        data: weeklyProduction.values,
-                                                        backgroundColor: "#f59e0b",
-                                                        borderColor: "#f59e0b",
-                                                        borderRadius: 4,
-                                                        barPercentage: 0.7,
-                                                        categoryPercentage: 0.8,
-                                                    },
-                                                    ],
-                                                }}
-                                                options={{
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        title: {
-                                                        display: true,
-                                                        text: "kWh",
-                                                        },
-                                                    },
-                                                    },
-                                                    plugins: {
-                                                    legend: { display: false },
-                                                    },
-                                                }}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
                                 {generationView === "monthly" && (
-                                    <div className="" style={{ height: "250px" }}>
+                                    <div className="" style={{ height: "300px" }}>
                                         {/* Monthly bar chart */}
                                         <Bar
                                             data={{
@@ -998,6 +937,89 @@ export default function TowerSelect(){
                                         /> 
                                     </div>
                                 )}
+
+                                {generationView === "yearly" && (
+                                    <div className="" style={{ height: "300px" }}>
+                                        {/* Monthly bar chart */}
+                                        <Bar
+                                            data={{
+                                                labels: monthLabels,
+                                                datasets: [
+                                                    {
+                                                        label: "Energy Output",
+                                                        data: monthlyProduction.values,
+                                                        backgroundColor: "#f59e0b",
+                                                        borderColor: "#f59e0b",
+                                                        borderWidth: 2,
+                                                        borderRadius: 4,
+                                                        barPercentage: 0.8,
+                                                        categoryPercentage: 0.9,
+                                                    },
+                                                ],
+                                            }}
+                                            options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                //aspectRatio: 3,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        title: {
+                                                            display: true,
+                                                            text: "kWh",
+                                                        },
+                                                    },
+                                                },
+                                                plugins: {
+                                                    legend: { display: false },
+                                                },
+                                            }}
+                                            className="h-full"
+                                        /> 
+                                    </div>
+                                )}
+                                {generationView === "total" && (
+                                    <div className="" style={{ height: "300px" }}>
+                                        {/* yearly bar chart */}
+                                        <Bar
+                                            data={{
+                                                labels: yearlyProduction.labels,
+                                                datasets: [
+                                                    {
+                                                        label: "Energy Output",
+                                                        data: yearlyProduction.values,
+                                                        backgroundColor: "#f59e0b",
+                                                        borderColor: "#f59e0b",
+                                                        borderWidth: 2,
+                                                        borderRadius: 4,
+                                                        barPercentage: 0.5,
+                                                        categoryPercentage: 0.3,
+                                                    },
+                                                ],
+                                            }}
+                                            options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                //aspectRatio: 3,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        title: {
+                                                            display: true,
+                                                            text: "MWH",
+                                                        },
+                                                    },
+                                                },
+                                                plugins: {
+                                                    legend: { display: false },
+                                                },
+                                            }}
+                                            className="h-full"
+                                        /> 
+                                    </div>
+                                )}
+
+                                
                             </div>
                         </div>
                     )}
@@ -1031,6 +1053,10 @@ export default function TowerSelect(){
                                         <span className="font-medium">Communication Protocol</span>
                                         <span className="text-green-600 font-semibold">Online</span>
                                     </li>
+                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                        <span className="font-medium">Encoder</span>
+                                        <span className="text-green-600 font-semibold">Online</span>
+                                    </li>
                                     {/* Fault/offline: text-red-600; warning: text-yellow-500   */}
                                 </ul>
                             </div>
@@ -1043,33 +1069,33 @@ export default function TowerSelect(){
                             {/* Control actions */}
                             <div className='flex flex-col'>
                                 <ul className="grid grid-cols-2 gap-3 p-4 text-black">
-                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
                                         <span className="font-medium">Restart</span>
                                         <span className="text-xs">Reboot tower systems and all components</span>
                                     </li>
 
-                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
                                         <span className="font-medium">Reset</span>
                                         <span className="text-xs">Reset to default factory settings</span>
                                     </li>
 
-                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
                                         <span className="font-medium">Go Home</span>
                                         <span className="text-xs">Return tower to home position</span>
                                     </li>
 
-                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
                                         <span className="font-medium">Enter Maintenance</span>
                                         <span className="text-xs">Enable maintenance mode for repairs</span>
                                     </li>
 
-                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
                                         <span className="font-medium">Leave Maintenance</span>
                                         <span className="text-xs">Exit maintenance mode and resume operation</span>
                                     </li>
 
                                     
-                                    <li className="flex flex-col text-left hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
+                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
                                         <span className="font-medium">Stop Command</span>
                                         <span className="text-xs">Emergency stop all operations</span>
                                     </li>

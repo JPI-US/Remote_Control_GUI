@@ -145,6 +145,22 @@ exports.Prisma.SettingsScalarFieldEnum = {
   phone_recovery: 'phone_recovery'
 };
 
+exports.Prisma.SystemsScalarFieldEnum = {
+  id: 'id',
+  system_name: 'system_name',
+  inverter_type: 'inverter_type',
+  customer_id: 'customer_id',
+  timezone: 'timezone',
+  installation_date: 'installation_date',
+  status: 'status',
+  total_towers: 'total_towers',
+  max_pv_kw: 'max_pv_kw',
+  software_version: 'software_version',
+  api_key: 'api_key',
+  latitude: 'latitude',
+  longitude: 'longitude'
+};
+
 exports.Prisma.NotificationsScalarFieldEnum = {
   notifications_id: 'notifications_id',
   customer_id: 'customer_id',
@@ -171,7 +187,9 @@ exports.Prisma.TowersScalarFieldEnum = {
   length: 'length',
   height: 'height',
   width: 'width',
-  software_version: 'software_version'
+  software_version: 'software_version',
+  current_angle: 'current_angle',
+  system_id: 'system_id'
 };
 
 exports.Prisma.TelemetryScalarFieldEnum = {
@@ -186,6 +204,53 @@ exports.Prisma.TelemetryScalarFieldEnum = {
   clouds: 'clouds',
   solar_flux: 'solar_flux',
   angle: 'angle'
+};
+
+exports.Prisma.EnergyScalarFieldEnum = {
+  day: 'day',
+  month: 'month',
+  year: 'year',
+  tower: 'tower',
+  energy: 'energy',
+  id: 'id'
+};
+
+exports.Prisma.OrdersScalarFieldEnum = {
+  id: 'id',
+  customer_id: 'customer_id',
+  tower_count: 'tower_count',
+  address_id: 'address_id',
+  price: 'price',
+  currency: 'currency',
+  state: 'state',
+  date_time: 'date_time',
+  payment_received: 'payment_received'
+};
+
+exports.Prisma.Software_ticketsScalarFieldEnum = {
+  id: 'id',
+  customer_id: 'customer_id',
+  email: 'email',
+  subject: 'subject',
+  message: 'message',
+  date_time: 'date_time',
+  handled: 'handled'
+};
+
+exports.Prisma.Tower_logsScalarFieldEnum = {
+  id: 'id',
+  customer_id: 'customer_id',
+  type: 'type',
+  message: 'message',
+  date_time: 'date_time',
+  tower_id: 'tower_id',
+  closed: 'closed'
+};
+
+exports.Prisma.UsersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email'
 };
 
 exports.Prisma.SortOrder = {
@@ -207,9 +272,15 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   Customer: 'Customer',
   Settings: 'Settings',
+  Systems: 'Systems',
   Notifications: 'Notifications',
   Towers: 'Towers',
-  Telemetry: 'Telemetry'
+  Telemetry: 'Telemetry',
+  energy: 'energy',
+  orders: 'orders',
+  software_tickets: 'software_tickets',
+  tower_logs: 'tower_logs',
+  users: 'users'
 };
 
 /**
