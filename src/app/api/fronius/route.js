@@ -37,7 +37,7 @@ export async function GET(request) {
         }
         
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const customerId = decoded.sub;
+        const customerId = Number(decoded.sub);
 
         if (!headers.AccessKeyId || !headers.AccessKeyValue) {
             throw new Error("Missing SolarWeb API credentials");
@@ -53,15 +53,34 @@ export async function GET(request) {
             );
         }
 
-        // Fetch system from DB
-        const system = await prisma.systems.findUnique({
-            where: { id: 2 },
-            select: { timezone: true },
+        //Fetch customer's systems
+        const systems = await prisma.systems.findMany({
+            where: {
+                customer_system: {
+                    some: { customer_id: customerId },
+                },
+                status: "ACTIVE",
+            },
+            select: {
+                id: true,
+                // api_key intentionally excluded
+            },
         });
 
-        if (!system) {
-            return NextResponse.json({ error: "System not found" }, { status: 404 });
+        if (!systems.length) {
+            console.error(`No system for customer ${customerId}`);
+            return NextResponse.json(
+                { error: "No active system assigned to this customer" },
+                { status: 404 }
+            );
         }
+
+        const realsystemId = systems[0].id; // best system
+
+        const system = await prisma.systems.findUnique({
+            where: { id: realsystemId },
+            select: { timezone: true },
+        });
 
         // Get System timezone
         const systemTZ = system.timezone ?? "America/Chicago";

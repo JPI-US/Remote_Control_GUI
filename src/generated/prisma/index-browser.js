@@ -125,7 +125,9 @@ exports.Prisma.CustomerScalarFieldEnum = {
   country_code: 'country_code',
   phone_number: 'phone_number',
   customer_type: 'customer_type',
-  password_hash: 'password_hash'
+  password_hash: 'password_hash',
+  plan_tier: 'plan_tier',
+  role: 'role'
 };
 
 exports.Prisma.SettingsScalarFieldEnum = {
@@ -149,7 +151,6 @@ exports.Prisma.SystemsScalarFieldEnum = {
   id: 'id',
   system_name: 'system_name',
   inverter_type: 'inverter_type',
-  customer_id: 'customer_id',
   timezone: 'timezone',
   installation_date: 'installation_date',
   status: 'status',
@@ -253,6 +254,12 @@ exports.Prisma.UsersScalarFieldEnum = {
   email: 'email'
 };
 
+exports.Prisma.Customer_systemScalarFieldEnum = {
+  customer_id: 'customer_id',
+  system_id: 'system_id',
+  role: 'role'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -267,7 +274,15 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.plan_tier = exports.$Enums.plan_tier = {
+  RESIDENTIAL: 'RESIDENTIAL',
+  COMMERCIAL: 'COMMERCIAL'
+};
 
+exports.user_role = exports.$Enums.user_role = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
 
 exports.Prisma.ModelName = {
   Customer: 'Customer',
@@ -280,7 +295,8 @@ exports.Prisma.ModelName = {
   orders: 'orders',
   software_tickets: 'software_tickets',
   tower_logs: 'tower_logs',
-  users: 'users'
+  users: 'users',
+  customer_system: 'customer_system'
 };
 
 /**

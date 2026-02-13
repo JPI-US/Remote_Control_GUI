@@ -68,6 +68,40 @@ export type tower_logs = $Result.DefaultSelection<Prisma.$tower_logsPayload>
  * 
  */
 export type users = $Result.DefaultSelection<Prisma.$usersPayload>
+/**
+ * Model customer_system
+ * 
+ */
+export type customer_system = $Result.DefaultSelection<Prisma.$customer_systemPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const plan_tier: {
+  RESIDENTIAL: 'RESIDENTIAL',
+  COMMERCIAL: 'COMMERCIAL'
+};
+
+export type plan_tier = (typeof plan_tier)[keyof typeof plan_tier]
+
+
+export const user_role: {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
+export type user_role = (typeof user_role)[keyof typeof user_role]
+
+}
+
+export type plan_tier = $Enums.plan_tier
+
+export const plan_tier: typeof $Enums.plan_tier
+
+export type user_role = $Enums.user_role
+
+export const user_role: typeof $Enums.user_role
 
 /**
  * ##  Prisma Client ʲˢ
@@ -303,6 +337,16 @@ export class PrismaClient<
     * ```
     */
   get users(): Prisma.usersDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customer_system`: Exposes CRUD operations for the **customer_system** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Customer_systems
+    * const customer_systems = await prisma.customer_system.findMany()
+    * ```
+    */
+  get customer_system(): Prisma.customer_systemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -753,7 +797,8 @@ export namespace Prisma {
     orders: 'orders',
     software_tickets: 'software_tickets',
     tower_logs: 'tower_logs',
-    users: 'users'
+    users: 'users',
+    customer_system: 'customer_system'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -772,7 +817,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "customer" | "settings" | "systems" | "notifications" | "towers" | "telemetry" | "energy" | "orders" | "software_tickets" | "tower_logs" | "users"
+      modelProps: "customer" | "settings" | "systems" | "notifications" | "towers" | "telemetry" | "energy" | "orders" | "software_tickets" | "tower_logs" | "users" | "customer_system"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1590,6 +1635,80 @@ export namespace Prisma {
           }
         }
       }
+      customer_system: {
+        payload: Prisma.$customer_systemPayload<ExtArgs>
+        fields: Prisma.customer_systemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.customer_systemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.customer_systemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>
+          }
+          findFirst: {
+            args: Prisma.customer_systemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.customer_systemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>
+          }
+          findMany: {
+            args: Prisma.customer_systemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>[]
+          }
+          create: {
+            args: Prisma.customer_systemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>
+          }
+          createMany: {
+            args: Prisma.customer_systemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.customer_systemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>[]
+          }
+          delete: {
+            args: Prisma.customer_systemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>
+          }
+          update: {
+            args: Prisma.customer_systemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>
+          }
+          deleteMany: {
+            args: Prisma.customer_systemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.customer_systemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.customer_systemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>[]
+          }
+          upsert: {
+            args: Prisma.customer_systemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$customer_systemPayload>
+          }
+          aggregate: {
+            args: Prisma.Customer_systemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomer_system>
+          }
+          groupBy: {
+            args: Prisma.customer_systemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Customer_systemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.customer_systemCountArgs<ExtArgs>
+            result: $Utils.Optional<Customer_systemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1685,6 +1804,7 @@ export namespace Prisma {
     software_tickets?: software_ticketsOmit
     tower_logs?: tower_logsOmit
     users?: usersOmit
+    customer_system?: customer_systemOmit
   }
 
   /* Types for Logging */
@@ -1779,21 +1899,17 @@ export namespace Prisma {
    */
 
   export type CustomerCountOutputType = {
-    notification: number
+    customer_system: number
     orders: number
-    setting: number
     software_tickets: number
-    systems: number
     tower_logs: number
     tower: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    notification?: boolean | CustomerCountOutputTypeCountNotificationArgs
+    customer_system?: boolean | CustomerCountOutputTypeCountCustomer_systemArgs
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
-    setting?: boolean | CustomerCountOutputTypeCountSettingArgs
     software_tickets?: boolean | CustomerCountOutputTypeCountSoftware_ticketsArgs
-    systems?: boolean | CustomerCountOutputTypeCountSystemsArgs
     tower_logs?: boolean | CustomerCountOutputTypeCountTower_logsArgs
     tower?: boolean | CustomerCountOutputTypeCountTowerArgs
   }
@@ -1812,8 +1928,8 @@ export namespace Prisma {
   /**
    * CustomerCountOutputType without action
    */
-  export type CustomerCountOutputTypeCountNotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: NotificationsWhereInput
+  export type CustomerCountOutputTypeCountCustomer_systemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: customer_systemWhereInput
   }
 
   /**
@@ -1826,22 +1942,8 @@ export namespace Prisma {
   /**
    * CustomerCountOutputType without action
    */
-  export type CustomerCountOutputTypeCountSettingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SettingsWhereInput
-  }
-
-  /**
-   * CustomerCountOutputType without action
-   */
   export type CustomerCountOutputTypeCountSoftware_ticketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: software_ticketsWhereInput
-  }
-
-  /**
-   * CustomerCountOutputType without action
-   */
-  export type CustomerCountOutputTypeCountSystemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SystemsWhereInput
   }
 
   /**
@@ -1864,10 +1966,12 @@ export namespace Prisma {
    */
 
   export type SystemsCountOutputType = {
+    customer_system: number
     towers: number
   }
 
   export type SystemsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer_system?: boolean | SystemsCountOutputTypeCountCustomer_systemArgs
     towers?: boolean | SystemsCountOutputTypeCountTowersArgs
   }
 
@@ -1880,6 +1984,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the SystemsCountOutputType
      */
     select?: SystemsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SystemsCountOutputType without action
+   */
+  export type SystemsCountOutputTypeCountCustomer_systemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: customer_systemWhereInput
   }
 
   /**
@@ -1987,6 +2098,8 @@ export namespace Prisma {
     phone_number: string | null
     customer_type: string | null
     password_hash: string | null
+    plan_tier: $Enums.plan_tier | null
+    role: $Enums.user_role | null
   }
 
   export type CustomerMaxAggregateOutputType = {
@@ -1998,6 +2111,8 @@ export namespace Prisma {
     phone_number: string | null
     customer_type: string | null
     password_hash: string | null
+    plan_tier: $Enums.plan_tier | null
+    role: $Enums.user_role | null
   }
 
   export type CustomerCountAggregateOutputType = {
@@ -2009,6 +2124,8 @@ export namespace Prisma {
     phone_number: number
     customer_type: number
     password_hash: number
+    plan_tier: number
+    role: number
     _all: number
   }
 
@@ -2032,6 +2149,8 @@ export namespace Prisma {
     phone_number?: true
     customer_type?: true
     password_hash?: true
+    plan_tier?: true
+    role?: true
   }
 
   export type CustomerMaxAggregateInputType = {
@@ -2043,6 +2162,8 @@ export namespace Prisma {
     phone_number?: true
     customer_type?: true
     password_hash?: true
+    plan_tier?: true
+    role?: true
   }
 
   export type CustomerCountAggregateInputType = {
@@ -2054,6 +2175,8 @@ export namespace Prisma {
     phone_number?: true
     customer_type?: true
     password_hash?: true
+    plan_tier?: true
+    role?: true
     _all?: true
   }
 
@@ -2152,6 +2275,8 @@ export namespace Prisma {
     phone_number: string | null
     customer_type: string
     password_hash: string
+    plan_tier: $Enums.plan_tier | null
+    role: $Enums.user_role | null
     _count: CustomerCountAggregateOutputType | null
     _avg: CustomerAvgAggregateOutputType | null
     _sum: CustomerSumAggregateOutputType | null
@@ -2182,11 +2307,13 @@ export namespace Prisma {
     phone_number?: boolean
     customer_type?: boolean
     password_hash?: boolean
+    plan_tier?: boolean
+    role?: boolean
+    customer_system?: boolean | Customer$customer_systemArgs<ExtArgs>
     notification?: boolean | Customer$notificationArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     setting?: boolean | Customer$settingArgs<ExtArgs>
     software_tickets?: boolean | Customer$software_ticketsArgs<ExtArgs>
-    systems?: boolean | Customer$systemsArgs<ExtArgs>
     tower_logs?: boolean | Customer$tower_logsArgs<ExtArgs>
     tower?: boolean | Customer$towerArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
@@ -2201,6 +2328,8 @@ export namespace Prisma {
     phone_number?: boolean
     customer_type?: boolean
     password_hash?: boolean
+    plan_tier?: boolean
+    role?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2212,6 +2341,8 @@ export namespace Prisma {
     phone_number?: boolean
     customer_type?: boolean
     password_hash?: boolean
+    plan_tier?: boolean
+    role?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectScalar = {
@@ -2223,15 +2354,17 @@ export namespace Prisma {
     phone_number?: boolean
     customer_type?: boolean
     password_hash?: boolean
+    plan_tier?: boolean
+    role?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "country_code" | "phone_number" | "customer_type" | "password_hash", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "country_code" | "phone_number" | "customer_type" | "password_hash" | "plan_tier" | "role", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer_system?: boolean | Customer$customer_systemArgs<ExtArgs>
     notification?: boolean | Customer$notificationArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     setting?: boolean | Customer$settingArgs<ExtArgs>
     software_tickets?: boolean | Customer$software_ticketsArgs<ExtArgs>
-    systems?: boolean | Customer$systemsArgs<ExtArgs>
     tower_logs?: boolean | Customer$tower_logsArgs<ExtArgs>
     tower?: boolean | Customer$towerArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
@@ -2242,11 +2375,11 @@ export namespace Prisma {
   export type $CustomerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Customer"
     objects: {
-      notification: Prisma.$NotificationsPayload<ExtArgs>[]
+      customer_system: Prisma.$customer_systemPayload<ExtArgs>[]
+      notification: Prisma.$NotificationsPayload<ExtArgs> | null
       orders: Prisma.$ordersPayload<ExtArgs>[]
-      setting: Prisma.$SettingsPayload<ExtArgs>[]
+      setting: Prisma.$SettingsPayload<ExtArgs> | null
       software_tickets: Prisma.$software_ticketsPayload<ExtArgs>[]
-      systems: Prisma.$SystemsPayload<ExtArgs>[]
       tower_logs: Prisma.$tower_logsPayload<ExtArgs>[]
       tower: Prisma.$TowersPayload<ExtArgs>[]
     }
@@ -2259,6 +2392,8 @@ export namespace Prisma {
       phone_number: string | null
       customer_type: string
       password_hash: string
+      plan_tier: $Enums.plan_tier | null
+      role: $Enums.user_role | null
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -2653,11 +2788,11 @@ export namespace Prisma {
    */
   export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    notification<T extends Customer$notificationArgs<ExtArgs> = {}>(args?: Subset<T, Customer$notificationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customer_system<T extends Customer$customer_systemArgs<ExtArgs> = {}>(args?: Subset<T, Customer$customer_systemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notification<T extends Customer$notificationArgs<ExtArgs> = {}>(args?: Subset<T, Customer$notificationArgs<ExtArgs>>): Prisma__NotificationsClient<$Result.GetResult<Prisma.$NotificationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    setting<T extends Customer$settingArgs<ExtArgs> = {}>(args?: Subset<T, Customer$settingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    setting<T extends Customer$settingArgs<ExtArgs> = {}>(args?: Subset<T, Customer$settingArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     software_tickets<T extends Customer$software_ticketsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$software_ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$software_ticketsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    systems<T extends Customer$systemsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$systemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tower_logs<T extends Customer$tower_logsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$tower_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tower<T extends Customer$towerArgs<ExtArgs> = {}>(args?: Subset<T, Customer$towerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TowersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2697,6 +2832,8 @@ export namespace Prisma {
     readonly phone_number: FieldRef<"Customer", 'String'>
     readonly customer_type: FieldRef<"Customer", 'String'>
     readonly password_hash: FieldRef<"Customer", 'String'>
+    readonly plan_tier: FieldRef<"Customer", 'plan_tier'>
+    readonly role: FieldRef<"Customer", 'user_role'>
   }
     
 
@@ -3085,6 +3222,30 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.customer_system
+   */
+  export type Customer$customer_systemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    where?: customer_systemWhereInput
+    orderBy?: customer_systemOrderByWithRelationInput | customer_systemOrderByWithRelationInput[]
+    cursor?: customer_systemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Customer_systemScalarFieldEnum | Customer_systemScalarFieldEnum[]
+  }
+
+  /**
    * Customer.notification
    */
   export type Customer$notificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3101,11 +3262,6 @@ export namespace Prisma {
      */
     include?: NotificationsInclude<ExtArgs> | null
     where?: NotificationsWhereInput
-    orderBy?: NotificationsOrderByWithRelationInput | NotificationsOrderByWithRelationInput[]
-    cursor?: NotificationsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: NotificationsScalarFieldEnum | NotificationsScalarFieldEnum[]
   }
 
   /**
@@ -3149,11 +3305,6 @@ export namespace Prisma {
      */
     include?: SettingsInclude<ExtArgs> | null
     where?: SettingsWhereInput
-    orderBy?: SettingsOrderByWithRelationInput | SettingsOrderByWithRelationInput[]
-    cursor?: SettingsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SettingsScalarFieldEnum | SettingsScalarFieldEnum[]
   }
 
   /**
@@ -3178,30 +3329,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Software_ticketsScalarFieldEnum | Software_ticketsScalarFieldEnum[]
-  }
-
-  /**
-   * Customer.systems
-   */
-  export type Customer$systemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Systems
-     */
-    select?: SystemsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Systems
-     */
-    omit?: SystemsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SystemsInclude<ExtArgs> | null
-    where?: SystemsWhereInput
-    orderBy?: SystemsOrderByWithRelationInput | SystemsOrderByWithRelationInput[]
-    cursor?: SystemsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SystemsScalarFieldEnum | SystemsScalarFieldEnum[]
   }
 
   /**
@@ -3496,7 +3623,7 @@ export namespace Prisma {
 
   export type SettingsGroupByOutputType = {
     settings_id: number
-    customer_id: number
+    customer_id: number | null
     theme: string | null
     time_zone: string | null
     text_size: string
@@ -3545,7 +3672,7 @@ export namespace Prisma {
     last_login?: boolean
     email_recovery?: boolean
     phone_recovery?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Settings$customerArgs<ExtArgs>
   }, ExtArgs["result"]["settings"]>
 
   export type SettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3563,7 +3690,7 @@ export namespace Prisma {
     last_login?: boolean
     email_recovery?: boolean
     phone_recovery?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Settings$customerArgs<ExtArgs>
   }, ExtArgs["result"]["settings"]>
 
   export type SettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3581,7 +3708,7 @@ export namespace Prisma {
     last_login?: boolean
     email_recovery?: boolean
     phone_recovery?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Settings$customerArgs<ExtArgs>
   }, ExtArgs["result"]["settings"]>
 
   export type SettingsSelectScalar = {
@@ -3603,23 +3730,23 @@ export namespace Prisma {
 
   export type SettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"settings_id" | "customer_id" | "theme" | "time_zone" | "text_size" | "bold_text" | "update_frequency" | "region" | "language" | "twentyfourhourtime" | "last_login_device" | "last_login" | "email_recovery" | "phone_recovery", ExtArgs["result"]["settings"]>
   export type SettingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Settings$customerArgs<ExtArgs>
   }
   export type SettingsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Settings$customerArgs<ExtArgs>
   }
   export type SettingsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Settings$customerArgs<ExtArgs>
   }
 
   export type $SettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Settings"
     objects: {
-      customer: Prisma.$CustomerPayload<ExtArgs>
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       settings_id: number
-      customer_id: number
+      customer_id: number | null
       theme: string | null
       time_zone: string | null
       text_size: string
@@ -4026,7 +4153,7 @@ export namespace Prisma {
    */
   export interface Prisma__SettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customer<T extends Settings$customerArgs<ExtArgs> = {}>(args?: Subset<T, Settings$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4288,7 +4415,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Settings.
      */
-    data: XOR<SettingsCreateInput, SettingsUncheckedCreateInput>
+    data?: XOR<SettingsCreateInput, SettingsUncheckedCreateInput>
   }
 
   /**
@@ -4466,6 +4593,25 @@ export namespace Prisma {
   }
 
   /**
+   * Settings.customer
+   */
+  export type Settings$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
    * Settings without action
    */
   export type SettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4498,7 +4644,6 @@ export namespace Prisma {
 
   export type SystemsAvgAggregateOutputType = {
     id: number | null
-    customer_id: number | null
     total_towers: number | null
     max_pv_kw: Decimal | null
     latitude: Decimal | null
@@ -4507,7 +4652,6 @@ export namespace Prisma {
 
   export type SystemsSumAggregateOutputType = {
     id: number | null
-    customer_id: number | null
     total_towers: number | null
     max_pv_kw: Decimal | null
     latitude: Decimal | null
@@ -4518,7 +4662,6 @@ export namespace Prisma {
     id: number | null
     system_name: string | null
     inverter_type: string | null
-    customer_id: number | null
     timezone: string | null
     installation_date: Date | null
     status: string | null
@@ -4534,7 +4677,6 @@ export namespace Prisma {
     id: number | null
     system_name: string | null
     inverter_type: string | null
-    customer_id: number | null
     timezone: string | null
     installation_date: Date | null
     status: string | null
@@ -4550,7 +4692,6 @@ export namespace Prisma {
     id: number
     system_name: number
     inverter_type: number
-    customer_id: number
     timezone: number
     installation_date: number
     status: number
@@ -4566,7 +4707,6 @@ export namespace Prisma {
 
   export type SystemsAvgAggregateInputType = {
     id?: true
-    customer_id?: true
     total_towers?: true
     max_pv_kw?: true
     latitude?: true
@@ -4575,7 +4715,6 @@ export namespace Prisma {
 
   export type SystemsSumAggregateInputType = {
     id?: true
-    customer_id?: true
     total_towers?: true
     max_pv_kw?: true
     latitude?: true
@@ -4586,7 +4725,6 @@ export namespace Prisma {
     id?: true
     system_name?: true
     inverter_type?: true
-    customer_id?: true
     timezone?: true
     installation_date?: true
     status?: true
@@ -4602,7 +4740,6 @@ export namespace Prisma {
     id?: true
     system_name?: true
     inverter_type?: true
-    customer_id?: true
     timezone?: true
     installation_date?: true
     status?: true
@@ -4618,7 +4755,6 @@ export namespace Prisma {
     id?: true
     system_name?: true
     inverter_type?: true
-    customer_id?: true
     timezone?: true
     installation_date?: true
     status?: true
@@ -4721,7 +4857,6 @@ export namespace Prisma {
     id: number
     system_name: string
     inverter_type: string | null
-    customer_id: number | null
     timezone: string | null
     installation_date: Date | null
     status: string | null
@@ -4756,7 +4891,6 @@ export namespace Prisma {
     id?: boolean
     system_name?: boolean
     inverter_type?: boolean
-    customer_id?: boolean
     timezone?: boolean
     installation_date?: boolean
     status?: boolean
@@ -4766,7 +4900,7 @@ export namespace Prisma {
     api_key?: boolean
     latitude?: boolean
     longitude?: boolean
-    customer?: boolean | Systems$customerArgs<ExtArgs>
+    customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
     _count?: boolean | SystemsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["systems"]>
@@ -4775,7 +4909,6 @@ export namespace Prisma {
     id?: boolean
     system_name?: boolean
     inverter_type?: boolean
-    customer_id?: boolean
     timezone?: boolean
     installation_date?: boolean
     status?: boolean
@@ -4785,14 +4918,12 @@ export namespace Prisma {
     api_key?: boolean
     latitude?: boolean
     longitude?: boolean
-    customer?: boolean | Systems$customerArgs<ExtArgs>
   }, ExtArgs["result"]["systems"]>
 
   export type SystemsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     system_name?: boolean
     inverter_type?: boolean
-    customer_id?: boolean
     timezone?: boolean
     installation_date?: boolean
     status?: boolean
@@ -4802,14 +4933,12 @@ export namespace Prisma {
     api_key?: boolean
     latitude?: boolean
     longitude?: boolean
-    customer?: boolean | Systems$customerArgs<ExtArgs>
   }, ExtArgs["result"]["systems"]>
 
   export type SystemsSelectScalar = {
     id?: boolean
     system_name?: boolean
     inverter_type?: boolean
-    customer_id?: boolean
     timezone?: boolean
     installation_date?: boolean
     status?: boolean
@@ -4821,30 +4950,25 @@ export namespace Prisma {
     longitude?: boolean
   }
 
-  export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "customer_id" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "software_version" | "api_key" | "latitude" | "longitude", ExtArgs["result"]["systems"]>
+  export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "software_version" | "api_key" | "latitude" | "longitude", ExtArgs["result"]["systems"]>
   export type SystemsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | Systems$customerArgs<ExtArgs>
+    customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
     _count?: boolean | SystemsCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type SystemsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | Systems$customerArgs<ExtArgs>
-  }
-  export type SystemsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | Systems$customerArgs<ExtArgs>
-  }
+  export type SystemsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type SystemsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $SystemsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Systems"
     objects: {
-      customer: Prisma.$CustomerPayload<ExtArgs> | null
+      customer_system: Prisma.$customer_systemPayload<ExtArgs>[]
       towers: Prisma.$TowersPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       system_name: string
       inverter_type: string | null
-      customer_id: number | null
       timezone: string | null
       installation_date: Date | null
       status: string | null
@@ -5248,7 +5372,7 @@ export namespace Prisma {
    */
   export interface Prisma__SystemsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    customer<T extends Systems$customerArgs<ExtArgs> = {}>(args?: Subset<T, Systems$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customer_system<T extends Systems$customer_systemArgs<ExtArgs> = {}>(args?: Subset<T, Systems$customer_systemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     towers<T extends Systems$towersArgs<ExtArgs> = {}>(args?: Subset<T, Systems$towersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TowersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5282,7 +5406,6 @@ export namespace Prisma {
     readonly id: FieldRef<"Systems", 'Int'>
     readonly system_name: FieldRef<"Systems", 'String'>
     readonly inverter_type: FieldRef<"Systems", 'String'>
-    readonly customer_id: FieldRef<"Systems", 'Int'>
     readonly timezone: FieldRef<"Systems", 'String'>
     readonly installation_date: FieldRef<"Systems", 'DateTime'>
     readonly status: FieldRef<"Systems", 'String'>
@@ -5541,10 +5664,6 @@ export namespace Prisma {
      */
     data: SystemsCreateManyInput | SystemsCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SystemsIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5615,10 +5734,6 @@ export namespace Prisma {
      * Limit how many Systems to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SystemsIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5688,22 +5803,27 @@ export namespace Prisma {
   }
 
   /**
-   * Systems.customer
+   * Systems.customer_system
    */
-  export type Systems$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Systems$customer_systemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Customer
+     * Select specific fields to fetch from the customer_system
      */
-    select?: CustomerSelect<ExtArgs> | null
+    select?: customer_systemSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Customer
+     * Omit specific fields from the customer_system
      */
-    omit?: CustomerOmit<ExtArgs> | null
+    omit?: customer_systemOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CustomerInclude<ExtArgs> | null
-    where?: CustomerWhereInput
+    include?: customer_systemInclude<ExtArgs> | null
+    where?: customer_systemWhereInput
+    orderBy?: customer_systemOrderByWithRelationInput | customer_systemOrderByWithRelationInput[]
+    cursor?: customer_systemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Customer_systemScalarFieldEnum | Customer_systemScalarFieldEnum[]
   }
 
   /**
@@ -14934,6 +15054,1084 @@ export namespace Prisma {
 
 
   /**
+   * Model customer_system
+   */
+
+  export type AggregateCustomer_system = {
+    _count: Customer_systemCountAggregateOutputType | null
+    _avg: Customer_systemAvgAggregateOutputType | null
+    _sum: Customer_systemSumAggregateOutputType | null
+    _min: Customer_systemMinAggregateOutputType | null
+    _max: Customer_systemMaxAggregateOutputType | null
+  }
+
+  export type Customer_systemAvgAggregateOutputType = {
+    customer_id: number | null
+    system_id: number | null
+  }
+
+  export type Customer_systemSumAggregateOutputType = {
+    customer_id: number | null
+    system_id: number | null
+  }
+
+  export type Customer_systemMinAggregateOutputType = {
+    customer_id: number | null
+    system_id: number | null
+    role: string | null
+  }
+
+  export type Customer_systemMaxAggregateOutputType = {
+    customer_id: number | null
+    system_id: number | null
+    role: string | null
+  }
+
+  export type Customer_systemCountAggregateOutputType = {
+    customer_id: number
+    system_id: number
+    role: number
+    _all: number
+  }
+
+
+  export type Customer_systemAvgAggregateInputType = {
+    customer_id?: true
+    system_id?: true
+  }
+
+  export type Customer_systemSumAggregateInputType = {
+    customer_id?: true
+    system_id?: true
+  }
+
+  export type Customer_systemMinAggregateInputType = {
+    customer_id?: true
+    system_id?: true
+    role?: true
+  }
+
+  export type Customer_systemMaxAggregateInputType = {
+    customer_id?: true
+    system_id?: true
+    role?: true
+  }
+
+  export type Customer_systemCountAggregateInputType = {
+    customer_id?: true
+    system_id?: true
+    role?: true
+    _all?: true
+  }
+
+  export type Customer_systemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which customer_system to aggregate.
+     */
+    where?: customer_systemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of customer_systems to fetch.
+     */
+    orderBy?: customer_systemOrderByWithRelationInput | customer_systemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: customer_systemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` customer_systems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` customer_systems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned customer_systems
+    **/
+    _count?: true | Customer_systemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Customer_systemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Customer_systemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Customer_systemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Customer_systemMaxAggregateInputType
+  }
+
+  export type GetCustomer_systemAggregateType<T extends Customer_systemAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomer_system]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomer_system[P]>
+      : GetScalarType<T[P], AggregateCustomer_system[P]>
+  }
+
+
+
+
+  export type customer_systemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: customer_systemWhereInput
+    orderBy?: customer_systemOrderByWithAggregationInput | customer_systemOrderByWithAggregationInput[]
+    by: Customer_systemScalarFieldEnum[] | Customer_systemScalarFieldEnum
+    having?: customer_systemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Customer_systemCountAggregateInputType | true
+    _avg?: Customer_systemAvgAggregateInputType
+    _sum?: Customer_systemSumAggregateInputType
+    _min?: Customer_systemMinAggregateInputType
+    _max?: Customer_systemMaxAggregateInputType
+  }
+
+  export type Customer_systemGroupByOutputType = {
+    customer_id: number
+    system_id: number
+    role: string | null
+    _count: Customer_systemCountAggregateOutputType | null
+    _avg: Customer_systemAvgAggregateOutputType | null
+    _sum: Customer_systemSumAggregateOutputType | null
+    _min: Customer_systemMinAggregateOutputType | null
+    _max: Customer_systemMaxAggregateOutputType | null
+  }
+
+  type GetCustomer_systemGroupByPayload<T extends customer_systemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Customer_systemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Customer_systemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Customer_systemGroupByOutputType[P]>
+            : GetScalarType<T[P], Customer_systemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type customer_systemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    customer_id?: boolean
+    system_id?: boolean
+    role?: boolean
+    customers?: boolean | CustomerDefaultArgs<ExtArgs>
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customer_system"]>
+
+  export type customer_systemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    customer_id?: boolean
+    system_id?: boolean
+    role?: boolean
+    customers?: boolean | CustomerDefaultArgs<ExtArgs>
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customer_system"]>
+
+  export type customer_systemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    customer_id?: boolean
+    system_id?: boolean
+    role?: boolean
+    customers?: boolean | CustomerDefaultArgs<ExtArgs>
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customer_system"]>
+
+  export type customer_systemSelectScalar = {
+    customer_id?: boolean
+    system_id?: boolean
+    role?: boolean
+  }
+
+  export type customer_systemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"customer_id" | "system_id" | "role", ExtArgs["result"]["customer_system"]>
+  export type customer_systemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customers?: boolean | CustomerDefaultArgs<ExtArgs>
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }
+  export type customer_systemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customers?: boolean | CustomerDefaultArgs<ExtArgs>
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }
+  export type customer_systemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customers?: boolean | CustomerDefaultArgs<ExtArgs>
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }
+
+  export type $customer_systemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "customer_system"
+    objects: {
+      customers: Prisma.$CustomerPayload<ExtArgs>
+      systems: Prisma.$SystemsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      customer_id: number
+      system_id: number
+      role: string | null
+    }, ExtArgs["result"]["customer_system"]>
+    composites: {}
+  }
+
+  type customer_systemGetPayload<S extends boolean | null | undefined | customer_systemDefaultArgs> = $Result.GetResult<Prisma.$customer_systemPayload, S>
+
+  type customer_systemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<customer_systemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Customer_systemCountAggregateInputType | true
+    }
+
+  export interface customer_systemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['customer_system'], meta: { name: 'customer_system' } }
+    /**
+     * Find zero or one Customer_system that matches the filter.
+     * @param {customer_systemFindUniqueArgs} args - Arguments to find a Customer_system
+     * @example
+     * // Get one Customer_system
+     * const customer_system = await prisma.customer_system.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends customer_systemFindUniqueArgs>(args: SelectSubset<T, customer_systemFindUniqueArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Customer_system that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {customer_systemFindUniqueOrThrowArgs} args - Arguments to find a Customer_system
+     * @example
+     * // Get one Customer_system
+     * const customer_system = await prisma.customer_system.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends customer_systemFindUniqueOrThrowArgs>(args: SelectSubset<T, customer_systemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Customer_system that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {customer_systemFindFirstArgs} args - Arguments to find a Customer_system
+     * @example
+     * // Get one Customer_system
+     * const customer_system = await prisma.customer_system.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends customer_systemFindFirstArgs>(args?: SelectSubset<T, customer_systemFindFirstArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Customer_system that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {customer_systemFindFirstOrThrowArgs} args - Arguments to find a Customer_system
+     * @example
+     * // Get one Customer_system
+     * const customer_system = await prisma.customer_system.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends customer_systemFindFirstOrThrowArgs>(args?: SelectSubset<T, customer_systemFindFirstOrThrowArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Customer_systems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {customer_systemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Customer_systems
+     * const customer_systems = await prisma.customer_system.findMany()
+     * 
+     * // Get first 10 Customer_systems
+     * const customer_systems = await prisma.customer_system.findMany({ take: 10 })
+     * 
+     * // Only select the `customer_id`
+     * const customer_systemWithCustomer_idOnly = await prisma.customer_system.findMany({ select: { customer_id: true } })
+     * 
+     */
+    findMany<T extends customer_systemFindManyArgs>(args?: SelectSubset<T, customer_systemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Customer_system.
+     * @param {customer_systemCreateArgs} args - Arguments to create a Customer_system.
+     * @example
+     * // Create one Customer_system
+     * const Customer_system = await prisma.customer_system.create({
+     *   data: {
+     *     // ... data to create a Customer_system
+     *   }
+     * })
+     * 
+     */
+    create<T extends customer_systemCreateArgs>(args: SelectSubset<T, customer_systemCreateArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Customer_systems.
+     * @param {customer_systemCreateManyArgs} args - Arguments to create many Customer_systems.
+     * @example
+     * // Create many Customer_systems
+     * const customer_system = await prisma.customer_system.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends customer_systemCreateManyArgs>(args?: SelectSubset<T, customer_systemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Customer_systems and returns the data saved in the database.
+     * @param {customer_systemCreateManyAndReturnArgs} args - Arguments to create many Customer_systems.
+     * @example
+     * // Create many Customer_systems
+     * const customer_system = await prisma.customer_system.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Customer_systems and only return the `customer_id`
+     * const customer_systemWithCustomer_idOnly = await prisma.customer_system.createManyAndReturn({
+     *   select: { customer_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends customer_systemCreateManyAndReturnArgs>(args?: SelectSubset<T, customer_systemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Customer_system.
+     * @param {customer_systemDeleteArgs} args - Arguments to delete one Customer_system.
+     * @example
+     * // Delete one Customer_system
+     * const Customer_system = await prisma.customer_system.delete({
+     *   where: {
+     *     // ... filter to delete one Customer_system
+     *   }
+     * })
+     * 
+     */
+    delete<T extends customer_systemDeleteArgs>(args: SelectSubset<T, customer_systemDeleteArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Customer_system.
+     * @param {customer_systemUpdateArgs} args - Arguments to update one Customer_system.
+     * @example
+     * // Update one Customer_system
+     * const customer_system = await prisma.customer_system.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends customer_systemUpdateArgs>(args: SelectSubset<T, customer_systemUpdateArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Customer_systems.
+     * @param {customer_systemDeleteManyArgs} args - Arguments to filter Customer_systems to delete.
+     * @example
+     * // Delete a few Customer_systems
+     * const { count } = await prisma.customer_system.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends customer_systemDeleteManyArgs>(args?: SelectSubset<T, customer_systemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Customer_systems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {customer_systemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Customer_systems
+     * const customer_system = await prisma.customer_system.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends customer_systemUpdateManyArgs>(args: SelectSubset<T, customer_systemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Customer_systems and returns the data updated in the database.
+     * @param {customer_systemUpdateManyAndReturnArgs} args - Arguments to update many Customer_systems.
+     * @example
+     * // Update many Customer_systems
+     * const customer_system = await prisma.customer_system.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Customer_systems and only return the `customer_id`
+     * const customer_systemWithCustomer_idOnly = await prisma.customer_system.updateManyAndReturn({
+     *   select: { customer_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends customer_systemUpdateManyAndReturnArgs>(args: SelectSubset<T, customer_systemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Customer_system.
+     * @param {customer_systemUpsertArgs} args - Arguments to update or create a Customer_system.
+     * @example
+     * // Update or create a Customer_system
+     * const customer_system = await prisma.customer_system.upsert({
+     *   create: {
+     *     // ... data to create a Customer_system
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Customer_system we want to update
+     *   }
+     * })
+     */
+    upsert<T extends customer_systemUpsertArgs>(args: SelectSubset<T, customer_systemUpsertArgs<ExtArgs>>): Prisma__customer_systemClient<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Customer_systems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {customer_systemCountArgs} args - Arguments to filter Customer_systems to count.
+     * @example
+     * // Count the number of Customer_systems
+     * const count = await prisma.customer_system.count({
+     *   where: {
+     *     // ... the filter for the Customer_systems we want to count
+     *   }
+     * })
+    **/
+    count<T extends customer_systemCountArgs>(
+      args?: Subset<T, customer_systemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Customer_systemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Customer_system.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Customer_systemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Customer_systemAggregateArgs>(args: Subset<T, Customer_systemAggregateArgs>): Prisma.PrismaPromise<GetCustomer_systemAggregateType<T>>
+
+    /**
+     * Group by Customer_system.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {customer_systemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends customer_systemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: customer_systemGroupByArgs['orderBy'] }
+        : { orderBy?: customer_systemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, customer_systemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomer_systemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the customer_system model
+   */
+  readonly fields: customer_systemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for customer_system.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__customer_systemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customers<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    systems<T extends SystemsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SystemsDefaultArgs<ExtArgs>>): Prisma__SystemsClient<$Result.GetResult<Prisma.$SystemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the customer_system model
+   */
+  interface customer_systemFieldRefs {
+    readonly customer_id: FieldRef<"customer_system", 'Int'>
+    readonly system_id: FieldRef<"customer_system", 'Int'>
+    readonly role: FieldRef<"customer_system", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * customer_system findUnique
+   */
+  export type customer_systemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * Filter, which customer_system to fetch.
+     */
+    where: customer_systemWhereUniqueInput
+  }
+
+  /**
+   * customer_system findUniqueOrThrow
+   */
+  export type customer_systemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * Filter, which customer_system to fetch.
+     */
+    where: customer_systemWhereUniqueInput
+  }
+
+  /**
+   * customer_system findFirst
+   */
+  export type customer_systemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * Filter, which customer_system to fetch.
+     */
+    where?: customer_systemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of customer_systems to fetch.
+     */
+    orderBy?: customer_systemOrderByWithRelationInput | customer_systemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for customer_systems.
+     */
+    cursor?: customer_systemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` customer_systems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` customer_systems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of customer_systems.
+     */
+    distinct?: Customer_systemScalarFieldEnum | Customer_systemScalarFieldEnum[]
+  }
+
+  /**
+   * customer_system findFirstOrThrow
+   */
+  export type customer_systemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * Filter, which customer_system to fetch.
+     */
+    where?: customer_systemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of customer_systems to fetch.
+     */
+    orderBy?: customer_systemOrderByWithRelationInput | customer_systemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for customer_systems.
+     */
+    cursor?: customer_systemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` customer_systems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` customer_systems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of customer_systems.
+     */
+    distinct?: Customer_systemScalarFieldEnum | Customer_systemScalarFieldEnum[]
+  }
+
+  /**
+   * customer_system findMany
+   */
+  export type customer_systemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * Filter, which customer_systems to fetch.
+     */
+    where?: customer_systemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of customer_systems to fetch.
+     */
+    orderBy?: customer_systemOrderByWithRelationInput | customer_systemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing customer_systems.
+     */
+    cursor?: customer_systemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` customer_systems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` customer_systems.
+     */
+    skip?: number
+    distinct?: Customer_systemScalarFieldEnum | Customer_systemScalarFieldEnum[]
+  }
+
+  /**
+   * customer_system create
+   */
+  export type customer_systemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a customer_system.
+     */
+    data: XOR<customer_systemCreateInput, customer_systemUncheckedCreateInput>
+  }
+
+  /**
+   * customer_system createMany
+   */
+  export type customer_systemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many customer_systems.
+     */
+    data: customer_systemCreateManyInput | customer_systemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * customer_system createManyAndReturn
+   */
+  export type customer_systemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * The data used to create many customer_systems.
+     */
+    data: customer_systemCreateManyInput | customer_systemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * customer_system update
+   */
+  export type customer_systemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a customer_system.
+     */
+    data: XOR<customer_systemUpdateInput, customer_systemUncheckedUpdateInput>
+    /**
+     * Choose, which customer_system to update.
+     */
+    where: customer_systemWhereUniqueInput
+  }
+
+  /**
+   * customer_system updateMany
+   */
+  export type customer_systemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update customer_systems.
+     */
+    data: XOR<customer_systemUpdateManyMutationInput, customer_systemUncheckedUpdateManyInput>
+    /**
+     * Filter which customer_systems to update
+     */
+    where?: customer_systemWhereInput
+    /**
+     * Limit how many customer_systems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * customer_system updateManyAndReturn
+   */
+  export type customer_systemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * The data used to update customer_systems.
+     */
+    data: XOR<customer_systemUpdateManyMutationInput, customer_systemUncheckedUpdateManyInput>
+    /**
+     * Filter which customer_systems to update
+     */
+    where?: customer_systemWhereInput
+    /**
+     * Limit how many customer_systems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * customer_system upsert
+   */
+  export type customer_systemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the customer_system to update in case it exists.
+     */
+    where: customer_systemWhereUniqueInput
+    /**
+     * In case the customer_system found by the `where` argument doesn't exist, create a new customer_system with this data.
+     */
+    create: XOR<customer_systemCreateInput, customer_systemUncheckedCreateInput>
+    /**
+     * In case the customer_system was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<customer_systemUpdateInput, customer_systemUncheckedUpdateInput>
+  }
+
+  /**
+   * customer_system delete
+   */
+  export type customer_systemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+    /**
+     * Filter which customer_system to delete.
+     */
+    where: customer_systemWhereUniqueInput
+  }
+
+  /**
+   * customer_system deleteMany
+   */
+  export type customer_systemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which customer_systems to delete
+     */
+    where?: customer_systemWhereInput
+    /**
+     * Limit how many customer_systems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * customer_system without action
+   */
+  export type customer_systemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the customer_system
+     */
+    select?: customer_systemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the customer_system
+     */
+    omit?: customer_systemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: customer_systemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14955,7 +16153,9 @@ export namespace Prisma {
     country_code: 'country_code',
     phone_number: 'phone_number',
     customer_type: 'customer_type',
-    password_hash: 'password_hash'
+    password_hash: 'password_hash',
+    plan_tier: 'plan_tier',
+    role: 'role'
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -14985,7 +16185,6 @@ export namespace Prisma {
     id: 'id',
     system_name: 'system_name',
     inverter_type: 'inverter_type',
-    customer_id: 'customer_id',
     timezone: 'timezone',
     installation_date: 'installation_date',
     status: 'status',
@@ -15116,6 +16315,15 @@ export namespace Prisma {
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
 
 
+  export const Customer_systemScalarFieldEnum: {
+    customer_id: 'customer_id',
+    system_id: 'system_id',
+    role: 'role'
+  };
+
+  export type Customer_systemScalarFieldEnum = (typeof Customer_systemScalarFieldEnum)[keyof typeof Customer_systemScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -15170,6 +16378,34 @@ export namespace Prisma {
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'plan_tier'
+   */
+  export type Enumplan_tierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'plan_tier'>
+    
+
+
+  /**
+   * Reference to a field of type 'plan_tier[]'
+   */
+  export type ListEnumplan_tierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'plan_tier[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'user_role'
+   */
+  export type Enumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role'>
+    
+
+
+  /**
+   * Reference to a field of type 'user_role[]'
+   */
+  export type ListEnumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role[]'>
     
 
 
@@ -15237,11 +16473,13 @@ export namespace Prisma {
     phone_number?: StringNullableFilter<"Customer"> | string | null
     customer_type?: StringFilter<"Customer"> | string
     password_hash?: StringFilter<"Customer"> | string
-    notification?: NotificationsListRelationFilter
+    plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
+    role?: Enumuser_roleNullableFilter<"Customer"> | $Enums.user_role | null
+    customer_system?: Customer_systemListRelationFilter
+    notification?: XOR<NotificationsNullableScalarRelationFilter, NotificationsWhereInput> | null
     orders?: OrdersListRelationFilter
-    setting?: SettingsListRelationFilter
+    setting?: XOR<SettingsNullableScalarRelationFilter, SettingsWhereInput> | null
     software_tickets?: Software_ticketsListRelationFilter
-    systems?: SystemsListRelationFilter
     tower_logs?: Tower_logsListRelationFilter
     tower?: TowersListRelationFilter
   }
@@ -15255,11 +16493,13 @@ export namespace Prisma {
     phone_number?: SortOrderInput | SortOrder
     customer_type?: SortOrder
     password_hash?: SortOrder
-    notification?: NotificationsOrderByRelationAggregateInput
+    plan_tier?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    customer_system?: customer_systemOrderByRelationAggregateInput
+    notification?: NotificationsOrderByWithRelationInput
     orders?: ordersOrderByRelationAggregateInput
-    setting?: SettingsOrderByRelationAggregateInput
+    setting?: SettingsOrderByWithRelationInput
     software_tickets?: software_ticketsOrderByRelationAggregateInput
-    systems?: SystemsOrderByRelationAggregateInput
     tower_logs?: tower_logsOrderByRelationAggregateInput
     tower?: TowersOrderByRelationAggregateInput
   }
@@ -15276,11 +16516,13 @@ export namespace Prisma {
     phone_number?: StringNullableFilter<"Customer"> | string | null
     customer_type?: StringFilter<"Customer"> | string
     password_hash?: StringFilter<"Customer"> | string
-    notification?: NotificationsListRelationFilter
+    plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
+    role?: Enumuser_roleNullableFilter<"Customer"> | $Enums.user_role | null
+    customer_system?: Customer_systemListRelationFilter
+    notification?: XOR<NotificationsNullableScalarRelationFilter, NotificationsWhereInput> | null
     orders?: OrdersListRelationFilter
-    setting?: SettingsListRelationFilter
+    setting?: XOR<SettingsNullableScalarRelationFilter, SettingsWhereInput> | null
     software_tickets?: Software_ticketsListRelationFilter
-    systems?: SystemsListRelationFilter
     tower_logs?: Tower_logsListRelationFilter
     tower?: TowersListRelationFilter
   }, "id" | "email">
@@ -15294,6 +16536,8 @@ export namespace Prisma {
     phone_number?: SortOrderInput | SortOrder
     customer_type?: SortOrder
     password_hash?: SortOrder
+    plan_tier?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
     _count?: CustomerCountOrderByAggregateInput
     _avg?: CustomerAvgOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
@@ -15313,6 +16557,8 @@ export namespace Prisma {
     phone_number?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     customer_type?: StringWithAggregatesFilter<"Customer"> | string
     password_hash?: StringWithAggregatesFilter<"Customer"> | string
+    plan_tier?: Enumplan_tierNullableWithAggregatesFilter<"Customer"> | $Enums.plan_tier | null
+    role?: Enumuser_roleNullableWithAggregatesFilter<"Customer"> | $Enums.user_role | null
   }
 
   export type SettingsWhereInput = {
@@ -15320,7 +16566,7 @@ export namespace Prisma {
     OR?: SettingsWhereInput[]
     NOT?: SettingsWhereInput | SettingsWhereInput[]
     settings_id?: IntFilter<"Settings"> | number
-    customer_id?: IntFilter<"Settings"> | number
+    customer_id?: IntNullableFilter<"Settings"> | number | null
     theme?: StringNullableFilter<"Settings"> | string | null
     time_zone?: StringNullableFilter<"Settings"> | string | null
     text_size?: StringFilter<"Settings"> | string
@@ -15333,12 +16579,12 @@ export namespace Prisma {
     last_login?: DateTimeFilter<"Settings"> | Date | string
     email_recovery?: StringNullableFilter<"Settings"> | string | null
     phone_recovery?: StringNullableFilter<"Settings"> | string | null
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
   }
 
   export type SettingsOrderByWithRelationInput = {
     settings_id?: SortOrder
-    customer_id?: SortOrder
+    customer_id?: SortOrderInput | SortOrder
     theme?: SortOrderInput | SortOrder
     time_zone?: SortOrderInput | SortOrder
     text_size?: SortOrder
@@ -15372,12 +16618,12 @@ export namespace Prisma {
     last_login?: DateTimeFilter<"Settings"> | Date | string
     email_recovery?: StringNullableFilter<"Settings"> | string | null
     phone_recovery?: StringNullableFilter<"Settings"> | string | null
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
   }, "settings_id" | "customer_id">
 
   export type SettingsOrderByWithAggregationInput = {
     settings_id?: SortOrder
-    customer_id?: SortOrder
+    customer_id?: SortOrderInput | SortOrder
     theme?: SortOrderInput | SortOrder
     time_zone?: SortOrderInput | SortOrder
     text_size?: SortOrder
@@ -15402,7 +16648,7 @@ export namespace Prisma {
     OR?: SettingsScalarWhereWithAggregatesInput[]
     NOT?: SettingsScalarWhereWithAggregatesInput | SettingsScalarWhereWithAggregatesInput[]
     settings_id?: IntWithAggregatesFilter<"Settings"> | number
-    customer_id?: IntWithAggregatesFilter<"Settings"> | number
+    customer_id?: IntNullableWithAggregatesFilter<"Settings"> | number | null
     theme?: StringNullableWithAggregatesFilter<"Settings"> | string | null
     time_zone?: StringNullableWithAggregatesFilter<"Settings"> | string | null
     text_size?: StringWithAggregatesFilter<"Settings"> | string
@@ -15424,7 +16670,6 @@ export namespace Prisma {
     id?: IntFilter<"Systems"> | number
     system_name?: StringFilter<"Systems"> | string
     inverter_type?: StringNullableFilter<"Systems"> | string | null
-    customer_id?: IntNullableFilter<"Systems"> | number | null
     timezone?: StringNullableFilter<"Systems"> | string | null
     installation_date?: DateTimeNullableFilter<"Systems"> | Date | string | null
     status?: StringNullableFilter<"Systems"> | string | null
@@ -15434,7 +16679,7 @@ export namespace Prisma {
     api_key?: StringNullableFilter<"Systems"> | string | null
     latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
-    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    customer_system?: Customer_systemListRelationFilter
     towers?: TowersListRelationFilter
   }
 
@@ -15442,7 +16687,6 @@ export namespace Prisma {
     id?: SortOrder
     system_name?: SortOrder
     inverter_type?: SortOrderInput | SortOrder
-    customer_id?: SortOrderInput | SortOrder
     timezone?: SortOrderInput | SortOrder
     installation_date?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
@@ -15452,7 +16696,7 @@ export namespace Prisma {
     api_key?: SortOrderInput | SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
-    customer?: CustomerOrderByWithRelationInput
+    customer_system?: customer_systemOrderByRelationAggregateInput
     towers?: TowersOrderByRelationAggregateInput
   }
 
@@ -15463,7 +16707,6 @@ export namespace Prisma {
     NOT?: SystemsWhereInput | SystemsWhereInput[]
     system_name?: StringFilter<"Systems"> | string
     inverter_type?: StringNullableFilter<"Systems"> | string | null
-    customer_id?: IntNullableFilter<"Systems"> | number | null
     timezone?: StringNullableFilter<"Systems"> | string | null
     installation_date?: DateTimeNullableFilter<"Systems"> | Date | string | null
     status?: StringNullableFilter<"Systems"> | string | null
@@ -15473,7 +16716,7 @@ export namespace Prisma {
     api_key?: StringNullableFilter<"Systems"> | string | null
     latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
-    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    customer_system?: Customer_systemListRelationFilter
     towers?: TowersListRelationFilter
   }, "id">
 
@@ -15481,7 +16724,6 @@ export namespace Prisma {
     id?: SortOrder
     system_name?: SortOrder
     inverter_type?: SortOrderInput | SortOrder
-    customer_id?: SortOrderInput | SortOrder
     timezone?: SortOrderInput | SortOrder
     installation_date?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
@@ -15505,7 +16747,6 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Systems"> | number
     system_name?: StringWithAggregatesFilter<"Systems"> | string
     inverter_type?: StringNullableWithAggregatesFilter<"Systems"> | string | null
-    customer_id?: IntNullableWithAggregatesFilter<"Systems"> | number | null
     timezone?: StringNullableWithAggregatesFilter<"Systems"> | string | null
     installation_date?: DateTimeNullableWithAggregatesFilter<"Systems"> | Date | string | null
     status?: StringNullableWithAggregatesFilter<"Systems"> | string | null
@@ -15550,10 +16791,10 @@ export namespace Prisma {
 
   export type NotificationsWhereUniqueInput = Prisma.AtLeast<{
     notifications_id?: number
+    customer_id?: number
     AND?: NotificationsWhereInput | NotificationsWhereInput[]
     OR?: NotificationsWhereInput[]
     NOT?: NotificationsWhereInput | NotificationsWhereInput[]
-    customer_id?: IntNullableFilter<"Notifications"> | number | null
     push_notifications_enabled?: BoolNullableFilter<"Notifications"> | boolean | null
     push_notify_login?: BoolNullableFilter<"Notifications"> | boolean | null
     notification_tone?: StringNullableFilter<"Notifications"> | string | null
@@ -15563,7 +16804,7 @@ export namespace Prisma {
     sms_password_changes?: BoolNullableFilter<"Notifications"> | boolean | null
     sms_login_attempts?: BoolNullableFilter<"Notifications"> | boolean | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
-  }, "notifications_id">
+  }, "notifications_id" | "customer_id">
 
   export type NotificationsOrderByWithAggregationInput = {
     notifications_id?: SortOrder
@@ -16119,6 +17360,57 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"users"> | string
   }
 
+  export type customer_systemWhereInput = {
+    AND?: customer_systemWhereInput | customer_systemWhereInput[]
+    OR?: customer_systemWhereInput[]
+    NOT?: customer_systemWhereInput | customer_systemWhereInput[]
+    customer_id?: IntFilter<"customer_system"> | number
+    system_id?: IntFilter<"customer_system"> | number
+    role?: StringNullableFilter<"customer_system"> | string | null
+    customers?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    systems?: XOR<SystemsScalarRelationFilter, SystemsWhereInput>
+  }
+
+  export type customer_systemOrderByWithRelationInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+    role?: SortOrderInput | SortOrder
+    customers?: CustomerOrderByWithRelationInput
+    systems?: SystemsOrderByWithRelationInput
+  }
+
+  export type customer_systemWhereUniqueInput = Prisma.AtLeast<{
+    customer_id_system_id?: customer_systemCustomer_idSystem_idCompoundUniqueInput
+    AND?: customer_systemWhereInput | customer_systemWhereInput[]
+    OR?: customer_systemWhereInput[]
+    NOT?: customer_systemWhereInput | customer_systemWhereInput[]
+    customer_id?: IntFilter<"customer_system"> | number
+    system_id?: IntFilter<"customer_system"> | number
+    role?: StringNullableFilter<"customer_system"> | string | null
+    customers?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    systems?: XOR<SystemsScalarRelationFilter, SystemsWhereInput>
+  }, "customer_id_system_id">
+
+  export type customer_systemOrderByWithAggregationInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+    role?: SortOrderInput | SortOrder
+    _count?: customer_systemCountOrderByAggregateInput
+    _avg?: customer_systemAvgOrderByAggregateInput
+    _max?: customer_systemMaxOrderByAggregateInput
+    _min?: customer_systemMinOrderByAggregateInput
+    _sum?: customer_systemSumOrderByAggregateInput
+  }
+
+  export type customer_systemScalarWhereWithAggregatesInput = {
+    AND?: customer_systemScalarWhereWithAggregatesInput | customer_systemScalarWhereWithAggregatesInput[]
+    OR?: customer_systemScalarWhereWithAggregatesInput[]
+    NOT?: customer_systemScalarWhereWithAggregatesInput | customer_systemScalarWhereWithAggregatesInput[]
+    customer_id?: IntWithAggregatesFilter<"customer_system"> | number
+    system_id?: IntWithAggregatesFilter<"customer_system"> | number
+    role?: StringNullableWithAggregatesFilter<"customer_system"> | string | null
+  }
+
   export type CustomerCreateInput = {
     name: string
     email: string
@@ -16127,11 +17419,13 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
@@ -16145,11 +17439,13 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -16162,11 +17458,13 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
@@ -16180,11 +17478,13 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -16198,6 +17498,8 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
   }
 
   export type CustomerUpdateManyMutationInput = {
@@ -16208,6 +17510,8 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
   }
 
   export type CustomerUncheckedUpdateManyInput = {
@@ -16219,6 +17523,8 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
   }
 
   export type SettingsCreateInput = {
@@ -16234,12 +17540,12 @@ export namespace Prisma {
     last_login?: Date | string
     email_recovery?: string | null
     phone_recovery?: string | null
-    customer: CustomerCreateNestedOneWithoutSettingInput
+    customer?: CustomerCreateNestedOneWithoutSettingInput
   }
 
   export type SettingsUncheckedCreateInput = {
     settings_id?: number
-    customer_id: number
+    customer_id?: number | null
     theme?: string | null
     time_zone?: string | null
     text_size?: string
@@ -16267,12 +17573,12 @@ export namespace Prisma {
     last_login?: DateTimeFieldUpdateOperationsInput | Date | string
     email_recovery?: NullableStringFieldUpdateOperationsInput | string | null
     phone_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutSettingNestedInput
+    customer?: CustomerUpdateOneWithoutSettingNestedInput
   }
 
   export type SettingsUncheckedUpdateInput = {
     settings_id?: IntFieldUpdateOperationsInput | number
-    customer_id?: IntFieldUpdateOperationsInput | number
+    customer_id?: NullableIntFieldUpdateOperationsInput | number | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     time_zone?: NullableStringFieldUpdateOperationsInput | string | null
     text_size?: StringFieldUpdateOperationsInput | string
@@ -16289,7 +17595,7 @@ export namespace Prisma {
 
   export type SettingsCreateManyInput = {
     settings_id?: number
-    customer_id: number
+    customer_id?: number | null
     theme?: string | null
     time_zone?: string | null
     text_size?: string
@@ -16321,7 +17627,7 @@ export namespace Prisma {
 
   export type SettingsUncheckedUpdateManyInput = {
     settings_id?: IntFieldUpdateOperationsInput | number
-    customer_id?: IntFieldUpdateOperationsInput | number
+    customer_id?: NullableIntFieldUpdateOperationsInput | number | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     time_zone?: NullableStringFieldUpdateOperationsInput | string | null
     text_size?: StringFieldUpdateOperationsInput | string
@@ -16348,7 +17654,7 @@ export namespace Prisma {
     api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
-    customer?: CustomerCreateNestedOneWithoutSystemsInput
+    customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
     towers?: TowersCreateNestedManyWithoutSystemInput
   }
 
@@ -16356,7 +17662,6 @@ export namespace Prisma {
     id?: number
     system_name: string
     inverter_type?: string | null
-    customer_id?: number | null
     timezone?: string | null
     installation_date?: Date | string | null
     status?: string | null
@@ -16366,6 +17671,7 @@ export namespace Prisma {
     api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
     towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
   }
 
@@ -16381,7 +17687,7 @@ export namespace Prisma {
     api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customer?: CustomerUpdateOneWithoutSystemsNestedInput
+    customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
     towers?: TowersUpdateManyWithoutSystemNestedInput
   }
 
@@ -16389,7 +17695,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     system_name?: StringFieldUpdateOperationsInput | string
     inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableIntFieldUpdateOperationsInput | number | null
     timezone?: NullableStringFieldUpdateOperationsInput | string | null
     installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16399,6 +17704,7 @@ export namespace Prisma {
     api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
     towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
   }
 
@@ -16406,7 +17712,6 @@ export namespace Prisma {
     id?: number
     system_name: string
     inverter_type?: string | null
-    customer_id?: number | null
     timezone?: string | null
     installation_date?: Date | string | null
     status?: string | null
@@ -16436,7 +17741,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     system_name?: StringFieldUpdateOperationsInput | string
     inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableIntFieldUpdateOperationsInput | number | null
     timezone?: NullableStringFieldUpdateOperationsInput | string | null
     installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17071,6 +18375,46 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
   }
 
+  export type customer_systemCreateInput = {
+    role?: string | null
+    customers: CustomerCreateNestedOneWithoutCustomer_systemInput
+    systems: SystemsCreateNestedOneWithoutCustomer_systemInput
+  }
+
+  export type customer_systemUncheckedCreateInput = {
+    customer_id: number
+    system_id: number
+    role?: string | null
+  }
+
+  export type customer_systemUpdateInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    customers?: CustomerUpdateOneRequiredWithoutCustomer_systemNestedInput
+    systems?: SystemsUpdateOneRequiredWithoutCustomer_systemNestedInput
+  }
+
+  export type customer_systemUncheckedUpdateInput = {
+    customer_id?: IntFieldUpdateOperationsInput | number
+    system_id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type customer_systemCreateManyInput = {
+    customer_id: number
+    system_id: number
+    role?: string | null
+  }
+
+  export type customer_systemUpdateManyMutationInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type customer_systemUncheckedUpdateManyInput = {
+    customer_id?: IntFieldUpdateOperationsInput | number
+    system_id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -17123,10 +18467,29 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NotificationsListRelationFilter = {
-    every?: NotificationsWhereInput
-    some?: NotificationsWhereInput
-    none?: NotificationsWhereInput
+  export type Enumplan_tierNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.plan_tier | Enumplan_tierFieldRefInput<$PrismaModel> | null
+    in?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumplan_tierNullableFilter<$PrismaModel> | $Enums.plan_tier | null
+  }
+
+  export type Enumuser_roleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
+  }
+
+  export type Customer_systemListRelationFilter = {
+    every?: customer_systemWhereInput
+    some?: customer_systemWhereInput
+    none?: customer_systemWhereInput
+  }
+
+  export type NotificationsNullableScalarRelationFilter = {
+    is?: NotificationsWhereInput | null
+    isNot?: NotificationsWhereInput | null
   }
 
   export type OrdersListRelationFilter = {
@@ -17135,22 +18498,15 @@ export namespace Prisma {
     none?: ordersWhereInput
   }
 
-  export type SettingsListRelationFilter = {
-    every?: SettingsWhereInput
-    some?: SettingsWhereInput
-    none?: SettingsWhereInput
+  export type SettingsNullableScalarRelationFilter = {
+    is?: SettingsWhereInput | null
+    isNot?: SettingsWhereInput | null
   }
 
   export type Software_ticketsListRelationFilter = {
     every?: software_ticketsWhereInput
     some?: software_ticketsWhereInput
     none?: software_ticketsWhereInput
-  }
-
-  export type SystemsListRelationFilter = {
-    every?: SystemsWhereInput
-    some?: SystemsWhereInput
-    none?: SystemsWhereInput
   }
 
   export type Tower_logsListRelationFilter = {
@@ -17170,7 +18526,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type NotificationsOrderByRelationAggregateInput = {
+  export type customer_systemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17178,15 +18534,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type SettingsOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type software_ticketsOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type SystemsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17207,6 +18555,8 @@ export namespace Prisma {
     phone_number?: SortOrder
     customer_type?: SortOrder
     password_hash?: SortOrder
+    plan_tier?: SortOrder
+    role?: SortOrder
   }
 
   export type CustomerAvgOrderByAggregateInput = {
@@ -17223,6 +18573,8 @@ export namespace Prisma {
     phone_number?: SortOrder
     customer_type?: SortOrder
     password_hash?: SortOrder
+    plan_tier?: SortOrder
+    role?: SortOrder
   }
 
   export type CustomerMinOrderByAggregateInput = {
@@ -17234,6 +18586,8 @@ export namespace Prisma {
     phone_number?: SortOrder
     customer_type?: SortOrder
     password_hash?: SortOrder
+    plan_tier?: SortOrder
+    role?: SortOrder
   }
 
   export type CustomerSumOrderByAggregateInput = {
@@ -17309,6 +18663,26 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type Enumplan_tierNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.plan_tier | Enumplan_tierFieldRefInput<$PrismaModel> | null
+    in?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumplan_tierNullableWithAggregatesFilter<$PrismaModel> | $Enums.plan_tier | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumplan_tierNullableFilter<$PrismaModel>
+    _max?: NestedEnumplan_tierNullableFilter<$PrismaModel>
+  }
+
+  export type Enumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+  }
+
   export type BoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
@@ -17325,9 +18699,9 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type CustomerScalarRelationFilter = {
-    is?: CustomerWhereInput
-    isNot?: CustomerWhereInput
+  export type CustomerNullableScalarRelationFilter = {
+    is?: CustomerWhereInput | null
+    isNot?: CustomerWhereInput | null
   }
 
   export type SettingsCountOrderByAggregateInput = {
@@ -17446,16 +18820,10 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
-  export type CustomerNullableScalarRelationFilter = {
-    is?: CustomerWhereInput | null
-    isNot?: CustomerWhereInput | null
-  }
-
   export type SystemsCountOrderByAggregateInput = {
     id?: SortOrder
     system_name?: SortOrder
     inverter_type?: SortOrder
-    customer_id?: SortOrder
     timezone?: SortOrder
     installation_date?: SortOrder
     status?: SortOrder
@@ -17469,7 +18837,6 @@ export namespace Prisma {
 
   export type SystemsAvgOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
     latitude?: SortOrder
@@ -17480,7 +18847,6 @@ export namespace Prisma {
     id?: SortOrder
     system_name?: SortOrder
     inverter_type?: SortOrder
-    customer_id?: SortOrder
     timezone?: SortOrder
     installation_date?: SortOrder
     status?: SortOrder
@@ -17496,7 +18862,6 @@ export namespace Prisma {
     id?: SortOrder
     system_name?: SortOrder
     inverter_type?: SortOrder
-    customer_id?: SortOrder
     timezone?: SortOrder
     installation_date?: SortOrder
     status?: SortOrder
@@ -17510,7 +18875,6 @@ export namespace Prisma {
 
   export type SystemsSumOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
     latitude?: SortOrder
@@ -17610,6 +18974,11 @@ export namespace Prisma {
   export type NotificationsSumOrderByAggregateInput = {
     notifications_id?: SortOrder
     customer_id?: SortOrder
+  }
+
+  export type CustomerScalarRelationFilter = {
+    is?: CustomerWhereInput
+    isNot?: CustomerWhereInput
   }
 
   export type OrdersScalarRelationFilter = {
@@ -18051,11 +19420,55 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type NotificationsCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput> | NotificationsCreateWithoutCustomerInput[] | NotificationsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput | NotificationsCreateOrConnectWithoutCustomerInput[]
-    createMany?: NotificationsCreateManyCustomerInputEnvelope
-    connect?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
+  export type SystemsScalarRelationFilter = {
+    is?: SystemsWhereInput
+    isNot?: SystemsWhereInput
+  }
+
+  export type customer_systemCustomer_idSystem_idCompoundUniqueInput = {
+    customer_id: number
+    system_id: number
+  }
+
+  export type customer_systemCountOrderByAggregateInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+    role?: SortOrder
+  }
+
+  export type customer_systemAvgOrderByAggregateInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+  }
+
+  export type customer_systemMaxOrderByAggregateInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+    role?: SortOrder
+  }
+
+  export type customer_systemMinOrderByAggregateInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+    role?: SortOrder
+  }
+
+  export type customer_systemSumOrderByAggregateInput = {
+    customer_id?: SortOrder
+    system_id?: SortOrder
+  }
+
+  export type customer_systemCreateNestedManyWithoutCustomersInput = {
+    create?: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput> | customer_systemCreateWithoutCustomersInput[] | customer_systemUncheckedCreateWithoutCustomersInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutCustomersInput | customer_systemCreateOrConnectWithoutCustomersInput[]
+    createMany?: customer_systemCreateManyCustomersInputEnvelope
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+  }
+
+  export type NotificationsCreateNestedOneWithoutCustomerInput = {
+    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput
+    connect?: NotificationsWhereUniqueInput
   }
 
   export type ordersCreateNestedManyWithoutCustomersInput = {
@@ -18065,11 +19478,10 @@ export namespace Prisma {
     connect?: ordersWhereUniqueInput | ordersWhereUniqueInput[]
   }
 
-  export type SettingsCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput> | SettingsCreateWithoutCustomerInput[] | SettingsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput | SettingsCreateOrConnectWithoutCustomerInput[]
-    createMany?: SettingsCreateManyCustomerInputEnvelope
-    connect?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
+  export type SettingsCreateNestedOneWithoutCustomerInput = {
+    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput
+    connect?: SettingsWhereUniqueInput
   }
 
   export type software_ticketsCreateNestedManyWithoutCustomersInput = {
@@ -18077,13 +19489,6 @@ export namespace Prisma {
     connectOrCreate?: software_ticketsCreateOrConnectWithoutCustomersInput | software_ticketsCreateOrConnectWithoutCustomersInput[]
     createMany?: software_ticketsCreateManyCustomersInputEnvelope
     connect?: software_ticketsWhereUniqueInput | software_ticketsWhereUniqueInput[]
-  }
-
-  export type SystemsCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<SystemsCreateWithoutCustomerInput, SystemsUncheckedCreateWithoutCustomerInput> | SystemsCreateWithoutCustomerInput[] | SystemsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SystemsCreateOrConnectWithoutCustomerInput | SystemsCreateOrConnectWithoutCustomerInput[]
-    createMany?: SystemsCreateManyCustomerInputEnvelope
-    connect?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
   }
 
   export type tower_logsCreateNestedManyWithoutCustomersInput = {
@@ -18100,11 +19505,17 @@ export namespace Prisma {
     connect?: TowersWhereUniqueInput | TowersWhereUniqueInput[]
   }
 
-  export type NotificationsUncheckedCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput> | NotificationsCreateWithoutCustomerInput[] | NotificationsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput | NotificationsCreateOrConnectWithoutCustomerInput[]
-    createMany?: NotificationsCreateManyCustomerInputEnvelope
-    connect?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
+  export type customer_systemUncheckedCreateNestedManyWithoutCustomersInput = {
+    create?: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput> | customer_systemCreateWithoutCustomersInput[] | customer_systemUncheckedCreateWithoutCustomersInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutCustomersInput | customer_systemCreateOrConnectWithoutCustomersInput[]
+    createMany?: customer_systemCreateManyCustomersInputEnvelope
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+  }
+
+  export type NotificationsUncheckedCreateNestedOneWithoutCustomerInput = {
+    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput
+    connect?: NotificationsWhereUniqueInput
   }
 
   export type ordersUncheckedCreateNestedManyWithoutCustomersInput = {
@@ -18114,11 +19525,10 @@ export namespace Prisma {
     connect?: ordersWhereUniqueInput | ordersWhereUniqueInput[]
   }
 
-  export type SettingsUncheckedCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput> | SettingsCreateWithoutCustomerInput[] | SettingsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput | SettingsCreateOrConnectWithoutCustomerInput[]
-    createMany?: SettingsCreateManyCustomerInputEnvelope
-    connect?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
+  export type SettingsUncheckedCreateNestedOneWithoutCustomerInput = {
+    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput
+    connect?: SettingsWhereUniqueInput
   }
 
   export type software_ticketsUncheckedCreateNestedManyWithoutCustomersInput = {
@@ -18126,13 +19536,6 @@ export namespace Prisma {
     connectOrCreate?: software_ticketsCreateOrConnectWithoutCustomersInput | software_ticketsCreateOrConnectWithoutCustomersInput[]
     createMany?: software_ticketsCreateManyCustomersInputEnvelope
     connect?: software_ticketsWhereUniqueInput | software_ticketsWhereUniqueInput[]
-  }
-
-  export type SystemsUncheckedCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<SystemsCreateWithoutCustomerInput, SystemsUncheckedCreateWithoutCustomerInput> | SystemsCreateWithoutCustomerInput[] | SystemsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SystemsCreateOrConnectWithoutCustomerInput | SystemsCreateOrConnectWithoutCustomerInput[]
-    createMany?: SystemsCreateManyCustomerInputEnvelope
-    connect?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
   }
 
   export type tower_logsUncheckedCreateNestedManyWithoutCustomersInput = {
@@ -18165,18 +19568,36 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type NotificationsUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput> | NotificationsCreateWithoutCustomerInput[] | NotificationsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput | NotificationsCreateOrConnectWithoutCustomerInput[]
-    upsert?: NotificationsUpsertWithWhereUniqueWithoutCustomerInput | NotificationsUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: NotificationsCreateManyCustomerInputEnvelope
-    set?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    disconnect?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    delete?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    connect?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    update?: NotificationsUpdateWithWhereUniqueWithoutCustomerInput | NotificationsUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: NotificationsUpdateManyWithWhereWithoutCustomerInput | NotificationsUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: NotificationsScalarWhereInput | NotificationsScalarWhereInput[]
+  export type NullableEnumplan_tierFieldUpdateOperationsInput = {
+    set?: $Enums.plan_tier | null
+  }
+
+  export type NullableEnumuser_roleFieldUpdateOperationsInput = {
+    set?: $Enums.user_role | null
+  }
+
+  export type customer_systemUpdateManyWithoutCustomersNestedInput = {
+    create?: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput> | customer_systemCreateWithoutCustomersInput[] | customer_systemUncheckedCreateWithoutCustomersInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutCustomersInput | customer_systemCreateOrConnectWithoutCustomersInput[]
+    upsert?: customer_systemUpsertWithWhereUniqueWithoutCustomersInput | customer_systemUpsertWithWhereUniqueWithoutCustomersInput[]
+    createMany?: customer_systemCreateManyCustomersInputEnvelope
+    set?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    disconnect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    delete?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    update?: customer_systemUpdateWithWhereUniqueWithoutCustomersInput | customer_systemUpdateWithWhereUniqueWithoutCustomersInput[]
+    updateMany?: customer_systemUpdateManyWithWhereWithoutCustomersInput | customer_systemUpdateManyWithWhereWithoutCustomersInput[]
+    deleteMany?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
+  }
+
+  export type NotificationsUpdateOneWithoutCustomerNestedInput = {
+    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput
+    upsert?: NotificationsUpsertWithoutCustomerInput
+    disconnect?: NotificationsWhereInput | boolean
+    delete?: NotificationsWhereInput | boolean
+    connect?: NotificationsWhereUniqueInput
+    update?: XOR<XOR<NotificationsUpdateToOneWithWhereWithoutCustomerInput, NotificationsUpdateWithoutCustomerInput>, NotificationsUncheckedUpdateWithoutCustomerInput>
   }
 
   export type ordersUpdateManyWithoutCustomersNestedInput = {
@@ -18193,18 +19614,14 @@ export namespace Prisma {
     deleteMany?: ordersScalarWhereInput | ordersScalarWhereInput[]
   }
 
-  export type SettingsUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput> | SettingsCreateWithoutCustomerInput[] | SettingsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput | SettingsCreateOrConnectWithoutCustomerInput[]
-    upsert?: SettingsUpsertWithWhereUniqueWithoutCustomerInput | SettingsUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: SettingsCreateManyCustomerInputEnvelope
-    set?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    disconnect?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    delete?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    connect?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    update?: SettingsUpdateWithWhereUniqueWithoutCustomerInput | SettingsUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: SettingsUpdateManyWithWhereWithoutCustomerInput | SettingsUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: SettingsScalarWhereInput | SettingsScalarWhereInput[]
+  export type SettingsUpdateOneWithoutCustomerNestedInput = {
+    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput
+    upsert?: SettingsUpsertWithoutCustomerInput
+    disconnect?: SettingsWhereInput | boolean
+    delete?: SettingsWhereInput | boolean
+    connect?: SettingsWhereUniqueInput
+    update?: XOR<XOR<SettingsUpdateToOneWithWhereWithoutCustomerInput, SettingsUpdateWithoutCustomerInput>, SettingsUncheckedUpdateWithoutCustomerInput>
   }
 
   export type software_ticketsUpdateManyWithoutCustomersNestedInput = {
@@ -18219,20 +19636,6 @@ export namespace Prisma {
     update?: software_ticketsUpdateWithWhereUniqueWithoutCustomersInput | software_ticketsUpdateWithWhereUniqueWithoutCustomersInput[]
     updateMany?: software_ticketsUpdateManyWithWhereWithoutCustomersInput | software_ticketsUpdateManyWithWhereWithoutCustomersInput[]
     deleteMany?: software_ticketsScalarWhereInput | software_ticketsScalarWhereInput[]
-  }
-
-  export type SystemsUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<SystemsCreateWithoutCustomerInput, SystemsUncheckedCreateWithoutCustomerInput> | SystemsCreateWithoutCustomerInput[] | SystemsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SystemsCreateOrConnectWithoutCustomerInput | SystemsCreateOrConnectWithoutCustomerInput[]
-    upsert?: SystemsUpsertWithWhereUniqueWithoutCustomerInput | SystemsUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: SystemsCreateManyCustomerInputEnvelope
-    set?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    disconnect?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    delete?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    connect?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    update?: SystemsUpdateWithWhereUniqueWithoutCustomerInput | SystemsUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: SystemsUpdateManyWithWhereWithoutCustomerInput | SystemsUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: SystemsScalarWhereInput | SystemsScalarWhereInput[]
   }
 
   export type tower_logsUpdateManyWithoutCustomersNestedInput = {
@@ -18271,18 +19674,28 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type NotificationsUncheckedUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput> | NotificationsCreateWithoutCustomerInput[] | NotificationsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput | NotificationsCreateOrConnectWithoutCustomerInput[]
-    upsert?: NotificationsUpsertWithWhereUniqueWithoutCustomerInput | NotificationsUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: NotificationsCreateManyCustomerInputEnvelope
-    set?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    disconnect?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    delete?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    connect?: NotificationsWhereUniqueInput | NotificationsWhereUniqueInput[]
-    update?: NotificationsUpdateWithWhereUniqueWithoutCustomerInput | NotificationsUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: NotificationsUpdateManyWithWhereWithoutCustomerInput | NotificationsUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: NotificationsScalarWhereInput | NotificationsScalarWhereInput[]
+  export type customer_systemUncheckedUpdateManyWithoutCustomersNestedInput = {
+    create?: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput> | customer_systemCreateWithoutCustomersInput[] | customer_systemUncheckedCreateWithoutCustomersInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutCustomersInput | customer_systemCreateOrConnectWithoutCustomersInput[]
+    upsert?: customer_systemUpsertWithWhereUniqueWithoutCustomersInput | customer_systemUpsertWithWhereUniqueWithoutCustomersInput[]
+    createMany?: customer_systemCreateManyCustomersInputEnvelope
+    set?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    disconnect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    delete?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    update?: customer_systemUpdateWithWhereUniqueWithoutCustomersInput | customer_systemUpdateWithWhereUniqueWithoutCustomersInput[]
+    updateMany?: customer_systemUpdateManyWithWhereWithoutCustomersInput | customer_systemUpdateManyWithWhereWithoutCustomersInput[]
+    deleteMany?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
+  }
+
+  export type NotificationsUncheckedUpdateOneWithoutCustomerNestedInput = {
+    create?: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: NotificationsCreateOrConnectWithoutCustomerInput
+    upsert?: NotificationsUpsertWithoutCustomerInput
+    disconnect?: NotificationsWhereInput | boolean
+    delete?: NotificationsWhereInput | boolean
+    connect?: NotificationsWhereUniqueInput
+    update?: XOR<XOR<NotificationsUpdateToOneWithWhereWithoutCustomerInput, NotificationsUpdateWithoutCustomerInput>, NotificationsUncheckedUpdateWithoutCustomerInput>
   }
 
   export type ordersUncheckedUpdateManyWithoutCustomersNestedInput = {
@@ -18299,18 +19712,14 @@ export namespace Prisma {
     deleteMany?: ordersScalarWhereInput | ordersScalarWhereInput[]
   }
 
-  export type SettingsUncheckedUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput> | SettingsCreateWithoutCustomerInput[] | SettingsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput | SettingsCreateOrConnectWithoutCustomerInput[]
-    upsert?: SettingsUpsertWithWhereUniqueWithoutCustomerInput | SettingsUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: SettingsCreateManyCustomerInputEnvelope
-    set?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    disconnect?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    delete?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    connect?: SettingsWhereUniqueInput | SettingsWhereUniqueInput[]
-    update?: SettingsUpdateWithWhereUniqueWithoutCustomerInput | SettingsUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: SettingsUpdateManyWithWhereWithoutCustomerInput | SettingsUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: SettingsScalarWhereInput | SettingsScalarWhereInput[]
+  export type SettingsUncheckedUpdateOneWithoutCustomerNestedInput = {
+    create?: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutCustomerInput
+    upsert?: SettingsUpsertWithoutCustomerInput
+    disconnect?: SettingsWhereInput | boolean
+    delete?: SettingsWhereInput | boolean
+    connect?: SettingsWhereUniqueInput
+    update?: XOR<XOR<SettingsUpdateToOneWithWhereWithoutCustomerInput, SettingsUpdateWithoutCustomerInput>, SettingsUncheckedUpdateWithoutCustomerInput>
   }
 
   export type software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput = {
@@ -18325,20 +19734,6 @@ export namespace Prisma {
     update?: software_ticketsUpdateWithWhereUniqueWithoutCustomersInput | software_ticketsUpdateWithWhereUniqueWithoutCustomersInput[]
     updateMany?: software_ticketsUpdateManyWithWhereWithoutCustomersInput | software_ticketsUpdateManyWithWhereWithoutCustomersInput[]
     deleteMany?: software_ticketsScalarWhereInput | software_ticketsScalarWhereInput[]
-  }
-
-  export type SystemsUncheckedUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<SystemsCreateWithoutCustomerInput, SystemsUncheckedCreateWithoutCustomerInput> | SystemsCreateWithoutCustomerInput[] | SystemsUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: SystemsCreateOrConnectWithoutCustomerInput | SystemsCreateOrConnectWithoutCustomerInput[]
-    upsert?: SystemsUpsertWithWhereUniqueWithoutCustomerInput | SystemsUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: SystemsCreateManyCustomerInputEnvelope
-    set?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    disconnect?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    delete?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    connect?: SystemsWhereUniqueInput | SystemsWhereUniqueInput[]
-    update?: SystemsUpdateWithWhereUniqueWithoutCustomerInput | SystemsUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: SystemsUpdateManyWithWhereWithoutCustomerInput | SystemsUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: SystemsScalarWhereInput | SystemsScalarWhereInput[]
   }
 
   export type tower_logsUncheckedUpdateManyWithoutCustomersNestedInput = {
@@ -18383,18 +19778,21 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type CustomerUpdateOneRequiredWithoutSettingNestedInput = {
+  export type CustomerUpdateOneWithoutSettingNestedInput = {
     create?: XOR<CustomerCreateWithoutSettingInput, CustomerUncheckedCreateWithoutSettingInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutSettingInput
     upsert?: CustomerUpsertWithoutSettingInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutSettingInput, CustomerUpdateWithoutSettingInput>, CustomerUncheckedUpdateWithoutSettingInput>
   }
 
-  export type CustomerCreateNestedOneWithoutSystemsInput = {
-    create?: XOR<CustomerCreateWithoutSystemsInput, CustomerUncheckedCreateWithoutSystemsInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutSystemsInput
-    connect?: CustomerWhereUniqueInput
+  export type customer_systemCreateNestedManyWithoutSystemsInput = {
+    create?: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput> | customer_systemCreateWithoutSystemsInput[] | customer_systemUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutSystemsInput | customer_systemCreateOrConnectWithoutSystemsInput[]
+    createMany?: customer_systemCreateManySystemsInputEnvelope
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
   }
 
   export type TowersCreateNestedManyWithoutSystemInput = {
@@ -18402,6 +19800,13 @@ export namespace Prisma {
     connectOrCreate?: TowersCreateOrConnectWithoutSystemInput | TowersCreateOrConnectWithoutSystemInput[]
     createMany?: TowersCreateManySystemInputEnvelope
     connect?: TowersWhereUniqueInput | TowersWhereUniqueInput[]
+  }
+
+  export type customer_systemUncheckedCreateNestedManyWithoutSystemsInput = {
+    create?: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput> | customer_systemCreateWithoutSystemsInput[] | customer_systemUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutSystemsInput | customer_systemCreateOrConnectWithoutSystemsInput[]
+    createMany?: customer_systemCreateManySystemsInputEnvelope
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
   }
 
   export type TowersUncheckedCreateNestedManyWithoutSystemInput = {
@@ -18431,14 +19836,18 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
-  export type CustomerUpdateOneWithoutSystemsNestedInput = {
-    create?: XOR<CustomerCreateWithoutSystemsInput, CustomerUncheckedCreateWithoutSystemsInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutSystemsInput
-    upsert?: CustomerUpsertWithoutSystemsInput
-    disconnect?: CustomerWhereInput | boolean
-    delete?: CustomerWhereInput | boolean
-    connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutSystemsInput, CustomerUpdateWithoutSystemsInput>, CustomerUncheckedUpdateWithoutSystemsInput>
+  export type customer_systemUpdateManyWithoutSystemsNestedInput = {
+    create?: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput> | customer_systemCreateWithoutSystemsInput[] | customer_systemUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutSystemsInput | customer_systemCreateOrConnectWithoutSystemsInput[]
+    upsert?: customer_systemUpsertWithWhereUniqueWithoutSystemsInput | customer_systemUpsertWithWhereUniqueWithoutSystemsInput[]
+    createMany?: customer_systemCreateManySystemsInputEnvelope
+    set?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    disconnect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    delete?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    update?: customer_systemUpdateWithWhereUniqueWithoutSystemsInput | customer_systemUpdateWithWhereUniqueWithoutSystemsInput[]
+    updateMany?: customer_systemUpdateManyWithWhereWithoutSystemsInput | customer_systemUpdateManyWithWhereWithoutSystemsInput[]
+    deleteMany?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
   }
 
   export type TowersUpdateManyWithoutSystemNestedInput = {
@@ -18453,6 +19862,20 @@ export namespace Prisma {
     update?: TowersUpdateWithWhereUniqueWithoutSystemInput | TowersUpdateWithWhereUniqueWithoutSystemInput[]
     updateMany?: TowersUpdateManyWithWhereWithoutSystemInput | TowersUpdateManyWithWhereWithoutSystemInput[]
     deleteMany?: TowersScalarWhereInput | TowersScalarWhereInput[]
+  }
+
+  export type customer_systemUncheckedUpdateManyWithoutSystemsNestedInput = {
+    create?: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput> | customer_systemCreateWithoutSystemsInput[] | customer_systemUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: customer_systemCreateOrConnectWithoutSystemsInput | customer_systemCreateOrConnectWithoutSystemsInput[]
+    upsert?: customer_systemUpsertWithWhereUniqueWithoutSystemsInput | customer_systemUpsertWithWhereUniqueWithoutSystemsInput[]
+    createMany?: customer_systemCreateManySystemsInputEnvelope
+    set?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    disconnect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    delete?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+    update?: customer_systemUpdateWithWhereUniqueWithoutSystemsInput | customer_systemUpdateWithWhereUniqueWithoutSystemsInput[]
+    updateMany?: customer_systemUpdateManyWithWhereWithoutSystemsInput | customer_systemUpdateManyWithWhereWithoutSystemsInput[]
+    deleteMany?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
   }
 
   export type TowersUncheckedUpdateManyWithoutSystemNestedInput = {
@@ -18691,6 +20114,34 @@ export namespace Prisma {
     update?: XOR<XOR<TowersUpdateToOneWithWhereWithoutTower_logsInput, TowersUpdateWithoutTower_logsInput>, TowersUncheckedUpdateWithoutTower_logsInput>
   }
 
+  export type CustomerCreateNestedOneWithoutCustomer_systemInput = {
+    create?: XOR<CustomerCreateWithoutCustomer_systemInput, CustomerUncheckedCreateWithoutCustomer_systemInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutCustomer_systemInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type SystemsCreateNestedOneWithoutCustomer_systemInput = {
+    create?: XOR<SystemsCreateWithoutCustomer_systemInput, SystemsUncheckedCreateWithoutCustomer_systemInput>
+    connectOrCreate?: SystemsCreateOrConnectWithoutCustomer_systemInput
+    connect?: SystemsWhereUniqueInput
+  }
+
+  export type CustomerUpdateOneRequiredWithoutCustomer_systemNestedInput = {
+    create?: XOR<CustomerCreateWithoutCustomer_systemInput, CustomerUncheckedCreateWithoutCustomer_systemInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutCustomer_systemInput
+    upsert?: CustomerUpsertWithoutCustomer_systemInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutCustomer_systemInput, CustomerUpdateWithoutCustomer_systemInput>, CustomerUncheckedUpdateWithoutCustomer_systemInput>
+  }
+
+  export type SystemsUpdateOneRequiredWithoutCustomer_systemNestedInput = {
+    create?: XOR<SystemsCreateWithoutCustomer_systemInput, SystemsUncheckedCreateWithoutCustomer_systemInput>
+    connectOrCreate?: SystemsCreateOrConnectWithoutCustomer_systemInput
+    upsert?: SystemsUpsertWithoutCustomer_systemInput
+    connect?: SystemsWhereUniqueInput
+    update?: XOR<XOR<SystemsUpdateToOneWithWhereWithoutCustomer_systemInput, SystemsUpdateWithoutCustomer_systemInput>, SystemsUncheckedUpdateWithoutCustomer_systemInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -18739,6 +20190,20 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedEnumplan_tierNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.plan_tier | Enumplan_tierFieldRefInput<$PrismaModel> | null
+    in?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumplan_tierNullableFilter<$PrismaModel> | $Enums.plan_tier | null
+  }
+
+  export type NestedEnumuser_roleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -18827,6 +20292,26 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumplan_tierNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.plan_tier | Enumplan_tierFieldRefInput<$PrismaModel> | null
+    in?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.plan_tier[] | ListEnumplan_tierFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumplan_tierNullableWithAggregatesFilter<$PrismaModel> | $Enums.plan_tier | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumplan_tierNullableFilter<$PrismaModel>
+    _max?: NestedEnumplan_tierNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableFilter<$PrismaModel = never> = {
@@ -18991,6 +20476,26 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type customer_systemCreateWithoutCustomersInput = {
+    role?: string | null
+    systems: SystemsCreateNestedOneWithoutCustomer_systemInput
+  }
+
+  export type customer_systemUncheckedCreateWithoutCustomersInput = {
+    system_id: number
+    role?: string | null
+  }
+
+  export type customer_systemCreateOrConnectWithoutCustomersInput = {
+    where: customer_systemWhereUniqueInput
+    create: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput>
+  }
+
+  export type customer_systemCreateManyCustomersInputEnvelope = {
+    data: customer_systemCreateManyCustomersInput | customer_systemCreateManyCustomersInput[]
+    skipDuplicates?: boolean
+  }
+
   export type NotificationsCreateWithoutCustomerInput = {
     push_notifications_enabled?: boolean | null
     push_notify_login?: boolean | null
@@ -19017,11 +20522,6 @@ export namespace Prisma {
   export type NotificationsCreateOrConnectWithoutCustomerInput = {
     where: NotificationsWhereUniqueInput
     create: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
-  }
-
-  export type NotificationsCreateManyCustomerInputEnvelope = {
-    data: NotificationsCreateManyCustomerInput | NotificationsCreateManyCustomerInput[]
-    skipDuplicates?: boolean
   }
 
   export type ordersCreateWithoutCustomersInput = {
@@ -19093,11 +20593,6 @@ export namespace Prisma {
     create: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput>
   }
 
-  export type SettingsCreateManyCustomerInputEnvelope = {
-    data: SettingsCreateManyCustomerInput | SettingsCreateManyCustomerInput[]
-    skipDuplicates?: boolean
-  }
-
   export type software_ticketsCreateWithoutCustomersInput = {
     email: string
     subject: string
@@ -19122,47 +20617,6 @@ export namespace Prisma {
 
   export type software_ticketsCreateManyCustomersInputEnvelope = {
     data: software_ticketsCreateManyCustomersInput | software_ticketsCreateManyCustomersInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type SystemsCreateWithoutCustomerInput = {
-    system_name: string
-    inverter_type?: string | null
-    timezone?: string | null
-    installation_date?: Date | string | null
-    status?: string | null
-    total_towers?: number | null
-    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
-    api_key?: string | null
-    latitude?: Decimal | DecimalJsLike | number | string
-    longitude?: Decimal | DecimalJsLike | number | string
-    towers?: TowersCreateNestedManyWithoutSystemInput
-  }
-
-  export type SystemsUncheckedCreateWithoutCustomerInput = {
-    id?: number
-    system_name: string
-    inverter_type?: string | null
-    timezone?: string | null
-    installation_date?: Date | string | null
-    status?: string | null
-    total_towers?: number | null
-    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
-    api_key?: string | null
-    latitude?: Decimal | DecimalJsLike | number | string
-    longitude?: Decimal | DecimalJsLike | number | string
-    towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
-  }
-
-  export type SystemsCreateOrConnectWithoutCustomerInput = {
-    where: SystemsWhereUniqueInput
-    create: XOR<SystemsCreateWithoutCustomerInput, SystemsUncheckedCreateWithoutCustomerInput>
-  }
-
-  export type SystemsCreateManyCustomerInputEnvelope = {
-    data: SystemsCreateManyCustomerInput | SystemsCreateManyCustomerInput[]
     skipDuplicates?: boolean
   }
 
@@ -19239,36 +20693,63 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type NotificationsUpsertWithWhereUniqueWithoutCustomerInput = {
-    where: NotificationsWhereUniqueInput
-    update: XOR<NotificationsUpdateWithoutCustomerInput, NotificationsUncheckedUpdateWithoutCustomerInput>
-    create: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
+  export type customer_systemUpsertWithWhereUniqueWithoutCustomersInput = {
+    where: customer_systemWhereUniqueInput
+    update: XOR<customer_systemUpdateWithoutCustomersInput, customer_systemUncheckedUpdateWithoutCustomersInput>
+    create: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput>
   }
 
-  export type NotificationsUpdateWithWhereUniqueWithoutCustomerInput = {
-    where: NotificationsWhereUniqueInput
+  export type customer_systemUpdateWithWhereUniqueWithoutCustomersInput = {
+    where: customer_systemWhereUniqueInput
+    data: XOR<customer_systemUpdateWithoutCustomersInput, customer_systemUncheckedUpdateWithoutCustomersInput>
+  }
+
+  export type customer_systemUpdateManyWithWhereWithoutCustomersInput = {
+    where: customer_systemScalarWhereInput
+    data: XOR<customer_systemUpdateManyMutationInput, customer_systemUncheckedUpdateManyWithoutCustomersInput>
+  }
+
+  export type customer_systemScalarWhereInput = {
+    AND?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
+    OR?: customer_systemScalarWhereInput[]
+    NOT?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
+    customer_id?: IntFilter<"customer_system"> | number
+    system_id?: IntFilter<"customer_system"> | number
+    role?: StringNullableFilter<"customer_system"> | string | null
+  }
+
+  export type NotificationsUpsertWithoutCustomerInput = {
+    update: XOR<NotificationsUpdateWithoutCustomerInput, NotificationsUncheckedUpdateWithoutCustomerInput>
+    create: XOR<NotificationsCreateWithoutCustomerInput, NotificationsUncheckedCreateWithoutCustomerInput>
+    where?: NotificationsWhereInput
+  }
+
+  export type NotificationsUpdateToOneWithWhereWithoutCustomerInput = {
+    where?: NotificationsWhereInput
     data: XOR<NotificationsUpdateWithoutCustomerInput, NotificationsUncheckedUpdateWithoutCustomerInput>
   }
 
-  export type NotificationsUpdateManyWithWhereWithoutCustomerInput = {
-    where: NotificationsScalarWhereInput
-    data: XOR<NotificationsUpdateManyMutationInput, NotificationsUncheckedUpdateManyWithoutCustomerInput>
+  export type NotificationsUpdateWithoutCustomerInput = {
+    push_notifications_enabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    push_notify_login?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    notification_tone?: NullableStringFieldUpdateOperationsInput | string | null
+    email_marketing?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    email_account_activity?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    email_newsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sms_password_changes?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sms_login_attempts?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
-  export type NotificationsScalarWhereInput = {
-    AND?: NotificationsScalarWhereInput | NotificationsScalarWhereInput[]
-    OR?: NotificationsScalarWhereInput[]
-    NOT?: NotificationsScalarWhereInput | NotificationsScalarWhereInput[]
-    notifications_id?: IntFilter<"Notifications"> | number
-    customer_id?: IntNullableFilter<"Notifications"> | number | null
-    push_notifications_enabled?: BoolNullableFilter<"Notifications"> | boolean | null
-    push_notify_login?: BoolNullableFilter<"Notifications"> | boolean | null
-    notification_tone?: StringNullableFilter<"Notifications"> | string | null
-    email_marketing?: BoolNullableFilter<"Notifications"> | boolean | null
-    email_account_activity?: BoolNullableFilter<"Notifications"> | boolean | null
-    email_newsletter?: BoolNullableFilter<"Notifications"> | boolean | null
-    sms_password_changes?: BoolNullableFilter<"Notifications"> | boolean | null
-    sms_login_attempts?: BoolNullableFilter<"Notifications"> | boolean | null
+  export type NotificationsUncheckedUpdateWithoutCustomerInput = {
+    notifications_id?: IntFieldUpdateOperationsInput | number
+    push_notifications_enabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    push_notify_login?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    notification_tone?: NullableStringFieldUpdateOperationsInput | string | null
+    email_marketing?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    email_account_activity?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    email_newsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sms_password_changes?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sms_login_attempts?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type ordersUpsertWithWhereUniqueWithoutCustomersInput = {
@@ -19302,40 +20783,46 @@ export namespace Prisma {
     payment_received?: BoolFilter<"orders"> | boolean
   }
 
-  export type SettingsUpsertWithWhereUniqueWithoutCustomerInput = {
-    where: SettingsWhereUniqueInput
+  export type SettingsUpsertWithoutCustomerInput = {
     update: XOR<SettingsUpdateWithoutCustomerInput, SettingsUncheckedUpdateWithoutCustomerInput>
     create: XOR<SettingsCreateWithoutCustomerInput, SettingsUncheckedCreateWithoutCustomerInput>
+    where?: SettingsWhereInput
   }
 
-  export type SettingsUpdateWithWhereUniqueWithoutCustomerInput = {
-    where: SettingsWhereUniqueInput
+  export type SettingsUpdateToOneWithWhereWithoutCustomerInput = {
+    where?: SettingsWhereInput
     data: XOR<SettingsUpdateWithoutCustomerInput, SettingsUncheckedUpdateWithoutCustomerInput>
   }
 
-  export type SettingsUpdateManyWithWhereWithoutCustomerInput = {
-    where: SettingsScalarWhereInput
-    data: XOR<SettingsUpdateManyMutationInput, SettingsUncheckedUpdateManyWithoutCustomerInput>
+  export type SettingsUpdateWithoutCustomerInput = {
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    time_zone?: NullableStringFieldUpdateOperationsInput | string | null
+    text_size?: StringFieldUpdateOperationsInput | string
+    bold_text?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    update_frequency?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    twentyfourhourtime?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    last_login_device?: StringFieldUpdateOperationsInput | string
+    last_login?: DateTimeFieldUpdateOperationsInput | Date | string
+    email_recovery?: NullableStringFieldUpdateOperationsInput | string | null
+    phone_recovery?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type SettingsScalarWhereInput = {
-    AND?: SettingsScalarWhereInput | SettingsScalarWhereInput[]
-    OR?: SettingsScalarWhereInput[]
-    NOT?: SettingsScalarWhereInput | SettingsScalarWhereInput[]
-    settings_id?: IntFilter<"Settings"> | number
-    customer_id?: IntFilter<"Settings"> | number
-    theme?: StringNullableFilter<"Settings"> | string | null
-    time_zone?: StringNullableFilter<"Settings"> | string | null
-    text_size?: StringFilter<"Settings"> | string
-    bold_text?: BoolNullableFilter<"Settings"> | boolean | null
-    update_frequency?: StringNullableFilter<"Settings"> | string | null
-    region?: StringNullableFilter<"Settings"> | string | null
-    language?: StringNullableFilter<"Settings"> | string | null
-    twentyfourhourtime?: BoolNullableFilter<"Settings"> | boolean | null
-    last_login_device?: StringFilter<"Settings"> | string
-    last_login?: DateTimeFilter<"Settings"> | Date | string
-    email_recovery?: StringNullableFilter<"Settings"> | string | null
-    phone_recovery?: StringNullableFilter<"Settings"> | string | null
+  export type SettingsUncheckedUpdateWithoutCustomerInput = {
+    settings_id?: IntFieldUpdateOperationsInput | number
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    time_zone?: NullableStringFieldUpdateOperationsInput | string | null
+    text_size?: StringFieldUpdateOperationsInput | string
+    bold_text?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    update_frequency?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    twentyfourhourtime?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    last_login_device?: StringFieldUpdateOperationsInput | string
+    last_login?: DateTimeFieldUpdateOperationsInput | Date | string
+    email_recovery?: NullableStringFieldUpdateOperationsInput | string | null
+    phone_recovery?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type software_ticketsUpsertWithWhereUniqueWithoutCustomersInput = {
@@ -19365,41 +20852,6 @@ export namespace Prisma {
     message?: StringFilter<"software_tickets"> | string
     date_time?: DateTimeFilter<"software_tickets"> | Date | string
     handled?: BoolFilter<"software_tickets"> | boolean
-  }
-
-  export type SystemsUpsertWithWhereUniqueWithoutCustomerInput = {
-    where: SystemsWhereUniqueInput
-    update: XOR<SystemsUpdateWithoutCustomerInput, SystemsUncheckedUpdateWithoutCustomerInput>
-    create: XOR<SystemsCreateWithoutCustomerInput, SystemsUncheckedCreateWithoutCustomerInput>
-  }
-
-  export type SystemsUpdateWithWhereUniqueWithoutCustomerInput = {
-    where: SystemsWhereUniqueInput
-    data: XOR<SystemsUpdateWithoutCustomerInput, SystemsUncheckedUpdateWithoutCustomerInput>
-  }
-
-  export type SystemsUpdateManyWithWhereWithoutCustomerInput = {
-    where: SystemsScalarWhereInput
-    data: XOR<SystemsUpdateManyMutationInput, SystemsUncheckedUpdateManyWithoutCustomerInput>
-  }
-
-  export type SystemsScalarWhereInput = {
-    AND?: SystemsScalarWhereInput | SystemsScalarWhereInput[]
-    OR?: SystemsScalarWhereInput[]
-    NOT?: SystemsScalarWhereInput | SystemsScalarWhereInput[]
-    id?: IntFilter<"Systems"> | number
-    system_name?: StringFilter<"Systems"> | string
-    inverter_type?: StringNullableFilter<"Systems"> | string | null
-    customer_id?: IntNullableFilter<"Systems"> | number | null
-    timezone?: StringNullableFilter<"Systems"> | string | null
-    installation_date?: DateTimeNullableFilter<"Systems"> | Date | string | null
-    status?: StringNullableFilter<"Systems"> | string | null
-    total_towers?: IntNullableFilter<"Systems"> | number | null
-    max_pv_kw?: DecimalNullableFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
-    software_version?: StringNullableFilter<"Systems"> | string | null
-    api_key?: StringNullableFilter<"Systems"> | string | null
-    latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
-    longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
   }
 
   export type tower_logsUpsertWithWhereUniqueWithoutCustomersInput = {
@@ -19476,10 +20928,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
@@ -19493,10 +20947,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -19525,10 +20981,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
@@ -19542,50 +21000,34 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
-  export type CustomerCreateWithoutSystemsInput = {
-    name: string
-    email: string
-    address_id?: number | null
-    country_code?: string | null
-    phone_number?: string | null
-    customer_type: string
-    password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
-    orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
-    software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
-    tower?: TowersCreateNestedManyWithoutCustomerInput
+  export type customer_systemCreateWithoutSystemsInput = {
+    role?: string | null
+    customers: CustomerCreateNestedOneWithoutCustomer_systemInput
   }
 
-  export type CustomerUncheckedCreateWithoutSystemsInput = {
-    id?: number
-    name: string
-    email: string
-    address_id?: number | null
-    country_code?: string | null
-    phone_number?: string | null
-    customer_type: string
-    password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
-    orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
-    software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
-    tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
+  export type customer_systemUncheckedCreateWithoutSystemsInput = {
+    customer_id: number
+    role?: string | null
   }
 
-  export type CustomerCreateOrConnectWithoutSystemsInput = {
-    where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutSystemsInput, CustomerUncheckedCreateWithoutSystemsInput>
+  export type customer_systemCreateOrConnectWithoutSystemsInput = {
+    where: customer_systemWhereUniqueInput
+    create: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput>
+  }
+
+  export type customer_systemCreateManySystemsInputEnvelope = {
+    data: customer_systemCreateManySystemsInput | customer_systemCreateManySystemsInput[]
+    skipDuplicates?: boolean
   }
 
   export type TowersCreateWithoutSystemInput = {
@@ -19633,48 +21075,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CustomerUpsertWithoutSystemsInput = {
-    update: XOR<CustomerUpdateWithoutSystemsInput, CustomerUncheckedUpdateWithoutSystemsInput>
-    create: XOR<CustomerCreateWithoutSystemsInput, CustomerUncheckedCreateWithoutSystemsInput>
-    where?: CustomerWhereInput
+  export type customer_systemUpsertWithWhereUniqueWithoutSystemsInput = {
+    where: customer_systemWhereUniqueInput
+    update: XOR<customer_systemUpdateWithoutSystemsInput, customer_systemUncheckedUpdateWithoutSystemsInput>
+    create: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput>
   }
 
-  export type CustomerUpdateToOneWithWhereWithoutSystemsInput = {
-    where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutSystemsInput, CustomerUncheckedUpdateWithoutSystemsInput>
+  export type customer_systemUpdateWithWhereUniqueWithoutSystemsInput = {
+    where: customer_systemWhereUniqueInput
+    data: XOR<customer_systemUpdateWithoutSystemsInput, customer_systemUncheckedUpdateWithoutSystemsInput>
   }
 
-  export type CustomerUpdateWithoutSystemsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
-    password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
-    orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
-    software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
-    tower?: TowersUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type CustomerUncheckedUpdateWithoutSystemsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
-    password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
-    orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
-    software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
+  export type customer_systemUpdateManyWithWhereWithoutSystemsInput = {
+    where: customer_systemScalarWhereInput
+    data: XOR<customer_systemUpdateManyMutationInput, customer_systemUncheckedUpdateManyWithoutSystemsInput>
   }
 
   export type TowersUpsertWithWhereUniqueWithoutSystemInput = {
@@ -19701,10 +21115,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
@@ -19718,10 +21134,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -19750,10 +21168,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
@@ -19767,10 +21187,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -19811,11 +21233,13 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
   }
 
@@ -19828,11 +21252,13 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
   }
 
@@ -19881,14 +21307,13 @@ export namespace Prisma {
     api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
-    customer?: CustomerCreateNestedOneWithoutSystemsInput
+    customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
   }
 
   export type SystemsUncheckedCreateWithoutTowersInput = {
     id?: number
     system_name: string
     inverter_type?: string | null
-    customer_id?: number | null
     timezone?: string | null
     installation_date?: Date | string | null
     status?: string | null
@@ -19898,6 +21323,7 @@ export namespace Prisma {
     api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
   }
 
   export type SystemsCreateOrConnectWithoutTowersInput = {
@@ -19940,11 +21366,13 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
   }
 
@@ -19957,11 +21385,13 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
   }
 
@@ -20022,14 +21452,13 @@ export namespace Prisma {
     api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customer?: CustomerUpdateOneWithoutSystemsNestedInput
+    customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
   }
 
   export type SystemsUncheckedUpdateWithoutTowersInput = {
     id?: IntFieldUpdateOperationsInput | number
     system_name?: StringFieldUpdateOperationsInput | string
     inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableIntFieldUpdateOperationsInput | number | null
     timezone?: NullableStringFieldUpdateOperationsInput | string | null
     installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20039,6 +21468,7 @@ export namespace Prisma {
     api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -20049,10 +21479,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
@@ -20066,10 +21498,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
     tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -20143,10 +21577,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
@@ -20160,10 +21596,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
     tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -20192,10 +21630,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
     tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
@@ -20209,10 +21649,12 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -20241,10 +21683,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
     tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
@@ -20258,10 +21702,12 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -20274,11 +21720,13 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedManyWithoutCustomerInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    systems?: SystemsCreateNestedManyWithoutCustomerInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -20291,11 +21739,13 @@ export namespace Prisma {
     phone_number?: string | null
     customer_type: string
     password_hash: string
-    notification?: NotificationsUncheckedCreateNestedManyWithoutCustomerInput
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedManyWithoutCustomerInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    systems?: SystemsUncheckedCreateNestedManyWithoutCustomerInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -20363,11 +21813,13 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUpdateManyWithoutCustomerNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -20380,11 +21832,13 @@ export namespace Prisma {
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    notification?: NotificationsUncheckedUpdateManyWithoutCustomerNestedInput
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateManyWithoutCustomerNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    systems?: SystemsUncheckedUpdateManyWithoutCustomerNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -20434,16 +21888,177 @@ export namespace Prisma {
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type NotificationsCreateManyCustomerInput = {
-    notifications_id?: number
-    push_notifications_enabled?: boolean | null
-    push_notify_login?: boolean | null
-    notification_tone?: string | null
-    email_marketing?: boolean | null
-    email_account_activity?: boolean | null
-    email_newsletter?: boolean | null
-    sms_password_changes?: boolean | null
-    sms_login_attempts?: boolean | null
+  export type CustomerCreateWithoutCustomer_systemInput = {
+    name: string
+    email: string
+    address_id?: number | null
+    country_code?: string | null
+    phone_number?: string | null
+    customer_type: string
+    password_hash: string
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    notification?: NotificationsCreateNestedOneWithoutCustomerInput
+    orders?: ordersCreateNestedManyWithoutCustomersInput
+    setting?: SettingsCreateNestedOneWithoutCustomerInput
+    software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
+    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
+    tower?: TowersCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutCustomer_systemInput = {
+    id?: number
+    name: string
+    email: string
+    address_id?: number | null
+    country_code?: string | null
+    phone_number?: string | null
+    customer_type: string
+    password_hash: string
+    plan_tier?: $Enums.plan_tier | null
+    role?: $Enums.user_role | null
+    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
+    orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
+    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
+    software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
+    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
+    tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutCustomer_systemInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutCustomer_systemInput, CustomerUncheckedCreateWithoutCustomer_systemInput>
+  }
+
+  export type SystemsCreateWithoutCustomer_systemInput = {
+    system_name: string
+    inverter_type?: string | null
+    timezone?: string | null
+    installation_date?: Date | string | null
+    status?: string | null
+    total_towers?: number | null
+    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
+    software_version?: string | null
+    api_key?: string | null
+    latitude?: Decimal | DecimalJsLike | number | string
+    longitude?: Decimal | DecimalJsLike | number | string
+    towers?: TowersCreateNestedManyWithoutSystemInput
+  }
+
+  export type SystemsUncheckedCreateWithoutCustomer_systemInput = {
+    id?: number
+    system_name: string
+    inverter_type?: string | null
+    timezone?: string | null
+    installation_date?: Date | string | null
+    status?: string | null
+    total_towers?: number | null
+    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
+    software_version?: string | null
+    api_key?: string | null
+    latitude?: Decimal | DecimalJsLike | number | string
+    longitude?: Decimal | DecimalJsLike | number | string
+    towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
+  }
+
+  export type SystemsCreateOrConnectWithoutCustomer_systemInput = {
+    where: SystemsWhereUniqueInput
+    create: XOR<SystemsCreateWithoutCustomer_systemInput, SystemsUncheckedCreateWithoutCustomer_systemInput>
+  }
+
+  export type CustomerUpsertWithoutCustomer_systemInput = {
+    update: XOR<CustomerUpdateWithoutCustomer_systemInput, CustomerUncheckedUpdateWithoutCustomer_systemInput>
+    create: XOR<CustomerCreateWithoutCustomer_systemInput, CustomerUncheckedCreateWithoutCustomer_systemInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutCustomer_systemInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutCustomer_systemInput, CustomerUncheckedUpdateWithoutCustomer_systemInput>
+  }
+
+  export type CustomerUpdateWithoutCustomer_systemInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address_id?: NullableIntFieldUpdateOperationsInput | number | null
+    country_code?: NullableStringFieldUpdateOperationsInput | string | null
+    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_type?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
+    orders?: ordersUpdateManyWithoutCustomersNestedInput
+    setting?: SettingsUpdateOneWithoutCustomerNestedInput
+    software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
+    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
+    tower?: TowersUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutCustomer_systemInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address_id?: NullableIntFieldUpdateOperationsInput | number | null
+    country_code?: NullableStringFieldUpdateOperationsInput | string | null
+    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_type?: StringFieldUpdateOperationsInput | string
+    password_hash?: StringFieldUpdateOperationsInput | string
+    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
+    orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
+    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
+    software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
+    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
+    tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type SystemsUpsertWithoutCustomer_systemInput = {
+    update: XOR<SystemsUpdateWithoutCustomer_systemInput, SystemsUncheckedUpdateWithoutCustomer_systemInput>
+    create: XOR<SystemsCreateWithoutCustomer_systemInput, SystemsUncheckedCreateWithoutCustomer_systemInput>
+    where?: SystemsWhereInput
+  }
+
+  export type SystemsUpdateToOneWithWhereWithoutCustomer_systemInput = {
+    where?: SystemsWhereInput
+    data: XOR<SystemsUpdateWithoutCustomer_systemInput, SystemsUncheckedUpdateWithoutCustomer_systemInput>
+  }
+
+  export type SystemsUpdateWithoutCustomer_systemInput = {
+    system_name?: StringFieldUpdateOperationsInput | string
+    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
+    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    software_version?: NullableStringFieldUpdateOperationsInput | string | null
+    api_key?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    towers?: TowersUpdateManyWithoutSystemNestedInput
+  }
+
+  export type SystemsUncheckedUpdateWithoutCustomer_systemInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    system_name?: StringFieldUpdateOperationsInput | string
+    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
+    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    software_version?: NullableStringFieldUpdateOperationsInput | string | null
+    api_key?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
+  }
+
+  export type customer_systemCreateManyCustomersInput = {
+    system_id: number
+    role?: string | null
   }
 
   export type ordersCreateManyCustomersInput = {
@@ -20457,22 +22072,6 @@ export namespace Prisma {
     payment_received: boolean
   }
 
-  export type SettingsCreateManyCustomerInput = {
-    settings_id?: number
-    theme?: string | null
-    time_zone?: string | null
-    text_size?: string
-    bold_text?: boolean | null
-    update_frequency?: string | null
-    region?: string | null
-    language?: string | null
-    twentyfourhourtime?: boolean | null
-    last_login_device?: string
-    last_login?: Date | string
-    email_recovery?: string | null
-    phone_recovery?: string | null
-  }
-
   export type software_ticketsCreateManyCustomersInput = {
     id?: number
     email: string
@@ -20480,21 +22079,6 @@ export namespace Prisma {
     message: string
     date_time?: Date | string
     handled: boolean
-  }
-
-  export type SystemsCreateManyCustomerInput = {
-    id?: number
-    system_name: string
-    inverter_type?: string | null
-    timezone?: string | null
-    installation_date?: Date | string | null
-    status?: string | null
-    total_towers?: number | null
-    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
-    api_key?: string | null
-    latitude?: Decimal | DecimalJsLike | number | string
-    longitude?: Decimal | DecimalJsLike | number | string
   }
 
   export type tower_logsCreateManyCustomersInput = {
@@ -20523,39 +22107,19 @@ export namespace Prisma {
     system_id?: number | null
   }
 
-  export type NotificationsUpdateWithoutCustomerInput = {
-    push_notifications_enabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    push_notify_login?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    notification_tone?: NullableStringFieldUpdateOperationsInput | string | null
-    email_marketing?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    email_account_activity?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    email_newsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    sms_password_changes?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    sms_login_attempts?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  export type customer_systemUpdateWithoutCustomersInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    systems?: SystemsUpdateOneRequiredWithoutCustomer_systemNestedInput
   }
 
-  export type NotificationsUncheckedUpdateWithoutCustomerInput = {
-    notifications_id?: IntFieldUpdateOperationsInput | number
-    push_notifications_enabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    push_notify_login?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    notification_tone?: NullableStringFieldUpdateOperationsInput | string | null
-    email_marketing?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    email_account_activity?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    email_newsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    sms_password_changes?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    sms_login_attempts?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  export type customer_systemUncheckedUpdateWithoutCustomersInput = {
+    system_id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type NotificationsUncheckedUpdateManyWithoutCustomerInput = {
-    notifications_id?: IntFieldUpdateOperationsInput | number
-    push_notifications_enabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    push_notify_login?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    notification_tone?: NullableStringFieldUpdateOperationsInput | string | null
-    email_marketing?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    email_account_activity?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    email_newsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    sms_password_changes?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    sms_login_attempts?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  export type customer_systemUncheckedUpdateManyWithoutCustomersInput = {
+    system_id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ordersUpdateWithoutCustomersInput = {
@@ -20592,53 +22156,6 @@ export namespace Prisma {
     payment_received?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type SettingsUpdateWithoutCustomerInput = {
-    theme?: NullableStringFieldUpdateOperationsInput | string | null
-    time_zone?: NullableStringFieldUpdateOperationsInput | string | null
-    text_size?: StringFieldUpdateOperationsInput | string
-    bold_text?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    update_frequency?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableStringFieldUpdateOperationsInput | string | null
-    twentyfourhourtime?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    last_login_device?: StringFieldUpdateOperationsInput | string
-    last_login?: DateTimeFieldUpdateOperationsInput | Date | string
-    email_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type SettingsUncheckedUpdateWithoutCustomerInput = {
-    settings_id?: IntFieldUpdateOperationsInput | number
-    theme?: NullableStringFieldUpdateOperationsInput | string | null
-    time_zone?: NullableStringFieldUpdateOperationsInput | string | null
-    text_size?: StringFieldUpdateOperationsInput | string
-    bold_text?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    update_frequency?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableStringFieldUpdateOperationsInput | string | null
-    twentyfourhourtime?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    last_login_device?: StringFieldUpdateOperationsInput | string
-    last_login?: DateTimeFieldUpdateOperationsInput | Date | string
-    email_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type SettingsUncheckedUpdateManyWithoutCustomerInput = {
-    settings_id?: IntFieldUpdateOperationsInput | number
-    theme?: NullableStringFieldUpdateOperationsInput | string | null
-    time_zone?: NullableStringFieldUpdateOperationsInput | string | null
-    text_size?: StringFieldUpdateOperationsInput | string
-    bold_text?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    update_frequency?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableStringFieldUpdateOperationsInput | string | null
-    twentyfourhourtime?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    last_login_device?: StringFieldUpdateOperationsInput | string
-    last_login?: DateTimeFieldUpdateOperationsInput | Date | string
-    email_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_recovery?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
   export type software_ticketsUpdateWithoutCustomersInput = {
     email?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
@@ -20663,52 +22180,6 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     date_time?: DateTimeFieldUpdateOperationsInput | Date | string
     handled?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type SystemsUpdateWithoutCustomerInput = {
-    system_name?: StringFieldUpdateOperationsInput | string
-    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
-    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
-    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    towers?: TowersUpdateManyWithoutSystemNestedInput
-  }
-
-  export type SystemsUncheckedUpdateWithoutCustomerInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    system_name?: StringFieldUpdateOperationsInput | string
-    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
-    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
-    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
-  }
-
-  export type SystemsUncheckedUpdateManyWithoutCustomerInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    system_name?: StringFieldUpdateOperationsInput | string
-    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
-    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
-    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type tower_logsUpdateWithoutCustomersInput = {
@@ -20790,6 +22261,11 @@ export namespace Prisma {
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type customer_systemCreateManySystemsInput = {
+    customer_id: number
+    role?: string | null
+  }
+
   export type TowersCreateManySystemInput = {
     id?: number
     model: string
@@ -20805,6 +22281,21 @@ export namespace Prisma {
     width: number
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type customer_systemUpdateWithoutSystemsInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    customers?: CustomerUpdateOneRequiredWithoutCustomer_systemNestedInput
+  }
+
+  export type customer_systemUncheckedUpdateWithoutSystemsInput = {
+    customer_id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type customer_systemUncheckedUpdateManyWithoutSystemsInput = {
+    customer_id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TowersUpdateWithoutSystemInput = {

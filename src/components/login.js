@@ -36,30 +36,13 @@ export default function Login(){
 
             if (res.ok) {
                 // JWT is stored in HttpOnly cookie by backend
-                router.push('/towerselect'); // Redirect to dashboard
+                router.push('/systemselect'); // Redirect to dashboard
             } else {setMessage(data.error)}
         } catch (err) {
             console.error('Login failed', err);
             setMessage('Login failed. Please try again.');
         }
     };
-
-        /* const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
-      
-        const data = await res.json();
-      
-        if (res.ok) {
-            // Store token (consider HttpOnly cookies for secure apps)
-            localStorage.setItem('token', data.token);
-            router.push('/towerselect'); // Go to home page or dashboard
-        } else {
-            setMessage(data.error);
-        }
-    };  */
     
     return(
         /*  bg-white md:bg-[#f7e2cc]*/
@@ -67,10 +50,6 @@ export default function Login(){
             <div
                 className="absolute inset-0 bg-[url('/images/vine_power_tower_scale60.jpg')] bg-cover bg-center md:brightness-75 brightness-50 ">
             </div>
-            {/* Optional dark overlay 
-            <div className="absolute inset-0 bg-black/40"></div>
-                <form onSubmit={handleLogin} className='bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl ring-1 ring-white/30'>
-            */}
             <div className='relative z-10 flex w-full md:min-w-2/5 justify-center'>
                 <form onSubmit={handleLogin} className='md:border-2 border-black md:rounded-2xl w-full p-4 md:rounded-lg md:max-w-md backdrop-blur-md bg-white md:shadow-lg md:shadow-black'>
                     {showLogoutMessage && (

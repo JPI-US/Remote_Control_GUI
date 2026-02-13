@@ -57,6 +57,9 @@ export async function POST(request) {
     const token = jwt.sign(
       {
         sub: user.id,
+        role: user.role,
+        planTier: user.planTier,
+        activeSystemId: null // initially null
       },
       JWT_SECRET,
       { expiresIn: '7d' } // adjust session duration

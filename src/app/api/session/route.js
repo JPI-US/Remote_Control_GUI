@@ -11,14 +11,13 @@ export async function GET(request) {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.sub;
-    console.log('User ID from token:', userId);
 
-    if (!userId) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
-    }
-
-    return NextResponse.json({ id: userId }, { status: 200 });
+    return NextResponse.json({
+      sub: decoded.sub,
+      role: decoded.role,
+      planTier: decoded.planTier,
+      activeSystemId: decoded.activeSystemId || null,
+    });
   } catch (err) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
