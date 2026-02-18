@@ -157,9 +157,12 @@ exports.Prisma.SystemsScalarFieldEnum = {
   total_towers: 'total_towers',
   max_pv_kw: 'max_pv_kw',
   software_version: 'software_version',
-  api_key: 'api_key',
   latitude: 'latitude',
-  longitude: 'longitude'
+  longitude: 'longitude',
+  system_cipher: 'system_cipher',
+  system_iv: 'system_iv',
+  system_tag: 'system_tag',
+  has_fronius_system: 'has_fronius_system'
 };
 
 exports.Prisma.NotificationsScalarFieldEnum = {

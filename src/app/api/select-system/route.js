@@ -30,10 +30,10 @@ export async function POST(request) {
 
         // Check user has access to this system (unless admin)
         if (userRole !== "ADMIN") {
-            const allowed = await prisma.customerSystem.findFirst({
+            const allowed = await prisma.customer_system.findFirst({
                 where: {
-                    customerId: customerId,
-                    systemId: systemId,
+                    customer_id: customerId,
+                    system_id: systemId,
                 },
             });
 

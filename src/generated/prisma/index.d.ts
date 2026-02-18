@@ -4668,9 +4668,12 @@ export namespace Prisma {
     total_towers: number | null
     max_pv_kw: Decimal | null
     software_version: string | null
-    api_key: string | null
     latitude: Decimal | null
     longitude: Decimal | null
+    system_cipher: string | null
+    system_iv: string | null
+    system_tag: string | null
+    has_fronius_system: boolean | null
   }
 
   export type SystemsMaxAggregateOutputType = {
@@ -4683,9 +4686,12 @@ export namespace Prisma {
     total_towers: number | null
     max_pv_kw: Decimal | null
     software_version: string | null
-    api_key: string | null
     latitude: Decimal | null
     longitude: Decimal | null
+    system_cipher: string | null
+    system_iv: string | null
+    system_tag: string | null
+    has_fronius_system: boolean | null
   }
 
   export type SystemsCountAggregateOutputType = {
@@ -4698,9 +4704,12 @@ export namespace Prisma {
     total_towers: number
     max_pv_kw: number
     software_version: number
-    api_key: number
     latitude: number
     longitude: number
+    system_cipher: number
+    system_iv: number
+    system_tag: number
+    has_fronius_system: number
     _all: number
   }
 
@@ -4731,9 +4740,12 @@ export namespace Prisma {
     total_towers?: true
     max_pv_kw?: true
     software_version?: true
-    api_key?: true
     latitude?: true
     longitude?: true
+    system_cipher?: true
+    system_iv?: true
+    system_tag?: true
+    has_fronius_system?: true
   }
 
   export type SystemsMaxAggregateInputType = {
@@ -4746,9 +4758,12 @@ export namespace Prisma {
     total_towers?: true
     max_pv_kw?: true
     software_version?: true
-    api_key?: true
     latitude?: true
     longitude?: true
+    system_cipher?: true
+    system_iv?: true
+    system_tag?: true
+    has_fronius_system?: true
   }
 
   export type SystemsCountAggregateInputType = {
@@ -4761,9 +4776,12 @@ export namespace Prisma {
     total_towers?: true
     max_pv_kw?: true
     software_version?: true
-    api_key?: true
     latitude?: true
     longitude?: true
+    system_cipher?: true
+    system_iv?: true
+    system_tag?: true
+    has_fronius_system?: true
     _all?: true
   }
 
@@ -4863,9 +4881,12 @@ export namespace Prisma {
     total_towers: number | null
     max_pv_kw: Decimal | null
     software_version: string | null
-    api_key: string | null
     latitude: Decimal
     longitude: Decimal
+    system_cipher: string | null
+    system_iv: string | null
+    system_tag: string | null
+    has_fronius_system: boolean
     _count: SystemsCountAggregateOutputType | null
     _avg: SystemsAvgAggregateOutputType | null
     _sum: SystemsSumAggregateOutputType | null
@@ -4897,9 +4918,12 @@ export namespace Prisma {
     total_towers?: boolean
     max_pv_kw?: boolean
     software_version?: boolean
-    api_key?: boolean
     latitude?: boolean
     longitude?: boolean
+    system_cipher?: boolean
+    system_iv?: boolean
+    system_tag?: boolean
+    has_fronius_system?: boolean
     customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
     _count?: boolean | SystemsCountOutputTypeDefaultArgs<ExtArgs>
@@ -4915,9 +4939,12 @@ export namespace Prisma {
     total_towers?: boolean
     max_pv_kw?: boolean
     software_version?: boolean
-    api_key?: boolean
     latitude?: boolean
     longitude?: boolean
+    system_cipher?: boolean
+    system_iv?: boolean
+    system_tag?: boolean
+    has_fronius_system?: boolean
   }, ExtArgs["result"]["systems"]>
 
   export type SystemsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4930,9 +4957,12 @@ export namespace Prisma {
     total_towers?: boolean
     max_pv_kw?: boolean
     software_version?: boolean
-    api_key?: boolean
     latitude?: boolean
     longitude?: boolean
+    system_cipher?: boolean
+    system_iv?: boolean
+    system_tag?: boolean
+    has_fronius_system?: boolean
   }, ExtArgs["result"]["systems"]>
 
   export type SystemsSelectScalar = {
@@ -4945,12 +4975,15 @@ export namespace Prisma {
     total_towers?: boolean
     max_pv_kw?: boolean
     software_version?: boolean
-    api_key?: boolean
     latitude?: boolean
     longitude?: boolean
+    system_cipher?: boolean
+    system_iv?: boolean
+    system_tag?: boolean
+    has_fronius_system?: boolean
   }
 
-  export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "software_version" | "api_key" | "latitude" | "longitude", ExtArgs["result"]["systems"]>
+  export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "software_version" | "latitude" | "longitude" | "system_cipher" | "system_iv" | "system_tag" | "has_fronius_system", ExtArgs["result"]["systems"]>
   export type SystemsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
@@ -4975,9 +5008,12 @@ export namespace Prisma {
       total_towers: number | null
       max_pv_kw: Prisma.Decimal | null
       software_version: string | null
-      api_key: string | null
       latitude: Prisma.Decimal
       longitude: Prisma.Decimal
+      system_cipher: string | null
+      system_iv: string | null
+      system_tag: string | null
+      has_fronius_system: boolean
     }, ExtArgs["result"]["systems"]>
     composites: {}
   }
@@ -5412,9 +5448,12 @@ export namespace Prisma {
     readonly total_towers: FieldRef<"Systems", 'Int'>
     readonly max_pv_kw: FieldRef<"Systems", 'Decimal'>
     readonly software_version: FieldRef<"Systems", 'String'>
-    readonly api_key: FieldRef<"Systems", 'String'>
     readonly latitude: FieldRef<"Systems", 'Decimal'>
     readonly longitude: FieldRef<"Systems", 'Decimal'>
+    readonly system_cipher: FieldRef<"Systems", 'String'>
+    readonly system_iv: FieldRef<"Systems", 'String'>
+    readonly system_tag: FieldRef<"Systems", 'String'>
+    readonly has_fronius_system: FieldRef<"Systems", 'Boolean'>
   }
     
 
@@ -16191,9 +16230,12 @@ export namespace Prisma {
     total_towers: 'total_towers',
     max_pv_kw: 'max_pv_kw',
     software_version: 'software_version',
-    api_key: 'api_key',
     latitude: 'latitude',
-    longitude: 'longitude'
+    longitude: 'longitude',
+    system_cipher: 'system_cipher',
+    system_iv: 'system_iv',
+    system_tag: 'system_tag',
+    has_fronius_system: 'has_fronius_system'
   };
 
   export type SystemsScalarFieldEnum = (typeof SystemsScalarFieldEnum)[keyof typeof SystemsScalarFieldEnum]
@@ -16676,9 +16718,12 @@ export namespace Prisma {
     total_towers?: IntNullableFilter<"Systems"> | number | null
     max_pv_kw?: DecimalNullableFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
     software_version?: StringNullableFilter<"Systems"> | string | null
-    api_key?: StringNullableFilter<"Systems"> | string | null
     latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
+    system_cipher?: StringNullableFilter<"Systems"> | string | null
+    system_iv?: StringNullableFilter<"Systems"> | string | null
+    system_tag?: StringNullableFilter<"Systems"> | string | null
+    has_fronius_system?: BoolFilter<"Systems"> | boolean
     customer_system?: Customer_systemListRelationFilter
     towers?: TowersListRelationFilter
   }
@@ -16693,15 +16738,19 @@ export namespace Prisma {
     total_towers?: SortOrderInput | SortOrder
     max_pv_kw?: SortOrderInput | SortOrder
     software_version?: SortOrderInput | SortOrder
-    api_key?: SortOrderInput | SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    system_cipher?: SortOrderInput | SortOrder
+    system_iv?: SortOrderInput | SortOrder
+    system_tag?: SortOrderInput | SortOrder
+    has_fronius_system?: SortOrder
     customer_system?: customer_systemOrderByRelationAggregateInput
     towers?: TowersOrderByRelationAggregateInput
   }
 
   export type SystemsWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    latitude_longitude?: SystemsLatitudeLongitudeCompoundUniqueInput
     AND?: SystemsWhereInput | SystemsWhereInput[]
     OR?: SystemsWhereInput[]
     NOT?: SystemsWhereInput | SystemsWhereInput[]
@@ -16713,12 +16762,15 @@ export namespace Prisma {
     total_towers?: IntNullableFilter<"Systems"> | number | null
     max_pv_kw?: DecimalNullableFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
     software_version?: StringNullableFilter<"Systems"> | string | null
-    api_key?: StringNullableFilter<"Systems"> | string | null
     latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
+    system_cipher?: StringNullableFilter<"Systems"> | string | null
+    system_iv?: StringNullableFilter<"Systems"> | string | null
+    system_tag?: StringNullableFilter<"Systems"> | string | null
+    has_fronius_system?: BoolFilter<"Systems"> | boolean
     customer_system?: Customer_systemListRelationFilter
     towers?: TowersListRelationFilter
-  }, "id">
+  }, "id" | "latitude_longitude">
 
   export type SystemsOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16730,9 +16782,12 @@ export namespace Prisma {
     total_towers?: SortOrderInput | SortOrder
     max_pv_kw?: SortOrderInput | SortOrder
     software_version?: SortOrderInput | SortOrder
-    api_key?: SortOrderInput | SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    system_cipher?: SortOrderInput | SortOrder
+    system_iv?: SortOrderInput | SortOrder
+    system_tag?: SortOrderInput | SortOrder
+    has_fronius_system?: SortOrder
     _count?: SystemsCountOrderByAggregateInput
     _avg?: SystemsAvgOrderByAggregateInput
     _max?: SystemsMaxOrderByAggregateInput
@@ -16753,9 +16808,12 @@ export namespace Prisma {
     total_towers?: IntNullableWithAggregatesFilter<"Systems"> | number | null
     max_pv_kw?: DecimalNullableWithAggregatesFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
     software_version?: StringNullableWithAggregatesFilter<"Systems"> | string | null
-    api_key?: StringNullableWithAggregatesFilter<"Systems"> | string | null
     latitude?: DecimalWithAggregatesFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalWithAggregatesFilter<"Systems"> | Decimal | DecimalJsLike | number | string
+    system_cipher?: StringNullableWithAggregatesFilter<"Systems"> | string | null
+    system_iv?: StringNullableWithAggregatesFilter<"Systems"> | string | null
+    system_tag?: StringNullableWithAggregatesFilter<"Systems"> | string | null
+    has_fronius_system?: BoolWithAggregatesFilter<"Systems"> | boolean
   }
 
   export type NotificationsWhereInput = {
@@ -17651,9 +17709,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
     customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
     towers?: TowersCreateNestedManyWithoutSystemInput
   }
@@ -17668,9 +17729,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
     towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
   }
@@ -17684,9 +17748,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
     towers?: TowersUpdateManyWithoutSystemNestedInput
   }
@@ -17701,9 +17768,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
     towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
   }
@@ -17718,9 +17788,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
   }
 
   export type SystemsUpdateManyMutationInput = {
@@ -17732,9 +17805,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SystemsUncheckedUpdateManyInput = {
@@ -17747,9 +17823,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type NotificationsCreateInput = {
@@ -18820,6 +18899,16 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type SystemsLatitudeLongitudeCompoundUniqueInput = {
+    latitude: Decimal | DecimalJsLike | number | string
+    longitude: Decimal | DecimalJsLike | number | string
+  }
+
   export type SystemsCountOrderByAggregateInput = {
     id?: SortOrder
     system_name?: SortOrder
@@ -18830,9 +18919,12 @@ export namespace Prisma {
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
     software_version?: SortOrder
-    api_key?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    system_cipher?: SortOrder
+    system_iv?: SortOrder
+    system_tag?: SortOrder
+    has_fronius_system?: SortOrder
   }
 
   export type SystemsAvgOrderByAggregateInput = {
@@ -18853,9 +18945,12 @@ export namespace Prisma {
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
     software_version?: SortOrder
-    api_key?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    system_cipher?: SortOrder
+    system_iv?: SortOrder
+    system_tag?: SortOrder
+    has_fronius_system?: SortOrder
   }
 
   export type SystemsMinOrderByAggregateInput = {
@@ -18868,9 +18963,12 @@ export namespace Prisma {
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
     software_version?: SortOrder
-    api_key?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    system_cipher?: SortOrder
+    system_iv?: SortOrder
+    system_tag?: SortOrder
+    has_fronius_system?: SortOrder
   }
 
   export type SystemsSumOrderByAggregateInput = {
@@ -18925,6 +19023,14 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NotificationsCountOrderByAggregateInput = {
@@ -19242,11 +19348,6 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type ordersCountOrderByAggregateInput = {
     id?: SortOrder
     customer_id?: SortOrder
@@ -19297,14 +19398,6 @@ export namespace Prisma {
     tower_count?: SortOrder
     address_id?: SortOrder
     price?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type software_ticketsCountOrderByAggregateInput = {
@@ -19836,6 +19929,10 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type customer_systemUpdateManyWithoutSystemsNestedInput = {
     create?: XOR<customer_systemCreateWithoutSystemsInput, customer_systemUncheckedCreateWithoutSystemsInput> | customer_systemCreateWithoutSystemsInput[] | customer_systemUncheckedCreateWithoutSystemsInput[]
     connectOrCreate?: customer_systemCreateOrConnectWithoutSystemsInput | customer_systemCreateOrConnectWithoutSystemsInput[]
@@ -20028,10 +20125,6 @@ export namespace Prisma {
     connectOrCreate?: TowersCreateOrConnectWithoutOrdersInput | TowersCreateOrConnectWithoutOrdersInput[]
     createMany?: TowersCreateManyOrdersInputEnvelope
     connect?: TowersWhereUniqueInput | TowersWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type CustomerUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -20385,6 +20478,11 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -20431,6 +20529,14 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -20461,19 +20567,6 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type customer_systemCreateWithoutCustomersInput = {
@@ -21304,9 +21397,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
     customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
   }
 
@@ -21320,9 +21416,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
   }
 
@@ -21449,9 +21548,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
   }
 
@@ -21465,9 +21567,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
   }
 
@@ -21939,9 +22044,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
     towers?: TowersCreateNestedManyWithoutSystemInput
   }
 
@@ -21955,9 +22063,12 @@ export namespace Prisma {
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
     software_version?: string | null
-    api_key?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
     towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
   }
 
@@ -22034,9 +22145,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     towers?: TowersUpdateManyWithoutSystemNestedInput
   }
 
@@ -22050,9 +22164,12 @@ export namespace Prisma {
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    api_key?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
   }
 

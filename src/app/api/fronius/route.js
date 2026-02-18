@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { DateTime } from 'luxon';
 import jwt from "jsonwebtoken";
+import { decryptSystemId } from "@/lib/froniusCrypto";
 
 const BASE_URL = "https://api.solarweb.com/swqapi/pvsystems";
 
@@ -38,52 +39,27 @@ export async function GET(request) {
         
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const customerId = Number(decoded.sub);
+        const activeSystemId = Number(decoded.activeSystemId) || null;
 
         if (!headers.AccessKeyId || !headers.AccessKeyValue) {
             throw new Error("Missing SolarWeb API credentials");
         }
 
-        const { searchParams } = new URL(request.url);
-        const systemId = searchParams.get("systemId");
-
-        if (!systemId) {
-            return NextResponse.json(
-                { error: "systemId is required" },
-                { status: 400 }
-            );
-        }
-
-        //Fetch customer's systems
-        const systems = await prisma.systems.findMany({
+        // Verify the user has access to this Fronius system
+        const systemRecord = await prisma.systems.findFirst({
             where: {
-                customer_system: {
-                    some: { customer_id: customerId },
-                },
-                status: "ACTIVE",
+                id: activeSystemId, 
+                customer_system: { some: { customer_id: customerId } } 
             },
-            select: {
-                id: true,
-                // api_key intentionally excluded
-            },
-        });
-
-        if (!systems.length) {
-            console.error(`No system for customer ${customerId}`);
-            return NextResponse.json(
-                { error: "No active system assigned to this customer" },
-                { status: 404 }
-            );
-        }
-
-        const realsystemId = systems[0].id; // best system
-
-        const system = await prisma.systems.findUnique({
-            where: { id: realsystemId },
             select: { timezone: true },
         });
 
+        if (!systemRecord) {
+            return NextResponse.json({ error: "System not found for this customer" }, { status: 404 });
+        }
+
         // Get System timezone
-        const systemTZ = system.timezone ?? "America/Chicago";
+        const systemTZ = systemRecord.timezone ?? "America/Chicago";
 
         // Get current time based on system timezone
         const nowSystem = DateTime.now().setZone(systemTZ);
@@ -110,16 +86,16 @@ export async function GET(request) {
         //Fronius formatting
         const fromISO = fromUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         const toISO   = toUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
- 
-        /* 
 
-        if (m < 1 || m > 12) {
-            return NextResponse.json(
-                { error: "month must be between 1 and 12" },
-                { status: 400 }
-            );
+        // Assuming systemId comes from searchParams
+        const { searchParams } = new URL(request.url);
+        const systemId = searchParams.get("systemId");
+
+        if (!systemId) {
+        return NextResponse.json({ error: "systemId is required" }, { status: 400 });
         }
-        */
+
+        console.log("Backend using systemId:", systemId);
 
         const endpoints = {
             live: `${BASE_URL}/${systemId}/LiveData`,

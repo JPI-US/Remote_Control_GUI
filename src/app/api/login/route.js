@@ -19,7 +19,6 @@ export async function POST(request) {
 
     const body = await request.json();
     const { email, password } = loginSchema.parse(body);
-    //const { email, password } = await request.json();//OLD
 
     // Fetch user by email
     const user = await prisma.customer.findUnique({

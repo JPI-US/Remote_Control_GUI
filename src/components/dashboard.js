@@ -13,20 +13,19 @@ import 'chartjs-adapter-date-fns'; // FOR USING CATEGORY TIME
 import 'chartjs-adapter-luxon'; // Timezone-aware adapter
 import { DateTime } from "luxon";
 
-const SYSTEM_ID = "49bfa0cf-3479-4852-bf3a-91ad30ac50cc";
-
 const RADIUS = 45; // Static
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // Static
 
 export default function Dashboard(){
     const { session, user, loading } = useSession(); // Retrieving session info: 
-    const { system, loading: systemloading } = useSystem(); //Retrieving system data    
+    const { system, froniusSystemId, loading: systemloading } = useSystem(); //Retrieving system data    
     const router = useRouter();
 
     const MAX_PV_POWER = system?.max_pv_kw; 
     const system_tz = system?.timezone;
-    const chartDayCT = DateTime.now().setZone(system_tz).startOf("day");
     const chartDay = DateTime.now().setZone(system_tz).startOf("day");
+    const SYSTEM_ID = froniusSystemId;
+    console.log(`The system id: ${SYSTEM_ID}`);
 
     const lat = system?.latitude;
     const lon = system?.longitude;
@@ -43,6 +42,8 @@ export default function Dashboard(){
 
     // Useeffect for retrieving the live power generation data
     useEffect(() => {
+        if (!SYSTEM_ID) return;
+        console.log("Fetching Fronius data for system:", SYSTEM_ID);
         async function fetchLive() {
             try {
                 // Fetch power data
@@ -67,7 +68,7 @@ export default function Dashboard(){
         fetchLive();
         intervalRef.current = setInterval(fetchLive, 10000); // Call every 10 seconds
         return () => clearInterval(intervalRef.current);
-    }, []); 
+    }, [SYSTEM_ID]); 
 
     // Convert watts → percentage
     const powerPercent = Math.min(
@@ -81,6 +82,8 @@ export default function Dashboard(){
 
     // Useeffect for retrieving the monthly energy generation data /api/fronius/dailyproductionforMonth?systemId=${SYSTEM_ID}
     useEffect(() => {
+        if (!SYSTEM_ID) return;
+        console.log("Fetching Fronius data for system:", SYSTEM_ID);
         async function fetchDailyProduction() {
             try {
                 // Fetch power data
@@ -99,7 +102,7 @@ export default function Dashboard(){
         }
 
         fetchDailyProduction();
-    }, []); 
+    }, [SYSTEM_ID]); 
 
     // Retrieving Todays total power generation
     const todaysProduction = useMemo(() => {
@@ -114,6 +117,8 @@ export default function Dashboard(){
 
     // Useeffect for retrieving the monthly energy generation data /api/fronius/dailyproductionforMonth?systemId=${SYSTEM_ID}
     useEffect(() => {
+        if (!SYSTEM_ID) return;
+        console.log("Fetching Fronius data for system:", SYSTEM_ID);
         async function fetchMonthlyProduction() {
             try {
                 // Fetch power data
@@ -132,7 +137,7 @@ export default function Dashboard(){
         }
 
         fetchMonthlyProduction();
-    }, []);
+    }, [SYSTEM_ID]);
      
     const MONTH_NAMES = [
         "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -145,6 +150,8 @@ export default function Dashboard(){
 
     // Useeffect for retrieving the yearly energy generation data /api/fronius/dailyproductionforMonth?systemId=${SYSTEM_ID}
     useEffect(() => {
+        if (!SYSTEM_ID) return;
+        console.log("Fetching Fronius data for system:", SYSTEM_ID);
         async function fetchYearlyProduction() {
             try {
                 // Fetch power data
@@ -163,11 +170,13 @@ export default function Dashboard(){
         }
 
         fetchYearlyProduction();
-    }, []);
+    }, [SYSTEM_ID]);
 
 
     // Useeffect for retrieving the hourly power generation data /api/fronius/dailyProduction?systemId=${SYSTEM_ID}
     useEffect(() => {
+        if (!SYSTEM_ID) return;
+        console.log("Fetching Fronius data for system:", SYSTEM_ID);
         async function fetchHourlyProduction() {
             try {
                 // Fetch power data
@@ -200,7 +209,7 @@ export default function Dashboard(){
         fetchHourlyProduction();
         intervalRef1.current = setInterval(fetchHourlyProduction, 300000); // Call every 5 minutes
         return () => clearInterval(intervalRef1.current);
-    }, []);
+    }, [SYSTEM_ID]);
 
     // Generate full day 5-minute interval labels (00:00 → 23:55)
     const fullDayLabels = [];
@@ -246,6 +255,8 @@ export default function Dashboard(){
 
     //Fetching the toatal lifetime generation
     useEffect(() => {
+        if (!SYSTEM_ID) return;
+        console.log("Fetching Fronius data for system:", SYSTEM_ID);
         async function fetchtotalProduction() {
             try {
                 // Fetch power data
@@ -264,7 +275,7 @@ export default function Dashboard(){
         }
 
         fetchtotalProduction();
-    }, []); 
+    }, [SYSTEM_ID]); 
     
     const [weather, setWeather] = useState(null);
     const [weatherLoading, setweatherLoading] = useState(true);
@@ -349,7 +360,7 @@ export default function Dashboard(){
             },
             {
                 label: 'Todays Total Power Generation',
-                value: `${(todaysProduction).toFixed(2)} kW`,
+                value: `${(todaysProduction ?? 0).toFixed(2)} kW`,
                 icon: '/images/Sun.svg',
                 description: 'Total power achieved today',
                 color: 'orange'
@@ -488,10 +499,14 @@ export default function Dashboard(){
 
     const value = 125;
   
-    // Case 1: still loading
-    if (systemloading) {
+    // --- Rendering ---
+    if (loading || systemloading) {
         return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
-    } 
+    }
+    
+    if (!session) {
+        return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Unauthorized...</p>;
+    }
     // Case 2: no system found
     if (!system) {
         return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">No system data found...</p>;
@@ -499,9 +514,7 @@ export default function Dashboard(){
     console.log(JSON.stringify(system)); // prints full object as JSON string
     const angle = system?.towers?.[0]?.current_angle ?? "N/A";
     console.log(`This is the tower angle: ${angle}`);
-    if (loading || !session) {
-        return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
-    }
+    
 
     return(
         <div className='w-screen max-w-full overflow-x-hidden min-h-screen h-auto pb-4 text-black text-center bg-[#dfe0e2]'>

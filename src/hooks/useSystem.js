@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useSystem() {
-    const [system, setSystem] = useState(null);
+    const [systemData, setSystemData] = useState({ system: null, froniusSystemId: null });
     const [loading, setLoading] = useState(true);
+    const intervalRef = useRef(null); //Interval time for refreshes
 
     useEffect(() => {
         async function fetchSystem() {
@@ -13,21 +14,25 @@ export function useSystem() {
                 });
 
                 if (!res.ok) {
-                    setSystem(null);
+                    console.error("Failed to fetch system, status:", res.status);
+                    setSystemData({ system: null, froniusSystemId: null });
                     return;
                 }
 
                 const data = await res.json();
-                setSystem(data);
+                console.log("Fetched system from API:", data);
+                setSystemData(data); // { system, froniusSystemId 
             } catch (err) {
                 console.error("Failed to fetch system", err);
-                setSystem(null);
+                setSystemData({ system: null, froniusSystemId: null });
             } finally {
                 setLoading(false);
             }
         }
 
         fetchSystem();
+        intervalRef.current = setInterval(fetchSystem, 600000); // Call every 10 minutes
+        return () => clearInterval(intervalRef.current);
     }, []);
-    return { system, loading };
+    return { ...systemData, loading };
 }

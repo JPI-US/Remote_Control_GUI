@@ -7,7 +7,7 @@ export default function Contact(){
         <div className='w-screen max-w-full overflow-hidden min-h-screen md:h-screen pb-4 text-center bg-[#dfe0e2] text-black'>
             <div className='py-8 relative w-full h-32'>
                 {/* Back Button */}
-                <Link href="/towerselect" className="absolute top-7 left-8">
+                <Link href="/dashboard" className="absolute top-7 left-8">
                     <ArrowLeft size={32} className="text-black" />
                 </Link>
                 {/* Janta Logo */}

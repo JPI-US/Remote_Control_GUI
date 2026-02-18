@@ -52,21 +52,25 @@ model Settings {
 }
 
 model Systems {
-  id                Int               @id @default(autoincrement())
-  system_name       String            @db.VarChar(100)
-  inverter_type     String?           @db.VarChar(100)
-  timezone          String?           @db.VarChar(50)
-  installation_date DateTime?         @db.Date
-  status            String?           @default("ACTIVE") @db.VarChar(50)
-  total_towers      Int?              @default(0)
-  max_pv_kw         Decimal?          @default(0) @db.Decimal(10, 2)
-  software_version  String?           @db.VarChar(50)
-  api_key           String?           @db.VarChar(200)
-  latitude          Decimal           @default(0) @db.Decimal(9, 7)
-  longitude         Decimal           @default(0) @db.Decimal(10, 7)
-  customer_system   customer_system[]
-  towers            Towers[]
+  id                 Int               @id @default(autoincrement())
+  system_name        String            @db.VarChar(100)
+  inverter_type      String?           @db.VarChar(100)
+  timezone           String?           @db.VarChar(50)
+  installation_date  DateTime?         @db.Date
+  status             String?           @default("ACTIVE") @db.VarChar(50)
+  total_towers       Int?              @default(0)
+  max_pv_kw          Decimal?          @default(0) @db.Decimal(10, 2)
+  software_version   String?           @db.VarChar(50)
+  latitude           Decimal           @default(0) @db.Decimal(9, 7)
+  longitude          Decimal           @default(0) @db.Decimal(10, 7)
+  system_cipher      String?           @db.VarChar(512)
+  system_iv          String?           @db.VarChar(32)
+  system_tag         String?           @db.VarChar(32)
+  has_fronius_system Boolean           @default(false)
+  customer_system    customer_system[]
+  towers             Towers[]
 
+  @@unique([latitude, longitude], map: "unique_physical_system_geo")
   @@map("systems")
 }
 

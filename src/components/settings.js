@@ -3,10 +3,12 @@ import React from 'react';
 import { useEffect, useState } from "react";
 import Link from 'next/link';
 import { ArrowLeft, Menu, X} from "lucide-react";
-import { useAuth } from '@/hooks/useAuth';
+import { useSession } from '@/hooks/useSession';
 
 export default function Settings(){
-    const { user, userId, loading } = useAuth();//Retrieve user info
+    //const { userId } = useAuth();//Retrieve user info
+    const { session, user, loading } = useSession(); // Retrieving session info: 
+    const userID = session?.sub ?? null;
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -321,7 +323,8 @@ export default function Settings(){
 
         }
     };
-    if (loading) {
+
+    if (loading || !session) {
         return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
     }
 
@@ -347,7 +350,7 @@ export default function Settings(){
                         <ul className="text-black text-left">
                             <li className='mt-4 pl-4 text-xl'>{user.name}</li>
 
-                            <li className='mt-2 pl-4'><Link href="/towerselect" className="block hover:underline">Dashboard</Link></li>
+                            <li className='mt-2 pl-4'><Link href="/dashboard" className="block hover:underline">Dashboard</Link></li>
                             <li className='mt-2 pl-4'><Link href="/contact" className="block hover:underline">Contact us</Link></li>
                             <li className="mt-2 pl-4">
                                 <button
@@ -371,7 +374,7 @@ export default function Settings(){
 
             {/* Menu tabs */}
             <div className="relative flex items-center w-full py-4 px-8 border-b bg-[#f4f4f5]">
-                <Link href="/towerselect" className="flex items-center justify-center">
+                <Link href="/dashboard" className="flex items-center justify-center">
                     <ArrowLeft size={32} className="text-black" />
                 </Link>
                 <div className="absolute left-1/2 -translate-x-1/2 flex space-x-6 text-2xl">
