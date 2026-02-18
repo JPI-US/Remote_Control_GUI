@@ -511,6 +511,9 @@ export default function Dashboard(){
     if (!system) {
         return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">No system data found...</p>;
     } 
+    if (!user) {
+        return <p>User not found or not logged in</p>;
+    }
     console.log(JSON.stringify(system)); // prints full object as JSON string
     const angle = system?.towers?.[0]?.current_angle ?? "N/A";
     console.log(`This is the tower angle: ${angle}`);
@@ -536,7 +539,7 @@ export default function Dashboard(){
                 {menuOpen && (
                     <div className="absolute top-16 right-1 w-56 h-auto bg-[#f4f4f5] z-40 shadow-sm shadow-black border-gray-400 border rounded-md py-3">
                         <ul className="text-black text-left">
-                            <li className='mt-4 pl-4 text-xl'>{user.name}</li>
+                            <li className='mt-4 pl-4 text-xl'>{user?.name || 'Guest'}</li>
 
                             <li className='mt-2 pl-4'><Link href="/settings" className="block hover:underline">Settings</Link></li>
                             <li className='mt-2 pl-4'><Link href="/contact" className="block hover:underline">Contact us</Link></li>

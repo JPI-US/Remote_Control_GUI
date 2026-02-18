@@ -17,19 +17,10 @@ export function useSession() {
                 }
 
                 const session = await sessionRes.json();
-                // *** Add User ID validation***
-
-                // Only redirect if JWT is missing or invalid
-                if (!session?.sub) {
-                    setSession(null);
-                    setUser(null);
-                    return;
-                }
-
                 setSession(session); // Fetched session
 
                 //Fetch user info from your existing API
-                const userRes = await fetch(`/api/user/${session.sub}`, { credentials: "include" });
+                const userRes = await fetch(`/api/user`, { credentials: "include" });
                 if (!userRes.ok) {
                     setUser(null);
                     return;

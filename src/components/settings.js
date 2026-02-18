@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import Link from 'next/link';
 import { ArrowLeft, Menu, X} from "lucide-react";
 import { useSession } from '@/hooks/useSession';
+import { useSystem } from '@/hooks/useSystem';
 
 export default function Settings(){
     //const { userId } = useAuth();//Retrieve user info
     const { session, user, loading } = useSession(); // Retrieving session info: 
+    const { system, froniusSystemId, loading: systemloading } = useSystem(); //Retrieving system data    
     const userID = session?.sub ?? null;
 
     const [name, setName] = useState('');
@@ -28,7 +30,7 @@ export default function Settings(){
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
 
-        if (!userId) {
+        if (!userID) {
             setShowError(true);
             setTimeout(() => setShowError(false), 4000);
             // setMessage("Missing user ID");
@@ -38,7 +40,7 @@ export default function Settings(){
         const bodyData = { name, email, phone }; // store for fetch & logging
         console.log('Sending body:', bodyData);
 
-        const res = await fetch(`/api/user/${userId}`, {
+        const res = await fetch(`/api/user`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bodyData),
@@ -58,9 +60,9 @@ export default function Settings(){
     };
 
     //Handles user settings updates
-    const [pushNotifications, setPushNotifications] = useState(false);
-    const [systemAlerts, setSystemAlerts] = useState(false);
-    const [failedLogins, setFailedLogins] = useState(false);
+    // const [pushNotifications, setPushNotifications] = useState(false);   Dormant
+    // const [systemAlerts, setSystemAlerts] = useState(false);             Dormant
+    // const [failedLogins, setFailedLogins] = useState(false);             Dormant
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -69,50 +71,90 @@ export default function Settings(){
     // Handles password change
     const handlePasswordChange = async (e) => {
         e.preventDefault();
-    
+
+        // Basic validation
         if (!currentPassword || !newPassword || !confirmPassword) {
             setShowError(true);
-            //setShowError('Please fill in all fields.');
             setTimeout(() => setShowError(false), 4000);
             return;
         }
-    
+
         if (newPassword !== confirmPassword) {
             setShowError(true);
-            //setShowError('New passwords do not match.');
             setTimeout(() => setShowError(false), 4000);
             return;
         }
 
         if (currentPassword === newPassword) {
             setShowError(true);
-            //setShowError('New password is the same as old password');
             setTimeout(() => setShowError(false), 4000);
             return;
         }
-    
-        const res = await fetch(`/api/user/${userId}/change-password`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ currentPassword, newPassword }),
-        });
-    
-        const data = await res.json();
-    
-        if (res.ok) {
-            setShowMessage(true);
-            //setShowMessage('Password updated successfully.');
-            setTimeout(() => setShowMessage(false), 4000);
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
-        } else {
-            setTimeout(() => setShowError(false), 4000);
-            //setShowError(data.error || 'Password update failed.');
+
+        try {
+            const res = await fetch("/api/user/change-password", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ currentPassword, newPassword }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setShowMessage(true);
+                setTimeout(() => setShowMessage(false), 4000);
+                setCurrentPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+            } else {
+                setShowError(true);
+                setTimeout(() => setShowError(false), 4000);
+            }
+        } catch (err) {
+            console.error("Password update error:", err);
+            setShowError(true);
             setTimeout(() => setShowError(false), 4000);
         }
-    }
-    
+    };
+
+    const [systemName, setSystemName] = useState('');
+    useEffect(() => {
+        if (system) {
+            setSystemName(system.system_name);
+        }
+    }, [system]);
+    const handleSystemUpdate = async (e) => {
+        e.preventDefault();
+
+        if (!systemName) {
+            setShowError(true);
+            setTimeout(() => setShowError(false), 4000);
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/system', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ system_name: systemName }),
+                credentials: 'include', // JWT cookie sent automatically
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setShowMessage(true);
+                setTimeout(() => setShowMessage(false), 4000);
+            } else {
+                setShowError(true);
+                setTimeout(() => setShowError(false), 4000);
+            }
+        } catch (err) {
+            console.error('Error updating system:', err);
+            setShowError(true);
+            setTimeout(() => setShowError(false), 4000);
+        }
+    };
 
     //Hamburger menu
     const [menuOpen, setMenuOpen] = useState(false);
@@ -191,7 +233,7 @@ export default function Settings(){
                     </div>
                     <div className='flex items-center justify-center text-lg'>
                         <div className="flex flex-col">
-                            <form>
+                            <form onSubmit={handlePasswordChange}>
                                 {showMessage && (
                                     <div className="bg-green-200 border border-green-600 text-green-800 px-4 py-2 rounded mb-4 text-center">
                                         Password updated successfully.
@@ -293,15 +335,24 @@ export default function Settings(){
                     </div>
                     <div className='flex items-center justify-center text-lg'>
                         <div className="flex flex-col">
-                            <form>
+                            <form onSubmit={handleSystemUpdate}>
+                                {showMessage && (
+                                    <div className="bg-green-200 border border-green-600 text-green-800 px-4 py-2 rounded mb-4 text-center">
+                                    System updated successfully.
+                                    </div>
+                                )}
+                                {showError && (
+                                    <div className="bg-red-400 border border-green-600 text-green-800 px-4 py-2 rounded mb-4 text-center">
+                                    Failed to update system.
+                                    </div>
+                                )}
                                 <div className='flex pt-6 items-center py-2'>
                                     <p className='pr-2'>System Name</p>
                                     <input 
                                         type="text" 
                                         className='border-2 border-black p-1 bg-white'
-                                        value='Patrick Home'
-                                        //value={currentPassword}
-                                        //onChange={(e) => setCurrentPassword(e.target.value)}
+                                        value={systemName}
+                                        onChange={(e) => setSystemName(e.target.value)}
                                     />
                                 </div>
                                 <div className='pt-4 py-2'>

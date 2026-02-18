@@ -1,49 +1,48 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 import prisma from '@/lib/prisma'; // adjust path as needed
 
-export async function PUT(req, context) {
+export async function PUT(req) {
     try {
-        await (context.params);
-        const token = request.cookies.get('session')?.value;
+        // Get token from cookie
+        const token = req.cookies.get("session")?.value;
         if (!token) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const authUserId = decoded.sub;
-    
-        const idParam = (await (context.params)).id;
-        const userId = parseInt(idParam);
         
-        if (isNaN(userId)) {
-            return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
-        }
+        // Verify JWT
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const authUserId = Number(decoded.sub); // the ID of the authenticated user
 
-        // Only allow the user to update their own data
-        if (userId !== authUserId) {
-            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-        }
-
+        // Parse request body
         const { currentPassword, newPassword } = await req.json();
 
+        if (!currentPassword || !newPassword) {
+            return NextResponse.json({ error: "Missing passwords" }, { status: 400 });
+        }
+        
+        // Fetch user from DB
         const user = await prisma.customer.findUnique({
-            where: { id: userId },
+            where: { id: authUserId },
         });
       
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
       
+        // Compare current password
         const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
         if (!isMatch) {
             return NextResponse.json({ error: 'Incorrect current password' }, { status: 401 });
         }
       
-        const newHash = await bcrypt.hash(newPassword, 10);
+        // Hash new password
+        const newHash = await bcrypt.hash(newPassword, 12);
       
+        // Update password in DB
         await prisma.customer.update({
-            where: { id: userId },
+            where: { id: authUserId },
             data: { password_hash: newHash },
         });
       

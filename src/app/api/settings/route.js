@@ -1,16 +1,18 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET(request, context){
+export async function GET(request){
     try{
-        if (!context || !context.params) {
-            console.error('Missing context or params');
-            return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+        // Read from cookie
+        const token = request.cookies.get("session")?.value;
+        if (!token) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        await (context.params);
 
-        const idParam = (await (context.params)).customer_id;
-        const customerId = parseInt(idParam);
+        //Verify JWT
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const customerId = Number(decoded.sub);
+        console.log(`Select systems customer ID: ${customerId}`);
 
         if (isNaN(customerId)) {
             console.error('Invalid customer ID:', idParam);
