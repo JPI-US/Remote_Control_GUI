@@ -14,7 +14,7 @@ export async function POST(request) {
         }
 
         //Verify JWT
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
         const userRole = String(decoded.role);
         console.log(`Select systems customer ID: ${customerId}`);

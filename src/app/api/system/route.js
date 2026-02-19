@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { decryptSystemId } from "@/lib/froniusCrypto"; // make sure this path matches your project
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 export async function GET(request) {
     try {
         const token = request.cookies.get("session")?.value;
@@ -11,7 +14,7 @@ export async function GET(request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
         const activeSystemId = decoded.activeSystemId || null;
 
@@ -94,7 +97,7 @@ export async function PUT(request) {
         }
 
         // Verify JWT
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
         const activeSystemId = decoded.activeSystemId;
 

@@ -3,6 +3,9 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import prisma from '@/lib/prisma'; // adjust path as needed
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 export async function PUT(req) {
     try {
         // Get token from cookie
@@ -12,7 +15,7 @@ export async function PUT(req) {
         }
         
         // Verify JWT
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const authUserId = Number(decoded.sub); // the ID of the authenticated user
 
         // Parse request body

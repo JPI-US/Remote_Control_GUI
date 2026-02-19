@@ -9,7 +9,7 @@ import { useSystem } from '@/hooks/useSystem';
 export default function Settings(){
     //const { userId } = useAuth();//Retrieve user info
     const { session, user, loading } = useSession(); // Retrieving session info: 
-    const { system, froniusSystemId, loading: systemloading } = useSystem(); //Retrieving system data    
+    const { system } = useSystem(); //Retrieving system data    
     const userID = session?.sub ?? null;
 
     const [name, setName] = useState('');

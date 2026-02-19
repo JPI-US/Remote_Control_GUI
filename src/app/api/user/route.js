@@ -2,6 +2,9 @@ import prisma from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 export async function GET(request){
   try{
       // Read from cookie
@@ -11,7 +14,7 @@ export async function GET(request){
       }
 
       //Verify JWT
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET);
       const customerId = Number(decoded.sub);
       console.log(`Select systems customer ID: ${customerId}`);
 
@@ -45,7 +48,7 @@ export async function PUT(request) {
     const token = request.cookies.get("session")?.value;
     if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     const customerId = Number(decoded.sub);
 
     const body = await request.json();

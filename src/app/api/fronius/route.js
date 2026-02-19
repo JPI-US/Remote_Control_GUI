@@ -12,6 +12,9 @@ const headers = {
     AccessKeyValue: process.env.SOLAR_KEY_VALUE,
 };
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 /**
  * Generic SolarWeb fetch helper
  */
@@ -37,7 +40,7 @@ export async function GET(request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
         
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
         const activeSystemId = Number(decoded.activeSystemId) || null;
 

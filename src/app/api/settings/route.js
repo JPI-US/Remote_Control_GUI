@@ -1,6 +1,9 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 export async function GET(request){
     try{
         // Read from cookie
@@ -10,7 +13,7 @@ export async function GET(request){
         }
 
         //Verify JWT
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
         console.log(`Select systems customer ID: ${customerId}`);
 

@@ -1,6 +1,9 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 export async function GET(request, context){
     try{
         if (!context || !context.params) {
@@ -14,7 +17,7 @@ export async function GET(request, context){
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         const authUserId = decoded.sub;
 
         const idParam = (await (context.params)).customer_id;
