@@ -1,15 +1,10 @@
-'use client';
-import Login from '@/components/login.js';
+// app/page.js (server component)
+import LoginPage from '@/components/LoginWrapper';
 
 export const metadata = {
   title: "Janta Power ⋅ Login",
 };
 
-export default function Home() {
-  return (
-    <div>
-      <Login></Login>
-    </div>
-    
-  );
+export default function Page() {
+  return <LoginPage />;
 }
