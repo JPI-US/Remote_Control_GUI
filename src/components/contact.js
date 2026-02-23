@@ -87,7 +87,7 @@ export default function Contact(){
                             required
                         /> 
                         <label className="ml-2 mb-2 text-md">
-                            I accept the <a href='/' className='hover:underline'>privacy policy</a> of Janta Power
+                            {/* I accept the <a href='/' className='hover:underline'>privacy policy</a> of Janta Power */}
                             <span className="text-red-500"> *</span> 
                         </label> 
                     </div>
