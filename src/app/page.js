@@ -1,4 +1,5 @@
 // app/page.js (server component)
+'use client';
 import LoginPage from '@/components/LoginWrapper';
 
 export const metadata = {
