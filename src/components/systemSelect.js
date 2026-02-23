@@ -56,7 +56,7 @@ export default function SystemSelect(){
 
     return(
         <div
-            className="system-select-container"
+            className="system-select-container pt-4"
             style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}
         >
             {systems.map((system) => (
