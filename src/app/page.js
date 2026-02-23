@@ -1,5 +1,5 @@
 // app/page.js (server component)
-'use client';
+import { Suspense } from 'react';
 import LoginPage from '@/components/LoginWrapper';
 
 export const metadata = {
@@ -7,5 +7,11 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <LoginPage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPage />
+    </Suspense>
+  );
+
 }
+    
