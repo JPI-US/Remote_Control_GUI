@@ -1,29 +1,18 @@
-# ============================
-# 1️⃣ Builder Stage
-# ============================
 FROM node:20-bullseye AS builder
-
-# Set working directory
 WORKDIR /app
 
-# Install system build tools for native modules (Prisma, node-gyp, etc.)
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Install build tools
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Copy package.json and package-lock.json first for caching
 COPY package.json package-lock.json* ./
 
-# Clean npm cache and install dependencies deterministically
-RUN npm cache clean --force
-RUN npm ci --no-optional
+# Increase npm fetch timeout + legacy peer deps + no optional
+RUN npm config set fetch-timeout 60000
+RUN npm install --no-optional --legacy-peer-deps
 
-# Copy all source files
 COPY . .
 
-# Generate Prisma client (must run after dependencies)
+# Prisma client
 RUN npx prisma generate
 
 # Build Next.js app
