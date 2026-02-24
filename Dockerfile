@@ -1,12 +1,12 @@
 # -------- Stage 1: Dependencies --------
-FROM node:18-bullseye AS deps
+FROM node:20-bullseye AS deps
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
 RUN npm install
 
 # -------- Stage 2: Build --------
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Accept secrets as build args
@@ -33,7 +33,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # -------- Stage 3: Production runner --------
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
