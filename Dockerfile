@@ -1,6 +1,10 @@
 # -------- Stage 1: Builder --------
-FROM node:20-alpine AS builder
+# Use same base (slim/Debian) as runner so native modules (bcrypt, Prisma) are built for glibc, not musl
+FROM node:20-slim AS builder
 WORKDIR /app
+
+# Build deps for native modules (e.g. bcrypt) and OpenSSL for Prisma
+RUN apt-get update -y && apt-get install -y --no-install-recommends python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # -------- Build-time environment variables --------
 # Accept secrets as build args
@@ -37,8 +41,12 @@ RUN npx prisma generate
 RUN NODE_ENV=production npm run build
 
 # -------- Stage 2: Production Runner --------
-FROM node:20-alpine AS runner
+# Use slim (Debian) instead of alpine to avoid SIGSEGV with Next.js/Prisma on musl
+FROM node:20-slim AS runner
 WORKDIR /app
+
+# Install OpenSSL so Prisma can load the correct query engine (debian-openssl-1.1.x or 3.0.x)
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Set production environment
 ENV NODE_ENV=production
@@ -49,9 +57,13 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
+# Prisma client output (includes query engine for debian-openssl-3.0.x on slim)
+COPY --from=builder /app/src/generated/prisma ./src/generated/prisma
 
 # Expose port
 EXPOSE 3000
 
-# Start the app with runtime environment variables
+# Pass required env at run time, e.g.:
+#   docker run -p 3000:3000 -e DATABASE_URL="..." -e JWT_SECRET="..." -e SOLAR_KEY_ID="..." -e SOLAR_KEY_VALUE="..." -e FRONIUS_SYSTEM_KEY="..." remote_control_gui:latest
+# Or: docker run -p 3000:3000 --env-file .env.production remote_control_gui:latest
 CMD ["npm", "start"]
