@@ -17,15 +17,15 @@ ENV SOLAR_KEY_VALUE=$SOLAR_KEY_VALUE
 ENV JWT_SECRET=$JWT_SECRET
 ENV FRONIUS_SYSTEM_KEY=$FRONIUS_SYSTEM_KEY
 
-# Build in development mode so devDependencies (Tailwind, PostCSS, TypeScript, etc.) are available
-ENV NODE_ENV=development
-
-# Copy package files and install dependencies (including devDependencies)
+# Copy package files and install dependencies (including devDependencies for build)
 COPY package.json package-lock.json* ./
 RUN npm ci
 
 # Copy source code
 COPY . .
+
+# Ensure pages/_document.js at both root and src/pages (fixes 404 prerender "Html" error in Docker).
+RUN node scripts/ensure-pages-document.js
 
 # Optionally copy .env.production if you want to use the file directly
 # COPY .env.production .env.production
@@ -33,8 +33,8 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build Next.js (will now see all env variables)
-RUN npm run build
+# Build Next.js. Use NODE_ENV=production so 404 prerender uses production path (avoids "Html" error when NODE_ENV=development).
+RUN NODE_ENV=production npm run build
 
 # -------- Stage 2: Production Runner --------
 FROM node:20-alpine AS runner
