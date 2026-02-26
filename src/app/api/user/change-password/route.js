@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import prisma from '@/lib/prisma'; // adjust path as needed
 
+export const dynamic = 'force-dynamic';
+
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
 

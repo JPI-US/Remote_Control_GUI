@@ -4,6 +4,8 @@ import { DateTime } from 'luxon';
 import jwt from "jsonwebtoken";
 import { decryptSystemId } from "@/lib/froniusCrypto";
 
+export const dynamic = 'force-dynamic';
+
 const BASE_URL = "https://api.solarweb.com/swqapi/pvsystems";
 
 const headers = {

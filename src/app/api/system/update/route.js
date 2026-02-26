@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { encryptSystemId } from "@/lib/froniusCrypto";
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(req) {
   try {
     const body = await req.json();

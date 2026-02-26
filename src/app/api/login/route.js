@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is not set');
 }

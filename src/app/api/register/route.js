@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
 import Settings from '@/components/general';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request) {
     const { email, firstName, lastName, password, address } = await request.json();
 
