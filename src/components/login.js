@@ -2,122 +2,136 @@
 import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-export default function Login(){
+export default function Login() {
     const searchParams = useSearchParams();
     const [showLogoutMessage, setShowLogoutMessage] = useState(false);
-
-    useEffect(() => {
-        if (searchParams.get('loggedout') === 'true') {
-          setShowLogoutMessage(true);
-    
-          // Optional: hide message after a few seconds
-          setTimeout(() => setShowLogoutMessage(false), 4000);
-        }
-    }, [searchParams]);
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [acceptTerms, setAcceptTerms] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        if (searchParams.get('loggedout') === 'true') {
+            setShowLogoutMessage(true);
+            setTimeout(() => setShowLogoutMessage(false), 4000);
+        }
+    }, [searchParams]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (!acceptTerms) {
+            setMessage('Please accept the terms of service.');
+            return;
+        }
+        setMessage('');
 
         try {
             const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
-                credentials: 'include', // send & accept cookies
+                credentials: 'include',
             });
 
             const data = await res.json();
 
             if (res.ok) {
-                // JWT is stored in HttpOnly cookie by backend
-                router.push('/systemselect'); // Redirect to dashboard
-            } else {setMessage(data.error)}
+                router.push('/systemselect');
+            } else {
+                setMessage(data.error || 'Invalid email or password.');
+            }
         } catch (err) {
             console.error('Login failed', err);
             setMessage('Login failed. Please try again.');
         }
     };
-    
-    return(
-        /*  bg-white md:bg-[#f7e2cc]*/
-        <div className="relative w-screen h-screen text-center flex items-center justify-center">
+
+    return (
+        <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+            {/* Background image: Dallas Three Towers 1 */}
             <div
-                className="absolute inset-0 bg-[url('/images/vine_power_tower_scale60.jpg')] bg-cover bg-center md:brightness-75 brightness-50 ">
-            </div>
-            <div className='relative z-10 flex w-full md:min-w-2/5 justify-center'>
-                <form onSubmit={handleLogin} className='md:border-2 border-black md:rounded-2xl w-full p-4 md:rounded-lg md:max-w-md backdrop-blur-md bg-white md:shadow-lg md:shadow-black'>
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                    backgroundImage: "url('/images/Dallas%20Three%20Towers%201.jpg')",
+                }}
+            />
+
+            {/* Login card - Surface */}
+            <div className="relative z-10 w-full max-w-md mx-4">
+                <div className="bg-[#FFFFFF] rounded-2xl shadow-xl p-8 md:p-10">
+                    {/* Logo and Sign in row: lines align with logo width */}
+                    <div className="grid justify-items-center mx-auto" style={{ width: 'max-content' }}>
+                        <div className="flex justify-center mb-2">
+                            <img
+                                src="/images/Janta%20Power%20Official%20Logo%201.svg"
+                                alt="Janta Power"
+                                className="h-28 w-auto md:h-36"
+                            />
+                        </div>
+                        <div className="flex items-center gap-3 my-6 w-full min-w-0">
+                            <span className="flex-1 h-px bg-[#87a9c4] min-w-0" />
+                            <h2 className="text-[#2F3E4D] font-medium text-lg uppercase tracking-wide flex-shrink-0">
+                                Sign in
+                            </h2>
+                            <span className="flex-1 h-px bg-[#87a9c4] min-w-0" />
+                        </div>
+                    </div>
+
                     {showLogoutMessage && (
-                        <div className="bg-green-200 border border-green-600 text-green-800 px-4 rounded mb-2 text-center">
+                        <div className="mb-4 p-3 rounded-lg text-sm text-center bg-[#2A9D8F]/15 text-[#2A9D8F]">
                             You have been logged out successfully.
                         </div>
                     )}
-                    <img
-                        className='w-full sm:w-auto h-auto rounded-lg mx-auto -mt-8'
-                        src='images/Logo Type_Mix1.png'
-                        alt='Janta logo' 
-                        style={{height:'15em', width:'15em'}} 
-                    />
+                    {message && (
+                        <div className="mb-4 p-3 rounded-lg text-sm text-center bg-[#D80404]/15 text-[#D80404]">
+                            {message}
+                        </div>
+                    )}
 
-                    <p className='text-black text-5xl font-bold mx-auto -mt-14 pb-10'>
-                        Sign in
-                    </p>
-
-                    {message && <p className="text-xl text-red-500 pb-4 font-bold text-center">{message}</p>}
-
-                    <div className=''>
-                        <input 
-                            type='email' 
-                            id='email' 
-                            name='email'
-                            inputMode="email"
-                            className='rounded-lg border-2 w-full p-2 text-black bg-white'
-                            placeholder='Email'
-                            value={email}
-                            maxLength={254} /* NEW */
-                            pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"    /* NEW */
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        /> 
-                    </div>
-
-                    <div className='pt-8'>
+                    <form onSubmit={handleLogin} className="space-y-4">
                         <input
-                            type='password' 
-                            id='password' 
-                            name='password'
-                            className='rounded-lg border-2 w-full p-2 text-black bg-white'
-                            placeholder='Password'
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => { setEmail(e.target.value); setMessage(''); }}
+                            className="w-full px-4 py-3 border border-[#87a9c4]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87a9c4]/40 focus:border-[#87a9c4] bg-[#FFFFFF] text-[#2F3E4D] placeholder-[#6A7B8F]/70"
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
                             value={password}
-                            maxLength={128} /* NEW */
-                            onChange={(e) => setPassword(e.target.value)}
-                            required>
-                        </input>
-                    </div>
+                            onChange={(e) => { setPassword(e.target.value); setMessage(''); }}
+                            className="w-full px-4 py-3 border border-[#87a9c4]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87a9c4]/40 focus:border-[#87a9c4] bg-[#FFFFFF] text-[#2F3E4D] placeholder-[#6A7B8F]/70"
+                            required
+                        />
 
-                    <div className='mt-6 flex'>
-                        <input type="checkbox" id="horns" name="horns" className='mr-1' required/>
-                        <p className='text-black text-md'>By signing in, you accept the <a href='www.google.com' className='underline'>terms of service</a>.</p>
-                    </div>
+                        {/* Terms - Accent circular indicator */}
+                        <label className="flex items-start gap-3 cursor-pointer text-sm text-[#6A7B8F]">
+                            <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full border-2 border-[#87a9c4] flex items-center justify-center">
+                                {acceptTerms ? (
+                                    <span className="w-2 h-2 rounded-full bg-[#87a9c4]" />
+                                ) : null}
+                            </span>
+                            <input
+                                type="checkbox"
+                                checked={acceptTerms}
+                                onChange={(e) => setAcceptTerms(e.target.checked)}
+                                className="sr-only"
+                            />
+                            <span>By signing in, you accept the terms of service.</span>
+                        </label>
 
-                    <div className='mt-6 text-right'>
-                        <button type="submit" className='w-full border-2 border-black rounded-lg bg-[#ecac5c] font-bold p-2 text-black hover:brightness-90'>
-                            Sign in
+                        <button
+                            type="submit"
+                            className="w-full py-3 mt-4 rounded-lg font-semibold text-[#2F3E4D] bg-[#F3B664] hover:bg-[#F3B664]/90 focus:outline-none focus:ring-2 focus:ring-[#F3B664]/50 transition"
+                        >
+                            Sign In
                         </button>
-                    </div>
-
-                    <div className='mt-6 flex justify-between w-full'>
-                        <a href='/register' className='text-black hover:underline hidden'>Sign up</a>
-                        <a href='/passreset' className='text-black hover:underline hidden'>Forgot password?</a>
-                    </div>
-
-                </form>
-            </div>            
+                    </form>
+                </div>
+            </div>
         </div>
-    )
+    );
 }

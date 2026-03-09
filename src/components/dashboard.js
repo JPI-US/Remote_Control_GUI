@@ -2,22 +2,35 @@
 import React from 'react';
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from 'next/navigation';
-import { Menu, X } from "lucide-react";
+import {
+    Menu, X, Moon, Sun, LayoutDashboard, BarChart3, Sliders, History,
+    Droplets, Thermometer, Zap, Globe, Check, RotateCcw, Power, Home,
+} from "lucide-react";
 import Link from 'next/link';
 import { useSystem } from '@/hooks/useSystem';
 import { useSession } from '@/hooks/useSession';
+import { useTheme } from '@/context/ThemeContext';
 import "@/lib/chart";
 import "@/lib/line";
 import { Bar, Line } from "react-chartjs-2";
-import 'chartjs-adapter-date-fns'; // FOR USING CATEGORY TIME
-import 'chartjs-adapter-luxon'; // Timezone-aware adapter
+import 'chartjs-adapter-date-fns';
+import 'chartjs-adapter-luxon';
 import { DateTime } from "luxon";
 
-const RADIUS = 45; // Static
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // Static
+const RADIUS = 45;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+const SIDEBAR_BG = "#374151";
+const MAIN_BG = "#F2F2F2";
+const CARD_BG = "#FFFFFF";
+const ACCENT_GREEN = "#2A9D8F";
+const ORANGE = "#F3B664";
+const TITLE_COLOR = "#2F3E4D";
+const TEXT_MUTED = "#6A7B8F";
 
 export default function Dashboard(){
-    const { session, user, loading } = useSession(); // Retrieving session info: 
+    const { session, user, loading } = useSession(); // Retrieving session info:
+    const { isDark, toggleDark } = useTheme(); 
     const { system, froniusSystemId, loading: systemloading } = useSystem(); //Retrieving system data    
     const router = useRouter();
 
@@ -250,10 +263,7 @@ export default function Dashboard(){
     });
 
 
-    const [activeTab, setActiveTab] = useState("historical"); // Active tab state
-    const [generationView, setGenerationView] = useState("daily"); // Active chart generation state
-
-    //Fetching the toatal lifetime generation
+    //Fetching the total lifetime generation
     useEffect(() => {
         if (!SYSTEM_ID) return;
         console.log("Fetching Fronius data for system:", SYSTEM_ID);
@@ -432,73 +442,65 @@ export default function Dashboard(){
     //console.log(`Condition: ${condition}`);// Chance Rain Showers
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
-    //Hamburger menu
     const [menuOpen, setMenuOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [autonomousMode, setAutonomousMode] = useState(true);
+    const [maintenanceMode, setMaintenanceMode] = useState(false);
+    const [historicalPeriod, setHistoricalPeriod] = useState("monthly");
+    const diagnosticsRef = useRef(null);
+    const controlRef = useRef(null);
+    const historicalRef = useRef(null);
+    const [activeSection, setActiveSection] = useState("dashboard");
 
-    
-
-    // Dark Mode Toggle
-    const [darkMode, setDarkMode] = useState(false);
-
-    // Check if dark mode was previously set
-    /* useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            setDarkMode(true);
-            document.documentElement.classList.add('dark');
-        } else {
-            setDarkMode(false);
-            document.documentElement.classList.remove('dark');
-        }
-    }, []);
-    
-    useEffect(() => {
-        // Set dark mode in localStorage and document
-        if (darkMode) {
-            localStorage.setItem('theme', 'dark');
-            document.documentElement.classList.add('dark');
-        } else {
-            localStorage.setItem('theme', 'light');
-            document.documentElement.classList.remove('dark');
-        }
-    }, [darkMode]); */
-    
-    // Decoding jwt token to retrieve user data {
-    //const router = useRouter();
-
-    //Filter search results
     const [query, setQuery] = useState("");
+    const currentTime = useMemo(() =>
+        DateTime.now().setZone(system_tz || "America/Chicago").toFormat("hh:mm:ss a"),
+        [system_tz]
+    );
+    const carbonSaved = useMemo(() =>
+        totalProduction != null ? (totalProduction * 0.37).toFixed(2) : "0",
+        [totalProduction]
+    );
 
-    // A set for holding the selected status
-    const [activeStatuses, setActiveStatuses] = useState(new Set());/* 
-
-    const displayedCards = useMemo(() => {
-        return powerData.filter((item) => {
-            const matchesQuery = item.name.toLowerCase().includes(query.toLowerCase());
-            const matchesStatus = activeStatuses.size === 0 || activeStatuses.has(item.status);
-            return matchesQuery && matchesStatus;
-        });
-    }, [query, activeStatuses, powerData]); */
-
-    // Function for adding and eleting a status from the set
-    const handleStatusChange = (status) => {
-        setActiveStatuses(prev => {
-            const newSet = new Set(prev);
-            newSet.has(status) ? newSet.delete(status) : newSet.add(status);
-            return newSet;
-        });
+    // Scroll to section when sidebar link is clicked or URL has #diagnostics, #control, #historical
+    const scrollToSection = (ref) => {
+        ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
-    // let displayedCards = query ? filteredResults : powerData;    
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const hash = window.location.hash;
+        const id = setTimeout(() => {
+            if (hash === "#diagnostics") scrollToSection(diagnosticsRef);
+            else if (hash === "#control") scrollToSection(controlRef);
+            else if (hash === "#historical") scrollToSection(historicalRef);
+        }, 100);
+        return () => clearTimeout(id);
+    }, []);
+    useEffect(() => {
+        const onHashChange = () => {
+            const hash = window.location.hash;
+            if (hash === "#diagnostics") {
+                scrollToSection(diagnosticsRef);
+                setActiveSection("diagnostics");
+            } else if (hash === "#control") {
+                scrollToSection(controlRef);
+                setActiveSection("control");
+            } else if (hash === "#historical") {
+                scrollToSection(historicalRef);
+                setActiveSection("historical");
+            } else {
+                setActiveSection("dashboard");
+            }
+        };
+        const hash = window.location.hash;
+        if (hash === "#diagnostics") setActiveSection("diagnostics");
+        else if (hash === "#control") setActiveSection("control");
+        else if (hash === "#historical") setActiveSection("historical");
+        else setActiveSection("dashboard");
+        window.addEventListener("hashchange", onHashChange);
+        return () => window.removeEventListener("hashchange", onHashChange);
+    }, []);
 
-    /* displayedCards = activeStatuses.size
-        ? powerData.filter(item => activeStatuses.has(item.status))
-        : powerData; */
-
-    // Viewing the hidden components in status
-    const [isStatusOpen, setisStatusOpen] = useState(false);
-
-    const value = 125;
-  
     // --- Rendering ---
     if (loading || systemloading) {
         return <p className="bg-[#dfe0e2] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
@@ -519,603 +521,495 @@ export default function Dashboard(){
     console.log(`This is the tower angle: ${angle}`);
     
 
-    return(
-        <div className='w-screen max-w-full overflow-x-hidden min-h-screen h-auto pb-4 text-black text-center bg-[#dfe0e2]'>
-            <div className='h-40 border-b-4 border-[#87A9C4] bg-[#f4f4f5]'>
-                {/* Janta Logo 87A9C4*/}
-                {/* md:mr-auto md:ml-6 bg-[#f7e2cc] bg-[#fff]: tab header bg color; bg-[#f4f4f5]: tab group bg color; a9adb1: closest; dfe0e2: actual*/}
+    const angleNum = typeof angle === "number" && !Number.isNaN(angle) ? Math.floor(angle) : (angle ?? "—");
+    const powerPercentDisplay = MAX_PV_POWER > 0 ? Math.min(100, (pvPowerKw / (MAX_PV_POWER / 1000)) * 100) : 0;
+
+    return (
+        <div className="flex flex-col min-h-screen w-full bg-[#F2F2F2] text-[#2F3E4D] dark:bg-gray-900 dark:text-gray-100">
+            {/* Top header bar - fixed, white, with bigger logo */}
+            <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-4 bg-white shadow-sm dark:bg-gray-800 dark:shadow-gray-900">
                 <img
-                    className='w-full sm:w-auto h-auto rounded-lg mr-auto -mt-16 -mb-8'
-                    src='images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
+                    src="/images/Janta%20Power%20Business%20Card%20Logo%202.svg"
+                    alt="Janta Power"
+                    className="h-14 w-auto min-w-[160px] object-contain md:h-16 md:min-w-[200px]"
                 />
-                {/* Hamburger Menu */}
-                <button className="absolute top-7 right-8 z-50 cursor-pointer" onClick={() =>setMenuOpen(!menuOpen)}>
-                    {menuOpen ? <X size={32} /> : <Menu size={32} />}
-                </button>
-
-                {/* Dropdown Hamburger Menu */}
-                {menuOpen && (
-                    <div className="absolute top-16 right-1 w-56 h-auto bg-[#f4f4f5] z-40 shadow-sm shadow-black border-gray-400 border rounded-md py-3">
-                        <ul className="text-black text-left">
-                            <li className='mt-4 pl-4 text-xl'>{user?.name || 'Guest'}</li>
-
-                            <li className='mt-2 pl-4'><Link href="/settings" className="block hover:underline">Settings</Link></li>
-                            <li className='mt-2 pl-4'><Link href="/contact" className="block hover:underline">Contact us</Link></li>
-                            <li className="mt-2 pl-4">
-                                <button
-                                    onClick={async () => {
-                                    try {
-                                        await fetch('/api/logout', { method: 'GET' });
-                                        window.location.href = '/?loggedout=true';
-                                    } catch (err) {
-                                        console.error('Logout failed:', err);
-                                    }
-                                    }}
-                                    className="block hover:underline text-left w-full"
-                                >
-                                    Log Out
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                )}
-            </div>
-
-            {/* Page title */}
-            <div className='my-8'>    
-                <h1 className='text-4xl font-bold'>{/* Your Tower Dashboard  */}{system.system_name} </h1>
-            </div>
-
-            {/* New dashboard design */}
-            <div className="card mx-10 px-4 py-4 mb-10 relative overflow-hidden bg-white rounded-md shadow-black shadow-md border-t-1 border-black">
-                {/* Header */}
-                <h2 className="font-bold uppercase tracking-wide mb-4 flex items-center">
-                    <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                    Live Tower Status
-                </h2>
-
-                {/* Status Banner */}
-                <div className="mb-4 p-3 bg-green-500/10 border border-green-500 rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="relative">
-                                <div className="w-12 h-12 rounded-full border-4 flex items-center justify-center">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-blue-400 flex items-center justify-center">
-                                        <span className="text-sm font-bold">●</span>
-                                    </div>
-                                </div>
-                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
-                            </div>
-                            
-                            <div>
-                                <p className="text-sm font-medium">Tower Status</p>
-                                <p className="text-xs">Online & Operational</p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <div className="text-xs">Status</div>
-                            <div className="text-sm font-medium text-green-700">Online</div>
-                        </div>
-                    </div>
+                <p className="text-sm font-medium text-[#2F3E4D] dark:text-gray-200 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+                    {system?.system_name || "System"} • {currentTime}
+                </p>
+                    <div className="flex items-center gap-2">
+                        <button type="button" aria-label={isDark ? "Light mode" : "Dark mode"} className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={toggleDark}>
+                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                    </button>
+                    <button type="button" aria-label="Menu" className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
+                        {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                    </button>
                 </div>
+            </header>
 
-                {/* Main Content */}
-                <div className="flex flex-col lg:flex-row items-center justify-around p-4 relative">
-                    {/* Power Output Ring */}
-                    <div className="relative w-64 h-64 flex flex-col items-center justify-center">
-                        <div className="relative w-64 h-64 flex items-center justify-center">
-                            <div className="absolute text-4xl font-bold z-10 animate-pulse">
-                                <span className="accent-orange">{pvPowerKw.toFixed(2)}</span> kW
-                            </div>
-
-                            <svg
-                                className="w-64 h-64 absolute"
-                                viewBox="0 0 100 100"
-                            >
-                                {/* Background */}
-                                <circle
-                                    cx="50"
-                                    cy="50"
-                                    r={RADIUS}
-                                    fill="transparent"
-                                    stroke="#d1d5db"
-                                    strokeWidth="8"
-                                />
-
-                                {/* Power Ring */}
-                                <circle
-                                    cx="50"
-                                    cy="50"
-                                    r={RADIUS}
-                                    fill="transparent"
-                                    stroke="url(#powerGradient)"
-                                    strokeWidth="8"
-                                    strokeDasharray={CIRCUMFERENCE}
-                                    strokeDashoffset={dashOffset}
-                                    strokeLinecap="round"
-                                    transform="rotate(-90 50 50)"
-                                    className="transition-all duration-1000 ease-in-out"
-                                />
-
-                                <defs>
-                                    <linearGradient id="powerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor="#fbbf24" />
-                                    <stop offset="50%" stopColor="#f59e0b" />
-                                    <stop offset="100%" stopColor="#d97706" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        <p className="mt-6 text-lg font-bold text-center">
-                            Current Power Output
-                        </p>
-                    </div>
-
-                    {/* Tower + Angle */}
-                    <div className="flex flex-col items-center">
-                        <div className="relative">
-                            <img
-                                src="/images/Tower-Drawing.svg"
-                                className="w-72 h-72 mb-4 logo-invert drop-shadow-lg transition-all duration-300 hover:scale-105"
-                            />
-                            <div className="absolute inset-0 w-72 h-72 bg-white/5 rounded-full blur-xl -z-10"/>
-                        </div>
-
-                        {/* Angle Indicator */}
-                        <div className="flex flex-col items-center mb-3 ml-12">
-                            <div className="flex items-center space-x-3">
-                                <div className="relative w-8 h-8"/>
-                                    <div
-                                        className="absolute inset-0 rounded-full"
-                                        style={{ transform: `rotate(${angle}deg)` }}
-                                    >
-                                        <div className="w-1 h-3 rounded-full"/>
+            {/* Below header: fixed vertical sidebar + main content (pt-20 = space for fixed header) */}
+            <div className="flex flex-1 min-h-0 pt-20">
+                {/* Vertical sidebar - fixed, dark grey, not scrollable */}
+                <aside
+                    className="fixed left-0 top-20 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
+                    style={{ backgroundColor: SIDEBAR_BG }}
+                >
+                    <nav className="flex flex-col gap-6 p-4 pt-5">
+                        <div className="flex flex-col gap-1">
+                            <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">System</span>
+                            <div className="flex flex-col gap-0.5">
+                                {activeSection === "dashboard" ? (
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
+                                        <Link href="/dashboard" onClick={() => setActiveSection("dashboard")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                            <LayoutDashboard className="w-5 h-5 flex-shrink-0 text-white/90" />
+                                            Dashboard
+                                        </Link>
                                     </div>
-                                </div>
-                                <p className="text-2xl font-bold leading-none">
-                                    <span className="text-blue-600">{Math.floor(angle)}</span>°
-                                </p>
-                        </div>
-                        <p className="mt-1 text-sm ml-12 font-medium">
-                            Tower Angle
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div className="card mx-10 mb-10 px-4 py-4 relative overflow-hidden bg-white rounded-md shadow-black shadow-md border-t-1 border-black">
-                <h2 className="text-base font-bold uppercase tracking-wide mb-4 flex items-center">
-                    <span className="w-2 h-2 bg-cyan-400 rounded-full mr-2"></span>
-                    Daily Performance Metrics
-                </h2>
-                
-                {/* Status Overview Bar */}
-                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                    <div className="p-3 status-success rounded-lg bg-green-500/10 border border-green-500">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"/>
-                                <span className="text-sm font-medium">Tower Online</span>
-                            </div>
-                            <div className="text-xs">
-                                Last updated: {new Date().toLocaleTimeString()}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {/* Weather Widget */}
-                    <div className="p-3 border border-gray-300 rounded-lg">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                <div className="text-2xl">{weatherDisplay.icon}</div>
-                                <div>
-                                    <p className="text-sm text-blue-600 font-medium text-left">{weatherDisplay.title}</p>
-                                    <p className="text-xs text-left">{weatherDisplay.message}</p>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                {weather?.current ? (
-                                    <>
-                                        <div className="text-sm font-bold">
-                                            {weather.current.temp}°C
-                                        </div>
-                                        <div className="text-xs">
-                                            Humidity: {weather.current.humidity}%
-                                        </div>
-                                    </>
-                                    ) : (
-                                    <div>Loading...</div>
+                                ) : (
+                                    <Link href="/dashboard" onClick={() => setActiveSection("dashboard")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                        <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
+                                        Dashboard
+                                    </Link>
+                                )}
+                                {activeSection === "diagnostics" ? (
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
+                                        <Link href="/dashboard#diagnostics" onClick={() => setActiveSection("diagnostics")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                            <BarChart3 className="w-5 h-5 flex-shrink-0 text-white/90" />
+                                            Diagnostics
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <Link href="/dashboard#diagnostics" onClick={() => setActiveSection("diagnostics")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                        <BarChart3 className="w-5 h-5 flex-shrink-0" />
+                                        Diagnostics
+                                    </Link>
+                                )}
+                                {activeSection === "control" ? (
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
+                                        <Link href="/dashboard#control" onClick={() => setActiveSection("control")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                            <Sliders className="w-5 h-5 flex-shrink-0 text-white/90" />
+                                            Control
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <Link href="/dashboard#control" onClick={() => setActiveSection("control")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                        <Sliders className="w-5 h-5 flex-shrink-0" />
+                                        Control
+                                    </Link>
+                                )}
+                                {activeSection === "historical" ? (
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
+                                        <Link href="/dashboard#historical" onClick={() => setActiveSection("historical")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                            <History className="w-5 h-5 flex-shrink-0 text-white/90" />
+                                            Historical Data
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <Link href="/dashboard#historical" onClick={() => setActiveSection("historical")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                        <History className="w-5 h-5 flex-shrink-0" />
+                                        Historical Data
+                                    </Link>
                                 )}
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {tempStats.map((stat, index) => (
-                        <div key={index} className="stat-card flex items-center p-3 space-x-3 relative overflow-hidden group border-1 border-gray-300 rounded-md shadow-md">
-                            <div className="flex-shrink-0">
-                                <img 
-                                    src={stat.icon} 
-                                    alt={stat.label}
-                                    className="w-6 h-6 opacity-90 drop-shadow-sm"
-                                />
-                            </div>
-                            <div className="flex-1 text-left">
-                                <p className="text-xs uppercase font-medium mb-1">{stat.label}</p>
-                                <p className="text-lg font-bold mb-1 drop-shadow-sm">
-                                    <span className={`${
-                                        stat.label === 'Humidity' ? 'text-blue-600' :
-                                        stat.label === 'Temperature' ? 'text-red-500' :
-                                        stat.label === 'Current Power' ? 'text-orange-600' :
-                                        stat.label === 'System Efficiency' ? 'text-green-600' :
-                                        stat.label === 'Daily Peak Power' ? 'text-orange-600' :
-                                        'text-green-600'
-                                    }`}>{stat.value}</span>
-                                </p>
-                                <p className="text-xs">{stat.description}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+                    </nav>
+                </aside>
 
-            <div className="card mx-10 mb-10 px-4 py-4 relative overflow-hidden bg-white rounded-md shadow-black shadow-md border-t-1 border-black">
-                {/* Toggle Switch*/}
-                <div className="flex space-x-6 mx-auto text-lg mb-8">
-                    <button
-                        className={`tab border-b-2 hover:cursor-pointer
-                        ${activeTab === "historical"
-                            ? "border-black"
-                            : "border-transparent hover:border-gray-400"}
-                        `}
-                        onClick={() => setActiveTab("historical")}
-                    >
-                        Historical
-                    </button>
-                    <button
-                        className={`tab border-b-2 hover:cursor-pointer
-                        ${activeTab === "diagnostics"
-                            ? "border-black"
-                            : "border-transparent hover:border-gray-400"}
-                        `}
-                        onClick={() => setActiveTab("diagnostics")}
-                    >
-                        Diagnostics
-                    </button>
-                    <button
-                        className={`tab border-b-2 hover:cursor-pointer
-                        ${activeTab === "control"
-                            ? "border-black"
-                            : "border-transparent hover:border-gray-400"}
-                        `}
-                        onClick={() => setActiveTab("control")}
-                    >
-                        Control
-                    </button>
-                </div>
-                {/* Content Area */}
-                <div className="min-h-[200px]">
-                    {activeTab === "historical" && (
-                        <div>
-                            <h4 className="text-2xl text-black font-bold tracking-wide my-4">Historical Power Data</h4> 
-                            {/* Generation Timeframe Toggle */}
-                            <div className="flex justify-start mb-4">
-                                <div className="inline-flex space-x-2 bg-gray-100 rounded-md p-2">
-                                    {[
-                                        { id: "daily", label: "Daily" },
-                                        { id: "monthly", label: "Monthly" },
-                                        { id: "yearly", label: "Yearly" },
-                                        { id: "total", label: "Total" },
-                                    ].map((option) => (
-                                    <button
-                                        key={option.id}
-                                        onClick={() => setGenerationView(option.id)}
-                                        className={`px-3 py-1.5 text-sm font-medium transition-all duration-300 rounded-md
-                                        ${
-                                            generationView === option.id
-                                            ? "bg-blue-600 text-white shadow-sm"
-                                            : "text-gray-600 hover:text-black hover:cursor-pointer"
-                                        }`}
-                                    >
-                                        {option.label}
-                                    </button>
+                {/* Main content - ml-64 to sit beside fixed sidebar */}
+                <div className="flex-1 flex flex-col min-w-0 ml-64 dark:bg-gray-900">
+
+                {/* Scrollable sections (4 sections) - scroll-snap for section transitions */}
+                <main className="flex-1 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
+                    {/* Section 1 - Tower Status + Today at a Glance */}
+                    <section className="py-6 px-6 pb-4 dark:bg-gray-900" id="section-1">
+                        <h1 className="text-xl font-bold uppercase tracking-wide text-[#2F3E4D] dark:text-gray-100 mb-4">{system.system_name}</h1>
+
+                        {/* TOWER STATUS */}
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-200 mb-3">Tower Status</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            {/* Card 1: Current Power Output - circular gauge */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center dark:text-gray-100">
+                                <div className="relative w-40 h-40 flex items-center justify-center">
+                                    <span className="text-2xl font-bold z-10">{pvPowerKw.toFixed(2)} KW</span>
+                                    <svg className="w-40 h-40 absolute" viewBox="0 0 100 100">
+                                        <circle cx="50" cy="50" r={RADIUS} fill="transparent" stroke="#e5e7eb" strokeWidth="8" />
+                                        <circle
+                                            cx="50" cy="50" r={RADIUS}
+                                            fill="transparent"
+                                            stroke={ORANGE}
+                                            strokeWidth="8"
+                                            strokeDasharray={CIRCUMFERENCE}
+                                            strokeDashoffset={dashOffset}
+                                            strokeLinecap="round"
+                                            transform="rotate(-90 50 50)"
+                                            className="transition-all duration-1000"
+                                        />
+                                    </svg>
+                                </div>
+                                <p className="mt-3 text-sm text-[#6A7B8F] dark:text-gray-400">Current Power Output</p>
+                            </div>
+
+                            {/* Card 2: Tower Angle */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center dark:text-gray-100">
+                                <div className="relative flex items-center justify-center">
+                                    <img src="/images/tower_Design.svg" alt="Tower" className="w-32 h-32 object-contain" />
+                                </div>
+                                <p className="text-2xl font-bold text-[#2F3E4D] dark:text-gray-100 mt-2">{angleNum}°</p>
+                                <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Tower Angle</p>
+                            </div>
+
+                            {/* Card 3: System Health */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                                <h3 className="text-sm font-bold text-[#2F3E4D] dark:text-gray-100 mb-3">System Health</h3>
+                                <ul className="space-y-2">
+                                    {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item) => (
+                                        <li key={item} className="flex items-center justify-between text-sm">
+                                            <span className="text-[#2F3E4D] dark:text-gray-200">{item}</span>
+                                            <span className="flex items-center gap-1.5 text-[#2A9D8F] font-medium">
+                                                <span className="w-2 h-2 rounded-full bg-[#2A9D8F]" /> FUNCTIONAL
+                                            </span>
+                                        </li>
                                     ))}
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* TODAY AT A GLANCE */}
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Today at a Glance</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-white rounded-xl shadow-md p-4">
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Environmental</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex flex-col items-center text-center">
+                                        <Droplets className="w-8 h-8 text-blue-400 mb-2" />
+                                        <p className="text-xl font-bold text-[#2F3E4D]">{weather?.current?.humidity ?? "—"}%</p>
+                                        <p className="text-xs text-[#6A7B8F]">Humidity</p>
+                                    </div>
+                                    <div className="flex flex-col items-center text-center">
+                                        <Thermometer className="w-8 h-8 text-orange-500 mb-2" />
+                                        <p className="text-xl font-bold text-[#2F3E4D]">{weather?.current?.temp ?? "—"}°C</p>
+                                        <p className="text-xs text-[#6A7B8F]">Temperature</p>
+                                    </div>
                                 </div>
                             </div>
-                            {/* Historical charts go here */}
-                            <div className='w-full h-500px p-4'>
-                                {generationView === "daily" && hourlyProduction && (
-                                    <div className="">
-                                        {/* Daily line chart */}
-                                        {hourlyProduction && (
-                                            <div style={{ height: "300px" }}>
-                                                <Line
-                                                    data={{
-                                                        //labels: x,
-                                                        datasets: [
-                                                            {
-                                                                label: "Power Output",
-                                                                data: datasetPoints,
-                                                                //data: hourlyProduction.values,
-                                                                borderColor: "#f59e0b",
-                                                                fill: 'start',
-                                                                backgroundColor: "#f59e0b",
-                                                                borderWidth: 2,
-                                                                pointRadius: 0,
-                                                                pointHoverRadius: 4,
-                                                                pointHitRadius: 10,
-                                                                spanGaps: true,
-                                                                tension: 0.2,
-                                                                cubicInterpolationMode: 'monotone',
-                                                            },
-                                                        ],
-                                                    }}
-                                                    options={{
-                                                        responsive: true,
-                                                        maintainAspectRatio: false,
-                                                        //aspectRatio: 3,
-                                                        scales: {
-                                                            x: {
-                                                                type: 'time',
-                                                                adapters: {
-                                                                    date: {
-                                                                        zone: system_tz, 
-                                                                    },
-                                                                },
-                                                                min: fullDayDates[0],
-                                                                max: fullDayDates[fullDayDates.length - 1],
-                                                                time: {
-                                                                    unit: 'hour',
-                                                                    tooltipFormat: 'HH:mm',
-                                                                    displayFormats: {
-                                                                        hour: 'HH:mm',
-                                                                    },
-                                                                },
-                                                                grid: {
-                                                                    display: false, // removes all X-axis grid lines
-                                                                    drawTicks: false,
-                                                                },
-                                                                ticks: {
-                                                                    autoSkip: false,
-                                                                    maxRotation: 0,
-                                                                    align: 'center',
-                                                                },
-                                                            },
-                                                            y: {
-                                                                beginAtZero: true,
-                                                                title: {
-                                                                    display: true,
-                                                                    text: "watts",
-                                                                    fontSize: 44,
-                                                                },
-                                                            },
-                                                        },
-                                                        plugins: {
-                                                            legend: { display: false },
-                                                            tooltip: {
-                                                                callbacks: {
-                                                                    title: items => items[0].label,
-                                                                },
-                                                            },
-                                                            legend: { display: false },
-                                                        },
-                                                    }}
-                                                /> 
-                                            </div>
-                                        )}
+                            <div className="bg-white rounded-xl shadow-md p-4">
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Performance</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex flex-col items-center text-center">
+                                        <img src="/images/Battery%20charging.png" alt="Battery charging" className="w-8 h-8 object-contain mb-2" />
+                                        <p className="text-xl font-bold text-[#2F3E4D]">{maxHourlyPower} kW</p>
+                                        <p className="text-xs text-[#6A7B8F]">Daily Peak</p>
                                     </div>
-                                )}
+                                    <div className="flex flex-col items-center text-center">
+                                        <Zap className="w-8 h-8 text-[#6A7B8F] mb-2" />
+                                        <p className="text-xl font-bold text-[#2F3E4D]">{powerPercentDisplay.toFixed(1)}%</p>
+                                        <p className="text-xs text-[#6A7B8F]">Power Output</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                {generationView === "monthly" && (
-                                    <div className="" style={{ height: "300px" }}>
-                                        {/* Monthly bar chart */}
-                                        <Bar
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center text-center min-h-[240px]">
+                                <Globe className="w-10 h-10 text-[#2A9D8F] mb-2 flex-shrink-0" />
+                                <p className="text-xs text-[#6A7B8F]">Environmental impact reduction</p>
+                                <p className="text-xl font-bold text-[#2A9D8F] mt-1">{carbonSaved} kg CO2</p>
+                                <p className="text-sm text-[#2A9D8F]">Carbon Saved</p>
+                            </div>
+
+                            {/* Today's Data - area chart */}
+                            <div className="bg-white rounded-xl shadow-md p-4 md:col-span-1">
+                                <h3 className="text-sm font-bold text-[#2F3E4D] mb-3">Today&apos;s Data</h3>
+                                {hourlyProduction?.values?.length && fullDayDates?.length ? (
+                                    <div style={{ height: "200px" }}>
+                                        <Line
                                             data={{
-                                                labels: dailyProduction.labels,
-                                                datasets: [
-                                                    {
-                                                        label: "Energy Output",
-                                                        data: dailyProduction.values,
-                                                        backgroundColor: "#f59e0b",
-                                                        borderColor: "#f59e0b",
-                                                        borderWidth: 2,
-                                                        borderRadius: 4,
-                                                        barPercentage: 0.8,
-                                                        categoryPercentage: 0.9,
-                                                    },
-                                                ],
+                                                datasets: [{
+                                                    label: "Power (KW)",
+                                                    data: datasetPoints.map((p) => ({ x: p.x, y: (p.y || 0) / 1000 })),
+                                                    borderColor: ORANGE,
+                                                    backgroundColor: "rgba(243, 182, 100, 0.3)",
+                                                    fill: "start",
+                                                    borderWidth: 2,
+                                                    pointRadius: 0,
+                                                    tension: 0.2,
+                                                }],
                                             }}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
-                                                //aspectRatio: 3,
                                                 scales: {
+                                                    x: {
+                                                        type: "time",
+                                                        adapters: { date: { zone: system_tz } },
+                                                        min: fullDayDates[0],
+                                                        max: fullDayDates[fullDayDates.length - 1],
+                                                        grid: { display: false },
+                                                    },
                                                     y: {
                                                         beginAtZero: true,
-                                                        title: {
-                                                            display: true,
-                                                            text: "kWh",
-                                                        },
+                                                        title: { display: true, text: "Power (KW)" },
+                                                        grid: { color: "#f3f4f6" },
                                                     },
                                                 },
-                                                plugins: {
-                                                    legend: { display: false },
-                                                },
+                                                plugins: { legend: { display: false } },
                                             }}
-                                            className="h-full"
-                                        /> 
+                                        />
                                     </div>
+                                ) : (
+                                    <p className="text-sm text-[#6A7B8F] py-8 text-center">Loading chart data...</p>
                                 )}
+                            </div>
+                        </div>
+                    </section>
 
-                                {generationView === "yearly" && (
-                                    <div className="" style={{ height: "300px" }}>
-                                        {/* Monthly bar chart */}
+                    {/* Section 2 - System Diagnostics */}
+                    <section ref={diagnosticsRef} className="py-6 px-6 pt-4 bg-[#F2F2F2] scroll-mt-24" id="diagnostics">
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">System Diagnostics</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            {[
+                                { name: "Light Sensor", description: "Sun tracking and positioning" },
+                                { name: "Relay", description: "Power distribution and switching system" },
+                                { name: "Pressure Sensor", description: "Environmental pressure monitoring" },
+                                { name: "Humidity Sensor", description: "Moisture detection and monitoring" },
+                                { name: "Temperature Sensor", description: "Heat monitoring and thermal control" },
+                                { name: "Limit Switches", description: "Safety controls and position limits" },
+                            ].map((item) => (
+                                <div key={item.name} className="bg-white rounded-xl shadow-md p-4 flex items-center justify-between gap-4">
+                                    <div>
+                                        <h3 className="font-semibold text-[#2F3E4D]">{item.name}</h3>
+                                        <p className="text-sm text-[#6A7B8F] mt-0.5">{item.description}</p>
+                                    </div>
+                                    <span className="flex items-center gap-2 shrink-0 px-3 py-1.5 rounded-full bg-[#F2F2F2] text-sm font-medium text-[#2A9D8F]">
+                                        <span className="w-2 h-2 rounded-full bg-[#2A9D8F]" /> Online
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* System Controls - Tower Orientation + Control Panel */}
+                        <div ref={controlRef} id="control" className="scroll-mt-24">
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">System Controls</h2>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                            {/* Tower Orientation card */}
+                            <div className="bg-white rounded-xl shadow-md p-6">
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-4">Tower Orientation</h3>
+                                <div className="flex justify-center mb-4">
+                                    <img src="/images/Transparent%20PNG%201.jpg" alt="Tower" className="w-64 h-64 md:w-80 md:h-80 object-contain" />
+                                </div>
+                                <div className="flex items-center justify-center gap-2 text-[#2F3E4D] font-bold text-lg mb-4">
+                                    <RotateCcw className="w-5 h-5 text-[#6A7B8F]" />
+                                    {angleNum}°
+                                </div>
+                                <div className="flex flex-row items-start justify-center gap-8 flex-wrap min-w-0 pt-4 mt-4 border-t border-[#E5E7EB]">
+                                    <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
+                                        <button
+                                            type="button"
+                                            role="switch"
+                                            aria-checked={autonomousMode}
+                                            onClick={() => { setAutonomousMode(true); setMaintenanceMode(false); }}
+                                            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${autonomousMode ? "bg-[#2A9D8F]" : "bg-[#d1d5db]"}`}
+                                        >
+                                            <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${autonomousMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
+                                                {autonomousMode && <Check className="w-3 h-3 text-[#2A9D8F]" />}
+                                            </span>
+                                        </button>
+                                        <div className="flex flex-col gap-0.5 min-w-0">
+                                            <span className="font-bold text-[#2F3E4D] text-base">Autonomous</span>
+                                            <span className="text-sm text-[#6A7B8F]">Default</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
+                                        <button
+                                            type="button"
+                                            role="switch"
+                                            aria-checked={maintenanceMode}
+                                            onClick={() => setMaintenanceMode(!maintenanceMode)}
+                                            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${maintenanceMode ? "bg-[#dc2626]" : "bg-[#d1d5db]"}`}
+                                        >
+                                            <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${maintenanceMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
+                                                <X className="w-3 h-3 text-[#dc2626]" />
+                                            </span>
+                                        </button>
+                                        <div className="flex flex-col gap-0.5 min-w-0">
+                                            <span className="font-bold text-[#2F3E4D] text-base">Maintenance</span>
+                                            <span className="text-sm text-[#6A7B8F]">Requires confirmation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Control Panel card */}
+                            <div className="bg-white rounded-xl shadow-md p-6">
+                                <h3 className="text-lg font-bold text-[#2F3E4D] mb-4">Control Panel</h3>
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                        <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#2A9D8F] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#238276] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] focus:ring-offset-2 flex items-center justify-center gap-2">
+                                            <Power className="w-4 h-4" /> Start
+                                        </button>
+                                        <p className="text-sm text-[#2F3E4D]">Power on tower and start automated tracking</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                        <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#F3B664] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#e0a04d] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#F3B664] focus:ring-offset-2 flex items-center justify-center gap-2">
+                                            <RotateCcw className="w-4 h-4" /> Restart
+                                        </button>
+                                        <p className="text-sm text-[#2F3E4D]">Reboot tower systems and all components</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                        <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#e57373] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#ef5350] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#e57373] focus:ring-offset-2 flex items-center justify-center gap-2">
+                                            <X className="w-4 h-4" /> Stop
+                                        </button>
+                                        <p className="text-sm text-[#2F3E4D]">Emergency stop all operations</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                        <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#b91c1c] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#991b1b] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#b91c1c] focus:ring-offset-2 flex items-center justify-center gap-2">
+                                            <RotateCcw className="w-4 h-4" /> Reset
+                                        </button>
+                                        <p className="text-sm text-[#2F3E4D]">Reset tower to default factory settings</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                        <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#374151] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#4b5563] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#374151] focus:ring-offset-2 flex items-center justify-center gap-2">
+                                            <Home className="w-4 h-4" /> Home
+                                        </button>
+                                        <p className="text-sm text-[#2F3E4D]">Return tower to home position</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        {/* Historical Data section */}
+                        <div ref={historicalRef} id="historical" className="scroll-mt-24">
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">Historical Data</h2>
+                        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+                            <h3 className="text-base font-bold text-[#2F3E4D]">Historical Power Data</h3>
+                            <p className="text-sm text-[#6A7B8F] mt-0.5 mb-4">Energy produced over time</p>
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                {[
+                                    { id: "monthly", label: "Monthly" },
+                                    { id: "yearly", label: "Yearly" },
+                                    { id: "total", label: "Total" },
+                                ].map(({ id, label }) => (
+                                    <button
+                                        key={id}
+                                        type="button"
+                                        onClick={() => setHistoricalPeriod(id)}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${historicalPeriod === id ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="rounded-lg border border-[#E5E7EB] bg-[#FAFAFA] p-4" style={{ minHeight: "280px" }}>
+                                {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
+                                    <div style={{ height: "260px" }}>
                                         <Bar
                                             data={{
-                                                labels: monthLabels,
-                                                datasets: [
-                                                    {
-                                                        label: "Energy Output",
-                                                        data: monthlyProduction.values,
-                                                        backgroundColor: "#f59e0b",
-                                                        borderColor: "#f59e0b",
-                                                        borderWidth: 2,
-                                                        borderRadius: 4,
-                                                        barPercentage: 0.8,
-                                                        categoryPercentage: 0.9,
-                                                    },
-                                                ],
+                                                labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length),
+                                                datasets: [{
+                                                    label: "Energy (kWh)",
+                                                    data: (dailyProduction.values || []).map((v) => Math.round((v ?? 0) * 100) / 100),
+                                                    backgroundColor: "#F3B664",
+                                                    borderRadius: 4,
+                                                    barPercentage: 0.8,
+                                                    categoryPercentage: 0.9,
+                                                }],
                                             }}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
-                                                //aspectRatio: 3,
                                                 scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        title: {
-                                                            display: true,
-                                                            text: "kWh",
-                                                        },
-                                                    },
+                                                    y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E5E7EB" } },
+                                                    x: { grid: { display: false }, title: { display: true, text: "Day" } },
                                                 },
-                                                plugins: {
-                                                    legend: { display: false },
-                                                },
+                                                plugins: { legend: { display: false } },
                                             }}
-                                            className="h-full"
-                                        /> 
+                                        />
                                     </div>
                                 )}
-                                {generationView === "total" && (
-                                    <div className="" style={{ height: "300px" }}>
-                                        {/* yearly bar chart */}
+                                {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
+                                    <div style={{ height: "260px" }}>
                                         <Bar
                                             data={{
-                                                labels: yearlyProduction.labels,
-                                                datasets: [
-                                                    {
-                                                        label: "Energy Output",
-                                                        data: yearlyProduction.values,
-                                                        backgroundColor: "#f59e0b",
-                                                        borderColor: "#f59e0b",
-                                                        borderWidth: 2,
-                                                        borderRadius: 4,
-                                                        barPercentage: 0.5,
-                                                        categoryPercentage: 0.3,
-                                                    },
-                                                ],
+                                                labels: monthLabels.slice(0, (monthlyProduction.values || []).length),
+                                                datasets: [{
+                                                    label: "Energy (kWh)",
+                                                    data: (monthlyProduction.values || []).map((v) => Math.round((v ?? 0) * 100) / 100),
+                                                    backgroundColor: "#F3B664",
+                                                    borderRadius: 4,
+                                                    barPercentage: 0.8,
+                                                    categoryPercentage: 0.9,
+                                                }],
                                             }}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
-                                                //aspectRatio: 3,
                                                 scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        title: {
-                                                            display: true,
-                                                            text: "MWH",
-                                                        },
-                                                    },
+                                                    y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E5E7EB" } },
+                                                    x: { grid: { display: false }, title: { display: true, text: "Month" } },
                                                 },
-                                                plugins: {
-                                                    legend: { display: false },
-                                                },
+                                                plugins: { legend: { display: false } },
                                             }}
-                                            className="h-full"
-                                        /> 
+                                        />
                                     </div>
                                 )}
-
-                                
+                                {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
+                                    <div style={{ height: "260px" }}>
+                                        <Bar
+                                            data={{
+                                                labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length),
+                                                datasets: [{
+                                                    label: "Energy (MWh)",
+                                                    data: (yearlyProduction.values || []).map((v) => Math.round((v ?? 0) * 100) / 100),
+                                                    backgroundColor: "#F3B664",
+                                                    borderRadius: 4,
+                                                    barPercentage: 0.4,
+                                                    categoryPercentage: 0.5,
+                                                }],
+                                            }}
+                                            options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                scales: {
+                                                    y: { beginAtZero: true, title: { display: true, text: "Energy (MWh)" }, grid: { color: "#E5E7EB" } },
+                                                    x: { grid: { display: false }, title: { display: true, text: "Year" } },
+                                                },
+                                                plugins: { legend: { display: false } },
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                                {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
+                                    <p className="text-sm text-[#6A7B8F] py-12 text-center">Loading chart data...</p>
+                                )}
                             </div>
                         </div>
-                    )}
-
-                    {activeTab === "diagnostics" && (
-                        <div>
-                            <h4 className="text-2xl text-black font-bold tracking-wide my-4">System Diagnostics</h4>
-                            {/* Diagnostics content */}
-                            <div className='flex flex-col'>
-                                <ul className="grid grid-cols-2 gap-3 p-4 text-black">
-                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Tower</span>
-                                        <span className="text-green-600 font-semibold">Online</span>
-                                    </li>
-
-                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Motor</span>
-                                        <span className="text-green-600 font-semibold">Online</span>
-                                    </li>
-
-                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Relay</span>
-                                        <span className="text-green-600 font-semibold">Online</span>
-                                    </li>
-
-                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Limit Switch</span>
-                                        <span className="text-green-600 font-semibold">Online</span>
-                                    </li>
-                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Communication Protocol</span>
-                                        <span className="text-green-600 font-semibold">Online</span>
-                                    </li>
-                                    <li className="flex justify-between items-center border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Encoder</span>
-                                        <span className="text-green-600 font-semibold">Online</span>
-                                    </li>
-                                    {/* Fault/offline: text-red-600; warning: text-yellow-500   */}
-                                </ul>
-                            </div>
                         </div>
-                    )}
-
-                    {activeTab === "control" && (
-                        <div>
-                            <h4 className="text-2xl text-black font-bold tracking-wide my-4">Control Panel</h4>
-                            {/* Control actions */}
-                            <div className='flex flex-col'>
-                                <ul className="grid grid-cols-2 gap-3 p-4 text-black">
-                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Restart</span>
-                                        <span className="text-xs">Reboot tower systems and all components</span>
-                                    </li>
-
-                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Reset</span>
-                                        <span className="text-xs">Reset to default factory settings</span>
-                                    </li>
-
-                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Go Home</span>
-                                        <span className="text-xs">Return tower to home position</span>
-                                    </li>
-
-                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Enter Maintenance</span>
-                                        <span className="text-xs">Enable maintenance mode for repairs</span>
-                                    </li>
-
-                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Leave Maintenance</span>
-                                        <span className="text-xs">Exit maintenance mode and resume operation</span>
-                                    </li>
-
-                                    
-                                    <li className="flex flex-col text-center hover:cursor-pointer hover:scale-102 hover:shadow-lg border border-gray-300 rounded-md shadow-md px-3 py-2">
-                                        <span className="font-medium">Stop Command</span>
-                                        <span className="text-xs">Emergency stop all operations</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    )}
+                    </section>
+                </main>
                 </div>
             </div>
+
+            {/* Dropdown from top bar menu */}
+            {menuOpen && (
+                <div className="fixed top-24 right-6 w-56 bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <p className="px-4 py-2 text-sm font-medium border-b border-gray-100 dark:border-gray-700 dark:text-gray-200">{user?.name || "Guest"}</p>
+                    <Link href="/settings" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Settings</Link>
+                    <Link href="/contact" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Contact us</Link>
+                    <button
+                        onClick={async () => {
+                            try {
+                                await fetch("/api/logout", { method: "GET" });
+                                window.location.href = "/?loggedout=true";
+                            } catch (err) {
+                                console.error("Logout failed:", err);
+                            }
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200"
+                    >
+                        Log Out
+                    </button>
+                </div>
+            )}
         </div>
-    ) 
+    );
 }
