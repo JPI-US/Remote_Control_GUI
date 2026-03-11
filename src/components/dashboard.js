@@ -527,9 +527,9 @@ export default function Dashboard(){
     return (
         <div className="flex flex-col min-h-screen w-full bg-[#F2F2F2] text-[#2F3E4D] dark:bg-gray-900 dark:text-gray-100">
             {/* Top header bar - fixed, white, with bigger logo */}
-            <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-4 bg-white shadow-sm dark:bg-gray-800 dark:shadow-gray-900">
+            <header className="fixed top-0 left-64 right-0 z-40 flex items-center justify-between px-6 py-4 bg-white shadow-sm dark:bg-gray-800 dark:shadow-gray-900">
                 <img
-                    src="/images/Janta%20Power%20Business%20Card%20Logo%202.svg"
+                    src="/images/Janta_Power_Business_Card_Logo.jpeg"
                     alt="Janta Power"
                     className="h-14 w-auto min-w-[160px] object-contain md:h-16 md:min-w-[200px]"
                 />
@@ -550,12 +550,19 @@ export default function Dashboard(){
             <div className="flex flex-1 min-h-0 pt-20">
                 {/* Vertical sidebar - fixed, dark grey, not scrollable */}
                 <aside
-                    className="fixed left-0 top-20 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
+                    className="fixed left-0 top-0 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
                     style={{ backgroundColor: SIDEBAR_BG }}
                 >
-                    <nav className="flex flex-col gap-6 p-4 pt-5">
+                    <Link href="/dashboard" className="flex items-center justify-center px-4 pb-2 shrink-0 border-b border-white/10">
+                        <img
+                            src="/images/Janta_Power_Business_Card_Logo.jpeg"
+                            alt="Janta Power"
+                            className="w-full max-w-[200px] h-auto object-contain"
+                        />
+                    </Link>
+                    <nav className="flex flex-col gap-6 p-4 pt-2">
                         <div className="flex flex-col gap-1">
-                            <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">System</span>
+                            <span className="px-3 -mt-10 pb-2 text-xs font-bold uppercase tracking-wider text-white">System</span>
                             <div className="flex flex-col gap-0.5">
                                 {activeSection === "dashboard" ? (
                                     <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
@@ -676,44 +683,50 @@ export default function Dashboard(){
                         {/* TODAY AT A GLANCE */}
                         <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Today at a Glance</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div className="bg-white rounded-xl shadow-md p-4">
-                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Environmental</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="flex flex-col items-center text-center">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex flex-col min-h-[140px] relative overflow-hidden">
+                                {/* Full-height divider from top to bottom of card */}
+                                <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] dark:bg-gray-500 z-10" style={{ width: '4px' }} aria-hidden />
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-100 mb-3 shrink-0">Environmental</h3>
+                                <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
+                                    <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
                                         <Droplets className="w-8 h-8 text-blue-400 mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D]">{weather?.current?.humidity ?? "—"}%</p>
-                                        <p className="text-xs text-[#6A7B8F]">Humidity</p>
+                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{weather?.current?.humidity ?? "—"}%</p>
+                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Humidity</p>
                                     </div>
-                                    <div className="flex flex-col items-center text-center">
+                                    <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
                                         <Thermometer className="w-8 h-8 text-orange-500 mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D]">{weather?.current?.temp ?? "—"}°C</p>
-                                        <p className="text-xs text-[#6A7B8F]">Temperature</p>
+                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{weather?.current?.temp ?? "—"}°C</p>
+                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Temperature</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-white rounded-xl shadow-md p-4">
-                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Performance</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="flex flex-col items-center text-center">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex flex-col min-h-[140px] relative overflow-hidden">
+                                {/* Full-height divider from top to bottom of card */}
+                                <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] dark:bg-gray-500 z-10" style={{ width: '4px' }} aria-hidden />
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-100 mb-3 shrink-0">Performance</h3>
+                                <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
+                                    <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
                                         <img src="/images/Battery%20charging.png" alt="Battery charging" className="w-8 h-8 object-contain mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D]">{maxHourlyPower} kW</p>
-                                        <p className="text-xs text-[#6A7B8F]">Daily Peak</p>
+                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{maxHourlyPower} kW</p>
+                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Daily Peak</p>
                                     </div>
-                                    <div className="flex flex-col items-center text-center">
+                                    <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
                                         <Zap className="w-8 h-8 text-[#6A7B8F] mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D]">{powerPercentDisplay.toFixed(1)}%</p>
-                                        <p className="text-xs text-[#6A7B8F]">Power Output</p>
+                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{powerPercentDisplay.toFixed(1)}%</p>
+                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Power Output</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center text-center min-h-[240px]">
-                                <Globe className="w-10 h-10 text-[#2A9D8F] mb-2 flex-shrink-0" />
-                                <p className="text-xs text-[#6A7B8F]">Environmental impact reduction</p>
-                                <p className="text-xl font-bold text-[#2A9D8F] mt-1">{carbonSaved} kg CO2</p>
-                                <p className="text-sm text-[#2A9D8F]">Carbon Saved</p>
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]">
+                                <Globe className="w-16 h-16 text-[#2A9D8F] flex-shrink-0" />
+                                <div className="flex flex-col text-left min-w-0">
+                                    <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Environmental impact reduction</p>
+                                    <p className="text-2xl font-bold text-[#2A9D8F] mt-1">{carbonSaved} kg CO2</p>
+                                    <p className="text-base text-[#2A9D8F]">Carbon Saved</p>
+                                </div>
                             </div>
 
                             {/* Today's Data - area chart */}
