@@ -28,3 +28,46 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Circular checkbox styling */
+input[type="checkbox"].circular-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  background-color: transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, scale 0.2s ease;
+}
+
+input[type="checkbox"].circular-checkbox:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(236, 172, 92, 0.4);
+}
+
+input[type="checkbox"].circular-checkbox:checked {
+  background-color: #ecac5c;
+  border-color: #ecac5c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(236, 172, 92, 0.5);
+}
+
+input[type="checkbox"].circular-checkbox:checked:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 16px rgba(236, 172, 92, 0.7);
+}
+
+input[type="checkbox"].circular-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: white;
+  border-radius: 50%;
+}

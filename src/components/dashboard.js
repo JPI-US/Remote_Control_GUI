@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { motion } from "framer-motion";
 import { ArrowLeft, Droplets, Gauge, Menu, Thermometer, Wind, X} from "lucide-react";
+import Sidebar from './sidebar';
 import { Doughnut } from 'react-chartjs-2'; // Rline new
 import {
     LineChart,
@@ -315,20 +316,15 @@ export default function Dashboard({powerID}){
         return <p className="bg-[#f7e2cc] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
 
     return(
-        <div className='w-screen max-w-screen overflow-hidden h-auto pb-4 text-center bg-[#f7e2cc] text-black'>
-            <div className='py-8 relative w-full h-32'>
+        <div className='flex'>
+            <Sidebar />
+            <div className='flex-1 ml-64 w-screen max-w-screen overflow-hidden h-auto pb-4 text-center bg-[#f7e2cc] text-black'>
+                <div className='relative w-full h-30 bg-white'>
                 {/* Back Button */}
                 <Link href="/towerselect" className="absolute top-7 left-8">
                     <ArrowLeft size={32} className="text-black" />
                 </Link>
 
-                {/* Janta Logo */}
-                <img
-                    className='absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 object-cover'
-                    src='/images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
 
                 {/* Hamburger Menu */}
                 <button className="absolute top-7 right-8 z-50 cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
@@ -457,6 +453,7 @@ export default function Dashboard({powerID}){
                         {renderSensorControls()}
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     )

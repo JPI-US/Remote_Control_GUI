@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ArrowLeft} from "lucide-react";
+import Sidebar from './sidebar';
 
 export default function Profile(){
     const router = useRouter();
@@ -86,20 +87,15 @@ export default function Profile(){
         return <p className="bg-[#f7e2cc] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
     }
     return(
-        <div className='w-screen max-w-screen overflow-hidden h-screen md:h-screen pb-4 text-center bg-[#f7e2cc] text-black'>     
-            <div className='py-8 relative w-full h-32'>
+        <div className='flex'>
+            <Sidebar />
+            <div className='flex-1 ml-64 w-screen max-w-screen overflow-hidden h-screen md:h-screen pb-4 text-center bg-[#f7e2cc] text-black'>     
+                <div className='relative w-full h-30 bg-white'>
                 {/* Back Button */}
                 <Link href="/towerselect" className="absolute top-7 left-8">
                     <ArrowLeft size={32} className="text-black" />
                 </Link>
 
-                {/* Janta Logo */}
-                <img
-                    className='absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 object-cover'
-                    src='images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
             </div>
             <div className='border-2 border-black shadow-md shadow-black rounded-lg bg-white py-8 mx-2 md:mx-auto md:w-2/3 px-4'>
                 <div className='pb-4'>
@@ -162,6 +158,7 @@ export default function Profile(){
                         <input type='submit' value="Delete Account" className='border-2 border-black p-2 text-white text-xl cursor-pointer rounded-md hover:focus hover:border-black bg-red-600 ring-2'></input>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     )

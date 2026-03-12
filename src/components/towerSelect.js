@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useSystem } from '@/hooks/useSystem';
+import Sidebar from './sidebar';
 import "@/lib/chart";
 import "@/lib/line";
 import { Bar, Line } from "react-chartjs-2";
@@ -354,7 +355,7 @@ export default function TowerSelect(){
             },
             {
                 label: 'Todays Total Power Generation',
-                value: `${(todaysProduction).toFixed(2)} kW`,
+                value: `${(todaysProduction)} kW`,
                 icon: '/images/Sun.svg',
                 description: 'Total power achieved today',
                 color: 'orange'
@@ -509,16 +510,10 @@ export default function TowerSelect(){
     }
 
     return(
-        <div className='w-screen max-w-full overflow-x-hidden min-h-screen h-auto pb-4 text-black text-center bg-[#dfe0e2]'>
-            <div className='h-40 border-b-4 border-[#87A9C4] bg-[#f4f4f5]'>
-                {/* Janta Logo 87A9C4*/}
-                {/* md:mr-auto md:ml-6 bg-[#f7e2cc] bg-[#fff]: tab header bg color; bg-[#f4f4f5]: tab group bg color; a9adb1: closest; dfe0e2: actual*/}
-                <img
-                    className='w-full sm:w-auto h-auto rounded-lg mr-auto -mt-16 -mb-8'
-                    src='images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
+        <div className='flex'>
+            <Sidebar />
+            <div className='flex-1 ml-64 w-screen max-w-full overflow-x-hidden min-h-screen h-auto pb-4 text-black text-center bg-[#dfe0e2]'>
+                <div className='relative h-30 border-b-4 border-[#87A9C4] bg-white'>
                 {/* Hamburger Menu */}
                 <button className="absolute top-7 right-8 z-50 cursor-pointer" onClick={() =>setMenuOpen(!menuOpen)}>
                     {menuOpen ? <X size={32} /> : <Menu size={32} />}
@@ -646,10 +641,10 @@ export default function TowerSelect(){
                     <div className="flex flex-col items-center">
                         <div className="relative">
                             <img
-                                src="/images/Tower-Drawing.svg"
-                                className="w-72 h-72 mb-4 logo-invert drop-shadow-lg transition-all duration-300 hover:scale-105"
+                                src="/images/5k_Tower.png"
+                                className="w-96 h-72 mb-4 logo-invert drop-shadow-lg transition-all duration-300 hover:scale-105 object-cover"
                             />
-                            <div className="absolute inset-0 w-72 h-72 bg-white/5 rounded-full blur-xl -z-10"/>
+                            <div className="absolute inset-0 w-96 h-72 bg-white/5 rounded-full blur-xl -z-10"/>
                         </div>
 
                         {/* Angle Indicator */}
@@ -1105,6 +1100,7 @@ export default function TowerSelect(){
                     )}
                 </div>
             </div>
+            </div>
         </div>
-    ) 
+    )
 }

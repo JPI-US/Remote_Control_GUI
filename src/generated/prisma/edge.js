@@ -265,7 +265,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/msalla/Desktop/Github/Remote_Control_GUI/src/generated/prisma",
+      "value": "/home/abenezer/Projects/Remote_Control_GUI/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -274,7 +274,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "rhel-openssl-3.0.x",
         "native": true
       },
       {
@@ -287,7 +287,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/msalla/Desktop/Github/Remote_Control_GUI/prisma/schema.prisma",
+    "sourceFilePath": "/home/abenezer/Projects/Remote_Control_GUI/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

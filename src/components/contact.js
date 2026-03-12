@@ -5,18 +5,11 @@ import { ArrowLeft} from "lucide-react";
 export default function Contact(){
     return(
         <div className='w-screen max-w-full overflow-hidden min-h-screen md:h-screen pb-4 text-center bg-[#dfe0e2] text-black'>
-            <div className='py-8 relative w-full h-32'>
+            <div className='relative w-full h-30 bg-white'>
                 {/* Back Button */}
                 <Link href="/towerselect" className="absolute top-7 left-8">
                     <ArrowLeft size={32} className="text-black" />
                 </Link>
-                {/* Janta Logo */}
-                <img
-                    className='absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 object-cover'
-                    src='images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
             </div>
             <div className='border-2 border-black shadow-md shadow-black rounded-lg bg-white py-8 mx-2 md:mx-auto md:w-1/3 px-4'>
                 <form method='post'>

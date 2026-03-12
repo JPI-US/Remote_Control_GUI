@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from 'next/link';
 import { ArrowLeft, Menu, X} from "lucide-react";
 import { useAuth } from '@/hooks/useAuth';
+import Sidebar from './sidebar';
 
 export default function Settings(){
     const { user, userId, loading } = useAuth();//Retrieve user info
@@ -326,15 +327,10 @@ export default function Settings(){
     }
 
     return(
-        <div className='w-screen max-w-full overflow-hidden min-h-screen md:h-screen pb-4 text-center bg-[#dfe0e2] text-black'> 
-            <div className='h-40 border-b-4 border-[#87A9C4] bg-[#f4f4f5]'>
-                {/* Janta Logo*/}
-                <img
-                    className='w-full sm:w-auto h-auto rounded-lg mr-auto -mt-16 -mb-8'
-                    src='images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
+        <div className='flex'>
+            <Sidebar />
+            <div className='flex-1 ml-64 w-screen max-w-full overflow-hidden min-h-screen md:h-screen pb-4 text-center bg-[#dfe0e2] text-black'> 
+                <div className='relative h-30 border-b-4 border-[#87A9C4] bg-white'>
 
                 {/* Hamburger Menu */}
                 <button className="absolute top-7 right-8 z-50 cursor-pointer" onClick={() =>setMenuOpen(!menuOpen)}>
@@ -411,6 +407,7 @@ export default function Settings(){
             {/* Tab content*/}
             <div>
                 {renderSensorControls()}
+            </div>
             </div>
         </div>
     )

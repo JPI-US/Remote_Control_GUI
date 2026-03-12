@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { ArrowLeft, Droplets, Gauge, Menu, Thermometer, Wind, X} from "lucide-react";
+import Sidebar from './sidebar';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
@@ -464,19 +465,12 @@ export default function Historical({powerID}){
 
     return(
         <div className='w-screen max-w-screen overflow-hidden h-auto pb-4 text-center bg-[#f7e2cc] text-black'>
-            <div className='py-8 relative w-full h-32'>
+                <div className='relative w-full h-30 bg-white'>
                 {/* Back Button */}
                 <Link href={`/dashboard/${item.id}`} className="absolute top-7 left-8">
                     <ArrowLeft size={32} className="text-black" />
                 </Link>
 
-                {/* Janta Logo */}
-                <img
-                    className='absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 object-cover'
-                    src='/images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
 
                 {/* Hamburger Menu */}
                 <button className="absolute top-7 right-8 z-50 cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
@@ -560,6 +554,7 @@ export default function Historical({powerID}){
                         <Line data={data2} options={options2} />
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     )
