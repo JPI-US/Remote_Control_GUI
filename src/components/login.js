@@ -59,7 +59,7 @@ export default function Login() {
 
             {/* Login card - Surface */}
             <div className="relative z-10 w-full max-w-md mx-4">
-                <div className="bg-[#FFFFFF] rounded-2xl shadow-xl p-8 md:p-10">
+                <div className="bg-[#FFFFFF] dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-400 dark:border-gray-600 p-8 md:p-10 cursor-pointer">
                     {/* Logo and Sign in row: lines align with logo width */}
                     <div className="grid justify-items-center mx-auto" style={{ width: 'max-content' }}>
                         <div className="flex justify-center mb-2">
@@ -95,7 +95,7 @@ export default function Login() {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => { setEmail(e.target.value); setMessage(''); }}
-                            className="w-full px-4 py-3 border border-[#87a9c4]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87a9c4]/40 focus:border-[#87a9c4] bg-[#FFFFFF] text-[#2F3E4D] placeholder-[#6A7B8F]/70"
+                            className="w-full px-4 py-3 border border-gray-400 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87a9c4]/40 focus:border-[#87a9c4] bg-[#FFFFFF] dark:bg-gray-700 text-[#2F3E4D] dark:text-gray-100 placeholder-[#6A7B8F]/70"
                             required
                         />
                         <input
@@ -103,13 +103,13 @@ export default function Login() {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => { setPassword(e.target.value); setMessage(''); }}
-                            className="w-full px-4 py-3 border border-[#87a9c4]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87a9c4]/40 focus:border-[#87a9c4] bg-[#FFFFFF] text-[#2F3E4D] placeholder-[#6A7B8F]/70"
+                            className="w-full px-4 py-3 border border-gray-400 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87a9c4]/40 focus:border-[#87a9c4] bg-[#FFFFFF] dark:bg-gray-700 text-[#2F3E4D] dark:text-gray-100 placeholder-[#6A7B8F]/70"
                             required
                         />
 
                         {/* Terms - Accent circular indicator */}
                         <label className="flex items-start gap-3 cursor-pointer text-sm text-[#6A7B8F]">
-                            <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full border-2 border-[#87a9c4] flex items-center justify-center">
+                            <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full border-2 border-gray-400 dark:border-gray-600 flex items-center justify-center">
                                 {acceptTerms ? (
                                     <span className="w-2 h-2 rounded-full bg-[#87a9c4]" />
                                 ) : null}
@@ -125,7 +125,7 @@ export default function Login() {
 
                         <button
                             type="submit"
-                            className="w-full py-3 mt-4 rounded-lg font-semibold text-[#2F3E4D] bg-[#F3B664] hover:bg-[#F3B664]/90 focus:outline-none focus:ring-2 focus:ring-[#F3B664]/50 transition"
+                            className="w-full py-3 mt-4 rounded-lg font-semibold text-[#2F3E4D] bg-[#F3B664] hover:bg-[#F3B664]/90 focus:outline-none focus:ring-2 focus:ring-[#F3B664]/50 transition cursor-pointer"
                         >
                             Sign In
                         </button>

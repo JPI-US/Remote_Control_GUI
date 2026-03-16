@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST() {
-  const response = NextResponse.json({ message: 'Logged out' });
-
+function clearSessionCookie(response) {
   response.cookies.set('session', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -12,6 +10,16 @@ export async function POST() {
     path: '/',
     maxAge: 0, // immediately expires
   });
+}
 
+export async function POST() {
+  const response = NextResponse.json({ message: 'Logged out' });
+  clearSessionCookie(response);
+  return response;
+}
+
+export async function GET() {
+  const response = NextResponse.json({ message: 'Logged out' });
+  clearSessionCookie(response);
   return response;
 }

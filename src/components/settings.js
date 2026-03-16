@@ -147,7 +147,7 @@ export default function Settings() {
                     <button type="button" aria-label={isDark ? "Light mode" : "Dark mode"} className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={toggleDark}>
                         {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                     </button>
-                    <button type="button" aria-label="Menu" className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
+                    <button type="button" aria-label="Menu" className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200 cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
                         {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
                 </div>
@@ -155,8 +155,9 @@ export default function Settings() {
 
             {/* Dropdown from top bar menu - same as dashboard */}
             {menuOpen && (
-                <div className="fixed top-24 right-6 w-56 bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <p className="px-4 py-2 text-sm font-medium border-b border-gray-100 dark:border-gray-700 dark:text-gray-200">{user?.name || "Guest"}</p>
+                <div className="fixed top-24 right-6 w-56 bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-600 rounded-lg shadow-lg py-2 z-50">
+                    <p className="px-4 py-2 text-base font-semibold dark:text-gray-200">{user?.name || "Guest"}</p>
+                    <div className="border-t border-gray-200 dark:border-gray-600" aria-hidden="true" />
                     <Link href="/dashboard" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Dashboard</Link>
                     <Link href="/contact" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Contact us</Link>
                     <button
@@ -168,7 +169,7 @@ export default function Settings() {
                                 console.error("Logout failed:", err);
                             }
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200"
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200 cursor-pointer"
                     >
                         Log Out
                     </button>
@@ -178,24 +179,25 @@ export default function Settings() {
             <div className="flex flex-1 min-h-0 pt-20 flex-col">
                 {/* Horizontal nav bar above sections */}
                 <nav
-                    className="shrink-0 flex flex-row items-center border-b border-[#2d3748] px-6 pt-4"
+                    className="shrink-0 grid grid-cols-3 items-center border-b border-[#2d3748] px-6 pt-4"
                     style={{ backgroundColor: SIDEBAR_BG }}
                     aria-label="Settings sections"
                 >
                     <Link
                         href="/dashboard"
-                        className="flex items-center justify-center gap-2 py-4 pr-4 text-white/90 hover:bg-white/10 hover:text-white rounded-lg cursor-pointer transition-colors shrink-0"
+                        className="flex items-center justify-start gap-2 py-4 pr-4 text-white/90 hover:text-[#F3B664] rounded-lg cursor-pointer transition-colors w-fit"
                         aria-label="Back to dashboard"
                     >
                         <ArrowLeft className="w-5 h-5 flex-shrink-0" />
+                        Back to Dashboard
                     </Link>
-                    <div className="flex-1 flex flex-row justify-center gap-0 min-w-0">
+                    <div className="flex flex-row justify-center gap-0 min-w-0">
                     <button
                         type="button"
                         onClick={() => setView("profile")}
                         className={`flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-colors border-b-2 -mb-px cursor-pointer ${
                             view === "profile"
-                                ? "border-[#2A9D8F] text-white"
+                                ? "border-[#F3B664] text-white"
                                 : "border-transparent text-white/90 hover:bg-white/10"
                         }`}
                     >
@@ -207,7 +209,7 @@ export default function Settings() {
                         onClick={() => setView("settings")}
                         className={`flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-colors border-b-2 -mb-px cursor-pointer ${
                             view === "settings"
-                                ? "border-[#2A9D8F] text-white"
+                                ? "border-[#F3B664] text-white"
                                 : "border-transparent text-white/90 hover:bg-white/10"
                         }`}
                     >
@@ -219,7 +221,7 @@ export default function Settings() {
                         onClick={() => setView("system")}
                         className={`flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-colors border-b-2 -mb-px cursor-pointer ${
                             view === "system"
-                                ? "border-[#2A9D8F] text-white"
+                                ? "border-[#F3B664] text-white"
                                 : "border-transparent text-white/90 hover:bg-white/10"
                         }`}
                     >
@@ -227,7 +229,7 @@ export default function Settings() {
                         PV System
                     </button>
                     </div>
-                    <div className="w-9 shrink-0" aria-hidden="true" />
+                    <div aria-hidden="true" />
                 </nav>
 
                 {/* Main content */}
@@ -238,7 +240,7 @@ export default function Settings() {
                                 Account Details
                             </h1>
                             <div className="max-w-2xl mx-auto">
-                                <div className="bg-white rounded-xl shadow-md p-6">
+                                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
                                     {!editingProfile ? (
                                         <>
                                             <div className="flex items-center gap-4 mb-6">
@@ -247,7 +249,7 @@ export default function Settings() {
                                                 </div>
                                                 <span className="text-lg font-semibold text-[#2F3E4D]">{name || "—"}</span>
                                             </div>
-                                            <div className="divide-y divide-[#E5E7EB]">
+                                            <div className="divide-y divide-gray-400 dark:divide-gray-600">
                                                 <div className="flex justify-between items-center py-4">
                                                     <span className="text-[#2F3E4D]">Name</span>
                                                     <span className="text-[#2F3E4D]">{name || "—"}</span>
@@ -265,7 +267,7 @@ export default function Settings() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setEditingProfile(true)}
-                                                    className="px-5 py-2.5 rounded-lg font-bold text-white transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664]"
+                                                    className="px-5 py-2.5 rounded-lg font-bold text-white transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664] cursor-pointer"
                                                     style={{ backgroundColor: ORANGE }}
                                                 >
                                                     Edit Profile
@@ -294,7 +296,7 @@ export default function Settings() {
                                                         type="text"
                                                         value={name}
                                                         onChange={(e) => setName(e.target.value)}
-                                                        className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                                        className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                                     />
                                                 </div>
                                             </div>
@@ -305,7 +307,7 @@ export default function Settings() {
                                                         type="email"
                                                         value={email}
                                                         onChange={(e) => setEmail(e.target.value)}
-                                                        className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                                        className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                                     />
                                                 </div>
                                                 <div>
@@ -314,7 +316,7 @@ export default function Settings() {
                                                         type="tel"
                                                         value={phone}
                                                         onChange={(e) => setPhone(e.target.value)}
-                                                        className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                                        className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                                     />
                                                 </div>
                                             </div>
@@ -322,13 +324,13 @@ export default function Settings() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setEditingProfile(false)}
-                                                    className="px-4 py-2 rounded-lg border border-[#E5E7EB] text-[#2F3E4D] hover:bg-[#F2F2F2]"
+                                                    className="px-4 py-2 rounded-lg border border-gray-400 dark:border-gray-600 text-[#2F3E4D] dark:text-gray-200 dark:bg-gray-700 hover:bg-[#F2F2F2] dark:hover:bg-gray-600"
                                                 >
                                                     Cancel
                                                 </button>
                                                 <button
                                                     type="submit"
-                                                    className="px-5 py-2.5 rounded-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664]"
+                                                    className="px-5 py-2.5 rounded-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664] cursor-pointer"
                                                     style={{ backgroundColor: ORANGE }}
                                                 >
                                                     Save
@@ -346,7 +348,7 @@ export default function Settings() {
                             <h1 className="text-xl font-bold uppercase tracking-wide text-[#2F3E4D] text-center mb-8">
                                 User Settings
                             </h1>
-                            <div className="bg-white rounded-xl shadow-md p-6">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
                                 <form onSubmit={handlePasswordChange}>
                                     {showMessage && (
                                         <div className="bg-green-100 border border-green-600 text-green-800 px-4 py-2 rounded-lg mb-4 text-sm">
@@ -367,7 +369,7 @@ export default function Settings() {
                                                 type="password"
                                                 value={currentPassword}
                                                 onChange={(e) => setCurrentPassword(e.target.value)}
-                                                className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                                className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                             />
                                         </div>
                                         <div>
@@ -376,7 +378,7 @@ export default function Settings() {
                                                 type="password"
                                                 value={newPassword}
                                                 onChange={(e) => setNewPassword(e.target.value)}
-                                                className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                                className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                             />
                                         </div>
                                         <div>
@@ -385,14 +387,14 @@ export default function Settings() {
                                                 type="password"
                                                 value={confirmPassword}
                                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                                className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                                className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                             />
                                         </div>
                                     </div>
                                     <div className="mt-6 flex justify-end">
                                         <button
                                             type="submit"
-                                            className="px-5 py-2.5 rounded-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664]"
+                                            className="px-5 py-2.5 rounded-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664] cursor-pointer"
                                             style={{ backgroundColor: ORANGE }}
                                         >
                                             Save
@@ -408,7 +410,7 @@ export default function Settings() {
                             <h1 className="text-xl font-bold uppercase tracking-wide text-[#2F3E4D] text-center mb-8">
                                 PV System
                             </h1>
-                            <div className="bg-white rounded-xl shadow-md p-6">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
                                 <form onSubmit={handleSystemUpdate}>
                                     {showMessage && (
                                         <div className="bg-green-100 border border-green-600 text-green-800 px-4 py-2 rounded-lg mb-4 text-sm">
@@ -426,13 +428,13 @@ export default function Settings() {
                                             type="text"
                                             value={systemName}
                                             onChange={(e) => setSystemName(e.target.value)}
-                                            className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#2F3E4D] focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                                            className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
                                         />
                                     </div>
                                     <div className="flex justify-end">
                                         <button
                                             type="submit"
-                                            className="px-5 py-2.5 rounded-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664]"
+                                            className="px-5 py-2.5 rounded-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664] cursor-pointer"
                                             style={{ backgroundColor: ORANGE }}
                                         >
                                             Save

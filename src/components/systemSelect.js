@@ -75,7 +75,7 @@ export default function SystemSelect() {
     return (
         <div className="min-h-screen flex flex-col bg-[#F2F2F2]">
             {/* Header - Surface */}
-            <header className="bg-[#FFFFFF] shadow-sm">
+            <header className="bg-[#FFFFFF] dark:bg-gray-800 shadow-sm border-b border-gray-400 dark:border-gray-600">
                 <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
                     <img
                         src="/images/Janta%20Power%20Business%20Card%20Logo%202.svg"
@@ -86,13 +86,12 @@ export default function SystemSelect() {
                         <button
                             type="button"
                             aria-label="Dark mode"
-                            className="p-2 rounded-lg text-[#2F3E4D] hover:bg-[#F2F2F2] transition"
+                            className="p-2 rounded-lg text-[#2F3E4D] dark:text-gray-200 hover:bg-[#F2F2F2] dark:hover:bg-gray-700 transition"
                         >
                             <Moon className="w-5 h-5" />
                         </button>
                     </div>
                 </div>
-                <div className="h-1 bg-[#E5E7EB] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.08),0_2px_4px_-2px_rgba(0,0,0,0.06)]" />
             </header>
 
             {/* Main content - Backdrop */}
@@ -108,7 +107,7 @@ export default function SystemSelect() {
                                 key={system.id}
                                 type="button"
                                 onClick={() => selectSystem(system.id)}
-                                className="text-left w-full max-w-sm bg-[#FFFFFF] rounded-xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex border-0 p-0 cursor-pointer"
+                                className="text-left w-full max-w-sm bg-[#FFFFFF] dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 hover:shadow-lg transition-all duration-200 overflow-hidden flex p-0 cursor-pointer"
                             >
                                 {/* Left accent bar - green */}
                                 <span

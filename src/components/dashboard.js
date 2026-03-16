@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useRouter } from 'next/navigation';
 import {
     Menu, X, Moon, Sun, LayoutDashboard, BarChart3, Sliders, History,
@@ -13,6 +13,7 @@ import { useTheme } from '@/context/ThemeContext';
 import "@/lib/chart";
 import "@/lib/line";
 import { Bar, Line } from "react-chartjs-2";
+import TowerModelViewer from "@/components/TowerModelViewer";
 import 'chartjs-adapter-date-fns';
 import 'chartjs-adapter-luxon';
 import { DateTime } from "luxon";
@@ -446,7 +447,10 @@ export default function Dashboard(){
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [autonomousMode, setAutonomousMode] = useState(true);
     const [maintenanceMode, setMaintenanceMode] = useState(false);
+    const [selectedTowerIndex, setSelectedTowerIndex] = useState(0);
     const [historicalPeriod, setHistoricalPeriod] = useState("monthly");
+    const mainScrollRef = useRef(null);
+    const section1Ref = useRef(null);
     const diagnosticsRef = useRef(null);
     const controlRef = useRef(null);
     const historicalRef = useRef(null);
@@ -462,44 +466,100 @@ export default function Dashboard(){
         [totalProduction]
     );
 
-    // Scroll to section when sidebar link is clicked or URL has #diagnostics, #control, #historical
-    const scrollToSection = (ref) => {
-        ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Clamp selected tower index when tower count changes
+    useEffect(() => {
+        const count = system?.towers?.length ?? 0;
+        if (count > 0 && selectedTowerIndex >= count) {
+            setSelectedTowerIndex(count - 1);
+        }
+    }, [system?.towers?.length, selectedTowerIndex]);
+
+    // Scroll main content to a section (used by sidebar and hash)
+    const scrollToSection = (ref, pathWithHash) => {
+        const mainEl = mainScrollRef.current;
+        const sectionEl = ref?.current;
+        if (mainEl && sectionEl) {
+            const mainRect = mainEl.getBoundingClientRect();
+            const sectionRect = sectionEl.getBoundingClientRect();
+            const top = mainEl.scrollTop + (sectionRect.top - mainRect.top);
+            mainEl.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        } else if (sectionEl) {
+            sectionEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        if (pathWithHash && typeof window !== "undefined") window.history.replaceState(null, "", pathWithHash);
     };
     useEffect(() => {
         if (typeof window === "undefined") return;
         const hash = window.location.hash;
         const id = setTimeout(() => {
-            if (hash === "#diagnostics") scrollToSection(diagnosticsRef);
-            else if (hash === "#control") scrollToSection(controlRef);
-            else if (hash === "#historical") scrollToSection(historicalRef);
-        }, 100);
+            if (hash === "#diagnostics") scrollToSection(diagnosticsRef, "/dashboard#diagnostics");
+            else if (hash === "#control") scrollToSection(controlRef, "/dashboard#control");
+            else if (hash === "#historical") scrollToSection(historicalRef, "/dashboard#historical");
+        }, 200);
         return () => clearTimeout(id);
     }, []);
     useEffect(() => {
         const onHashChange = () => {
             const hash = window.location.hash;
-            if (hash === "#diagnostics") {
-                scrollToSection(diagnosticsRef);
-                setActiveSection("diagnostics");
-            } else if (hash === "#control") {
-                scrollToSection(controlRef);
-                setActiveSection("control");
-            } else if (hash === "#historical") {
-                scrollToSection(historicalRef);
-                setActiveSection("historical");
-            } else {
-                setActiveSection("dashboard");
-            }
+            if (hash === "#diagnostics") { scrollToSection(diagnosticsRef, "/dashboard#diagnostics"); setActiveSection("diagnostics"); }
+            else if (hash === "#control") { scrollToSection(controlRef, "/dashboard#control"); setActiveSection("control"); }
+            else if (hash === "#historical") { scrollToSection(historicalRef, "/dashboard#historical"); setActiveSection("historical"); }
+            else setActiveSection("dashboard");
         };
-        const hash = window.location.hash;
-        if (hash === "#diagnostics") setActiveSection("diagnostics");
-        else if (hash === "#control") setActiveSection("control");
-        else if (hash === "#historical") setActiveSection("historical");
+        const h = window.location.hash;
+        if (h === "#diagnostics") setActiveSection("diagnostics");
+        else if (h === "#control") setActiveSection("control");
+        else if (h === "#historical") setActiveSection("historical");
         else setActiveSection("dashboard");
         window.addEventListener("hashchange", onHashChange);
         return () => window.removeEventListener("hashchange", onHashChange);
     }, []);
+
+    // Scroll-spy: update sidebar highlight from scroll. Listener is attached when main mounts (ref callback).
+    const SECTIONS = useMemo(() => [
+        { ref: section1Ref, id: "dashboard" },
+        { ref: diagnosticsRef, id: "diagnostics" },
+        { ref: controlRef, id: "control" },
+        { ref: historicalRef, id: "historical" },
+    ], []);
+    const scrollSpyUpdateRef = useRef(null);
+    const updateActiveFromScroll = useCallback(() => {
+        const THRESHOLD = 160;
+        let bestId = "dashboard";
+        let bestTop = -Infinity;
+        let fallbackId = "dashboard";
+        let fallbackTop = -Infinity;
+        for (const { ref: r, id } of SECTIONS) {
+            const el = r?.current;
+            if (!el) continue;
+            const top = el.getBoundingClientRect().top;
+            if (top <= THRESHOLD && top > bestTop) { bestTop = top; bestId = id; }
+            if (top < window.innerHeight && top > fallbackTop) { fallbackTop = top; fallbackId = id; }
+        }
+        const next = bestTop > -Infinity ? bestId : fallbackId;
+        setActiveSection((prev) => (next === prev ? prev : next));
+    }, [SECTIONS]);
+    scrollSpyUpdateRef.current = updateActiveFromScroll;
+
+    const scrollSpyHandler = useCallback(() => {
+        scrollSpyUpdateRef.current?.();
+    }, []);
+
+    const setMainRef = useCallback((el) => {
+        if (mainScrollRef.current && !el) {
+            mainScrollRef.current.removeEventListener("scroll", scrollSpyHandler);
+        }
+        mainScrollRef.current = el;
+        if (el) {
+            el.addEventListener("scroll", scrollSpyHandler, { passive: true });
+            scrollSpyUpdateRef.current?.();
+        }
+    }, [scrollSpyHandler]);
+
+    useLayoutEffect(() => {
+        if (!system?.id) return;
+        updateActiveFromScroll();
+    }, [system?.id, updateActiveFromScroll]);
 
     // --- Rendering ---
     if (loading || systemloading) {
@@ -522,12 +582,20 @@ export default function Dashboard(){
     
 
     const angleNum = typeof angle === "number" && !Number.isNaN(angle) ? Math.floor(angle) : (angle ?? "—");
+    const towerCount = system?.towers?.length ?? 0;
+    const selectedTower = system?.towers?.[selectedTowerIndex];
+    const orientationAngle = selectedTower?.current_angle ?? "N/A";
+    const orientationAngleNum = typeof orientationAngle === "number" && !Number.isNaN(orientationAngle) ? Math.floor(orientationAngle) : (orientationAngle ?? "—");
+    const towerRotationDeg = typeof orientationAngle === "number" && !Number.isNaN(orientationAngle) ? orientationAngle : 0;
     const powerPercentDisplay = MAX_PV_POWER > 0 ? Math.min(100, (pvPowerKw / (MAX_PV_POWER / 1000)) * 100) : 0;
 
+    // Access: Admin sees everything; Residential (non-admin) has no Control Panel
+    const canAccessControlPanel = session?.role === "ADMIN" || session?.planTier === "COMMERCIAL";
+
     return (
-        <div className="flex flex-col min-h-screen w-full bg-[#F2F2F2] text-[#2F3E4D] dark:bg-gray-900 dark:text-gray-100">
+        <div className="flex flex-col h-screen overflow-hidden w-full bg-[#F2F2F2] text-[#2F3E4D] dark:bg-gray-900 dark:text-gray-100">
             {/* Top header bar - fixed, white, with bigger logo */}
-            <header className="fixed top-0 left-64 right-0 z-40 flex items-center justify-between px-6 py-4 bg-white shadow-sm dark:bg-gray-800 dark:shadow-gray-900">
+            <header className="fixed top-0 left-64 right-0 z-40 flex items-center justify-between px-6 py-4 bg-white shadow-sm border-b border-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:shadow-gray-900">
                 <img
                     src="/images/Janta_Power_Business_Card_Logo.jpeg"
                     alt="Janta Power"
@@ -540,14 +608,14 @@ export default function Dashboard(){
                         <button type="button" aria-label={isDark ? "Light mode" : "Dark mode"} className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={toggleDark}>
                         {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                     </button>
-                    <button type="button" aria-label="Menu" className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
+                    <button type="button" aria-label="Menu" className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200 cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
                         {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
                 </div>
             </header>
 
-            {/* Below header: fixed vertical sidebar + main content (pt-20 = space for fixed header) */}
-            <div className="flex flex-1 min-h-0 pt-20">
+            {/* Below header: fixed vertical sidebar + main content (pt-24 = space for fixed header + extra padding) */}
+            <div className="flex flex-1 min-h-0 pt-24">
                 {/* Vertical sidebar - fixed, dark grey, not scrollable */}
                 <aside
                     className="fixed left-0 top-0 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
@@ -565,76 +633,76 @@ export default function Dashboard(){
                             <span className="px-3 -mt-10 pb-2 text-xs font-bold uppercase tracking-wider text-white">System</span>
                             <div className="flex flex-col gap-0.5">
                                 {activeSection === "dashboard" ? (
-                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
-                                        <Link href="/dashboard" onClick={() => setActiveSection("dashboard")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ORANGE}` }}>
+                                        <button type="button" onClick={() => { setActiveSection("dashboard"); scrollToSection(section1Ref, "/dashboard"); }} className="flex items-center gap-3 px-3 py-2 w-full text-left text-white font-semibold cursor-pointer bg-transparent border-0">
                                             <LayoutDashboard className="w-5 h-5 flex-shrink-0 text-white/90" />
                                             Dashboard
-                                        </Link>
+                                        </button>
                                     </div>
                                 ) : (
-                                    <Link href="/dashboard" onClick={() => setActiveSection("dashboard")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                    <button type="button" onClick={() => { setActiveSection("dashboard"); scrollToSection(section1Ref, "/dashboard"); }} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 w-full text-left cursor-pointer bg-transparent border-0">
                                         <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
                                         Dashboard
-                                    </Link>
+                                    </button>
                                 )}
                                 {activeSection === "diagnostics" ? (
-                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
-                                        <Link href="/dashboard#diagnostics" onClick={() => setActiveSection("diagnostics")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ORANGE}` }}>
+                                        <button type="button" onClick={() => { setActiveSection("diagnostics"); scrollToSection(diagnosticsRef, "/dashboard#diagnostics"); }} className="flex items-center gap-3 px-3 py-2 w-full text-left text-white font-semibold cursor-pointer bg-transparent border-0">
                                             <BarChart3 className="w-5 h-5 flex-shrink-0 text-white/90" />
                                             Diagnostics
-                                        </Link>
+                                        </button>
                                     </div>
                                 ) : (
-                                    <Link href="/dashboard#diagnostics" onClick={() => setActiveSection("diagnostics")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                    <button type="button" onClick={() => { setActiveSection("diagnostics"); scrollToSection(diagnosticsRef, "/dashboard#diagnostics"); }} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 w-full text-left cursor-pointer bg-transparent border-0">
                                         <BarChart3 className="w-5 h-5 flex-shrink-0" />
                                         Diagnostics
-                                    </Link>
+                                    </button>
                                 )}
                                 {activeSection === "control" ? (
-                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
-                                        <Link href="/dashboard#control" onClick={() => setActiveSection("control")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ORANGE}` }}>
+                                        <button type="button" onClick={() => { setActiveSection("control"); scrollToSection(controlRef, "/dashboard#control"); }} className="flex items-center gap-3 px-3 py-2 w-full text-left text-white font-semibold cursor-pointer bg-transparent border-0">
                                             <Sliders className="w-5 h-5 flex-shrink-0 text-white/90" />
                                             Control
-                                        </Link>
+                                        </button>
                                     </div>
                                 ) : (
-                                    <Link href="/dashboard#control" onClick={() => setActiveSection("control")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                    <button type="button" onClick={() => { setActiveSection("control"); scrollToSection(controlRef, "/dashboard#control"); }} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 w-full text-left cursor-pointer bg-transparent border-0">
                                         <Sliders className="w-5 h-5 flex-shrink-0" />
                                         Control
-                                    </Link>
+                                    </button>
                                 )}
                                 {activeSection === "historical" ? (
-                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ACCENT_GREEN}` }}>
-                                        <Link href="/dashboard#historical" onClick={() => setActiveSection("historical")} className="flex items-center gap-3 px-3 py-2 w-full text-white font-semibold">
+                                    <div className="flex items-center rounded-lg bg-white/10 pl-1" style={{ borderLeft: `3px solid ${ORANGE}` }}>
+                                        <button type="button" onClick={() => { setActiveSection("historical"); scrollToSection(historicalRef, "/dashboard#historical"); }} className="flex items-center gap-3 px-3 py-2 w-full text-left text-white font-semibold cursor-pointer bg-transparent border-0">
                                             <History className="w-5 h-5 flex-shrink-0 text-white/90" />
                                             Historical Data
-                                        </Link>
+                                        </button>
                                     </div>
                                 ) : (
-                                    <Link href="/dashboard#historical" onClick={() => setActiveSection("historical")} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10">
+                                    <button type="button" onClick={() => { setActiveSection("historical"); scrollToSection(historicalRef, "/dashboard#historical"); }} className="flex items-center gap-3 px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 w-full text-left cursor-pointer bg-transparent border-0">
                                         <History className="w-5 h-5 flex-shrink-0" />
                                         Historical Data
-                                    </Link>
+                                    </button>
                                 )}
                             </div>
                         </div>
                     </nav>
                 </aside>
 
-                {/* Main content - ml-64 to sit beside fixed sidebar */}
-                <div className="flex-1 flex flex-col min-w-0 ml-64 dark:bg-gray-900">
+                {/* Main content - ml-64 to sit beside fixed sidebar; min-h-0 so main can scroll */}
+                <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-64 dark:bg-gray-900">
 
                 {/* Scrollable sections (4 sections) - scroll-snap for section transitions */}
-                <main className="flex-1 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
+                <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
                     {/* Section 1 - Tower Status + Today at a Glance */}
-                    <section className="py-6 px-6 pb-4 dark:bg-gray-900" id="section-1">
+                    <section ref={section1Ref} className="py-6 px-6 pb-4 dark:bg-gray-900" id="section-1">
                         <h1 className="text-xl font-bold uppercase tracking-wide text-[#2F3E4D] dark:text-gray-100 mb-4">{system.system_name}</h1>
 
                         {/* TOWER STATUS */}
                         <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-200 mb-3">Tower Status</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                             {/* Card 1: Current Power Output - circular gauge */}
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center dark:text-gray-100">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6 flex flex-col items-center dark:text-gray-100">
                                 <div className="relative w-40 h-40 flex items-center justify-center">
                                     <span className="text-2xl font-bold z-10">{pvPowerKw.toFixed(2)} KW</span>
                                     <svg className="w-40 h-40 absolute" viewBox="0 0 100 100">
@@ -656,7 +724,7 @@ export default function Dashboard(){
                             </div>
 
                             {/* Card 2: Tower Angle */}
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center dark:text-gray-100">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6 flex flex-col items-center dark:text-gray-100">
                                 <div className="relative flex items-center justify-center">
                                     <img src="/images/tower_Design.svg" alt="Tower" className="w-32 h-32 object-contain" />
                                 </div>
@@ -665,7 +733,7 @@ export default function Dashboard(){
                             </div>
 
                             {/* Card 3: System Health */}
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
                                 <h3 className="text-sm font-bold text-[#2F3E4D] dark:text-gray-100 mb-3">System Health</h3>
                                 <ul className="space-y-2">
                                     {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item) => (
@@ -683,54 +751,54 @@ export default function Dashboard(){
                         {/* TODAY AT A GLANCE */}
                         <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Today at a Glance</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex flex-col min-h-[140px] relative overflow-hidden">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-4 flex flex-col min-h-[140px] relative overflow-hidden">
                                 {/* Full-height divider from top to bottom of card */}
                                 <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] dark:bg-gray-500 z-10" style={{ width: '4px' }} aria-hidden />
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-100 mb-3 shrink-0">Environmental</h3>
                                 <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
                                     <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
-                                        <Droplets className="w-8 h-8 text-blue-400 mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{weather?.current?.humidity ?? "—"}%</p>
-                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Humidity</p>
+                                        <Droplets className="w-12 h-12 text-blue-400 mb-2" />
+                                        <p className="text-2xl font-bold text-[#2F3E4D] dark:text-gray-100">{weather?.current?.humidity ?? "—"}%</p>
+                                        <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Humidity</p>
                                     </div>
                                     <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
-                                        <Thermometer className="w-8 h-8 text-orange-500 mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{weather?.current?.temp ?? "—"}°C</p>
-                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Temperature</p>
+                                        <Thermometer className="w-12 h-12 text-orange-500 mb-2" />
+                                        <p className="text-2xl font-bold text-[#2F3E4D] dark:text-gray-100">{weather?.current?.temp ?? "—"}°C</p>
+                                        <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Temperature</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex flex-col min-h-[140px] relative overflow-hidden">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-4 flex flex-col min-h-[140px] relative overflow-hidden">
                                 {/* Full-height divider from top to bottom of card */}
                                 <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] dark:bg-gray-500 z-10" style={{ width: '4px' }} aria-hidden />
                                 <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-100 mb-3 shrink-0">Performance</h3>
                                 <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
                                     <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
-                                        <img src="/images/Battery%20charging.png" alt="Battery charging" className="w-8 h-8 object-contain mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{maxHourlyPower} kW</p>
-                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Daily Peak</p>
+                                        <img src="/images/Battery%20charging.png" alt="Battery charging" className="w-12 h-12 object-contain mb-2" />
+                                        <p className="text-2xl font-bold text-[#2F3E4D] dark:text-gray-100">{maxHourlyPower} kW</p>
+                                        <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Daily Peak</p>
                                     </div>
                                     <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
-                                        <Zap className="w-8 h-8 text-[#6A7B8F] mb-2" />
-                                        <p className="text-xl font-bold text-[#2F3E4D] dark:text-gray-100">{powerPercentDisplay.toFixed(1)}%</p>
-                                        <p className="text-xs text-[#6A7B8F] dark:text-gray-400">Power Output</p>
+                                        <Zap className="w-12 h-12 text-[#6A7B8F] mb-2" />
+                                        <p className="text-2xl font-bold text-[#2F3E4D] dark:text-gray-100">{powerPercentDisplay.toFixed(1)}%</p>
+                                        <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Power Output</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]">
-                                <Globe className="w-16 h-16 text-[#2A9D8F] flex-shrink-0" />
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]">
+                                <Globe className="w-24 h-24 text-[#2A9D8F] flex-shrink-0" />
                                 <div className="flex flex-col text-left min-w-0">
-                                    <p className="text-sm text-[#6A7B8F] dark:text-gray-400">Environmental impact reduction</p>
-                                    <p className="text-2xl font-bold text-[#2A9D8F] mt-1">{carbonSaved} kg CO2</p>
-                                    <p className="text-base text-[#2A9D8F]">Carbon Saved</p>
+                                    <p className="text-base text-[#6A7B8F] dark:text-gray-400">Environmental impact reduction</p>
+                                    <p className="text-3xl font-bold text-[#2A9D8F] mt-1">{carbonSaved} kg CO2</p>
+                                    <p className="text-lg text-[#2A9D8F]">Carbon Saved</p>
                                 </div>
                             </div>
 
                             {/* Today's Data - area chart */}
-                            <div className="bg-white rounded-xl shadow-md p-4 md:col-span-1">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-4 md:col-span-1">
                                 <h3 className="text-sm font-bold text-[#2F3E4D] mb-3">Today&apos;s Data</h3>
                                 {hourlyProduction?.values?.length && fullDayDates?.length ? (
                                     <div style={{ height: "200px" }}>
@@ -782,12 +850,12 @@ export default function Dashboard(){
                             {[
                                 { name: "Light Sensor", description: "Sun tracking and positioning" },
                                 { name: "Relay", description: "Power distribution and switching system" },
-                                { name: "Pressure Sensor", description: "Environmental pressure monitoring" },
+                                { name: "Atmospheric Pressure Sensor", description: "Environmental pressure monitoring" },
                                 { name: "Humidity Sensor", description: "Moisture detection and monitoring" },
                                 { name: "Temperature Sensor", description: "Heat monitoring and thermal control" },
                                 { name: "Limit Switches", description: "Safety controls and position limits" },
                             ].map((item) => (
-                                <div key={item.name} className="bg-white rounded-xl shadow-md p-4 flex items-center justify-between gap-4">
+                                <div key={item.name} className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-4 flex items-center justify-between gap-4">
                                     <div>
                                         <h3 className="font-semibold text-[#2F3E4D]">{item.name}</h3>
                                         <p className="text-sm text-[#6A7B8F] mt-0.5">{item.description}</p>
@@ -799,21 +867,46 @@ export default function Dashboard(){
                             ))}
                         </div>
 
-                        {/* System Controls - Tower Orientation + Control Panel */}
+                        {/* System Controls - Tower Orientation + Control Panel (Control Panel hidden for Residential) */}
                         <div ref={controlRef} id="control" className="scroll-mt-24">
-                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">System Controls</h2>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-200 mt-10 mb-3">System Controls</h2>
+                        <div className={`grid gap-6 mb-6 ${canAccessControlPanel ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
                             {/* Tower Orientation card */}
-                            <div className="bg-white rounded-xl shadow-md p-6">
-                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-4">Tower Orientation</h3>
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
+                                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] dark:text-gray-100">Tower Orientation</h3>
+                                    {towerCount > 1 && (
+                                        <div className="flex items-center gap-1" role="tablist" aria-label="Select tower">
+                                            {Array.from({ length: towerCount }, (_, i) => (
+                                                <button
+                                                    key={i}
+                                                    type="button"
+                                                    role="tab"
+                                                    aria-selected={selectedTowerIndex === i}
+                                                    aria-label={`Tower ${i + 1}`}
+                                                    onClick={() => setSelectedTowerIndex(i)}
+                                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${selectedTowerIndex === i ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] dark:bg-gray-700 text-[#2F3E4D] dark:text-gray-200 hover:bg-[#E5E7EB] dark:hover:bg-gray-600"}`}
+                                                >
+                                                    Tower {i + 1}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex justify-center mb-4">
-                                    <img src="/images/Transparent%20PNG%201.jpg" alt="Tower" className="w-64 h-64 md:w-80 md:h-80 object-contain" />
+                                    <TowerModelViewer
+                                        angleDeg={towerRotationDeg}
+                                        className="rounded-lg overflow-hidden bg-[#F2F2F2] dark:bg-gray-700 shrink-0"
+                                        width={360}
+                                        height={360}
+                                    />
                                 </div>
-                                <div className="flex items-center justify-center gap-2 text-[#2F3E4D] font-bold text-lg mb-4">
+                                <div className="flex items-center justify-center gap-2 text-[#2F3E4D] dark:text-gray-100 font-bold text-lg mb-4">
                                     <RotateCcw className="w-5 h-5 text-[#6A7B8F]" />
-                                    {angleNum}°
+                                    {orientationAngleNum}°
                                 </div>
-                                <div className="flex flex-row items-start justify-center gap-8 flex-wrap min-w-0 pt-4 mt-4 border-t border-[#E5E7EB]">
+                                {canAccessControlPanel && (
+                                <div className="flex flex-row items-start justify-center gap-8 flex-wrap min-w-0 pt-4 mt-4 border-t border-gray-400 dark:border-gray-600">
                                     <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
                                         <button
                                             type="button"
@@ -827,8 +920,8 @@ export default function Dashboard(){
                                             </span>
                                         </button>
                                         <div className="flex flex-col gap-0.5 min-w-0">
-                                            <span className="font-bold text-[#2F3E4D] text-base">Autonomous</span>
-                                            <span className="text-sm text-[#6A7B8F]">Default</span>
+                                            <span className="font-bold text-[#2F3E4D] dark:text-gray-100 text-base">Autonomous</span>
+                                            <span className="text-sm text-[#6A7B8F] dark:text-gray-400">Default</span>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
@@ -844,42 +937,44 @@ export default function Dashboard(){
                                             </span>
                                         </button>
                                         <div className="flex flex-col gap-0.5 min-w-0">
-                                            <span className="font-bold text-[#2F3E4D] text-base">Maintenance</span>
-                                            <span className="text-sm text-[#6A7B8F]">Requires confirmation</span>
+                                            <span className="font-bold text-[#2F3E4D] dark:text-gray-100 text-base">Maintenance</span>
+                                            <span className="text-sm text-[#6A7B8F] dark:text-gray-400">Requires confirmation</span>
                                         </div>
                                     </div>
                                 </div>
+                                )}
                             </div>
 
-                            {/* Control Panel card */}
-                            <div className="bg-white rounded-xl shadow-md p-6">
-                                <h3 className="text-lg font-bold text-[#2F3E4D] mb-4">Control Panel</h3>
+                            {/* Control Panel card - only for Admin and Commercial */}
+                            {canAccessControlPanel && (
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
+                                <h3 className="text-lg font-bold text-[#2F3E4D] dark:text-gray-100 mb-4">Control Panel</h3>
                                 <div className="flex flex-col gap-3">
-                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] dark:bg-gray-700 border border-gray-400 dark:border-gray-600 shadow-sm">
                                         <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#2A9D8F] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#238276] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] focus:ring-offset-2 flex items-center justify-center gap-2">
                                             <Power className="w-4 h-4" /> Start
                                         </button>
                                         <p className="text-sm text-[#2F3E4D]">Power on tower and start automated tracking</p>
                                     </div>
-                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] dark:bg-gray-700 border border-gray-400 dark:border-gray-600 shadow-sm">
                                         <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#F3B664] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#e0a04d] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#F3B664] focus:ring-offset-2 flex items-center justify-center gap-2">
                                             <RotateCcw className="w-4 h-4" /> Restart
                                         </button>
                                         <p className="text-sm text-[#2F3E4D]">Reboot tower systems and all components</p>
                                     </div>
-                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] dark:bg-gray-700 border border-gray-400 dark:border-gray-600 shadow-sm">
                                         <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#e57373] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#ef5350] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#e57373] focus:ring-offset-2 flex items-center justify-center gap-2">
                                             <X className="w-4 h-4" /> Stop
                                         </button>
                                         <p className="text-sm text-[#2F3E4D]">Emergency stop all operations</p>
                                     </div>
-                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] dark:bg-gray-700 border border-gray-400 dark:border-gray-600 shadow-sm">
                                         <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#b91c1c] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#991b1b] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#b91c1c] focus:ring-offset-2 flex items-center justify-center gap-2">
                                             <RotateCcw className="w-4 h-4" /> Reset
                                         </button>
                                         <p className="text-sm text-[#2F3E4D]">Reset tower to default factory settings</p>
                                     </div>
-                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] shadow-sm">
+                                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] dark:bg-gray-700 border border-gray-400 dark:border-gray-600 shadow-sm">
                                         <button type="button" className="shrink-0 w-24 py-2.5 rounded-lg bg-[#374151] text-white font-bold transition-all duration-200 cursor-pointer hover:bg-[#4b5563] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#374151] focus:ring-offset-2 flex items-center justify-center gap-2">
                                             <Home className="w-4 h-4" /> Home
                                         </button>
@@ -887,13 +982,14 @@ export default function Dashboard(){
                                     </div>
                                 </div>
                             </div>
+                            )}
                         </div>
                         </div>
 
                         {/* Historical Data section */}
                         <div ref={historicalRef} id="historical" className="scroll-mt-24">
                         <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">Historical Data</h2>
-                        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6 mb-6">
                             <h3 className="text-base font-bold text-[#2F3E4D]">Historical Power Data</h3>
                             <p className="text-sm text-[#6A7B8F] mt-0.5 mb-4">Energy produced over time</p>
                             <div className="flex flex-wrap gap-2 mb-4">
@@ -906,13 +1002,13 @@ export default function Dashboard(){
                                         key={id}
                                         type="button"
                                         onClick={() => setHistoricalPeriod(id)}
-                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${historicalPeriod === id ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${historicalPeriod === id ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
                                     >
                                         {label}
                                     </button>
                                 ))}
                             </div>
-                            <div className="rounded-lg border border-[#E5E7EB] bg-[#FAFAFA] p-4" style={{ minHeight: "280px" }}>
+                            <div className="rounded-lg bg-[#FAFAFA] dark:bg-gray-700 p-4" style={{ minHeight: "280px" }}>
                                 {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
                                     <div style={{ height: "260px" }}>
                                         <Bar
@@ -1004,8 +1100,9 @@ export default function Dashboard(){
 
             {/* Dropdown from top bar menu */}
             {menuOpen && (
-                <div className="fixed top-24 right-6 w-56 bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <p className="px-4 py-2 text-sm font-medium border-b border-gray-100 dark:border-gray-700 dark:text-gray-200">{user?.name || "Guest"}</p>
+                <div className="fixed top-24 right-6 w-56 bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-600 rounded-lg shadow-lg py-2 z-50">
+                    <p className="px-4 py-2 text-base font-semibold dark:text-gray-200">{user?.name || "Guest"}</p>
+                    <div className="border-t border-gray-200 dark:border-gray-600" aria-hidden="true" />
                     <Link href="/settings" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Settings</Link>
                     <Link href="/contact" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Contact us</Link>
                     <button
@@ -1017,7 +1114,7 @@ export default function Dashboard(){
                                 console.error("Logout failed:", err);
                             }
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200"
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200 cursor-pointer"
                     >
                         Log Out
                     </button>
