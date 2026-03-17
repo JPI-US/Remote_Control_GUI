@@ -893,12 +893,11 @@ export default function Dashboard(){
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex justify-center mb-4">
+                                <div className="w-full mb-4" style={{ aspectRatio: "1" }}>
                                     <TowerModelViewer
                                         angleDeg={towerRotationDeg}
-                                        className="rounded-lg overflow-hidden bg-[#F2F2F2] dark:bg-gray-700 shrink-0"
-                                        width={360}
-                                        height={360}
+                                        className="rounded-lg overflow-hidden bg-[#F2F2F2] dark:bg-gray-700 w-full h-full"
+                                        fillContainer
                                     />
                                 </div>
                                 <div className="flex items-center justify-center gap-2 text-[#2F3E4D] dark:text-gray-100 font-bold text-lg mb-4">
