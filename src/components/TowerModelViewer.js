@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-const MODEL_PATH = "/Model/";
+/** Folder must contain the .gltf and all buffer .bin files it references */
+const MODEL_PATH = "/Model/5.6k_10x4_panels/";
 const MODEL_FILE = "5.6k_10x4_panels.gltf";
+const SUN_PATH = "/Model/";
 const SUN_FILE = "sun.glb";
 
 export default function TowerModelViewer({ angleDeg = 0, className = "", width = 280, height = 280, bgColor = "#e8e8e8" }) {
@@ -110,7 +112,9 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                 );
 
                 function loadSun() {
-                    loader.load(
+                    const sunLoader = new GLTFLoader();
+                    sunLoader.setPath(SUN_PATH);
+                    sunLoader.load(
                         SUN_FILE,
                         (gltf) => {
                             if (!mountedRef.current || !scene) return;
