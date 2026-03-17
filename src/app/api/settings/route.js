@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export async function GET(request){
         console.log(`Select systems customer ID: ${customerId}`);
 
         if (isNaN(customerId)) {
-            console.error('Invalid customer ID:', idParam);
+            console.error('Invalid customer ID:', customerId);
             return NextResponse.json({ error: 'Invalid customer ID' }, { status: 400 });
         }
 

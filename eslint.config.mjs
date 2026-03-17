@@ -3,7 +3,15 @@ import globals from "globals";
 import pluginReact from "eslint-plugin-react";
 
 export default [
-  { ignores: ["node_modules", ".next", "dist", "build"] },
+  {
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "dist/**",
+      "build/**",
+      "src/generated/**",
+    ],
+  },
   {
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
     languageOptions: {

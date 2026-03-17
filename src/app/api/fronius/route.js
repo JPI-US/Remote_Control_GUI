@@ -104,6 +104,7 @@ export async function GET(request) {
 
         const endpoints = {
             live: `${BASE_URL}/${systemId}/LiveData`,
+            flowData: `${BASE_URL}/${systemId}/FlowData`,
             dailyProduction: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/${m}/days`,
             monthlyProduction: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/`,
             yearlyProduction: `${BASE_URL}/${systemId}/aggdata/years/`,
@@ -146,6 +147,9 @@ export async function GET(request) {
                 }
                 else if (key === "live") {
                     response.data.live = normalizeLiveData(data);
+                }
+                else if (key === "flowData") {
+                    response.data.flow = normalizeFlowData(data);
                 }
                 else if (key === "total") {
                     response.data.total = normalizetotalData(data);
@@ -274,6 +278,79 @@ function normalizeLiveData(data) {
         timestamp: new Date().toISOString(),
         pvPower: channels.PowerPV ?? 0, 
         online: data.status?.isOnline ?? false,
+    };
+}
+
+/**
+ * Normalize FlowData — grid, load, battery, self-consumption rates
+ * Channel names confirmed from live API probe:
+ *   PowerFeedIn    — power exported TO the grid (W), positive = exporting
+ *   PowerLoad      — house consumption (W)
+ *   PowerBattCharge — battery charge power (W), positive = charging, negative = discharging
+ *   PowerPV        — solar production (W)
+ *   PowerOutput    — total inverter output (W)
+ *   BattSOC        — battery state of charge (%), null if no battery
+ *   RateSelfConsumption  — % of solar used on-site
+ *   RateSelfSufficiency  — % of load covered by solar
+ */
+function normalizeFlowData(data) {
+    if (!data?.data?.channels) {
+        return {
+            pvPower: 0,
+            gridPower: 0,
+            gridImport: false,
+            loadPower: 0,
+            battChargePower: 0,
+            battSoc: null,
+            hasBattery: false,
+            selfConsumptionRate: null,
+            selfSufficiencyRate: null,
+            timestamp: new Date().toISOString(),
+        };
+    }
+
+    // Build a lookup map from the channels array
+    const ch = Object.fromEntries(
+        data.data.channels.map(c => [c.channelName, c.value])
+    );
+
+    const pvPower        = ch.PowerPV         ?? 0;
+    const feedIn         = ch.PowerFeedIn     ?? null; // positive = exporting
+    const loadPower      = ch.PowerLoad       ?? 0;
+    const battCharge     = ch.PowerBattCharge ?? null;
+    const battSoc        = ch.BattSOC         ?? null;  // null = no battery
+    const selfConsump    = ch.RateSelfConsumption ?? null;
+    const selfSuffic     = ch.RateSelfSufficiency ?? null;
+
+    // Derive grid power and direction:
+    // - If PowerFeedIn > 0  → exporting to grid, gridPower = feedIn
+    // - If PowerFeedIn <= 0 → likely importing; derive from load - pv
+    // - If feedIn is null   → use load - pv as best estimate
+    let gridPower  = 0;
+    let gridImport = false;
+
+    if (feedIn !== null && feedIn > 0) {
+        // Actively exporting
+        gridPower  = feedIn;
+        gridImport = false;
+    } else {
+        // Importing or zero — derive: what load needs beyond what PV covers
+        const netDemand = loadPower - pvPower;
+        gridPower  = Math.max(0, netDemand);
+        gridImport = gridPower > 0;
+    }
+
+    return {
+        pvPower,
+        gridPower:           Math.round(gridPower),
+        gridImport,
+        loadPower:           Math.round(loadPower),
+        battChargePower:     battCharge !== null ? Math.round(battCharge) : null,
+        battSoc,
+        hasBattery:          battSoc !== null,
+        selfConsumptionRate: selfConsump,
+        selfSufficiencyRate: selfSuffic,
+        timestamp:           data.data.logDateTime ?? new Date().toISOString(),
     };
 }
 //Normalized total data

@@ -8,7 +8,7 @@ const MODEL_PATH = "/Model/";
 const MODEL_FILE = "5.6k_10x4_panels.gltf";
 const SUN_FILE = "sun.glb";
 
-export default function TowerModelViewer({ angleDeg = 0, className = "", width = 280, height = 280 }) {
+export default function TowerModelViewer({ angleDeg = 0, className = "", width = 280, height = 280, bgColor = "#e8e8e8" }) {
     const containerRef = useRef(null);
     const angleRef = useRef(angleDeg);
     const mountedRef = useRef(true);
@@ -27,7 +27,7 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
         function init() {
             try {
                 scene = new THREE.Scene();
-                scene.background = new THREE.Color(0xe8e8e8);
+                scene.background = new THREE.Color(bgColor);
 
                 camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
                 camera.position.set(0, 14, 44);
@@ -163,7 +163,7 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
                     if (towerModel) {
-                        const effectiveAngle = Math.max(90, Math.min(270, 180)); // TODO: testing 270° — restore angleRef.current angleRef.current
+                        const effectiveAngle = Math.max(90, Math.min(270, angleRef.current));
                         const modelAngle = 360 - effectiveAngle;
                         towerModel.rotation.y = (modelAngle * Math.PI) / 180;
                     }
@@ -200,7 +200,7 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                 minWidth: width,
                 minHeight: height,
                 position: "relative",
-                background: "#e8e8e8",
+                background: bgColor,
             }}
         >
             <div

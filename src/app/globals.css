@@ -51,27 +51,20 @@
 }
 
 /* ===============================================
-   DESIGN TOKENS - Dark Mode
+   DESIGN TOKENS - Dark Mode (media query fallback)
    =============================================== */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Primary Colors */
     --color-primary: #14B8A6;
     --color-primary-light: #2DD4BF;
     --color-primary-dark: #0D9488;
-    
-    /* Accent Colors */
     --color-accent: #FBBF24;
     --color-accent-light: #FCD34D;
     --color-accent-dark: #F59E0B;
-    
-    /* Status Colors */
     --color-success: #34D399;
     --color-warning: #FB923C;
     --color-danger: #F87171;
     --color-info: #60A5FA;
-    
-    /* Neutral Colors */
     --color-background: #0F172A;
     --color-surface: #1E293B;
     --color-surface-alt: #334155;
@@ -79,17 +72,67 @@
     --color-text-muted: #94A3B8;
     --color-border: #475569;
     --color-border-light: #334155;
-    
-    /* Glassmorphism */
     --glass-bg: rgba(30, 41, 59, 0.8);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    
-    /* Sidebar */
     --sidebar-bg: #1E293B;
     --sidebar-border: rgba(255, 255, 255, 0.05);
   }
 }
+
+/* ===============================================
+   DARK MODE CLASS TOKENS — Rivian-style luxury
+   Applied via Tailwind's darkMode: 'class'
+   =============================================== */
+.dark {
+  /* Backgrounds */
+  --dk-bg:        #0c0c0d;
+  --dk-surface:   #141415;
+  --dk-surface2:  #1a1a1b;
+  --dk-border:    rgba(255,255,255,0.06);
+  --dk-border2:   rgba(255,255,255,0.10);
+
+  /* Text */
+  --dk-text-1:    #f0eeeb;
+  --dk-text-2:    rgba(255,255,255,0.45);
+  --dk-text-3:    rgba(255,255,255,0.25);
+
+  /* Accent */
+  --dk-amber:     #d4a853;
+  --dk-amber-dim: rgba(212,168,83,0.15);
+  --dk-green:     rgba(74,222,128,0.75);
+  --dk-red:       #ef4444;
+}
+
+/* Dark mode card base — used by .dk-card utility */
+.dark .dk-card {
+  background-color: var(--dk-surface);
+  border: 0.5px solid var(--dk-border);
+  box-shadow: none;
+}
+
+.dark .dk-card-hover:hover {
+  background-color: var(--dk-surface2);
+}
+
+/* Hairline separator in dark mode */
+.dark .dk-sep {
+  border-color: var(--dk-border);
+}
+
+/* Dark mode section fade-in animation */
+@keyframes dk-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.dark .dk-fade-in {
+  animation: dk-fade-up 0.4s ease-out both;
+}
+.dark .dk-fade-in-1 { animation-delay: 0ms; }
+.dark .dk-fade-in-2 { animation-delay: 60ms; }
+.dark .dk-fade-in-3 { animation-delay: 120ms; }
+.dark .dk-fade-in-4 { animation-delay: 180ms; }
+.dark .dk-fade-in-5 { animation-delay: 240ms; }
 
 /* ===============================================
    ANIMATIONS

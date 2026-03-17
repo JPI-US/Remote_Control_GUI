@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +32,7 @@ export async function GET(request, context){
         }
 
         // Only allow the user to access their own data
-        if (userId !== authUserId) {
+        if (String(customerId) !== String(authUserId)) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
