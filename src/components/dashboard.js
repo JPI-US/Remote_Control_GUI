@@ -17,6 +17,7 @@ import TowerModelViewer from "@/components/TowerModelViewer";
 import 'chartjs-adapter-date-fns';
 import 'chartjs-adapter-luxon';
 import { DateTime } from "luxon";
+import Sidebar from '@/components/Sidebar';
 
 const RADIUS = 45;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -617,7 +618,7 @@ export default function Dashboard(){
             {/* Below header: fixed vertical sidebar + main content (pt-24 = space for fixed header + extra padding) */}
             <div className="flex flex-1 min-h-0 pt-24">
                 {/* Vertical sidebar - fixed, dark grey, not scrollable */}
-                <aside
+                {/* <aside
                     className="fixed left-0 top-0 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
                     style={{ backgroundColor: SIDEBAR_BG }}
                 >
@@ -687,7 +688,12 @@ export default function Dashboard(){
                             </div>
                         </div>
                     </nav>
-                </aside>
+                </aside> */}
+                <Sidebar
+                    activeSection={activeSection}
+                    onSectionChange={setActiveSection}
+                    systemName={system?.system_name}
+                />
 
                 {/* Main content - ml-64 to sit beside fixed sidebar; min-h-0 so main can scroll */}
                 <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-64 dark:bg-gray-900">
