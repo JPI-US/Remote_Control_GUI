@@ -32,7 +32,7 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
       className="fixed left-0 top-0 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
       style={isDark
         ? { background: DK.bg, borderRight: `0.5px solid ${DK.border}` }
-        : { backgroundColor: '#1a1510', borderRight: '1px solid rgba(255,255,255,0.1)' }
+        : { background: 'linear-gradient(to bottom, #2A1C0E, #1E1408)', borderRight: '1px solid rgba(255,220,150,0.08)' }
       }
     >
       {/* Logo */}
@@ -59,7 +59,7 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
       <nav className="flex flex-col p-3 pt-5 gap-1">
         <span
           className="px-3 pb-3 text-xs font-bold uppercase tracking-widest"
-          style={{ color: isDark ? DK.text3 : 'rgba(148,163,184,1)' }}
+          style={{ color: isDark ? DK.text3 : 'rgba(230,184,92,0.5)' }}
         >
           System
         </span>
@@ -142,17 +142,18 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
                 transition-all duration-200 ease-out
                 font-medium text-sm relative overflow-hidden group text-left w-full
                 ${isActive
-                  ? 'bg-teal-600/30 text-teal-300'
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  ? 'text-amber-200'
+                  : 'text-amber-100/60 hover:bg-white/8 hover:text-amber-100'
                 }
               `}
+              style={isActive ? { background: 'rgba(230,184,92,0.15)' } : {}}
             >
               <span
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"
                 aria-hidden="true"
               />
               <Icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${
-                isActive ? 'scale-110 text-teal-400' : 'group-hover:scale-110'
+                isActive ? 'scale-110 text-amber-300' : 'group-hover:scale-110'
               }`} />
               <span className="relative z-10">{item.label}</span>
               {isActive && (
@@ -172,7 +173,7 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
         }
       >
         <p className="text-xs font-medium truncate"
-          style={{ color: isDark ? DK.text3 : 'rgba(148,163,184,1)' }}>
+          style={{ color: isDark ? DK.text3 : 'rgba(230,184,92,0.5)' }}>
           {systemName || 'System'}
         </p>
       </div>

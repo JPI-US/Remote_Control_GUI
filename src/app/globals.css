@@ -5,6 +5,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Global font rendering ── */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-feature-settings: "kern" 1, "liga" 1;
+  letter-spacing: 0.01em;
+}
+
 /* ===============================================
    DESIGN TOKENS - Light Mode
    =============================================== */

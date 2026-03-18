@@ -27,16 +27,32 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 // Light mode palette (unchanged)
 const SIDEBAR_BG = "#374151";
-const MAIN_BG = "#F2F2F2";
+const MAIN_BG = "#F7F5F2";
 const CARD_BG = "#FFFFFF";
-const ACCENT_GREEN = "#2A9D8F";
+const ACCENT_GREEN = "#4A9E78";
 const ORANGE = "#F3B664";
-const TITLE_COLOR = "#2F3E4D";
-const TEXT_MUTED = "#6A7B8F";
+const TITLE_COLOR = "#3D2E1E";
+const TEXT_MUTED = "#8B7A68";
+
+// Warm energy system palette — light mode
+const WM = {
+    bg:         "#F7F5F2",   // warm cream atmosphere
+    section1:   "#F7F5F2",   // tower status zone
+    section2:   "#F2F0EC",   // today at a glance — slightly deeper
+    section3:   "#F7F5F2",   // diagnostics
+    label:      "#8B7355",   // warm brown-gray section labels
+    title:      "#3D2E1E",   // warm dark brown page title
+    body:       "#4A3728",   // warm body text
+    muted:      "#A8978A",   // warm muted text
+    amber:      "#E8A020",   // primary energy amber
+    green:      "#4A9E78",   // soft warm green for sustainability
+    blue:       "#7BAFD4",   // sky blue — warm-toned, not cold
+    pill:       "#F2F0EC",   // pill / tag backgrounds
+};
 
 // SwiftUI-style card for light mode — pronounced directional shadow for depth
 const LT_CARD = {
-    background: "#ffffff",
+    background: "#FFFFFF",
     borderRadius: 20,
     boxShadow: "0 4px 6px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
     border: "1px solid rgba(0,0,0,0.04)",
@@ -391,15 +407,15 @@ export default function Dashboard() {
     const sensors = [
         { name: "Light Sensor", description: "Sun tracking and positioning", Icon: SunIcon, color: "#d4a853" },
         { name: "Relay", description: "Power distribution and switching system", Icon: Zap, color: "#a78bfa" },
-        { name: "Atmospheric Pressure Sensor", description: "Environmental pressure monitoring", Icon: Activity, color: "#38bdf8" },
-        { name: "Humidity Sensor", description: "Moisture detection and monitoring", Icon: Droplets, color: "#38bdf8" },
+        { name: "Atmospheric Pressure Sensor", description: "Environmental pressure monitoring", Icon: Activity, color: "#7BAFD4" },
+        { name: "Humidity Sensor", description: "Moisture detection and monitoring", Icon: Droplets, color: "#7BAFD4" },
         { name: "Temperature Sensor", description: "Heat monitoring and thermal control", Icon: Thermometer, color: "#f97316" },
         { name: "Limit Switches", description: "Safety controls and position limits", Icon: Gauge, color: "#94a3b8" },
     ];
 
     // Control actions
     const controlActions = [
-        { id: "start",   label: "Start",   description: "Power on tower and start automated tracking", Icon: Power,     lightCls: "bg-[#2A9D8F] hover:bg-[#238276] focus:ring-[#2A9D8F]" },
+        { id: "start",   label: "Start",   description: "Power on tower and start automated tracking", Icon: Power,     lightCls: "bg-[#4A9E78] hover:bg-[#238276] focus:ring-[#2A9D8F]" },
         { id: "restart", label: "Restart", description: "Reboot tower systems and all components",     Icon: RotateCcw, lightCls: "bg-[#F3B664] hover:bg-[#e0a04d] focus:ring-[#F3B664]" },
         { id: "stop",    label: "Stop",    description: "Emergency stop all operations",               Icon: X,         lightCls: "bg-[#e57373] hover:bg-[#ef5350] focus:ring-[#e57373]" },
         { id: "reset",   label: "Reset",   description: "Reset tower to default factory settings",     Icon: RotateCcw, lightCls: "bg-[#b91c1c] hover:bg-[#991b1b] focus:ring-[#b91c1c]" },
@@ -410,7 +426,7 @@ export default function Dashboard() {
     const sectionLabel = isDark
         ? { fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }
         : {};
-    const sectionLabelCls = isDark ? "" : "text-sm font-bold uppercase tracking-wider text-[#2F3E4D]";
+    const sectionLabelCls = isDark ? "" : "text-sm font-bold uppercase tracking-wider text-[#5C4A38]";
 
     const GAUGE_R = isDark ? 54 : RADIUS;
     const GAUGE_CIRC = 2 * Math.PI * GAUGE_R;
@@ -418,15 +434,15 @@ export default function Dashboard() {
 
     return (
         <div
-            className="flex flex-col h-screen overflow-hidden w-full text-[#2F3E4D] dark:text-gray-100"
-            style={isDark ? { background: DK.bg } : { background: MAIN_BG }}
+            className="flex flex-col h-screen overflow-hidden w-full text-[#5C4A38] dark:text-gray-100"
+            style={isDark ? { background: DK.bg } : { background: WM.bg, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", textRendering: "optimizeLegibility" }}
         >
             <div className="flex flex-1 min-h-0">
                 <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} systemName={system?.system_name} />
 
                 <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-64" style={isDark ? { background: DK.bg } : {}}>
                     <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
-                        {/* ── Header ── */}
+        {/* ── Header ── */}
                         <header
                             className="flex items-center justify-between px-6 py-4"
                             style={isDark
@@ -479,9 +495,9 @@ export default function Dashboard() {
                         ════════════════════════════════════════ */}
                         <section
                             ref={section1Ref}
-                            className="py-6 px-6 pb-4"
+                            className="py-10 px-8 pb-6"
                             id="section-1"
-                            style={isDark ? { background: DK.bg } : { background: "#F2F2F2" }}
+                            style={isDark ? { background: DK.bg } : { background: WM.section1 }}
                         >
                             {/* Page title */}
                             {isDark ? (
@@ -489,18 +505,18 @@ export default function Dashboard() {
                                     {system.system_name}
                                 </h1>
                             ) : (
-                                <h1 className="text-xl font-bold uppercase tracking-wide text-[#2F3E4D] mb-4">{system.system_name}</h1>
+                                <h1 className="text-2xl font-bold uppercase tracking-wide mb-8 mt-2" style={{ color: WM.title }}>{system.system_name}</h1>
                             )}
 
                             {/* TOWER STATUS label */}
                             {isDark ? (
                                 <p style={{ ...sectionLabel, marginBottom: 16 }}>Tower Status</p>
                             ) : (
-                                <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Tower Status</h2>
+                                <h2 className="text-xs font-medium uppercase tracking-widest mb-4" style={{ color: WM.label, marginBottom: "20px" }}>Tower Status</h2>
                             )}
 
                             {/* ── Tower Status Cards ── */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
 
                                 {/* Card 1: Power Output */}
                                 {isDark ? (
@@ -548,9 +564,9 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#2F3E4D]" style={LT_CARD}>
+                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#5C4A38]" style={LT_CARD}>
                                         <div className="relative w-40 h-40 flex items-center justify-center">
-                                            <span className="text-2xl font-bold z-10">{pvPowerKw.toFixed(2)} KW</span>
+                                            <span className="text-3xl font-bold z-10 tracking-tight">{pvPowerKw.toFixed(2)} <span className="text-lg font-medium">kW</span></span>
                                             <svg className="w-40 h-40 absolute" viewBox="0 0 100 100">
                                                 <circle cx="50" cy="50" r={RADIUS} fill="transparent" stroke="#e5e7eb" strokeWidth="8" />
                                                 <circle cx="50" cy="50" r={RADIUS} fill="transparent" stroke={ORANGE} strokeWidth="8"
@@ -558,7 +574,7 @@ export default function Dashboard() {
                                                     strokeLinecap="round" transform="rotate(-90 50 50)" className="transition-all duration-1000" />
                                             </svg>
                                         </div>
-                                        <p className="mt-3 text-sm text-[#6A7B8F]">Current Power Output</p>
+                                        <p className="mt-3 text-sm text-[#A8978A]">Current Power Output</p>
                                     </div>
                                 )}
 
@@ -600,12 +616,12 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#2F3E4D]" style={LT_CARD}>
+                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#5C4A38]" style={LT_CARD}>
                                         <div className="relative flex items-center justify-center">
                                             <img src="/images/tower_Design.svg" alt="Tower" className="w-32 h-32 object-contain" />
                                         </div>
-                                        <p className="text-2xl font-bold text-[#2F3E4D] mt-2">{angleNum}°</p>
-                                        <p className="text-sm text-[#6A7B8F]">Tower Angle</p>
+                                        <p className="text-3xl font-bold text-[#5C4A38] mt-2 tracking-tight">{angleNum}<span className="text-lg font-medium">°</span></p>
+                                        <p className="text-sm text-[#A8978A]">Tower Angle</p>
                                     </div>
                                 )}
 
@@ -637,13 +653,13 @@ export default function Dashboard() {
                                     </div>
                                 ) : (
                                     <div className="bg-white rounded-2xl p-6" style={LT_CARD}>
-                                        <h3 className="text-sm font-bold text-[#2F3E4D] mb-3">System Health</h3>
+                                        <h3 className="text-sm font-medium text-[#5C4A38] mb-3">System Health</h3>
                                         <ul className="space-y-2">
                                             {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item) => (
                                                 <li key={item} className="flex items-center justify-between text-sm">
-                                                    <span className="text-[#2F3E4D]">{item}</span>
-                                                    <span className="flex items-center gap-1.5 text-[#2A9D8F] font-medium">
-                                                        <span className="w-2 h-2 rounded-full bg-[#2A9D8F]" /> FUNCTIONAL
+                                                    <span className="text-[#5C4A38]">{item}</span>
+                                                    <span className="flex items-center gap-1.5 text-[#4A9E78] font-medium">
+                                                        <span className="w-2 h-2 rounded-full bg-[#4A9E78]" /> FUNCTIONAL
                                                     </span>
                                                 </li>
                                             ))}
@@ -656,11 +672,11 @@ export default function Dashboard() {
                             {isDark ? (
                                 <p style={{ ...sectionLabel, marginBottom: 16 }}>Today at a Glance</p>
                             ) : (
-                                <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">Today at a Glance</h2>
+                                <h2 className="text-xs font-medium uppercase tracking-widest mb-4" style={{ color: WM.label, marginBottom: "20px" }}>Today at a Glance</h2>
                             )}
 
                             {/* ── Environmental + Performance row ── */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
 
                                 {/* Environmental */}
                                 {isDark ? (
@@ -675,14 +691,14 @@ export default function Dashboard() {
                                             {/* Humidity */}
                                             <div className="flex flex-col px-5 py-5" style={{ borderRight: `0.5px solid ${DK.border}` }}>
                                                 <div className="flex items-center gap-2 mb-3">
-                                                    <Droplets style={{ width: 16, height: 16, color: "#38bdf8", opacity: 0.7, flexShrink: 0 }} />
+                                                    <Droplets style={{ width: 16, height: 16, color: "#7BAFD4", opacity: 0.7, flexShrink: 0 }} />
                                                     <span style={{ fontSize: 14, color: DK.text3 }}>Humidity</span>
                                                 </div>
                                                 <p style={{ fontSize: 40, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
                                                     {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 20, fontWeight: 300 }}>%</span>
                                                 </p>
                                                 <div className="mt-3">
-                                                    <Sparkline values={[22,24,23,25,24,26,25,weather?.current?.humidity ?? 24]} color="#38bdf8" />
+                                                    <Sparkline values={[22,24,23,25,24,26,25,weather?.current?.humidity ?? 24]} color="#7BAFD4" />
                                                 </div>
                                                 <p style={{ fontSize: 13, color: DK.text3, marginTop: 6 }}>Updated {currentTime}</p>
                                             </div>
@@ -705,17 +721,17 @@ export default function Dashboard() {
                                 ) : (
                                     <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
                                         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
-                                        <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3 shrink-0">Environmental</h3>
+                                        <h3 className="text-xs font-medium uppercase tracking-widest mb-4 shrink-0" style={{ color: WM.label }}>Environmental</h3>
                                         <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
                                             <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
-                                                <Droplets className="w-12 h-12 text-blue-400 mb-2" />
-                                                <p className="text-2xl font-bold text-[#2F3E4D]">{weather?.current?.humidity ?? "—"}%</p>
-                                                <p className="text-sm text-[#6A7B8F]">Humidity</p>
+                                                <Droplets className="w-12 h-12 text-[#7BAFD4] mb-2" />
+                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{weather?.current?.humidity ?? "—"}<span className="text-lg font-medium">%</span></p>
+                                                <p className="text-sm text-[#A8978A]">Humidity</p>
                                             </div>
                                             <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
                                                 <Thermometer className="w-12 h-12 text-orange-500 mb-2" />
-                                                <p className="text-2xl font-bold text-[#2F3E4D]">{weather?.current?.temp ?? "—"}°C</p>
-                                                <p className="text-sm text-[#6A7B8F]">Temperature</p>
+                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{weather?.current?.temp ?? "—"}<span className="text-lg font-medium">°C</span></p>
+                                                <p className="text-sm text-[#A8978A]">Temperature</p>
                                             </div>
                                         </div>
                                     </div>
@@ -771,17 +787,17 @@ export default function Dashboard() {
                                 ) : (
                                     <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
                                         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
-                                        <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3 shrink-0">Performance</h3>
+                                        <h3 className="text-xs font-medium uppercase tracking-widest mb-4 shrink-0" style={{ color: WM.label }}>Performance</h3>
                                         <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
                                             <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
                                                 <img src="/images/Battery%20charging.png" alt="Battery charging" className="w-12 h-12 object-contain mb-2" />
-                                                <p className="text-2xl font-bold text-[#2F3E4D]">{maxHourlyPower} kW</p>
-                                                <p className="text-sm text-[#6A7B8F]">Daily Peak</p>
+                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{maxHourlyPower} <span className="text-lg font-medium">kW</span></p>
+                                                <p className="text-sm text-[#A8978A]">Daily Peak</p>
                                             </div>
                                             <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
-                                                <Zap className="w-12 h-12 text-[#6A7B8F] mb-2" />
-                                                <p className="text-2xl font-bold text-[#2F3E4D]">{powerPercentDisplay.toFixed(1)}%</p>
-                                                <p className="text-sm text-[#6A7B8F]">Power Output</p>
+                                                <Zap className="w-12 h-12 text-[#A8978A] mb-2" />
+                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{powerPercentDisplay.toFixed(1)}<span className="text-lg font-medium">%</span></p>
+                                                <p className="text-sm text-[#A8978A]">Power Output</p>
                                             </div>
                                         </div>
                                     </div>
@@ -789,7 +805,7 @@ export default function Dashboard() {
                             </div>
 
                             {/* ── CO2 + Today's Data row ── */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
 
                                 {/* CO2 / Environmental Impact */}
                                 {isDark ? (
@@ -821,11 +837,11 @@ export default function Dashboard() {
                                     </div>
                                 ) : (
                                     <div className="bg-white rounded-2xl p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]" style={LT_CARD}>
-                                        <Globe className="w-24 h-24 text-[#2A9D8F] flex-shrink-0" />
+                                        <Globe className="w-24 h-24 text-[#4A9E78] flex-shrink-0" />
                                         <div className="flex flex-col text-left min-w-0">
-                                            <p className="text-base text-[#6A7B8F]">Environmental impact reduction</p>
-                                            <p className="text-3xl font-bold text-[#2A9D8F] mt-1">{carbonSaved} kg CO2</p>
-                                            <p className="text-lg text-[#2A9D8F]">Carbon Saved</p>
+                                            <p className="text-base text-[#A8978A]">Environmental impact reduction</p>
+                                            <p className="text-3xl font-bold text-[#4A9E78] mt-1 tracking-tight">{carbonSaved} <span className="text-lg font-medium">kg CO₂</span></p>
+                                            <p className="text-lg text-[#4A9E78]">Carbon Saved</p>
                                         </div>
                                     </div>
                                 )}
@@ -898,7 +914,7 @@ export default function Dashboard() {
                                     </div>
                                 ) : (
                                     <div className="bg-white rounded-2xl p-4 md:col-span-1" style={LT_CARD}>
-                                        <h3 className="text-sm font-bold text-[#2F3E4D] mb-3">Today&apos;s Data</h3>
+                                        <h3 className="text-sm font-medium text-[#5C4A38] mb-3">Today's Data</h3>
                                         {hourlyProduction?.values?.length && fullDayDates?.length ? (
                                             <div style={{ height: "200px" }}>
                                                 <Line
@@ -919,14 +935,14 @@ export default function Dashboard() {
                                                         maintainAspectRatio: false,
                                                         scales: {
                                                             x: { type: "time", adapters: { date: { zone: system_tz } }, min: fullDayDates[0], max: fullDayDates[fullDayDates.length - 1], grid: { display: false } },
-                                                            y: { beginAtZero: true, title: { display: true, text: "Power (KW)" }, grid: { color: "#f3f4f6" } },
+                                                            y: { beginAtZero: true, title: { display: true, text: "Power (KW)" }, grid: { color: "#EDE4D6" } },
                                                         },
                                                         plugins: { legend: { display: false } },
                                                     }}
                                                 />
                                             </div>
                                         ) : (
-                                            <p className="text-sm text-[#6A7B8F] py-8 text-center">Loading chart data...</p>
+                                            <p className="text-sm text-[#A8978A] py-8 text-center">Loading chart data...</p>
                                         )}
                                     </div>
                                 )}
@@ -938,7 +954,7 @@ export default function Dashboard() {
                         ════════════════════════════════════════ */}
                         <section
                             ref={diagnosticsRef}
-                            className="py-6 px-6 pt-4 scroll-mt-24"
+                            className="py-10 px-8 pt-8 scroll-mt-24"
                             id="diagnostics"
                             style={isDark ? { background: DK.bg } : { background: "#F2F2F2" }}
                         >
@@ -946,7 +962,7 @@ export default function Dashboard() {
                             {isDark ? (
                                 <p style={{ ...sectionLabel, marginBottom: 16 }}>System Diagnostics</p>
                             ) : (
-                                <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3">System Diagnostics</h2>
+                                <h2 className="text-xs font-medium uppercase tracking-widest mb-4" style={{ color: WM.label, marginBottom: "20px" }}>System Diagnostics</h2>
                             )}
 
                             {/* ── Diagnostics ── */}
@@ -1008,7 +1024,7 @@ export default function Dashboard() {
                                 )
                             ) : (
                                 /* Light: original grid of cards */
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                                     {[
                                         { name: "Light Sensor", description: "Sun tracking and positioning" },
                                         { name: "Relay", description: "Power distribution and switching system" },
@@ -1019,11 +1035,11 @@ export default function Dashboard() {
                                     ].map((item) => (
                                         <div key={item.name} className="bg-white rounded-2xl p-4 flex items-center justify-between gap-4" style={LT_CARD}>
                                             <div>
-                                                <h3 className="font-semibold text-[#2F3E4D]">{item.name}</h3>
-                                                <p className="text-sm text-[#6A7B8F] mt-0.5">{item.description}</p>
+                                                <h3 className="font-semibold text-[#5C4A38]">{item.name}</h3>
+                                                <p className="text-sm text-[#A8978A] mt-0.5">{item.description}</p>
                                             </div>
-                                            <span className="flex items-center gap-2 shrink-0 px-3 py-1.5 rounded-full bg-[#F2F2F2] text-sm font-medium text-[#2A9D8F]">
-                                                <span className="w-2 h-2 rounded-full bg-[#2A9D8F]" /> Online
+                                            <span className="flex items-center gap-2 shrink-0 px-3 py-1.5 rounded-full text-sm font-medium text-[#4A9E78]" style={{ backgroundColor: WM.pill }}>
+                                                <span className="w-2 h-2 rounded-full bg-[#4A9E78]" /> Online
                                             </span>
                                         </div>
                                     ))}
@@ -1064,7 +1080,7 @@ export default function Dashboard() {
                                     </>
                                 ) : (
                                     <>
-                                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">System Controls</h2>
+                                        <h2 className="text-xs font-medium uppercase tracking-widest mt-10 mb-4" style={{ color: WM.label, marginTop: "56px" }}>System Controls</h2>
                                         <EnergyFlowPanel
                                             pvPower={pvPower}
                                             gridPower={gridPower}
@@ -1100,7 +1116,7 @@ export default function Dashboard() {
                                 {isDark ? (
                                     <p style={{ ...sectionLabel, marginBottom: 16, marginTop: 32 }}>Historical Data</p>
                                 ) : (
-                                    <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">Historical Data</h2>
+                                    <h2 className="text-xs font-medium uppercase tracking-widest mt-10 mb-4" style={{ color: WM.label, marginTop: "56px" }}>Historical Data</h2>
                                 )}
 
                                 {isDark ? (
@@ -1196,37 +1212,38 @@ export default function Dashboard() {
                                     </div>
                                 ) : (
                                     <div className="bg-white rounded-2xl p-6 mb-6" style={LT_CARD}>
-                                        <h3 className="text-base font-bold text-[#2F3E4D]">Historical Power Data</h3>
-                                        <p className="text-sm text-[#6A7B8F] mt-0.5 mb-4">Energy produced over time</p>
+                                        <h3 className="text-base font-medium text-[#5C4A38]">Historical Power Data</h3>
+                                        <p className="text-sm text-[#A8978A] mt-0.5 mb-4">Energy produced over time</p>
                                         <div className="flex flex-wrap gap-2 mb-4">
                                             {[{ id: "monthly", label: "Monthly" }, { id: "yearly", label: "Yearly" }, { id: "total", label: "Total" }].map(({ id, label }) => (
                                                 <button
                                                     key={id} type="button" onClick={() => setHistoricalPeriod(id)}
-                                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${historicalPeriod === id ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
+                                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${historicalPeriod === id ? "bg-[#F3B664] text-white" : "text-[#5C4A38] hover:bg-[#E8E0D4]"}`}
+                                                    style={historicalPeriod === id ? {} : { backgroundColor: WM.pill }}
                                                 >{label}</button>
                                             ))}
                                         </div>
-                                        <div className="rounded-lg bg-[#FAFAFA] p-4" style={{ minHeight: "280px" }}>
+                                        <div className="rounded-lg p-4" style={{ backgroundColor: "#F5EFE4", minHeight: "280px" }}>
                                             {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
                                                 <div style={{ height: "260px" }}>
                                                     <Bar data={{ labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length), datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E5E7EB" } }, x: { grid: { display: false }, title: { display: true, text: "Day" } } }, plugins: { legend: { display: false } } }} />
+                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E8DDD0" } }, x: { grid: { display: false }, title: { display: true, text: "Day" } } }, plugins: { legend: { display: false } } }} />
                                                 </div>
                                             )}
                                             {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
                                                 <div style={{ height: "260px" }}>
                                                     <Bar data={{ labels: monthLabels.slice(0, (monthlyProduction.values || []).length), datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E5E7EB" } }, x: { grid: { display: false }, title: { display: true, text: "Month" } } }, plugins: { legend: { display: false } } }} />
+                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E8DDD0" } }, x: { grid: { display: false }, title: { display: true, text: "Month" } } }, plugins: { legend: { display: false } } }} />
                                                 </div>
                                             )}
                                             {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
                                                 <div style={{ height: "260px" }}>
                                                     <Bar data={{ labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length), datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.4, categoryPercentage: 0.5 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (MWh)" }, grid: { color: "#E5E7EB" } }, x: { grid: { display: false }, title: { display: true, text: "Year" } } }, plugins: { legend: { display: false } } }} />
+                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (MWh)" }, grid: { color: "#E8DDD0" } }, x: { grid: { display: false }, title: { display: true, text: "Year" } } }, plugins: { legend: { display: false } } }} />
                                                 </div>
                                             )}
                                             {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
-                                                <p className="text-sm text-[#6A7B8F] py-12 text-center">Loading chart data...</p>
+                                                <p className="text-sm text-[#A8978A] py-12 text-center">Loading chart data...</p>
                                             )}
                                         </div>
                                     </div>
