@@ -17,14 +17,21 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
 
   // Dark mode palette (matches dashboard)
   const DK = {
-    bg:      '#0c0c0d',
-    surface: '#141415',
-    border:  'rgba(255,255,255,0.06)',
-    text1:   '#f0eeeb',
-    text2:   'rgba(255,255,255,0.45)',
-    text3:   'rgba(255,255,255,0.25)',
-    amber:   '#d4a853',
-  };
+    bg:       "#14110f",
+    surface:  "#1c1814",
+    surface2: "#221e19",
+    border:   "rgba(255,245,235,0.07)",
+    border2:  "rgba(255,245,235,0.12)",
+    text1:    "#f5f0ea",
+    text2:    "rgba(245,240,234,0.5)",
+    text3:    "rgba(245,240,234,0.28)",
+    amber:    "#e6b85c",
+    amberDim: "rgba(230,184,92,0.14)",
+    green:    "rgba(74,222,128,0.75)",
+    red:      "#ef4444",
+    warmGray: "#a8a29e",
+    earth:    "#8b7355",
+};
 
   return (
     <aside
