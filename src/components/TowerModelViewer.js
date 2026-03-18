@@ -6,8 +6,6 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const MODEL_PATH = "/Model/5.6k_10x4_panels/";
 const MODEL_FILE = "5.6k_10x4_panels.gltf";
-const SUN_PATH   = "/Model/";
-const SUN_FILE   = "sun.glb";
 
 export default function TowerModelViewer({
     angleDeg  = 0,
@@ -99,7 +97,7 @@ export default function TowerModelViewer({
                             }
                         });
                         scene.add(towerModel);
-                        loadSun();
+                        addSunFromTower();
                         setLoading(false);
                     },
                     undefined,
@@ -110,50 +108,48 @@ export default function TowerModelViewer({
                     }
                 );
 
-                // Sun model
-                function loadSun() {
-                    const sl = new GLTFLoader();
-                    sl.setPath(SUN_PATH);
-                    sl.load(SUN_FILE, (gltf) => {
-                        if (!mountedRef.current || !scene) return;
-                        const sunObj = gltf.scene;
-                        const sunBox = new THREE.Box3().setFromObject(sunObj);
-                        const sunSz  = sunBox.getSize(new THREE.Vector3());
-                        const sunSc  = 8 / Math.max(sunSz.x, sunSz.y, sunSz.z);
-                        sunObj.scale.set(sunSc, sunSc, sunSc);
-                        sunObj.traverse((child) => {
-                            if (child.isMesh && child.material) {
-                                const ms = Array.isArray(child.material)
-                                    ? child.material : [child.material];
-                                ms.forEach((m) => {
-                                    if (
-                                        m instanceof THREE.MeshStandardMaterial ||
-                                        m instanceof THREE.MeshPhysicalMaterial
-                                    ) {
-                                        m.emissive          = new THREE.Color(0xffaa00);
-                                        m.emissiveIntensity = 2.0;
-                                    }
-                                });
-                            }
-                        });
-                        const [sx, sy, sz] = [18, 22, 14];
-                        sunObj.position.set(sx, sy, sz);
-                        scene.add(sunObj);
-                        const dl = new THREE.DirectionalLight(0xffcc66, 2.2);
-                        dl.position.set(sx, sy, sz);
-                        dl.target.position.set(0, 10, 0);
-                        dl.castShadow            = true;
-                        dl.shadow.mapSize.width   = 2048;
-                        dl.shadow.mapSize.height  = 2048;
-                        dl.shadow.camera.left     = -25;
-                        dl.shadow.camera.right    = 25;
-                        dl.shadow.camera.top      = 25;
-                        dl.shadow.camera.bottom   = -25;
-                        scene.add(dl);
-                        const pl = new THREE.PointLight(0xffaa00, 0.7, 50);
-                        pl.position.set(sx, sy, sz);
-                        scene.add(pl);
-                    }, undefined, (e) => console.warn("Sun load failed:", e));
+                // Decorative "sun": reuse the already-loaded tower model (no extra network request).
+                function addSunFromTower() {
+                    if (!towerModel || !scene) return;
+                    const sunObj = towerModel.clone(true);
+                    sunObj.traverse((child) => {
+                        if (child.isMesh && child.material) {
+                            const ms = Array.isArray(child.material)
+                                ? child.material : [child.material];
+                            ms.forEach((m) => {
+                                if (
+                                    m instanceof THREE.MeshStandardMaterial ||
+                                    m instanceof THREE.MeshPhysicalMaterial
+                                ) {
+                                    m.emissive          = new THREE.Color(0xffaa00);
+                                    m.emissiveIntensity = 1.8;
+                                }
+                            });
+                        }
+                    });
+
+                    // Small, glowing "sun" off to the side.
+                    const [sx, sy, sz] = [18, 22, 14];
+                    sunObj.scale.multiplyScalar(0.35);
+                    sunObj.position.set(sx, sy, sz);
+                    sunObj.rotation.y = Math.PI * 0.35;
+                    scene.add(sunObj);
+
+                    const dl = new THREE.DirectionalLight(0xffcc66, 2.2);
+                    dl.position.set(sx, sy, sz);
+                    dl.target.position.set(0, 10, 0);
+                    dl.castShadow             = true;
+                    dl.shadow.mapSize.width   = 2048;
+                    dl.shadow.mapSize.height  = 2048;
+                    dl.shadow.camera.left     = -25;
+                    dl.shadow.camera.right    = 25;
+                    dl.shadow.camera.top      = 25;
+                    dl.shadow.camera.bottom   = -25;
+                    scene.add(dl);
+
+                    const pl = new THREE.PointLight(0xffaa00, 0.7, 50);
+                    pl.position.set(sx, sy, sz);
+                    scene.add(pl);
                 }
 
                 // Render loop — no fireflies, just tower rotation

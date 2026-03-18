@@ -42,8 +42,8 @@ const DK = {
     border:   "rgba(255,245,235,0.07)",
     border2:  "rgba(255,245,235,0.12)",
     text1:    "#f5f0ea",
-    text2:    "rgba(245,240,234,0.5)",
-    text3:    "rgba(245,240,234,0.28)",
+    text2:    "rgba(245,240,234,0.6)",
+    text3:    "rgba(245,240,234,0.38)",
     amber:    "#e6b85c",
     amberDim: "rgba(230,184,92,0.14)",
     green:    "rgba(74,222,128,0.75)",
@@ -407,7 +407,7 @@ export default function Dashboard() {
 
     // ─── Shared style helpers ───────────────────────────────────────────────
     const sectionLabel = isDark
-        ? { fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }
+        ? { fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }
         : {};
     const sectionLabelCls = isDark ? "" : "text-sm font-bold uppercase tracking-wider text-[#2F3E4D]";
 
@@ -483,7 +483,7 @@ export default function Dashboard() {
                         >
                             {/* Page title */}
                             {isDark ? (
-                                <h1 style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, marginBottom: 24 }}>
+                                <h1 style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, marginBottom: 24 }}>
                                     {system.system_name}
                                 </h1>
                             ) : (
@@ -512,7 +512,7 @@ export default function Dashboard() {
                                                 <span style={{ fontSize: 52, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
                                                     {pvPowerKw.toFixed(2)}
                                                 </span>
-                                                <span style={{ fontSize: 11, fontWeight: 400, color: DK.text3, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                                                <span style={{ fontSize: 12, fontWeight: 400, color: DK.text3, letterSpacing: "0.15em", textTransform: "uppercase" }}>
                                                     kilowatts
                                                 </span>
                                             </div>
@@ -535,12 +535,12 @@ export default function Dashboard() {
                                         {/* Stat footer */}
                                         <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div className="text-center">
-                                                <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Daily Total</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Daily Total</p>
                                                 <p style={{ fontSize: 16, fontWeight: 300, color: DK.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
                                             </div>
                                             <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
                                             <div className="text-center">
-                                                <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Peak Today</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Peak Today</p>
                                                 <p style={{ fontSize: 16, fontWeight: 300, color: DK.text1 }}>{maxHourlyPower} kW</p>
                                             </div>
                                         </div>
@@ -582,17 +582,17 @@ export default function Dashboard() {
                                             <p style={{ fontSize: 48, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
                                                 {angleNum}<span style={{ fontSize: 24, fontWeight: 200 }}>°</span>
                                             </p>
-                                            <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginTop: 6 }}>Tower Angle</p>
+                                            <p style={{ fontSize: 11, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginTop: 6 }}>Tower Angle</p>
                                         </div>
                                         {/* Footer stats */}
                                         <div className="w-full mt-4 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div className="text-center">
-                                                <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Azimuth</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Azimuth</p>
                                                 <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{angleNum}°</p>
                                             </div>
                                             <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
                                             <div className="text-center">
-                                                <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Elevation</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Elevation</p>
                                                 <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>32°</p>
                                             </div>
                                         </div>
@@ -616,7 +616,7 @@ export default function Dashboard() {
                                         {/* Header row */}
                                         <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <span style={{ fontSize: 11, fontWeight: 500, color: DK.text1 }}>System Health</span>
-                                            <span className="flex items-center gap-1.5" style={{ fontSize: 10, color: DK.green, fontWeight: 600, letterSpacing: "0.08em" }}>
+                                            <span className="flex items-center gap-1.5" style={{ fontSize: 11, color: DK.green, fontWeight: 600, letterSpacing: "0.08em" }}>
                                                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, display: "inline-block" }} />
                                                 All nominal
                                             </span>
@@ -666,7 +666,7 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-1 rounded-xl overflow-hidden"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
-                                        <p className="px-5 pt-4 pb-3" style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
+                                        <p className="px-5 pt-4 pb-3" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
                                             Environmental
                                         </p>
                                         <div className="grid grid-cols-2">
@@ -674,7 +674,7 @@ export default function Dashboard() {
                                             <div className="flex flex-col px-5 py-5" style={{ borderRight: `0.5px solid ${DK.border}` }}>
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Droplets style={{ width: 16, height: 16, color: "#38bdf8", opacity: 0.7, flexShrink: 0 }} />
-                                                    <span style={{ fontSize: 11, color: DK.text3 }}>Humidity</span>
+                                                    <span style={{ fontSize: 12, color: DK.text3 }}>Humidity</span>
                                                 </div>
                                                 <p style={{ fontSize: 40, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
                                                     {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 20, fontWeight: 300 }}>%</span>
@@ -682,13 +682,13 @@ export default function Dashboard() {
                                                 <div className="mt-3">
                                                     <Sparkline values={[22,24,23,25,24,26,25,weather?.current?.humidity ?? 24]} color="#38bdf8" />
                                                 </div>
-                                                <p style={{ fontSize: 10, color: DK.text3, marginTop: 6 }}>Updated {currentTime}</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, marginTop: 6 }}>Updated {currentTime}</p>
                                             </div>
                                             {/* Temperature */}
                                             <div className="flex flex-col px-5 py-5">
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Thermometer style={{ width: 16, height: 16, color: "#f97316", opacity: 0.7, flexShrink: 0 }} />
-                                                    <span style={{ fontSize: 11, color: DK.text3 }}>Temperature</span>
+                                                    <span style={{ fontSize: 12, color: DK.text3 }}>Temperature</span>
                                                 </div>
                                                 <p style={{ fontSize: 40, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
                                                     {weather?.current?.temp ?? "—"}<span style={{ fontSize: 20, fontWeight: 300 }}>°C</span>
@@ -696,7 +696,7 @@ export default function Dashboard() {
                                                 <div className="mt-3">
                                                     <Sparkline values={[12,13,14,14,15,15,14,weather?.current?.temp ?? 15]} color="#f97316" />
                                                 </div>
-                                                <p style={{ fontSize: 10, color: DK.text3, marginTop: 6 }}>Feels like {(weather?.current?.temp ?? 15) - 2}°C</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, marginTop: 6 }}>Feels like {(weather?.current?.temp ?? 15) - 2}°C</p>
                                             </div>
                                         </div>
                                     </div>
@@ -725,23 +725,23 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-2 rounded-xl overflow-hidden"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
-                                        <p className="px-5 pt-4 pb-3" style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
+                                        <p className="px-5 pt-4 pb-3" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
                                             Performance
                                         </p>
                                         {/* Two stats inline */}
                                         <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${DK.border}` }}>
-                                                <p style={{ fontSize: 10, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Daily Peak</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Daily Peak</p>
                                                 <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>{maxHourlyPower} <span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>kW</span></p>
                                             </div>
                                             <div className="px-5 py-4">
-                                                <p style={{ fontSize: 10, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Power Output</p>
+                                                <p style={{ fontSize: 11, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Power Output</p>
                                                 <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>{powerPercentDisplay.toFixed(1)}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>%</span></p>
                                             </div>
                                         </div>
                                         {/* Mini hourly bar chart */}
                                         <div className="px-5 py-4">
-                                            <p style={{ fontSize: 10, color: DK.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Hourly Output</p>
+                                            <p style={{ fontSize: 11, color: DK.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Hourly Output</p>
                                             <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 48 }}>
                                                 {Array.from({ length: 24 }, (_, i) => {
                                                     const hourVal = hourlyProduction?.values?.[Math.floor(i * (hourlyProduction.values.length / 24))] ?? 0;
@@ -761,7 +761,7 @@ export default function Dashboard() {
                                                     );
                                                 })}
                                             </div>
-                                            <div className="flex justify-between mt-1" style={{ fontSize: 9, color: DK.text3 }}>
+                                            <div className="flex justify-between mt-1" style={{ fontSize: 10, color: DK.text3 }}>
                                                 <span>0</span><span>6</span><span>12</span><span>18</span><span>now</span>
                                             </div>
                                         </div>
@@ -796,7 +796,7 @@ export default function Dashboard() {
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}`, minHeight: 200 }}
                                     >
                                         <div>
-                                            <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
+                                            <p style={{ fontSize: 11, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
                                                 Environmental Impact
                                             </p>
                                             <p style={{ fontSize: 44, fontWeight: 200, color: DK.amber, lineHeight: 1, letterSpacing: "-0.02em" }}>
@@ -805,12 +805,12 @@ export default function Dashboard() {
                                             <p style={{ fontSize: 12, color: DK.text3, marginTop: 8 }}>Carbon saved since installation</p>
                                         </div>
                                         {/* Equivalencies */}
-                                        <p style={{ fontSize: 11, color: DK.text2, marginTop: 16, marginBottom: 12 }}>
+                                        <p style={{ fontSize: 12, color: DK.text2, marginTop: 16, marginBottom: 12 }}>
                                             ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
                                         </p>
                                         {/* Progress bar */}
                                         <div>
-                                            <div className="flex justify-between mb-2" style={{ fontSize: 10, color: DK.text3 }}>
+                                            <div className="flex justify-between mb-2" style={{ fontSize: 11, color: DK.text3 }}>
                                                 <span>Monthly goal</span>
                                                 <span>{Math.min(carbonSaved, 50)} / 50 kg</span>
                                             </div>
@@ -836,7 +836,7 @@ export default function Dashboard() {
                                     >
                                         <div className="flex items-center justify-between mb-1">
                                             <p style={{ fontSize: 11, fontWeight: 500, color: DK.text1 }}>Today&apos;s Data</p>
-                                            <p style={{ fontSize: 10, color: DK.text3, letterSpacing: "0.08em" }}>Hourly production</p>
+                                            <p style={{ fontSize: 11, color: DK.text3, letterSpacing: "0.08em" }}>Hourly production</p>
                                         </div>
                                         {hourlyProduction?.values?.length && fullDayDates?.length ? (
                                             <div style={{ height: 180 }}>
@@ -864,13 +864,13 @@ export default function Dashboard() {
                                                                 max: fullDayDates[fullDayDates.length - 1],
                                                                 grid: { display: false },
                                                                 border: { display: false },
-                                                                ticks: { color: DK.text3, font: { size: 9 } },
+                                                                ticks: { color: DK.text3, font: { size: 10 } },
                                                             },
                                                             y: {
                                                                 beginAtZero: true,
                                                                 grid: { color: "rgba(255,255,255,0.04)", drawBorder: false },
                                                                 border: { display: false },
-                                                                ticks: { color: DK.text3, font: { size: 9 } },
+                                                                ticks: { color: DK.text3, font: { size: 10 } },
                                                             },
                                                         },
                                                         plugins: { legend: { display: false } },
@@ -885,11 +885,11 @@ export default function Dashboard() {
                                         {/* Footer peak/avg row */}
                                         <div className="flex justify-between mt-3 pt-3" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div>
-                                                <span style={{ fontSize: 10, color: DK.text3 }}>Peak  </span>
+                                                <span style={{ fontSize: 11, color: DK.text3 }}>Peak  </span>
                                                 <span style={{ fontSize: 12, fontWeight: 300, color: DK.text1 }}>{maxHourlyPower} kW</span>
                                             </div>
                                             <div>
-                                                <span style={{ fontSize: 10, color: DK.text3 }}>Today  </span>
+                                                <span style={{ fontSize: 11, color: DK.text3 }}>Today  </span>
                                                 <span style={{ fontSize: 12, fontWeight: 300, color: DK.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</span>
                                             </div>
                                         </div>
@@ -964,7 +964,7 @@ export default function Dashboard() {
                                                 <s.Icon style={{ width: 15, height: 15, color: s.color, opacity: 0.7, flexShrink: 0, marginRight: 14 }} />
                                                 <div className="flex-1 min-w-0">
                                                     <p style={{ fontSize: 13, color: DK.text1, fontWeight: 400 }}>{s.name}</p>
-                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 1 }}>{s.description}</p>
+                                                    <p style={{ fontSize: 12, color: DK.text3, marginTop: 1 }}>{s.description}</p>
                                                 </div>
                                                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, flexShrink: 0 }} />
                                             </div>
@@ -989,7 +989,7 @@ export default function Dashboard() {
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>{s.name}</p>
-                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 4, lineHeight: 1.5 }}>{s.description}</p>
+                                                    <p style={{ fontSize: 12, color: DK.text3, marginTop: 4, lineHeight: 1.5 }}>{s.description}</p>
                                                 </div>
                                                 <div style={{
                                                     display: "flex", alignItems: "center", gap: 5,
@@ -998,7 +998,7 @@ export default function Dashboard() {
                                                     border: "0.5px solid rgba(74,222,128,0.2)",
                                                 }}>
                                                     <span style={{ width: 5, height: 5, borderRadius: "50%", background: DK.green }} />
-                                                    <span style={{ fontSize: 10, fontWeight: 600, color: DK.green, letterSpacing: "0.06em" }}>Online</span>
+                                                    <span style={{ fontSize: 11, fontWeight: 600, color: DK.green, letterSpacing: "0.06em" }}>Online</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -1151,7 +1151,7 @@ export default function Dashboard() {
                                         <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <div>
                                                 <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>Historical Power Data</p>
-                                                <p style={{ fontSize: 11, color: DK.text3, marginTop: 2 }}>Energy produced over time</p>
+                                                <p style={{ fontSize: 12, color: DK.text3, marginTop: 2 }}>Energy produced over time</p>
                                             </div>
                                             {/* Period toggles */}
                                             <div className="flex items-center gap-1">
@@ -1183,8 +1183,8 @@ export default function Dashboard() {
                                                         options={{
                                                             responsive: true, maintainAspectRatio: false,
                                                             scales: {
-                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 10 } } },
-                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 10 } } },
+                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 11 } } },
+                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 11 } } },
                                                             },
                                                             plugins: { legend: { display: false } },
                                                         }}
@@ -1201,8 +1201,8 @@ export default function Dashboard() {
                                                         options={{
                                                             responsive: true, maintainAspectRatio: false,
                                                             scales: {
-                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 10 } } },
-                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 10 } } },
+                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 11 } } },
+                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 11 } } },
                                                             },
                                                             plugins: { legend: { display: false } },
                                                         }}
@@ -1219,8 +1219,8 @@ export default function Dashboard() {
                                                         options={{
                                                             responsive: true, maintainAspectRatio: false,
                                                             scales: {
-                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 10 } } },
-                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 10 } } },
+                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 11 } } },
+                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 11 } } },
                                                             },
                                                             plugins: { legend: { display: false } },
                                                         }}
