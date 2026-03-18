@@ -116,6 +116,7 @@ export default function Dashboard() {
     const intervalRef = useRef(null);
     const intervalRef1 = useRef(null);
 
+    // ── Live poll (every 10 s): live power + flow ──────────────────────────
     useEffect(() => {
         if (!SYSTEM_ID) return;
         async function fetchLive() {
@@ -123,10 +124,12 @@ export default function Dashboard() {
                 const response = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
                 if (!response.ok) return;
                 const json = await response.json();
-                const live = json.data?.live;
-                if (!live?.pvPower != null) setPvPower(live.pvPower);
 
-                // Extract flow data (grid, load, battery)
+                // Live power
+                const live = json.data?.live;
+                if (live?.pvPower != null) setPvPower(live.pvPower);
+
+                // Flow data (grid, load, battery) — more up-to-date pvPower wins
                 const flow = json.data?.flow;
                 if (flow) {
                     setGridPower(flow.gridPower ?? 0);
@@ -135,7 +138,6 @@ export default function Dashboard() {
                     setBattSoc(flow.battSoc ?? null);
                     setHasBattery(flow.hasBattery ?? false);
                     setBattChargePower(flow.battChargePower ?? null);
-                    // Also sync pvPower from flow (more up to date)
                     if (flow.pvPower != null) setPvPower(flow.pvPower);
                 }
             } catch (error) { console.error('Live fetch error:', error); }
@@ -152,17 +154,32 @@ export default function Dashboard() {
     const dashOffset = CIRCUMFERENCE * (1 - safePowerPercent);
     const pvPowerKw = pvPower / 1000;
 
+    // ── Production poll (every 5 min): all chart / historical data in one call ──
     useEffect(() => {
         if (!SYSTEM_ID) return;
-        async function fetchDailyProduction() {
+        async function fetchProduction() {
             try {
                 const res = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
                 if (!res.ok) return;
                 const json = await res.json();
+
                 setDailyProduction(json.data?.dailyproduction ?? null);
-            } catch (error) { console.error('Daily production error:', error); }
+                setMonthlyProduction(json.data?.monthlyproduction ?? null);
+                setYearlyProduction(json.data?.yearlyproduction ?? null);
+                setTotalProduction(json.data?.total ?? null);
+
+                const energyData = json.data?.hourlyproduction ?? null;
+                setHourlyProduction(energyData);
+                setMaxHourlyPower(
+                    energyData?.values?.length
+                        ? Math.round(Math.max(...energyData.values) / 1000)
+                        : 0
+                );
+            } catch (error) { console.error('Production fetch error:', error); }
         }
-        fetchDailyProduction();
+        fetchProduction();
+        intervalRef1.current = setInterval(fetchProduction, 300000);
+        return () => clearInterval(intervalRef1.current);
     }, [SYSTEM_ID]);
 
     const todaysProduction = useMemo(() => {
@@ -171,57 +188,10 @@ export default function Dashboard() {
         return dailyProduction.values[systemDay - 1] ?? null;
     }, [dailyProduction, system_tz]);
 
-    useEffect(() => {
-        if (!SYSTEM_ID) return;
-        async function fetchMonthlyProduction() {
-            try {
-                const res = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
-                if (!res.ok) return;
-                const json = await res.json();
-                setMonthlyProduction(json.data?.monthlyproduction ?? null);
-            } catch (error) { console.error('Monthly production error:', error); }
-        }
-        fetchMonthlyProduction();
-    }, [SYSTEM_ID]);
-
     const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const monthLabels = monthlyProduction?.labels
         ? monthlyProduction.labels.map(m => MONTH_NAMES[m - 1])
         : MONTH_NAMES;
-
-    useEffect(() => {
-        if (!SYSTEM_ID) return;
-        async function fetchYearlyProduction() {
-            try {
-                const res = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
-                if (!res.ok) return;
-                const json = await res.json();
-                setYearlyProduction(json.data?.yearlyproduction ?? null);
-            } catch (error) { console.error('Yearly production error:', error); }
-        }
-        fetchYearlyProduction();
-    }, [SYSTEM_ID]);
-
-    useEffect(() => {
-        if (!SYSTEM_ID) return;
-        async function fetchHourlyProduction() {
-            try {
-                const res = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
-                if (!res.ok) return;
-                const json = await res.json();
-                const energyData = json.data?.hourlyproduction ?? null;
-                setHourlyProduction(energyData);
-                if (energyData?.values?.length) {
-                    setMaxHourlyPower(Math.round(Math.max(...energyData.values) / 1000));
-                } else {
-                    setMaxHourlyPower(0);
-                }
-            } catch (error) { console.error('Hourly production error:', error); }
-        }
-        fetchHourlyProduction();
-        intervalRef1.current = setInterval(fetchHourlyProduction, 300000);
-        return () => clearInterval(intervalRef1.current);
-    }, [SYSTEM_ID]);
 
     const fullDayLabels = [];
     for (let h = 0; h < 24; h++) {
@@ -240,19 +210,6 @@ export default function Dashboard() {
         const utcTime = chartDay.setZone("utc", { keepLocalTime: true }).set({ hour: hh, minute: mm, second: 0, millisecond: 0 });
         return { x: utcTime.setZone(system_tz).toJSDate(), y: hourlyProduction.values[i] };
     });
-
-    useEffect(() => {
-        if (!SYSTEM_ID) return;
-        async function fetchtotalProduction() {
-            try {
-                const res = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
-                if (!res.ok) return;
-                const json = await res.json();
-                setTotalProduction(json.data?.total ?? null);
-            } catch (error) { console.error('Total production error:', error); }
-        }
-        fetchtotalProduction();
-    }, [SYSTEM_ID]);
 
     const [weather, setWeather] = useState(null);
     const [weatherLoading, setweatherLoading] = useState(true);

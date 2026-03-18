@@ -134,7 +134,7 @@ export async function GET(request) {
                 const [key, data] = result.value;
 
                 if (key === "hourlyProduction") {
-                    response.data.hourlyproduction = normalizeHourlyProduction(data);
+                    response.data.hourlyproduction = normalizeHourlyProduction(data, systemTZ);
                 }
                 else if (key === "dailyProduction") {
                     response.data.dailyproduction = normalizeDailyProduction(data, systemTZ);
@@ -173,7 +173,7 @@ export async function GET(request) {
 /**
  * Normalize hourly aggregated energy values (kWh)
  */
-function normalizeHourlyProduction(data) {
+function normalizeHourlyProduction(data, systemTZ = 'America/Chicago') {
     const entries = data?.data;
 
     if (!Array.isArray(entries)) {
@@ -196,9 +196,9 @@ function normalizeHourlyProduction(data) {
             const duration = 300/3600; // 5 minutes in an hour
             const powerW = energyWh / duration;
 
-            // Convert UTC string to Luxon DateTime in CT
+            // Convert UTC string to Luxon DateTime in system timezone
             const utcDate = DateTime.fromISO(entry.logDateTime, { zone: 'utc' });
-            const ctDate = utcDate.setZone('America/Chicago');
+            const ctDate = utcDate.setZone(systemTZ);
 
             return {
                 deviceTime: ctDate.toJSDate(), 

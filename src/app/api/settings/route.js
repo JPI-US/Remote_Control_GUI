@@ -21,7 +21,7 @@ export async function GET(request){
         console.log(`Select systems customer ID: ${customerId}`);
 
         if (isNaN(customerId)) {
-            console.error('Invalid customer ID:', idParam);
+            console.error('Invalid customer ID:', customerId);
             return NextResponse.json({ error: 'Invalid customer ID' }, { status: 400 });
         }
 
@@ -53,16 +53,21 @@ export async function GET(request){
     }
 }
 
-export async function PUT(req, context) {
-    const { params } = context;
-    const customerId = parseInt(params.customer_id);
-
-    console.log("Customer ID:", customerId);
-
+export async function PUT(req) {
     try {
+        const token = req.cookies.get('session')?.value;
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const customerId = Number(decoded.sub);
+
+        console.log('Customer ID:', customerId);
+
         const body = await req.json();
 
-        console.log("Request body:", body);
+        console.log('Request body:', body);
 
         if (isNaN(customerId)) {
             return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
@@ -82,9 +87,9 @@ export async function PUT(req, context) {
             },
         });
 
-        return NextResponse.json( updatedSettings );
+        return NextResponse.json(updatedSettings);
     } catch (error) {
-        console.error('Prisme update error:', error);
+        console.error('Prisma update error:', error);
         return NextResponse.json({ error: 'Update failed' }, { status: 500 });
     }
 }

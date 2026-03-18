@@ -37,7 +37,7 @@ export async function POST(req) {
     });
 
     // 2️⃣ Link system to customer via join table
-    await prisma.customer_systems.create({
+    await prisma.customer_system.create({
       data: {
         customer_id: customerId,
         system_id: system.id, // internal integer ID

@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
-import Settings from '@/components/general';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
-    const { email, firstName, lastName, password, address } = await request.json();
+    const { email, firstName, lastName, password } = await request.json();
 
-    const safeAddress = address?.trim() === '' ? null : address;
+    // Combine first/last into the single `name` column the schema defines
+    const fullName = `${(firstName ?? '').trim()} ${(lastName ?? '').trim()}`.trim();
 
     if (!email || !firstName || !lastName || !password) {
         return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
@@ -27,22 +27,21 @@ export async function POST(request) {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Save user
+        // Save user — customer_type is required by the schema
         const newCustomer = await prisma.customer.create({
             data: {
                 email,
-                first_name: firstName,
-                last_name: lastName,
+                name: fullName,
+                customer_type: 'RESIDENTIAL', // default; update to match your enum values
                 password_hash: hashedPassword,
-                address: safeAddress, // <- store null if empty
                 setting: {
-                    create: {},   
+                    create: {},
                 },
                 notification: {
                     create: {},
-                }
+                },
             },
-            include:{
+            include: {
                 setting: true,
                 notification: true,
             },

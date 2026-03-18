@@ -37,7 +37,7 @@ export async function GET(request, context){
             },
         });
 
-        if (!telemetry || !telemetry.length === 0) {
+        if (!telemetry || telemetry.length === 0) {
             console.warn(`No towers/telemetry found for ID ${customerId}`);
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
@@ -49,5 +49,3 @@ export async function GET(request, context){
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }
-
-
