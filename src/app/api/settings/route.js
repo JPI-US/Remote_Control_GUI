@@ -21,7 +21,7 @@ export async function GET(request){
         console.log(`Select systems customer ID: ${customerId}`);
 
         if (isNaN(customerId)) {
-            console.error('Invalid customer ID:', customerId);
+            console.error('Invalid customer ID:', idParam);
             return NextResponse.json({ error: 'Invalid customer ID' }, { status: 400 });
         }
 

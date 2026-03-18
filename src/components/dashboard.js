@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
     Menu, X, Moon, Sun, LayoutDashboard, BarChart3, Sliders, History,
     Droplets, Thermometer, Zap, Globe, Check, RotateCcw, Power, Home,
-    Sun as SunIcon, Wind, Activity, Gauge, Cpu, Wifi,
+    Sun as SunIcon, Wind, Activity, Gauge, Cpu, Wifi, SolarPanel,
     ChevronRight,
 } from "lucide-react";
 import Link from 'next/link';
@@ -20,6 +20,7 @@ import 'chartjs-adapter-date-fns';
 import 'chartjs-adapter-luxon';
 import { DateTime } from "luxon";
 import Sidebar from '@/components/Sidebar';
+import EnergyFlowPanel from '@/components/EnergyFlowPanel';
 
 const RADIUS = 45;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -48,6 +49,12 @@ const DK = {
     green:    "rgba(74,222,128,0.75)",
     red:      "#ef4444",
 };
+
+// Helper: returns className string for a dark-mode-aware card
+function dkCard(isDark, extraLight = "", extraDark = "") {
+    if (isDark) return `rounded-xl border ${extraDark}`;
+    return `bg-white rounded-xl shadow-md border border-gray-400 ${extraLight}`;
+}
 
 // Tiny sparkline component (dark mode only)
 function Sparkline({ values = [], color = DK.amber }) {
@@ -115,7 +122,7 @@ export default function Dashboard() {
                 if (!response.ok) return;
                 const json = await response.json();
                 const live = json.data?.live;
-                if (live?.pvPower != null) setPvPower(live.pvPower);
+                if (!live?.pvPower != null) setPvPower(live.pvPower);
 
                 // Extract flow data (grid, load, battery)
                 const flow = json.data?.flow;
@@ -126,6 +133,7 @@ export default function Dashboard() {
                     setBattSoc(flow.battSoc ?? null);
                     setHasBattery(flow.hasBattery ?? false);
                     setBattChargePower(flow.battChargePower ?? null);
+                    // Also sync pvPower from flow (more up to date)
                     if (flow.pvPower != null) setPvPower(flow.pvPower);
                 }
             } catch (error) { console.error('Live fetch error:', error); }
@@ -135,7 +143,6 @@ export default function Dashboard() {
         return () => clearInterval(intervalRef.current);
     }, [SYSTEM_ID]);
 
-    // ── Power calculations — all guards here so NaN never reaches the SVG ──
     const powerPercent = MAX_PV_POWER > 0
         ? Math.min(Math.max(pvPower / MAX_PV_POWER, 0), 1)
         : 0;
@@ -286,10 +293,19 @@ export default function Dashboard() {
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [autonomousMode, setAutonomousMode] = useState(true);
     const [maintenanceMode, setMaintenanceMode] = useState(false);
     const [selectedTowerIndex, setSelectedTowerIndex] = useState(0);
     const [historicalPeriod, setHistoricalPeriod] = useState("monthly");
+    const [isWide, setIsWide] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia("(min-width: 1280px)");
+        setIsWide(mq.matches);
+        const handler = (e) => setIsWide(e.matches);
+        mq.addEventListener("change", handler);
+        return () => mq.removeEventListener("change", handler);
+    }, []);
     const mainScrollRef = useRef(null);
     const section1Ref = useRef(null);
     const diagnosticsRef = useRef(null);
@@ -411,7 +427,7 @@ export default function Dashboard() {
     const powerPercentDisplay = MAX_PV_POWER > 0 ? Math.min(100, (pvPowerKw / (MAX_PV_POWER / 1000)) * 100) : 0;
     const canAccessControlPanel = session?.role === "ADMIN" || session?.planTier === "COMMERCIAL";
 
-    // Sensor list for diagnostics
+    // Sensor data for diagnostics
     const sensors = [
         { name: "Light Sensor", description: "Sun tracking and positioning", Icon: SunIcon, color: "#d4a853" },
         { name: "Relay", description: "Power distribution and switching system", Icon: Zap, color: "#a78bfa" },
@@ -430,12 +446,12 @@ export default function Dashboard() {
         { id: "home",    label: "Home",    description: "Return tower to home position",               Icon: Home,      lightCls: "bg-[#374151] hover:bg-[#4b5563] focus:ring-[#374151]" },
     ];
 
-    // Section label style helpers
+    // ─── Shared style helpers ───────────────────────────────────────────────
     const sectionLabel = isDark
         ? { fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }
         : {};
+    const sectionLabelCls = isDark ? "" : "text-sm font-bold uppercase tracking-wider text-[#2F3E4D]";
 
-    // Dark mode gauge — computed after safePowerPercent is defined above
     const GAUGE_R = isDark ? 54 : RADIUS;
     const GAUGE_CIRC = 2 * Math.PI * GAUGE_R;
     const gaugeDashOffset = GAUGE_CIRC * (1 - safePowerPercent);
@@ -526,6 +542,7 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-1 rounded-xl flex flex-col items-center p-6"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
+                                        {/* Large gauge ring */}
                                         <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
                                             <div className="flex flex-col items-center z-10 gap-1">
                                                 <span style={{ fontSize: 52, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
@@ -546,10 +563,12 @@ export default function Dashboard() {
                                                     strokeDashoffset={gaugeDashOffset}
                                                     strokeLinecap="round"
                                                     transform="rotate(-90 60 60)"
+                                                    className={safePowerPercent > 0 ? "power-ring-active" : ""}
                                                     style={{ transition: "stroke-dashoffset 1s ease-out" }}
                                                 />
                                             </svg>
                                         </div>
+                                        {/* Stat footer */}
                                         <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div className="text-center">
                                                 <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Daily Total</p>
@@ -583,7 +602,9 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-2 rounded-xl flex flex-col items-center p-6"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
+                                        {/* Sweep track + rotating panel */}
                                         <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
+                                            {/* Dashed sweep arc */}
                                             <svg className="absolute" width={140} height={140} viewBox="0 0 140 140">
                                                 <circle cx="70" cy="70" r="62" fill="none"
                                                     stroke={DK.border2} strokeWidth="1"
@@ -599,6 +620,7 @@ export default function Dashboard() {
                                             </p>
                                             <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginTop: 6 }}>Tower Angle</p>
                                         </div>
+                                        {/* Footer stats */}
                                         <div className="w-full mt-4 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div className="text-center">
                                                 <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Azimuth</p>
@@ -627,6 +649,7 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-3 rounded-xl overflow-hidden"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
+                                        {/* Header row */}
                                         <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <span style={{ fontSize: 11, fontWeight: 500, color: DK.text1 }}>System Health</span>
                                             <span className="flex items-center gap-1.5" style={{ fontSize: 10, color: DK.green, fontWeight: 600, letterSpacing: "0.08em" }}>
@@ -634,6 +657,7 @@ export default function Dashboard() {
                                                 All nominal
                                             </span>
                                         </div>
+                                        {/* Flat rows */}
                                         {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item, i, arr) => (
                                             <div
                                                 key={item}
@@ -682,6 +706,7 @@ export default function Dashboard() {
                                             Environmental
                                         </p>
                                         <div className="grid grid-cols-2">
+                                            {/* Humidity */}
                                             <div className="flex flex-col px-5 py-5" style={{ borderRight: `0.5px solid ${DK.border}` }}>
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Droplets style={{ width: 16, height: 16, color: "#38bdf8", opacity: 0.7, flexShrink: 0 }} />
@@ -695,6 +720,7 @@ export default function Dashboard() {
                                                 </div>
                                                 <p style={{ fontSize: 10, color: DK.text3, marginTop: 6 }}>Updated {currentTime}</p>
                                             </div>
+                                            {/* Temperature */}
                                             <div className="flex flex-col px-5 py-5">
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <Thermometer style={{ width: 16, height: 16, color: "#f97316", opacity: 0.7, flexShrink: 0 }} />
@@ -738,6 +764,7 @@ export default function Dashboard() {
                                         <p className="px-5 pt-4 pb-3" style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
                                             Performance
                                         </p>
+                                        {/* Two stats inline */}
                                         <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${DK.border}` }}>
                                                 <p style={{ fontSize: 10, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Daily Peak</p>
@@ -748,6 +775,7 @@ export default function Dashboard() {
                                                 <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>{powerPercentDisplay.toFixed(1)}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>%</span></p>
                                             </div>
                                         </div>
+                                        {/* Mini hourly bar chart */}
                                         <div className="px-5 py-4">
                                             <p style={{ fontSize: 10, color: DK.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Hourly Output</p>
                                             <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 48 }}>
@@ -812,9 +840,27 @@ export default function Dashboard() {
                                             </p>
                                             <p style={{ fontSize: 12, color: DK.text3, marginTop: 8 }}>Carbon saved since installation</p>
                                         </div>
-                                        <p style={{ fontSize: 11, color: DK.text2, marginTop: 16, marginBottom: 12 }}>
-                                            ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
-                                        </p>
+                                        {/* Equivalencies */}
+                                        <div style={{ display: "flex", gap: 24, marginTop: 20, marginBottom: 16 }}>
+                                            <div>
+                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
+                                                    {Math.round(carbonSaved / 21)}
+                                                </p>
+                                                <p style={{ fontSize: 10, color: DK.text3, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.10em" }}>
+                                                    Trees planted
+                                                </p>
+                                            </div>
+                                            <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
+                                            <div>
+                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
+                                                    {Math.round(carbonSaved * 4.3).toLocaleString()}
+                                                </p>
+                                                <p style={{ fontSize: 10, color: DK.text3, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.10em" }}>
+                                                    km not driven
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {/* Progress bar */}
                                         <div>
                                             <div className="flex justify-between mb-2" style={{ fontSize: 10, color: DK.text3 }}>
                                                 <span>Monthly goal</span>
@@ -888,6 +934,7 @@ export default function Dashboard() {
                                                 <p style={{ fontSize: 12, color: DK.text3 }}>Loading chart data...</p>
                                             </div>
                                         )}
+                                        {/* Footer peak/avg row */}
                                         <div className="flex justify-between mt-3 pt-3" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div>
                                                 <span style={{ fontSize: 10, color: DK.text3 }}>Peak  </span>
@@ -945,6 +992,7 @@ export default function Dashboard() {
                             id="diagnostics"
                             style={isDark ? { background: DK.bg } : { background: "#F2F2F2" }}
                         >
+                            {/* Section label */}
                             {isDark ? (
                                 <p style={{ ...sectionLabel, marginBottom: 16 }}>System Diagnostics</p>
                             ) : (
@@ -953,26 +1001,63 @@ export default function Dashboard() {
 
                             {/* ── Diagnostics ── */}
                             {isDark ? (
-                                <div
-                                    className="rounded-xl overflow-hidden mb-6"
-                                    style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                >
-                                    {sensors.map((s, i) => (
-                                        <div
-                                            key={s.name}
-                                            className="flex items-center px-5 py-4"
-                                            style={i > 0 ? { borderTop: `0.5px solid ${DK.border}` } : {}}
-                                        >
-                                            <s.Icon style={{ width: 15, height: 15, color: s.color, opacity: 0.7, flexShrink: 0, marginRight: 14 }} />
-                                            <div className="flex-1 min-w-0">
-                                                <p style={{ fontSize: 13, color: DK.text1, fontWeight: 400 }}>{s.name}</p>
-                                                <p style={{ fontSize: 11, color: DK.text3, marginTop: 1 }}>{s.description}</p>
+                                !isWide ? (
+                                    /* Compact flat list — small/medium screens */
+                                    <div
+                                        className="rounded-xl overflow-hidden mb-6"
+                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
+                                    >
+                                        {sensors.map((s, i) => (
+                                            <div
+                                                key={s.name}
+                                                className="flex items-center px-5 py-4"
+                                                style={i > 0 ? { borderTop: `0.5px solid ${DK.border}` } : {}}
+                                            >
+                                                <s.Icon style={{ width: 15, height: 15, color: s.color, opacity: 0.7, flexShrink: 0, marginRight: 14 }} />
+                                                <div className="flex-1 min-w-0">
+                                                    <p style={{ fontSize: 13, color: DK.text1, fontWeight: 400 }}>{s.name}</p>
+                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 1 }}>{s.description}</p>
+                                                </div>
+                                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, flexShrink: 0 }} />
                                             </div>
-                                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, flexShrink: 0 }} />
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    /* 2×3 grid cards — large screens */
+                                    <div className="grid grid-cols-2 gap-3 mb-6">
+                                        {sensors.map((s) => (
+                                            <div
+                                                key={s.name}
+                                                className="rounded-xl flex items-start gap-4 p-5"
+                                                style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
+                                            >
+                                                <div style={{
+                                                    width: 42, height: 42, borderRadius: 8, flexShrink: 0,
+                                                    background: `${s.color}14`,
+                                                    border: `0.5px solid ${s.color}40`,
+                                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                                }}>
+                                                    <s.Icon style={{ width: 20, height: 20, color: s.color, opacity: 0.85 }} />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>{s.name}</p>
+                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 4, lineHeight: 1.5 }}>{s.description}</p>
+                                                </div>
+                                                <div style={{
+                                                    display: "flex", alignItems: "center", gap: 5,
+                                                    padding: "4px 10px", borderRadius: 99, flexShrink: 0,
+                                                    background: "rgba(74,222,128,0.08)",
+                                                    border: "0.5px solid rgba(74,222,128,0.2)",
+                                                }}>
+                                                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: DK.green }} />
+                                                    <span style={{ fontSize: 10, fontWeight: 600, color: DK.green, letterSpacing: "0.06em" }}>Online</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )
                             ) : (
+                                /* Light: original grid of cards */
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     {[
                                         { name: "Light Sensor", description: "Sun tracking and positioning" },
@@ -998,196 +1083,107 @@ export default function Dashboard() {
                             {/* ── System Controls ── */}
                             <div ref={controlRef} id="control" className="scroll-mt-24">
                                 {isDark ? (
-                                    <p style={{ ...sectionLabel, marginBottom: 16, marginTop: 32 }}>System Controls</p>
+                                    <>
+                                        <p style={{ ...sectionLabel, marginBottom: 16, marginTop: 32 }}>System Controls</p>
+                                        <EnergyFlowPanel
+                                            pvPower={pvPower}
+                                            gridPower={gridPower}
+                                            gridImport={gridImport}
+                                            loadPower={loadPower}
+                                            battSoc={battSoc}
+                                            hasBattery={hasBattery}
+                                            battChargePower={battChargePower}
+                                            todaysProduction={todaysProduction}
+                                            maxHourlyPower={maxHourlyPower}
+                                            towerCount={towerCount}
+                                            selectedTowerIndex={selectedTowerIndex}
+                                            onTowerSelect={setSelectedTowerIndex}
+                                            towerRotationDeg={towerRotationDeg}
+                                            orientationAngleNum={orientationAngleNum}
+                                            canAccessControlPanel={canAccessControlPanel}
+                                            autonomousMode={autonomousMode}
+                                            setAutonomousMode={setAutonomousMode}
+                                            maintenanceMode={maintenanceMode}
+                                            setMaintenanceMode={setMaintenanceMode}
+                                            controlActions={controlActions}
+                                            isDark={isDark}
+                                            systemTimezone={system_tz}
+                                        />
+                                    </>
                                 ) : (
-                                    <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">System Controls</h2>
-                                )}
-
-                                <div className={`grid gap-6 mb-6 ${canAccessControlPanel ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
-
-                                    {/* Tower Orientation */}
-                                    {isDark ? (
-                                        <div
-                                            className="rounded-xl overflow-hidden"
-                                            style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                        >
-                                            <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }}>
-                                                    Tower Orientation
-                                                </span>
-                                                {towerCount > 1 && (
-                                                    <div className="flex items-center gap-1" role="tablist">
-                                                        {Array.from({ length: towerCount }, (_, i) => (
-                                                            <button
-                                                                key={i}
-                                                                type="button"
-                                                                onClick={() => setSelectedTowerIndex(i)}
-                                                                style={{
-                                                                    fontSize: 11, fontWeight: 500, padding: "4px 12px", borderRadius: 4,
-                                                                    background: selectedTowerIndex === i ? DK.amber : "transparent",
-                                                                    color: selectedTowerIndex === i ? "#000" : DK.text2,
-                                                                    border: `0.5px solid ${selectedTowerIndex === i ? DK.amber : DK.border}`,
-                                                                    cursor: "pointer", transition: "all 0.15s"
-                                                                }}
-                                                            >
-                                                                Tower {i + 1}
+                                    <>
+                                        <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">System Controls</h2>
+                                        <div className={`grid gap-6 mb-6 ${canAccessControlPanel ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
+                                            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
+                                                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                                                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D]">Tower Orientation</h3>
+                                                    {towerCount > 1 && (
+                                                        <div className="flex items-center gap-1" role="tablist">
+                                                            {Array.from({ length: towerCount }, (_, i) => (
+                                                                <button key={i} type="button" onClick={() => setSelectedTowerIndex(i)}
+                                                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${selectedTowerIndex === i ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
+                                                                >Tower {i + 1}</button>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex justify-center mb-4">
+                                                    <TowerModelViewer angleDeg={towerRotationDeg} className="rounded-lg overflow-hidden bg-[#F2F2F2] shrink-0" width={360} height={360} showFireflies={false} />
+                                                </div>
+                                                <div className="flex items-center justify-center gap-2 text-[#2F3E4D] font-bold text-lg mb-4">
+                                                    <RotateCcw className="w-5 h-5 text-[#6A7B8F]" /> {orientationAngleNum}°
+                                                </div>
+                                                {canAccessControlPanel && (
+                                                    <div className="flex flex-row items-start justify-center gap-8 flex-wrap min-w-0 pt-4 mt-4 border-t border-gray-400">
+                                                        <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
+                                                            <button type="button" role="switch" aria-checked={autonomousMode}
+                                                                onClick={() => { setAutonomousMode(true); setMaintenanceMode(false); }}
+                                                                className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${autonomousMode ? "bg-[#2A9D8F]" : "bg-[#d1d5db]"}`}>
+                                                                <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${autonomousMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
+                                                                    {autonomousMode && <Check className="w-3 h-3 text-[#2A9D8F]" />}
+                                                                </span>
                                                             </button>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="flex justify-center py-6">
-                                                <TowerModelViewer
-                                                    angleDeg={towerRotationDeg}
-                                                    bgColor={DK.surface2}
-                                                    className="rounded-lg overflow-hidden shrink-0"
-                                                    width={320}
-                                                    height={320}
-                                                />
-                                            </div>
-                                            <div className="flex items-center justify-center gap-2 pb-4" style={{ borderTop: `0.5px solid ${DK.border}`, paddingTop: 16 }}>
-                                                <RotateCcw style={{ width: 14, height: 14, color: DK.text3 }} />
-                                                <span style={{ fontSize: 28, fontWeight: 200, color: DK.text1 }}>{orientationAngleNum}°</span>
-                                            </div>
-                                            {canAccessControlPanel && (
-                                                <div className="flex flex-row items-center justify-center gap-8 flex-wrap px-6 py-4" style={{ borderTop: `0.5px solid ${DK.border}` }}>
-                                                    {[
-                                                        { label: "Autonomous", sub: "Default", active: autonomousMode, onClick: () => { setAutonomousMode(true); setMaintenanceMode(false); }, activeColor: DK.green },
-                                                        { label: "Maintenance", sub: "Requires confirmation", active: maintenanceMode, onClick: () => setMaintenanceMode(!maintenanceMode), activeColor: DK.red },
-                                                    ].map(({ label, sub, active, onClick, activeColor }) => (
-                                                        <div key={label} className="flex items-start gap-3">
-                                                            <button
-                                                                type="button"
-                                                                onClick={onClick}
-                                                                style={{
-                                                                    position: "relative", width: 44, height: 24, borderRadius: 12,
-                                                                    background: active ? activeColor : "rgba(255,255,255,0.1)",
-                                                                    transition: "background 0.2s", border: "none", cursor: "pointer", flexShrink: 0, marginTop: 2
-                                                                }}
-                                                            >
-                                                                <span style={{
-                                                                    position: "absolute", top: 3, left: active ? 23 : 3,
-                                                                    width: 18, height: 18, borderRadius: "50%", background: "#fff",
-                                                                    transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
-                                                                }} />
-                                                            </button>
-                                                            <div>
-                                                                <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>{label}</p>
-                                                                <p style={{ fontSize: 11, color: DK.text3 }}>{sub}</p>
+                                                            <div className="flex flex-col gap-0.5 min-w-0">
+                                                                <span className="font-bold text-[#2F3E4D] text-base">Autonomous</span>
+                                                                <span className="text-sm text-[#6A7B8F]">Default</span>
                                                             </div>
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
-                                            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                                                <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D]">Tower Orientation</h3>
-                                                {towerCount > 1 && (
-                                                    <div className="flex items-center gap-1" role="tablist">
-                                                        {Array.from({ length: towerCount }, (_, i) => (
-                                                            <button
-                                                                key={i} type="button" onClick={() => setSelectedTowerIndex(i)}
-                                                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${selectedTowerIndex === i ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
-                                                            >Tower {i + 1}</button>
-                                                        ))}
+                                                        <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
+                                                            <button type="button" role="switch" aria-checked={maintenanceMode}
+                                                                onClick={() => setMaintenanceMode(!maintenanceMode)}
+                                                                className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${maintenanceMode ? "bg-[#dc2626]" : "bg-[#d1d5db]"}`}>
+                                                                <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${maintenanceMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
+                                                                    <X className="w-3 h-3 text-[#dc2626]" />
+                                                                </span>
+                                                            </button>
+                                                            <div className="flex flex-col gap-0.5 min-w-0">
+                                                                <span className="font-bold text-[#2F3E4D] text-base">Maintenance</span>
+                                                                <span className="text-sm text-[#6A7B8F]">Requires confirmation</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="flex justify-center mb-4">
-                                                <TowerModelViewer angleDeg={towerRotationDeg} className="rounded-lg overflow-hidden bg-[#F2F2F2] shrink-0" width={360} height={360} />
-                                            </div>
-                                            <div className="flex items-center justify-center gap-2 text-[#2F3E4D] font-bold text-lg mb-4">
-                                                <RotateCcw className="w-5 h-5 text-[#6A7B8F]" /> {orientationAngleNum}°
-                                            </div>
                                             {canAccessControlPanel && (
-                                                <div className="flex flex-row items-start justify-center gap-8 flex-wrap min-w-0 pt-4 mt-4 border-t border-gray-400">
-                                                    <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
-                                                        <button type="button" role="switch" aria-checked={autonomousMode}
-                                                            onClick={() => { setAutonomousMode(true); setMaintenanceMode(false); }}
-                                                            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${autonomousMode ? "bg-[#2A9D8F]" : "bg-[#d1d5db]"}`}>
-                                                            <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${autonomousMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
-                                                                {autonomousMode && <Check className="w-3 h-3 text-[#2A9D8F]" />}
-                                                            </span>
-                                                        </button>
-                                                        <div className="flex flex-col gap-0.5 min-w-0">
-                                                            <span className="font-bold text-[#2F3E4D] text-base">Autonomous</span>
-                                                            <span className="text-sm text-[#6A7B8F]">Default</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
-                                                        <button type="button" role="switch" aria-checked={maintenanceMode}
-                                                            onClick={() => setMaintenanceMode(!maintenanceMode)}
-                                                            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${maintenanceMode ? "bg-[#dc2626]" : "bg-[#d1d5db]"}`}>
-                                                            <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${maintenanceMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
-                                                                <X className="w-3 h-3 text-[#dc2626]" />
-                                                            </span>
-                                                        </button>
-                                                        <div className="flex flex-col gap-0.5 min-w-0">
-                                                            <span className="font-bold text-[#2F3E4D] text-base">Maintenance</span>
-                                                            <span className="text-sm text-[#6A7B8F]">Requires confirmation</span>
-                                                        </div>
+                                                <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
+                                                    <h3 className="text-lg font-bold text-[#2F3E4D] mb-4">Control Panel</h3>
+                                                    <div className="flex flex-col gap-3">
+                                                        {controlActions.map((action) => (
+                                                            <div key={action.id} className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] border border-gray-400 shadow-sm">
+                                                                <button type="button" className={`shrink-0 w-24 py-2.5 rounded-lg text-white font-bold transition-all duration-200 cursor-pointer hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${action.lightCls}`}>
+                                                                    <action.Icon className="w-4 h-4" /> {action.label}
+                                                                </button>
+                                                                <p className="text-sm text-[#2F3E4D]">{action.description}</p>
+                                                            </div>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             )}
                                         </div>
-                                    )}
-
-                                    {/* Control Panel */}
-                                    {canAccessControlPanel && (
-                                        isDark ? (
-                                            <div
-                                                className="rounded-xl overflow-hidden"
-                                                style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                            >
-                                                <div className="px-5 py-4" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                                    <p style={{ fontSize: 11, fontWeight: 500, color: DK.text1 }}>Control Panel</p>
-                                                </div>
-                                                {controlActions.map((action, i) => (
-                                                    <button
-                                                        key={action.id}
-                                                        type="button"
-                                                        className="w-full text-left flex items-center px-5 py-[18px] cursor-pointer"
-                                                        style={{
-                                                            background: "transparent",
-                                                            borderTop: i > 0 ? `0.5px solid ${DK.border}` : "none",
-                                                            borderRight: "none",
-                                                            borderBottom: "none",
-                                                            borderLeft: "none",
-                                                        }}
-                                                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.025)"}
-                                                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                                                    >
-                                                        <action.Icon style={{
-                                                            width: 18, height: 18, marginRight: 16, flexShrink: 0,
-                                                            color: action.id === "stop" ? DK.red : DK.text3,
-                                                        }} />
-                                                        <div>
-                                                            <p style={{ fontSize: 14, fontWeight: 400, color: DK.text1, lineHeight: 1.3 }}>{action.label}</p>
-                                                            <p style={{ fontSize: 11, color: DK.text3, marginTop: 2 }}>{action.description}</p>
-                                                        </div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
-                                                <h3 className="text-lg font-bold text-[#2F3E4D] mb-4">Control Panel</h3>
-                                                <div className="flex flex-col gap-3">
-                                                    {controlActions.map((action) => (
-                                                        <div key={action.id} className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] border border-gray-400 shadow-sm">
-                                                            <button type="button" className={`shrink-0 w-24 py-2.5 rounded-lg text-white font-bold transition-all duration-200 cursor-pointer hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${action.lightCls}`}>
-                                                                <action.Icon className="w-4 h-4" /> {action.label}
-                                                            </button>
-                                                            <p className="text-sm text-[#2F3E4D]">{action.description}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )
-                                    )}
-                                </div>
+                                    </>
+                                )}
                             </div>
+
 
                             {/* ── Historical Data ── */}
                             <div ref={historicalRef} id="historical" className="scroll-mt-24">
@@ -1207,6 +1203,7 @@ export default function Dashboard() {
                                                 <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>Historical Power Data</p>
                                                 <p style={{ fontSize: 11, color: DK.text3, marginTop: 2 }}>Energy produced over time</p>
                                             </div>
+                                            {/* Period toggles */}
                                             <div className="flex items-center gap-1">
                                                 {[{ id: "monthly", label: "Monthly" }, { id: "yearly", label: "Yearly" }, { id: "total", label: "Total" }].map(({ id, label }) => (
                                                     <button

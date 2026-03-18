@@ -42,7 +42,7 @@ export default function Profile(){
                 const userResponse = await fetch(`/api/user/${userId}`);
                 const userData = await userResponse.json();
                 setUser(userData);
-                setName(userData.name ?? ''); 
+                setFirstName(userData.name); 
                 setEmail(userData.email);
 
             } catch (error){

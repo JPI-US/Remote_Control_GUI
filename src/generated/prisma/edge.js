@@ -284,7 +284,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/mudit/dev/Remote_Control_GUI/Updated/src/generated/prisma",
+      "value": "/home/mudit/dev/Remote_Control_GUI/updated/Remote_Control_GUI_repo/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -318,7 +318,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/mudit/dev/Remote_Control_GUI/Updated/prisma/schema.prisma",
+    "sourceFilePath": "/home/mudit/dev/Remote_Control_GUI/updated/Remote_Control_GUI_repo/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

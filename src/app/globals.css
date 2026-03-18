@@ -120,7 +120,14 @@
   border-color: var(--dk-border);
 }
 
-/* Dark mode section fade-in animation */
+/* Power ring heartbeat — very slow, only when actively producing */
+@keyframes power-ring-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+.dark .power-ring-active {
+  animation: power-ring-pulse 6s ease-in-out infinite;
+}
 @keyframes dk-fade-up {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
