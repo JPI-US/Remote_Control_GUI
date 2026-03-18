@@ -378,12 +378,12 @@ export default function Dashboard() {
     }
 
     const angle = system?.towers?.[0]?.current_angle ?? "N/A";
-    const angleNum = typeof angle === "number" && !Number.isNaN(angle) ? Math.floor(angle) : (angle ?? "—");
+    const angleNum = !isNaN(parseFloat(angle)) ? parseFloat(angle).toFixed(2) : "—";
     const towerCount = system?.towers?.length ?? 0;
     const selectedTower = system?.towers?.[selectedTowerIndex];
-    const orientationAngle = selectedTower?.current_angle ?? "N/A";
-    const orientationAngleNum = typeof orientationAngle === "number" && !Number.isNaN(orientationAngle) ? Math.floor(orientationAngle) : (orientationAngle ?? "—");
-    const towerRotationDeg = typeof orientationAngle === "number" && !Number.isNaN(orientationAngle) ? orientationAngle : 0;
+    const orientationAngle = selectedTower?.current_angle ?? null;
+    const orientationAngleNum = !isNaN(parseFloat(orientationAngle)) ? parseFloat(orientationAngle).toFixed(2) : "—";
+    const towerRotationDeg = !isNaN(parseFloat(orientationAngle)) ? parseFloat(orientationAngle) : 0;
     const powerPercentDisplay = MAX_PV_POWER > 0 ? Math.min(100, (pvPowerKw / (MAX_PV_POWER / 1000)) * 100) : 0;
     const canAccessControlPanel = session?.role === "ADMIN" || session?.planTier === "COMMERCIAL";
 
