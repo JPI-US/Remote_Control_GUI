@@ -125,16 +125,11 @@ const DK = {
     teal:     "#2dd4bf",
 };
 
-const VW = 520, VH = 400;
-const NODES = {
-    sun:     { x: 260, y: 48  },
-    tower:   { x: 260, y: 200 },
-    grid:    { x: 448, y: 128 },
-    house:   { x: 418, y: 336 },
-    battery: { x: 68,  y: 300 },
-};
-const px = (x) => `${(x / VW) * 100}%`;
-const py = (y) => `${(y / VH) * 100}%`;
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+const degToRad = (d) => (d * Math.PI) / 180;
+const DIAGRAM_ASPECT_W = 520;
+const DIAGRAM_ASPECT_H = 300;
+const CENTER_BIAS_Y_FRAC = -0.04; // shift center slightly upward to reduce bottom dead space
 
 function SunIcon({ active, size = 56 }) {
     const c = active ? DK.amber : "rgba(255,255,255,0.18)";
@@ -221,10 +216,10 @@ function TowerSVGFallback() {
     );
 }
 
-function Node({ x, y, children }) {
+function Node({ left, top, children }) {
     return (
         <div style={{
-            position: "absolute", left: px(x), top: py(y),
+            position: "absolute", left, top,
             transform: "translate(-50%, -50%)", zIndex: 2,
             display: "flex", flexDirection: "column", alignItems: "center",
             gap: 5, pointerEvents: "none",
@@ -262,6 +257,9 @@ export default function EnergyFlowPanel({
 }) {
     const [towerError, setTowerError] = useState(false);
     const [fireflyCount, setFireflyCount] = useState(() => getFireflyCount(systemTimezone));
+    const diagramRef = useRef(null);
+    // Start with a stable fallback so SVG lines don't "snap" from (0,0) on first paint.
+    const [diagramSize, setDiagramSize] = useState({ w: DIAGRAM_ASPECT_W, h: DIAGRAM_ASPECT_H });
 
     useEffect(() => {
         if (!isDark) return;
@@ -282,6 +280,59 @@ export default function EnergyFlowPanel({
     const battCharging = (battChargePower ?? 0) > 0;
     const gridColor    = gridImport ? DK.orange : DK.teal;
     const TOWER_HALF   = 100;
+
+    useEffect(() => {
+        const el = diagramRef.current;
+        if (!el) return;
+
+        const update = () => {
+            const r = el.getBoundingClientRect();
+            const w = Math.max(0, Math.round(r.width));
+            const h = Math.max(0, Math.round(r.height));
+            setDiagramSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
+        };
+
+        update();
+        const ro = new ResizeObserver(update);
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+
+    const { w: W, h: H } = diagramSize;
+    const cx = W / 2;
+    const cy = H / 2 + H * CENTER_BIAS_Y_FRAC;
+
+    // Scale tower & halo to available space so the ring radius stays meaningful.
+    const towerSize = clamp(Math.round(Math.min(W, H) * 0.58), 220, 320);
+    const haloSize = clamp(Math.round(towerSize * 1.12), 260, 380);
+    const nodeRadius = (() => {
+        const pad = 18;
+        const nodeSlot = 96; // icon + label footprint approximation
+        const r = Math.min(W, H) / 2 - pad - nodeSlot / 2;
+        return clamp(r, 120, 320);
+    })();
+
+    // Keep the same "directions" as the old hardcoded layout, but normalize all nodes
+    // to the same radius from the tower center so spacing scales with the panel size.
+    const ANG = {
+        sun: -90,
+        grid: -21,
+        house: 40,
+        battery: 152,
+    };
+
+    const pos = (angleDeg) => ({
+        x: cx + nodeRadius * Math.cos(degToRad(angleDeg)),
+        y: cy + nodeRadius * Math.sin(degToRad(angleDeg)),
+    });
+
+    const P = {
+        tower: { x: cx, y: cy },
+        sun: pos(ANG.sun),
+        grid: pos(ANG.grid),
+        house: pos(ANG.house),
+        battery: pos(ANG.battery),
+    };
 
     const statsRows = [
         { label: "Solar",  value: pvKw,  unit: "kW",
@@ -342,13 +393,13 @@ export default function EnergyFlowPanel({
                 <div style={{
                     flex: isCommercial ? "1" : "0 0 65%",
                     position: "relative",
-                    aspectRatio: `${VW} / ${VH}`,
+                    aspectRatio: `${DIAGRAM_ASPECT_W} / ${DIAGRAM_ASPECT_H}`,
                     background: DK.bg,
                     overflow: "hidden",
-                }}>
+                }} ref={diagramRef}>
                     {isDark && <FireflyCanvas count={fireflyCount} />}
 
-                    <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="none"
+                    <svg viewBox={`0 0 ${Math.max(1, W)} ${Math.max(1, H)}`} preserveAspectRatio="none"
                         style={{ position: "absolute", inset: 0, width: "100%", height: "100%",
                             pointerEvents: "none", zIndex: 2 }}>
                         <defs>
@@ -359,31 +410,31 @@ export default function EnergyFlowPanel({
                             ))}
                         </defs>
                         {/* Ghost traces */}
-                        <line x1={NODES.sun.x} y1={NODES.sun.y+28} x2={NODES.tower.x} y2={NODES.tower.y-TOWER_HALF}
+                        <line x1={P.sun.x} y1={P.sun.y+28} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
                             stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />
-                        <line x1={NODES.tower.x+TOWER_HALF} y1={NODES.tower.y-14} x2={NODES.grid.x-28} y2={NODES.grid.y+10}
+                        <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-14} x2={P.grid.x-28} y2={P.grid.y+10}
                             stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />
-                        <line x1={NODES.tower.x+TOWER_HALF} y1={NODES.tower.y+20} x2={NODES.house.x-30} y2={NODES.house.y-22}
+                        <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+20} x2={P.house.x-30} y2={P.house.y-22}
                             stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />
-                        {hasBattery && <line x1={NODES.battery.x+22} y1={NODES.battery.y-14} x2={NODES.tower.x-TOWER_HALF} y2={NODES.tower.y+22}
+                        {hasBattery && <line x1={P.battery.x+22} y1={P.battery.y-14} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+22}
                             stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />}
                         {/* Active lines */}
-                        {solarActive && <line x1={NODES.sun.x} y1={NODES.sun.y+26} x2={NODES.tower.x} y2={NODES.tower.y-TOWER_HALF+2}
+                        {solarActive && <line x1={P.sun.x} y1={P.sun.y+26} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
                             stroke={DK.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)" />}
-                        {gridActive && gridImport && <line x1={NODES.grid.x-26} y1={NODES.grid.y+8} x2={NODES.tower.x+TOWER_HALF} y2={NODES.tower.y-12}
+                        {gridActive && gridImport && <line x1={P.grid.x-26} y1={P.grid.y+8} x2={P.tower.x+TOWER_HALF} y2={P.tower.y-12}
                             stroke={DK.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)" />}
-                        {gridActive && !gridImport && <line x1={NODES.tower.x+TOWER_HALF} y1={NODES.tower.y-12} x2={NODES.grid.x-26} y2={NODES.grid.y+8}
+                        {gridActive && !gridImport && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-12} x2={P.grid.x-26} y2={P.grid.y+8}
                             stroke={DK.teal} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-tel)" />}
-                        {loadActive && <line x1={NODES.tower.x+TOWER_HALF} y1={NODES.tower.y+18} x2={NODES.house.x-28} y2={NODES.house.y-20}
+                        {loadActive && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+18} x2={P.house.x-28} y2={P.house.y-20}
                             stroke={DK.purple} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-pur)" />}
-                        {battActive && battCharging && <line x1={NODES.battery.x+20} y1={NODES.battery.y-12} x2={NODES.tower.x-TOWER_HALF} y2={NODES.tower.y+20}
+                        {battActive && battCharging && <line x1={P.battery.x+20} y1={P.battery.y-12} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+20}
                             stroke={DK.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
-                        {battActive && !battCharging && <line x1={NODES.tower.x-TOWER_HALF} y1={NODES.tower.y+20} x2={NODES.battery.x+20} y2={NODES.battery.y-12}
+                        {battActive && !battCharging && <line x1={P.tower.x-TOWER_HALF} y1={P.tower.y+20} x2={P.battery.x+20} y2={P.battery.y-12}
                             stroke={DK.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
                     </svg>
 
                     {/* Sun */}
-                    <Node x={NODES.sun.x} y={NODES.sun.y}>
+                    <Node left={`${P.sun.x}px`} top={`${P.sun.y}px`}>
                         <SunIcon active={solarActive} size={72} />
                         <NodeLabel value={pvKw} unit="kW" label="Solar"
                             sub={`Today ${(todaysProduction ?? 0).toFixed(1)} kWh`}
@@ -392,20 +443,20 @@ export default function EnergyFlowPanel({
 
                     {/* Tower halo */}
                     <div style={{
-                        position: "absolute", left: px(NODES.tower.x), top: py(NODES.tower.y),
-                        transform: "translate(-50%, -50%)", width: 320, height: 320,
+                        position: "absolute", left: `${P.tower.x}px`, top: `${P.tower.y}px`,
+                        transform: "translate(-50%, -50%)", width: haloSize, height: haloSize,
                         borderRadius: "50%",
                         background: "radial-gradient(circle, rgba(212,168,83,0.12) 0%, rgba(212,168,83,0.05) 40%, transparent 70%)",
                         pointerEvents: "none", zIndex: 2,
                     }} />
 
                     {/* Tower */}
-                    <Node x={NODES.tower.x} y={NODES.tower.y}>
+                    <Node left={`${P.tower.x}px`} top={`${P.tower.y}px`}>
                         {!towerError ? (
                             <TowerModelViewer angleDeg={towerRotationDeg} bgColor={DK.bg}
-                                width={290} height={290} onError={() => setTowerError(true)} />
+                                width={towerSize} height={towerSize} onError={() => setTowerError(true)} />
                         ) : (
-                            <div style={{ width: 290, height: 290, display: "flex",
+                            <div style={{ width: towerSize, height: towerSize, display: "flex",
                                 alignItems: "center", justifyContent: "center",
                                 background: DK.bg, borderRadius: 8 }}>
                                 <TowerSVGFallback />
@@ -414,7 +465,7 @@ export default function EnergyFlowPanel({
                     </Node>
 
                     {/* Grid */}
-                    <Node x={NODES.grid.x} y={NODES.grid.y}>
+                    <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
                         <GridIcon active={gridActive} importing={gridImport} size={66} />
                         <NodeLabel value={gridKw} unit="kW"
                             label={gridImport ? "Importing" : "Exporting"}
@@ -422,7 +473,7 @@ export default function EnergyFlowPanel({
                     </Node>
 
                     {/* House */}
-                    <Node x={NODES.house.x} y={NODES.house.y}>
+                    <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
                         <HouseIcon active={loadActive} size={72} />
                         <NodeLabel value={loadKw} unit="kW" label="Consumption"
                             color={loadActive ? DK.purple : DK.text3} />
@@ -430,7 +481,7 @@ export default function EnergyFlowPanel({
 
                     {/* Battery */}
                     {hasBattery && (
-                        <Node x={NODES.battery.x} y={NODES.battery.y}>
+                        <Node left={`${P.battery.x}px`} top={`${P.battery.y}px`}>
                             <BatteryIcon soc={battSoc} active={battActive} size={64} />
                             <NodeLabel value={`${battSoc ?? 0}`} unit="%"
                                 label={battActive ? (battCharging ? "Charging" : "Discharging") : "Standby"}
