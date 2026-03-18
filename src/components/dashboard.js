@@ -451,18 +451,14 @@ export default function Dashboard() {
                                     borderBottom: `0.5px solid ${DK.border}`,
                                   }
                                 : {
-                                    background: "linear-gradient(to right, rgba(42,28,18,0.92) 0%, rgba(62,42,26,0.75) 30%, rgba(80,58,36,0.45) 60%, rgba(242,242,242,0.6) 100%)",
-                                    borderBottom: "1px solid rgba(42,28,18,0.18)",
+                                    background: "linear-gradient(to right, rgba(42,28,14,0.96) 0%, rgba(58,38,20,0.80) 25%, rgba(80,58,36,0.45) 55%, rgba(242,242,242,0.0) 100%)",
+                                    borderBottom: "1px solid rgba(42,28,14,0.15)",
                                   }
                             }
                         >
-                            <img
-                                src="/images/Janta_Power_Business_Card_Logo.jpeg"
-                                alt="Janta Power"
-                                className="h-14 w-auto min-w-[160px] object-contain md:h-16 md:min-w-[200px]"
-                            />
+
                             <p
-                                className="text-sm font-medium absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
+                                className="text-sm font-medium"
                                 style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.9)" }}
                             >
                                 {system?.system_name || "System"} • {currentTime}
@@ -1074,8 +1070,8 @@ export default function Dashboard() {
                                             controlActions={controlActions}
                                             isDark={isDark}
                                             systemTimezone={system_tz}
-                                            // isCommercial={session?.planTier === "COMMERCIAL"}
-                                            isCommercial={true}
+                                            isCommercial={session?.planTier === "COMMERCIAL"}
+                                            // isCommercial={true}
                                         />
                                     </>
                                 ) : (

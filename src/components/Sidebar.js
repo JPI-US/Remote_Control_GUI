@@ -32,17 +32,17 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
       className="fixed left-0 top-0 bottom-0 w-64 z-30 flex flex-col overflow-y-auto"
       style={isDark
         ? { background: DK.bg, borderRight: `0.5px solid ${DK.border}` }
-        : { background: 'linear-gradient(to bottom, #2A1C0E, #1E1408)', borderRight: '1px solid rgba(255,220,150,0.08)' }
+        : { background: 'linear-gradient(to bottom, #2A1C0E, #1E1408)', boxShadow: '2px 0 16px rgba(0,0,0,0.18)' }
       }
     >
       {/* Logo */}
       <Link
         href="/dashboard"
-        className="flex items-center justify-center px-4 py-4 shrink-0"
+        className="flex items-center justify-center px-4 py-[18px] shrink-0"
         style={{
           borderBottom: isDark
             ? `0.5px solid ${DK.border}`
-            : '1px solid rgba(255,255,255,0.1)',
+            : 'none',
           transition: 'background 0.2s ease',
         }}
         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(230,184,92,0.04)'; }}
@@ -157,7 +157,7 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
               }`} />
               <span className="relative z-10">{item.label}</span>
               {isActive && (
-                <span className="absolute right-3 w-2 h-2 rounded-full bg-teal-400 animate-pulse-soft" />
+                <span className="absolute right-3 w-2 h-2 rounded-full bg-amber-400" />
               )}
             </button>
           );
