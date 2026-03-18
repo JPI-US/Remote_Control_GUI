@@ -258,13 +258,6 @@ export default function Dashboard() {
     const [selectedTowerIndex, setSelectedTowerIndex] = useState(0);
     const [historicalPeriod, setHistoricalPeriod] = useState("monthly");
     const [isWide, setIsWide] = useState(false);
-    useEffect(() => {
-        const mq = window.matchMedia("(min-width: 1280px)");
-        setIsWide(mq.matches);
-        const handler = (e) => setIsWide(e.matches);
-        mq.addEventListener("change", handler);
-        return () => mq.removeEventListener("change", handler);
-    }, []);
     const mainScrollRef = useRef(null);
     const section1Ref = useRef(null);
     const diagnosticsRef = useRef(null);
@@ -420,57 +413,58 @@ export default function Dashboard() {
             className="flex flex-col h-screen overflow-hidden w-full text-[#2F3E4D] dark:text-gray-100"
             style={isDark ? { background: DK.bg } : { background: MAIN_BG }}
         >
-            {/* ── Header ── */}
-            <header
-                className="fixed top-0 left-64 right-0 z-40 flex items-center justify-between px-6 py-4"
-                style={isDark
-                    ? {
-                        background: "rgba(20,17,15,0.75)",
-                        backdropFilter: "blur(16px)",
-                        WebkitBackdropFilter: "blur(16px)",
-                        borderBottom: `0.5px solid ${DK.border}`,
-                      }
-                    : { background: "#fff", boxShadow: "0 1px 2px rgba(0,0,0,0.06)", borderBottom: "1px solid #d1d5db" }
-                }
-            >
-                <img
-                    src="/images/Janta_Power_Business_Card_Logo.jpeg"
-                    alt="Janta Power"
-                    className="h-14 w-auto min-w-[160px] object-contain md:h-16 md:min-w-[200px]"
-                />
-                <p
-                    className="text-sm font-medium absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
-                    style={isDark ? { color: DK.text2 } : { color: TITLE_COLOR }}
-                >
-                    {system?.system_name || "System"} • {currentTime}
-                </p>
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        aria-label={isDark ? "Light mode" : "Dark mode"}
-                        className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-white/5 transition-colors"
-                        style={isDark ? { color: DK.text2 } : { color: TITLE_COLOR }}
-                        onClick={toggleDark}
-                    >
-                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                    </button>
-                    <button
-                        type="button"
-                        aria-label="Menu"
-                        className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-white/5 transition-colors cursor-pointer"
-                        style={isDark ? { color: DK.text2 } : { color: TITLE_COLOR }}
-                        onClick={() => setMenuOpen(!menuOpen)}
-                    >
-                        {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                    </button>
-                </div>
-            </header>
-
-            <div className="flex flex-1 min-h-0 pt-24">
+            <div className="flex flex-1 min-h-0">
                 <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} systemName={system?.system_name} />
 
                 <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-64" style={isDark ? { background: DK.bg } : {}}>
                     <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
+                        {/* ── Header ── */}
+                        <header
+                            className="flex items-center justify-between px-6 py-4"
+                            style={isDark
+                                ? {
+                                    background: "rgba(20,17,15,0.75)",
+                                    borderBottom: `0.5px solid ${DK.border}`,
+                                  }
+                                : {
+                                    background: "linear-gradient(to right, rgba(42,28,18,0.92) 0%, rgba(62,42,26,0.75) 30%, rgba(80,58,36,0.45) 60%, rgba(242,242,242,0.6) 100%)",
+                                    borderBottom: "1px solid rgba(42,28,18,0.18)",
+                                  }
+                            }
+                        >
+                            <img
+                                src="/images/Janta_Power_Business_Card_Logo.jpeg"
+                                alt="Janta Power"
+                                className="h-14 w-auto min-w-[160px] object-contain md:h-16 md:min-w-[200px]"
+                            />
+                            <p
+                                className="text-sm font-medium absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
+                                style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.9)" }}
+                            >
+                                {system?.system_name || "System"} • {currentTime}
+                            </p>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    aria-label={isDark ? "Light mode" : "Dark mode"}
+                                    className="p-2 rounded-lg transition-colors"
+                                    style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.85)" }}
+                                    onClick={toggleDark}
+                                >
+                                    {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    aria-label="Menu"
+                                    className="p-2 rounded-lg transition-colors cursor-pointer"
+                                    style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.85)" }}
+                                    onClick={() => setMenuOpen(!menuOpen)}
+                                >
+                                    {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                                </button>
+                            </div>
+                        </header>
+
 
                         {/* ════════════════════════════════════════
                             SECTION 1 — Tower Status + Today at a Glance
