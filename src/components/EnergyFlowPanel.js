@@ -148,6 +148,8 @@ const degToRad = (d) => (d * Math.PI) / 180;
 const DIAGRAM_ASPECT_W = 520;
 const DIAGRAM_ASPECT_H = 300;
 const CENTER_BIAS_Y_FRAC = -0.04; // shift center slightly upward to reduce bottom dead space
+// Solar node: icon 72px + gap 5 + label block; line starts below "SOLAR" text
+const SOLAR_LINE_START_OFFSET = 64;
 
 function SunIcon({ active, size = 56, theme = DK, isDark = true }) {
     const c = active ? theme.amber : (isDark ? "rgba(255,255,255,0.18)" : theme.text3);
@@ -434,7 +436,7 @@ export default function EnergyFlowPanel({
                             ))}
                         </defs>
                         {/* Ghost traces */}
-                        <line x1={P.sun.x} y1={P.sun.y+28} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
+                        <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
                         <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-14} x2={P.grid.x-28} y2={P.grid.y+10}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
@@ -443,7 +445,7 @@ export default function EnergyFlowPanel({
                         {hasBattery && <line x1={P.battery.x+22} y1={P.battery.y-14} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+22}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />}
                         {/* Active lines */}
-                        {solarActive && <line x1={P.sun.x} y1={P.sun.y+26} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
+                        {solarActive && <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
                             stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)" />}
                         {gridActive && gridImport && <line x1={P.grid.x-26} y1={P.grid.y+8} x2={P.tower.x+TOWER_HALF} y2={P.tower.y-12}
                             stroke={T.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)" />}
