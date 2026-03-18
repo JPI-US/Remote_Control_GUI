@@ -11,35 +11,25 @@ function getFireflyCount(timezone) {
     const now = DateTime.now().setZone(timezone || "America/Chicago");
     const h = now.hour;
     const m = now.minute;
-    const totalMinutes = h * 60 + m; // 0–1439
+    const totalMinutes = h * 60 + m;
 
-    const SUNSET  = 19 * 60 + 30; // 19:30 = 1170 min
-    const MIDNIGHT = 24 * 60;      // 1440 min (use 0 for post-midnight)
+    const SUNSET = 19 * 60 + 30; // 19:30
 
-    // Daytime — no fireflies
-    if (totalMinutes < SUNSET) return 0;
-
-    const minutesSinceSunset = totalMinutes - SUNSET; // 0–270
-
-    // Sunset → midnight: 25 + floor(minutes/30)*3, capped at 52
-    if (totalMinutes >= SUNSET) {
-        const intervals = Math.floor(minutesSinceSunset / 30);
-        const count = 25 + intervals * 3;
-        if (count >= 52) {
-            // Past midnight — now decrease by factor of 4 every 30 min
-            // minutesPastMidnight = totalMinutes (since h wraps back to 0)
-            const minutesPastMidnight = h < 12 ? totalMinutes : 0;
-            const decreaseIntervals = Math.floor(minutesPastMidnight / 30);
-            let val = 52;
-            for (let i = 0; i < decreaseIntervals; i++) {
-                val = Math.floor(val / 4);
-            }
-            return Math.max(0, val);
-        }
-        return Math.min(52, count);
+    // Post-midnight (0:00 – ~1:30 AM) — decrease from 52 by 4 every 30 min
+    if (h < 12) {
+        const minutesPastMidnight = totalMinutes; // 0–719
+        const decreaseIntervals = Math.floor(minutesPastMidnight / 30);
+        const val = 52 - decreaseIntervals * 4;
+        return Math.max(0, val);
     }
 
-    return 0;
+    // Daytime before sunset — no fireflies
+    if (totalMinutes < SUNSET) return 0;
+
+    // Sunset → midnight — ramp up from 25 to 52
+    const minutesSinceSunset = totalMinutes - SUNSET;
+    const intervals = Math.floor(minutesSinceSunset / 30);
+    return Math.min(52, 25 + intervals * 3);
 }
 
 // ── Full-panel 2D firefly canvas ──────────────────────────────────────────────
@@ -370,7 +360,7 @@ export default function EnergyFlowPanel({
     const gridColor    = gridImport ? DK.orange : DK.teal;
 
     // Grid/house icon offset from node center (icon is top, label is bottom)
-    const TOWER_HALF = 120; // half the 3D viewer size in VH space
+    const TOWER_HALF = 100; // SVG coord units — approx (290px / ~750px container) * 520
 
     const statsRows = [
         { label: "Solar",  value: pvKw,   unit: "kW",
@@ -568,13 +558,13 @@ export default function EnergyFlowPanel({
                             <TowerModelViewer
                                 angleDeg={towerRotationDeg}
                                 bgColor={DK.bg}
-                                width={240} height={240}
+                                width={290} height={290}
                                 onError={() => setTowerError(true)}
                                 style={{ borderRadius: 8,
                                     boxShadow: `0 0 0 0.5px ${DK.border}` }} />
                         ) : (
                             <div style={{
-                                width: 240, height: 240,
+                                width: 290, height: 290,
                                 display: "flex", alignItems: "center",
                                 justifyContent: "center",
                                 background: DK.bg, borderRadius: 8,

@@ -10,13 +10,12 @@ const SUN_PATH   = "/Model/";
 const SUN_FILE   = "sun.glb";
 
 export default function TowerModelViewer({
-    angleDeg      = 0,
-    className     = "",
-    width         = 280,
-    height        = 280,
-    bgColor       = "#0c0c0d",
+    angleDeg  = 0,
+    className = "",
+    width     = 280,
+    height    = 280,
+    bgColor   = "#0c0c0d",
     onError,
-    showFireflies = true,
 }) {
     const containerRef = useRef(null);
     const angleRef     = useRef(angleDeg);
@@ -31,7 +30,6 @@ export default function TowerModelViewer({
         if (!container) return;
 
         let scene, camera, renderer, towerModel, animationId;
-        const fireflyData = [];
 
         function init() {
             try {
@@ -61,57 +59,9 @@ export default function TowerModelViewer({
                 const fill = new THREE.PointLight(0xd4a853, 0.5, 60);
                 fill.position.set(-10, 2, 10);
                 scene.add(fill);
-                // Front uplight — warm amber from below
                 const uplight = new THREE.PointLight(0xd4a853, 1.2, 55);
                 uplight.position.set(0, -4, 22);
                 scene.add(uplight);
-
-                // Fireflies — only when showFireflies is true
-                if (showFireflies) {
-                    const size   = 96;
-                    const cvs    = document.createElement("canvas");
-                    cvs.width    = size;
-                    cvs.height   = size;
-                    const ctx    = cvs.getContext("2d");
-                    const mid    = size / 2;
-                    const grad   = ctx.createRadialGradient(mid, mid, 0, mid, mid, mid);
-                    grad.addColorStop(0,    "rgba(255,220,100,1)");
-                    grad.addColorStop(0.15, "rgba(212,168,83,0.95)");
-                    grad.addColorStop(0.4,  "rgba(212,168,83,0.5)");
-                    grad.addColorStop(0.7,  "rgba(180,120,30,0.12)");
-                    grad.addColorStop(1,    "rgba(0,0,0,0)");
-                    ctx.fillStyle = grad;
-                    ctx.fillRect(0, 0, size, size);
-                    const texture = new THREE.CanvasTexture(cvs);
-
-                    for (let i = 0; i < 180; i++) {
-                        const baseSize = Math.random() * 1.1 + 0.3;
-                        const opacity  = Math.random() * 0.65 + 0.35;
-                        const mat = new THREE.SpriteMaterial({
-                            map: texture, transparent: true,
-                            blending: THREE.AdditiveBlending,
-                            depthWrite: false, opacity,
-                        });
-                        const sprite = new THREE.Sprite(mat);
-                        sprite.scale.set(baseSize, baseSize, 1);
-                        const x = (Math.random() - 0.5) * 110;
-                        const y = Math.random() * 42;
-                        const z = (Math.random() - 0.5) * 80;
-                        sprite.position.set(x, y, z);
-                        scene.add(sprite);
-                        fireflyData.push({
-                            sprite,
-                            speed:       Math.random() * 0.028 + 0.006,
-                            sineFreq:    Math.random() * 0.02  + 0.005,
-                            sineAmp:     Math.random() * 2.2   + 0.5,
-                            sineOffset:  Math.random() * Math.PI * 2,
-                            initX: x, initZ: z,
-                            pulseFreq:   Math.random() * 0.05  + 0.01,
-                            pulseOffset: Math.random() * Math.PI * 2,
-                            baseOpacity: opacity,
-                        });
-                    }
-                } // ← correctly closes if (showFireflies)
 
                 // Tower model
                 const loader = new GLTFLoader();
@@ -206,39 +156,14 @@ export default function TowerModelViewer({
                     }, undefined, (e) => console.warn("Sun load failed:", e));
                 }
 
-                // Render loop
-                let t = 0;
+                // Render loop — no fireflies, just tower rotation
                 function animate() {
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
-                    t += 0.016;
-
                     if (towerModel) {
                         const eff = Math.max(90, Math.min(270, angleRef.current));
                         towerModel.rotation.y = ((360 - eff) * Math.PI) / 180;
                     }
-
-                    if (showFireflies) {
-                        for (const ff of fireflyData) {
-                            const s = ff.sprite;
-                            s.position.y += ff.speed;
-                            s.position.x = ff.initX +
-                                Math.sin(t * ff.sineFreq + ff.sineOffset) * ff.sineAmp;
-                            s.position.z = ff.initZ +
-                                Math.cos(t * ff.sineFreq * 0.7 + ff.sineOffset) * ff.sineAmp * 0.6;
-                            if (s.position.y > 42) {
-                                s.position.y = -3;
-                                s.position.x = (Math.random() - 0.5) * 110;
-                                ff.initX     = s.position.x;
-                                s.position.z = (Math.random() - 0.5) * 80;
-                                ff.initZ     = s.position.z;
-                            }
-                            s.material.opacity =
-                                ff.baseOpacity *
-                                (0.6 + 0.4 * Math.sin(t * ff.pulseFreq + ff.pulseOffset));
-                        }
-                    }
-
                     renderer.render(scene, camera);
                 }
                 animate();
@@ -260,7 +185,7 @@ export default function TowerModelViewer({
             }
             renderer?.dispose();
         };
-    }, [width, height, showFireflies]);
+    }, [width, height]);
 
     return (
         <div className={className} style={{
