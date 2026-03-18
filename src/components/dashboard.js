@@ -34,6 +34,14 @@ const ORANGE = "#F3B664";
 const TITLE_COLOR = "#2F3E4D";
 const TEXT_MUTED = "#6A7B8F";
 
+// SwiftUI-style card for light mode — pronounced directional shadow for depth
+const LT_CARD = {
+    background: "#ffffff",
+    borderRadius: 20,
+    boxShadow: "0 4px 6px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
+    border: "1px solid rgba(0,0,0,0.04)",
+};
+
 // Dark mode palette — Rivian-inspired
 const DK = {
     bg:       "#14110f",
@@ -55,7 +63,7 @@ const DK = {
 // Helper: returns className string for a dark-mode-aware card
 function dkCard(isDark, extraLight = "", extraDark = "") {
     if (isDark) return `rounded-xl border ${extraDark}`;
-    return `bg-white rounded-xl shadow-md border border-gray-400 ${extraLight}`;
+    return `bg-white rounded-2xl ${extraLight}`;
 }
 
 // Tiny sparkline component (dark mode only)
@@ -448,7 +456,7 @@ export default function Dashboard() {
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
                                     className="p-2 rounded-lg transition-colors"
-                                    style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.85)" }}
+                                    style={isDark ? { color: DK.text2 } : { color: "#2F3E4D" }}
                                     onClick={toggleDark}
                                 >
                                     {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -457,7 +465,7 @@ export default function Dashboard() {
                                     type="button"
                                     aria-label="Menu"
                                     className="p-2 rounded-lg transition-colors cursor-pointer"
-                                    style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.85)" }}
+                                    style={isDark ? { color: DK.text2 } : { color: "#2F3E4D" }}
                                     onClick={() => setMenuOpen(!menuOpen)}
                                 >
                                     {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -540,7 +548,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 flex flex-col items-center text-[#2F3E4D]">
+                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#2F3E4D]" style={LT_CARD}>
                                         <div className="relative w-40 h-40 flex items-center justify-center">
                                             <span className="text-2xl font-bold z-10">{pvPowerKw.toFixed(2)} KW</span>
                                             <svg className="w-40 h-40 absolute" viewBox="0 0 100 100">
@@ -592,7 +600,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 flex flex-col items-center text-[#2F3E4D]">
+                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#2F3E4D]" style={LT_CARD}>
                                         <div className="relative flex items-center justify-center">
                                             <img src="/images/tower_Design.svg" alt="Tower" className="w-32 h-32 object-contain" />
                                         </div>
@@ -628,7 +636,7 @@ export default function Dashboard() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
+                                    <div className="bg-white rounded-2xl p-6" style={LT_CARD}>
                                         <h3 className="text-sm font-bold text-[#2F3E4D] mb-3">System Health</h3>
                                         <ul className="space-y-2">
                                             {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item) => (
@@ -695,7 +703,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-4 flex flex-col min-h-[140px] relative overflow-hidden">
+                                    <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
                                         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
                                         <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3 shrink-0">Environmental</h3>
                                         <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
@@ -761,7 +769,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-4 flex flex-col min-h-[140px] relative overflow-hidden">
+                                    <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
                                         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
                                         <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mb-3 shrink-0">Performance</h3>
                                         <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
@@ -812,7 +820,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]">
+                                    <div className="bg-white rounded-2xl p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]" style={LT_CARD}>
                                         <Globe className="w-24 h-24 text-[#2A9D8F] flex-shrink-0" />
                                         <div className="flex flex-col text-left min-w-0">
                                             <p className="text-base text-[#6A7B8F]">Environmental impact reduction</p>
@@ -889,7 +897,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-4 md:col-span-1">
+                                    <div className="bg-white rounded-2xl p-4 md:col-span-1" style={LT_CARD}>
                                         <h3 className="text-sm font-bold text-[#2F3E4D] mb-3">Today&apos;s Data</h3>
                                         {hourlyProduction?.values?.length && fullDayDates?.length ? (
                                             <div style={{ height: "200px" }}>
@@ -1009,7 +1017,7 @@ export default function Dashboard() {
                                         { name: "Temperature Sensor", description: "Heat monitoring and thermal control" },
                                         { name: "Limit Switches", description: "Safety controls and position limits" },
                                     ].map((item) => (
-                                        <div key={item.name} className="bg-white rounded-xl shadow-md border border-gray-400 p-4 flex items-center justify-between gap-4">
+                                        <div key={item.name} className="bg-white rounded-2xl p-4 flex items-center justify-between gap-4" style={LT_CARD}>
                                             <div>
                                                 <h3 className="font-semibold text-[#2F3E4D]">{item.name}</h3>
                                                 <p className="text-sm text-[#6A7B8F] mt-0.5">{item.description}</p>
@@ -1187,7 +1195,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 mb-6">
+                                    <div className="bg-white rounded-2xl p-6 mb-6" style={LT_CARD}>
                                         <h3 className="text-base font-bold text-[#2F3E4D]">Historical Power Data</h3>
                                         <p className="text-sm text-[#6A7B8F] mt-0.5 mb-4">Energy produced over time</p>
                                         <div className="flex flex-wrap gap-2 mb-4">

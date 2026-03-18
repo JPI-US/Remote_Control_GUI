@@ -372,8 +372,11 @@ export default function EnergyFlowPanel({
     ];
 
     return (
-        <div className="rounded-xl overflow-hidden mb-6"
-            style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
+        <div className="rounded-2xl overflow-hidden mb-6"
+            style={isDark
+                ? { background: T.surface, border: `0.5px solid ${T.border}` }
+                : { background: T.surface, borderRadius: 20, boxShadow: "0 4px 6px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.04)" }
+            }>
 
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3"
