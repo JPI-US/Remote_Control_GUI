@@ -1063,73 +1063,31 @@ export default function Dashboard() {
                                 ) : (
                                     <>
                                         <h2 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D] mt-10 mb-3">System Controls</h2>
-                                        <div className={`grid gap-6 mb-6 ${canAccessControlPanel ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
-                                            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
-                                                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                                                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#2F3E4D]">Tower Orientation</h3>
-                                                    {towerCount > 1 && (
-                                                        <div className="flex items-center gap-1" role="tablist">
-                                                            {Array.from({ length: towerCount }, (_, i) => (
-                                                                <button key={i} type="button" onClick={() => setSelectedTowerIndex(i)}
-                                                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${selectedTowerIndex === i ? "bg-[#F3B664] text-white" : "bg-[#F2F2F2] text-[#2F3E4D] hover:bg-[#E5E7EB]"}`}
-                                                                >Tower {i + 1}</button>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="flex justify-center mb-4">
-                                                    <TowerModelViewer angleDeg={towerRotationDeg} className="rounded-lg overflow-hidden bg-[#F2F2F2] shrink-0" width={360} height={360} showFireflies={false} />
-                                                </div>
-                                                <div className="flex items-center justify-center gap-2 text-[#2F3E4D] font-bold text-lg mb-4">
-                                                    <RotateCcw className="w-5 h-5 text-[#6A7B8F]" /> {orientationAngleNum}°
-                                                </div>
-                                                {canAccessControlPanel && (
-                                                    <div className="flex flex-row items-start justify-center gap-8 flex-wrap min-w-0 pt-4 mt-4 border-t border-gray-400">
-                                                        <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
-                                                            <button type="button" role="switch" aria-checked={autonomousMode}
-                                                                onClick={() => { setAutonomousMode(true); setMaintenanceMode(false); }}
-                                                                className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${autonomousMode ? "bg-[#2A9D8F]" : "bg-[#d1d5db]"}`}>
-                                                                <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${autonomousMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
-                                                                    {autonomousMode && <Check className="w-3 h-3 text-[#2A9D8F]" />}
-                                                                </span>
-                                                            </button>
-                                                            <div className="flex flex-col gap-0.5 min-w-0">
-                                                                <span className="font-bold text-[#2F3E4D] text-base">Autonomous</span>
-                                                                <span className="text-sm text-[#6A7B8F]">Default</span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex items-start gap-3 min-w-0 flex-1 basis-0 max-w-[240px]">
-                                                            <button type="button" role="switch" aria-checked={maintenanceMode}
-                                                                onClick={() => setMaintenanceMode(!maintenanceMode)}
-                                                                className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 ${maintenanceMode ? "bg-[#dc2626]" : "bg-[#d1d5db]"}`}>
-                                                                <span className={`inline-flex h-5 w-5 rounded-full bg-white shadow items-center justify-center transition-transform ${maintenanceMode ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}>
-                                                                    <X className="w-3 h-3 text-[#dc2626]" />
-                                                                </span>
-                                                            </button>
-                                                            <div className="flex flex-col gap-0.5 min-w-0">
-                                                                <span className="font-bold text-[#2F3E4D] text-base">Maintenance</span>
-                                                                <span className="text-sm text-[#6A7B8F]">Requires confirmation</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            {canAccessControlPanel && (
-                                                <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6">
-                                                    <h3 className="text-lg font-bold text-[#2F3E4D] mb-4">Control Panel</h3>
-                                                    <div className="flex flex-col gap-3">
-                                                        {controlActions.map((action) => (
-                                                            <div key={action.id} className="flex items-center gap-4 p-3 rounded-xl bg-[#F2F2F2] border border-gray-400 shadow-sm">
-                                                                <button type="button" className={`shrink-0 w-24 py-2.5 rounded-lg text-white font-bold transition-all duration-200 cursor-pointer hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${action.lightCls}`}>
-                                                                    <action.Icon className="w-4 h-4" /> {action.label}
-                                                                </button>
-                                                                <p className="text-sm text-[#2F3E4D]">{action.description}</p>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
+                                        <EnergyFlowPanel
+                                            pvPower={pvPower}
+                                            gridPower={gridPower}
+                                            gridImport={gridImport}
+                                            loadPower={loadPower}
+                                            battSoc={battSoc}
+                                            hasBattery={hasBattery}
+                                            battChargePower={battChargePower}
+                                            todaysProduction={todaysProduction}
+                                            maxHourlyPower={maxHourlyPower}
+                                            towerCount={towerCount}
+                                            selectedTowerIndex={selectedTowerIndex}
+                                            onTowerSelect={setSelectedTowerIndex}
+                                            towerRotationDeg={towerRotationDeg}
+                                            orientationAngleNum={orientationAngleNum}
+                                            canAccessControlPanel={false}
+                                            autonomousMode={autonomousMode}
+                                            setAutonomousMode={setAutonomousMode}
+                                            maintenanceMode={maintenanceMode}
+                                            setMaintenanceMode={setMaintenanceMode}
+                                            controlActions={controlActions}
+                                            isDark={false}
+                                            systemTimezone={system_tz}
+                                            isCommercial={true}
+                                        />
                                     </>
                                 )}
                             </div>

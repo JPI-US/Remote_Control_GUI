@@ -125,14 +125,32 @@ const DK = {
     teal:     "#2dd4bf",
 };
 
+const LT = {
+    bg:       "#F2F2F2",
+    surface:  "#FFFFFF",
+    surface2: "#F8F8F8",
+    border:   "rgba(0,0,0,0.08)",
+    border2:  "rgba(0,0,0,0.14)",
+    text1:    "#2F3E4D",
+    text2:    "#6A7B8F",
+    text3:    "#9AABB8",
+    amber:    "#D97706",
+    amberDim: "rgba(217,119,6,0.08)",
+    green:    "#2A9D8F",
+    red:      "#dc2626",
+    orange:   "#ea580c",
+    purple:   "#7c3aed",
+    teal:     "#0d9488",
+};
+
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const degToRad = (d) => (d * Math.PI) / 180;
 const DIAGRAM_ASPECT_W = 520;
 const DIAGRAM_ASPECT_H = 300;
 const CENTER_BIAS_Y_FRAC = -0.04; // shift center slightly upward to reduce bottom dead space
 
-function SunIcon({ active, size = 56 }) {
-    const c = active ? DK.amber : "rgba(255,255,255,0.18)";
+function SunIcon({ active, size = 56, theme = DK, isDark = true }) {
+    const c = active ? theme.amber : (isDark ? "rgba(255,255,255,0.18)" : theme.text3);
     const cx = size/2, cy = size/2, rc = size*0.21, r1 = size*0.33, r2 = size*0.45;
     return (
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
@@ -149,8 +167,8 @@ function SunIcon({ active, size = 56 }) {
     );
 }
 
-function GridIcon({ active, importing, size = 52 }) {
-    const c = active ? (importing ? DK.orange : DK.teal) : "rgba(255,255,255,0.18)";
+function GridIcon({ active, importing, size = 52, theme = DK, isDark = true }) {
+    const c = active ? (importing ? theme.orange : theme.teal) : (isDark ? "rgba(255,255,255,0.18)" : theme.text3);
     return (
         <svg width={size} height={size * 1.15} viewBox="0 0 52 60">
             <line x1="26" y1="2"  x2="26" y2="50" stroke={c} strokeWidth="2.2" strokeLinecap="round" />
@@ -165,34 +183,34 @@ function GridIcon({ active, importing, size = 52 }) {
     );
 }
 
-function HouseIcon({ active, size = 58 }) {
-    const c = active ? DK.purple : "rgba(255,255,255,0.18)";
+function HouseIcon({ active, size = 58, theme = DK, isDark = true }) {
+    const c = active ? theme.purple : (isDark ? "rgba(255,255,255,0.18)" : theme.text3);
     return (
         <svg width={size} height={size} viewBox="0 0 58 58">
             <polygon points="29,2 56,23 49,23 49,54 9,54 9,23 2,23"
-                fill={active ? "rgba(167,139,250,0.07)" : "rgba(255,255,255,0.03)"}
+                fill={active ? "rgba(167,139,250,0.07)" : "transparent"}
                 stroke={c} strokeWidth="1.8" strokeLinejoin="round" />
             <rect x="23" y="38" width="12" height="16" rx="2"
-                fill={active ? "rgba(167,139,250,0.14)" : "rgba(255,255,255,0.04)"} />
+                fill={active ? "rgba(167,139,250,0.14)" : "transparent"} />
             <rect x="12" y="29" width="11" height="9" rx="2"
-                fill={active ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0.05)"} />
+                fill={active ? "rgba(167,139,250,0.18)" : "transparent"} />
             <rect x="35" y="29" width="11" height="9" rx="2"
-                fill={active ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0.05)"} />
+                fill={active ? "rgba(167,139,250,0.18)" : "transparent"} />
             <polygon points="34,20 27,32 31,32 24,44 33,29 28,29"
                 fill={c} opacity={active ? 0.88 : 0.38} />
         </svg>
     );
 }
 
-function BatteryIcon({ soc, active, size = 52 }) {
-    const c = active ? DK.green : "rgba(255,255,255,0.18)";
+function BatteryIcon({ soc, active, size = 52, theme = DK, isDark = true }) {
+    const c = active ? theme.green : (isDark ? "rgba(255,255,255,0.18)" : theme.text3);
     const pct = Math.max(0, Math.min(100, soc ?? 0));
     const maxH = 34, fillH = Math.max(3, (pct / 100) * maxH);
     return (
         <svg width={size * 0.62} height={size} viewBox="0 0 36 60">
             <rect x="11" y="0" width="14" height="6" rx="3" fill={c} opacity="0.5" />
             <rect x="1" y="6" width="34" height="50" rx="6"
-                fill={active ? "rgba(74,222,128,0.06)" : "rgba(255,255,255,0.03)"}
+                fill={active ? "rgba(74,222,128,0.06)" : "transparent"}
                 stroke={c} strokeWidth="1.4" />
             <rect x="5" y={6+5+(maxH-fillH)} width="26" height={fillH} rx="3" fill={c} opacity="0.5" />
             <text x="18" y="46" textAnchor="middle" fontSize="9.5"
@@ -201,17 +219,17 @@ function BatteryIcon({ soc, active, size = 52 }) {
     );
 }
 
-function TowerSVGFallback() {
+function TowerSVGFallback({ theme = DK }) {
     return (
         <svg width="96" height="96" viewBox="0 0 96 96">
             <rect x="13" y="12" width="70" height="44" rx="6"
-                fill="#1e3a5f" stroke={DK.amber} strokeWidth="1.4" opacity="0.85" />
-            <line x1="13" y1="26" x2="83" y2="26" stroke={DK.amber} strokeWidth="0.7" opacity="0.4" />
-            <line x1="13" y1="40" x2="83" y2="40" stroke={DK.amber} strokeWidth="0.7" opacity="0.4" />
-            <line x1="36" y1="12" x2="36" y2="56" stroke={DK.amber} strokeWidth="0.7" opacity="0.4" />
-            <line x1="60" y1="12" x2="60" y2="56" stroke={DK.amber} strokeWidth="0.7" opacity="0.4" />
-            <rect x="44" y="56" width="8" height="26" rx="2" fill={DK.text3} />
-            <rect x="32" y="80" width="32" height="6" rx="3" fill={DK.text3} opacity="0.6" />
+                fill="#1e3a5f" stroke={theme.amber} strokeWidth="1.4" opacity="0.85" />
+            <line x1="13" y1="26" x2="83" y2="26" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
+            <line x1="13" y1="40" x2="83" y2="40" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
+            <line x1="36" y1="12" x2="36" y2="56" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
+            <line x1="60" y1="12" x2="60" y2="56" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
+            <rect x="44" y="56" width="8" height="26" rx="2" fill={theme.text3} />
+            <rect x="32" y="80" width="32" height="6" rx="3" fill={theme.text3} opacity="0.6" />
         </svg>
     );
 }
@@ -229,15 +247,15 @@ function Node({ left, top, children }) {
     );
 }
 
-function NodeLabel({ value, unit, label, sub, color }) {
+function NodeLabel({ value, unit, label, sub, color, theme = DK }) {
     return (
         <div style={{ textAlign: "center", lineHeight: 1 }}>
             <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 3 }}>
                 <span style={{ fontSize: 22, fontWeight: 200, color, letterSpacing: "-0.02em" }}>{value}</span>
-                <span style={{ fontSize: 11, color: DK.text2 }}>{unit}</span>
+                <span style={{ fontSize: 11, color: theme.text2 }}>{unit}</span>
             </div>
-            {sub && <p style={{ fontSize: 10, color: DK.text3, marginTop: 3, letterSpacing: "0.05em" }}>{sub}</p>}
-            {label && <p style={{ fontSize: 10, color: DK.text3, marginTop: 2, letterSpacing: "0.08em", textTransform: "uppercase" }}>{label}</p>}
+            {sub && <p style={{ fontSize: 10, color: theme.text3, marginTop: 3, letterSpacing: "0.05em" }}>{sub}</p>}
+            {label && <p style={{ fontSize: 10, color: theme.text3, marginTop: 2, letterSpacing: "0.08em", textTransform: "uppercase" }}>{label}</p>}
         </div>
     );
 }
@@ -255,6 +273,7 @@ export default function EnergyFlowPanel({
     systemTimezone = "America/Chicago",
     isCommercial = false,
 }) {
+    const T = isDark ? DK : LT;
     const [towerError, setTowerError] = useState(false);
     const [fireflyCount, setFireflyCount] = useState(() => getFireflyCount(systemTimezone));
     const diagramRef = useRef(null);
@@ -278,7 +297,7 @@ export default function EnergyFlowPanel({
     const loadActive   = loadPower > 50;
     const battActive   = hasBattery && battChargePower !== null && Math.abs(battChargePower) > 50;
     const battCharging = (battChargePower ?? 0) > 0;
-    const gridColor    = gridImport ? DK.orange : DK.teal;
+    const gridColor    = gridImport ? T.orange : T.teal;
     const TOWER_HALF   = 100;
 
     useEffect(() => {
@@ -337,30 +356,30 @@ export default function EnergyFlowPanel({
     const statsRows = [
         { label: "Solar",  value: pvKw,  unit: "kW",
           sub: `${(todaysProduction ?? 0).toFixed(1)} kWh today`,
-          color: solarActive ? DK.amber : DK.text3 },
+          color: solarActive ? T.amber : T.text3 },
         { label: gridImport ? "Importing" : "Exporting",
           value: gridKw, unit: "kW", sub: "Grid",
-          color: gridActive ? gridColor : DK.text3 },
+          color: gridActive ? gridColor : T.text3 },
         { label: "Load",  value: loadKw, unit: "kW", sub: "Consumption",
-          color: loadActive ? DK.purple : DK.text3 },
+          color: loadActive ? T.purple : T.text3 },
         { label: "Peak",  value: `${maxHourlyPower}`, unit: "kW",
-          sub: "Today's max", color: DK.text2 },
+          sub: "Today's max", color: T.text2 },
         ...(hasBattery ? [{
             label: "Battery", value: `${battSoc ?? 0}`, unit: "%",
             sub: battActive ? (battCharging ? "Charging" : "Discharging") : "Standby",
-            color: DK.green,
+            color: T.green,
         }] : []),
     ];
 
     return (
         <div className="rounded-xl overflow-hidden mb-6"
-            style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}>
+            style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
 
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3"
-                style={{ borderBottom: `0.5px solid ${DK.border}` }}>
+                style={{ borderBottom: `0.5px solid ${T.border}` }}>
                 <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.15em",
-                    textTransform: "uppercase", color: DK.text3 }}>Energy Flow</span>
+                    textTransform: "uppercase", color: T.text3 }}>Energy Flow</span>
                 <div className="flex items-center gap-4">
                     {towerCount > 1 && (
                         <div className="flex items-center gap-1">
@@ -369,19 +388,19 @@ export default function EnergyFlowPanel({
                                     style={{
                                         fontSize: 11, fontWeight: 500, padding: "3px 10px",
                                         borderRadius: 4, cursor: "pointer", transition: "all 0.15s",
-                                        background: selectedTowerIndex === i ? DK.amber : "transparent",
-                                        color: selectedTowerIndex === i ? "#000" : DK.text2,
-                                        borderTop: `0.5px solid ${selectedTowerIndex === i ? DK.amber : DK.border}`,
-                                        borderRight: `0.5px solid ${selectedTowerIndex === i ? DK.amber : DK.border}`,
-                                        borderBottom: `0.5px solid ${selectedTowerIndex === i ? DK.amber : DK.border}`,
-                                        borderLeft: `0.5px solid ${selectedTowerIndex === i ? DK.amber : DK.border}`,
+                                        background: selectedTowerIndex === i ? T.amber : "transparent",
+                                        color: selectedTowerIndex === i ? "#000" : T.text2,
+                                        borderTop: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
+                                        borderRight: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
+                                        borderBottom: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
+                                        borderLeft: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
                                     }}>Tower {i + 1}</button>
                             ))}
                         </div>
                     )}
-                    <span style={{ fontSize: 22, fontWeight: 200, color: DK.text1, letterSpacing: "-0.02em" }}>
+                    <span style={{ fontSize: 22, fontWeight: 200, color: T.text1, letterSpacing: "-0.02em" }}>
                         {orientationAngleNum}
-                        <span style={{ fontSize: 13, fontWeight: 300, color: DK.text2 }}>°</span>
+                        <span style={{ fontSize: 13, fontWeight: 300, color: T.text2 }}>°</span>
                     </span>
                 </div>
             </div>
@@ -394,7 +413,9 @@ export default function EnergyFlowPanel({
                     flex: isCommercial ? "1" : "0 0 65%",
                     position: "relative",
                     aspectRatio: `${DIAGRAM_ASPECT_W} / ${DIAGRAM_ASPECT_H}`,
-                    background: DK.bg,
+                    background: isDark ? T.bg : T.bg,
+                    backgroundImage: isDark ? "none" : "linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)",
+                    backgroundSize: isDark ? "auto" : "32px 32px",
                     overflow: "hidden",
                 }} ref={diagramRef}>
                     {isDark && <FireflyCanvas count={fireflyCount} />}
@@ -403,7 +424,7 @@ export default function EnergyFlowPanel({
                         style={{ position: "absolute", inset: 0, width: "100%", height: "100%",
                             pointerEvents: "none", zIndex: 2 }}>
                         <defs>
-                            {[["amb",DK.amber],["org",DK.orange],["tel",DK.teal],["pur",DK.purple],["grn",DK.green]].map(([id,color]) => (
+                            {[["amb",T.amber],["org",T.orange],["tel",T.teal],["pur",T.purple],["grn",T.green]].map(([id,color]) => (
                                 <marker key={id} id={`ef-${id}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
                                     <path d="M2 1L8 5L2 9" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" />
                                 </marker>
@@ -411,34 +432,34 @@ export default function EnergyFlowPanel({
                         </defs>
                         {/* Ghost traces */}
                         <line x1={P.sun.x} y1={P.sun.y+28} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
-                            stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />
+                            stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
                         <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-14} x2={P.grid.x-28} y2={P.grid.y+10}
-                            stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />
+                            stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
                         <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+20} x2={P.house.x-30} y2={P.house.y-22}
-                            stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />
+                            stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
                         {hasBattery && <line x1={P.battery.x+22} y1={P.battery.y-14} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+22}
-                            stroke="rgba(255,255,255,0.05)" strokeWidth="1.2" strokeDasharray="5 5" />}
+                            stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />}
                         {/* Active lines */}
                         {solarActive && <line x1={P.sun.x} y1={P.sun.y+26} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
-                            stroke={DK.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)" />}
+                            stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)" />}
                         {gridActive && gridImport && <line x1={P.grid.x-26} y1={P.grid.y+8} x2={P.tower.x+TOWER_HALF} y2={P.tower.y-12}
-                            stroke={DK.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)" />}
+                            stroke={T.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)" />}
                         {gridActive && !gridImport && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-12} x2={P.grid.x-26} y2={P.grid.y+8}
-                            stroke={DK.teal} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-tel)" />}
+                            stroke={T.teal} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-tel)" />}
                         {loadActive && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+18} x2={P.house.x-28} y2={P.house.y-20}
-                            stroke={DK.purple} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-pur)" />}
+                            stroke={T.purple} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-pur)" />}
                         {battActive && battCharging && <line x1={P.battery.x+20} y1={P.battery.y-12} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+20}
-                            stroke={DK.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
+                            stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
                         {battActive && !battCharging && <line x1={P.tower.x-TOWER_HALF} y1={P.tower.y+20} x2={P.battery.x+20} y2={P.battery.y-12}
-                            stroke={DK.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
+                            stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
                     </svg>
 
                     {/* Sun */}
                     <Node left={`${P.sun.x}px`} top={`${P.sun.y}px`}>
-                        <SunIcon active={solarActive} size={72} />
+                        <SunIcon active={solarActive} size={72} theme={T} isDark={isDark} />
                         <NodeLabel value={pvKw} unit="kW" label="Solar"
                             sub={`Today ${(todaysProduction ?? 0).toFixed(1)} kWh`}
-                            color={solarActive ? DK.amber : DK.text3} />
+                            color={solarActive ? T.amber : T.text3} theme={T} />
                     </Node>
 
                     {/* Tower halo */}
@@ -446,46 +467,46 @@ export default function EnergyFlowPanel({
                         position: "absolute", left: `${P.tower.x}px`, top: `${P.tower.y}px`,
                         transform: "translate(-50%, -50%)", width: haloSize, height: haloSize,
                         borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(212,168,83,0.12) 0%, rgba(212,168,83,0.05) 40%, transparent 70%)",
+                        background: isDark ? "radial-gradient(circle, rgba(212,168,83,0.12) 0%, rgba(212,168,83,0.05) 40%, transparent 70%)" : "radial-gradient(circle, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.02) 40%, transparent 70%)",
                         pointerEvents: "none", zIndex: 2,
                     }} />
 
                     {/* Tower */}
                     <Node left={`${P.tower.x}px`} top={`${P.tower.y}px`}>
                         {!towerError ? (
-                            <TowerModelViewer angleDeg={towerRotationDeg} bgColor={DK.bg}
-                                width={towerSize} height={towerSize} onError={() => setTowerError(true)} />
+                            <TowerModelViewer angleDeg={towerRotationDeg} bgColor={T.bg}
+                                width={towerSize} height={towerSize} isDark={isDark} onError={() => setTowerError(true)} />
                         ) : (
                             <div style={{ width: towerSize, height: towerSize, display: "flex",
                                 alignItems: "center", justifyContent: "center",
-                                background: DK.bg, borderRadius: 8 }}>
-                                <TowerSVGFallback />
+                                background: T.bg, borderRadius: 8 }}>
+                                <TowerSVGFallback theme={T} />
                             </div>
                         )}
                     </Node>
 
                     {/* Grid */}
                     <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
-                        <GridIcon active={gridActive} importing={gridImport} size={66} />
+                        <GridIcon active={gridActive} importing={gridImport} size={66} theme={T} isDark={isDark} />
                         <NodeLabel value={gridKw} unit="kW"
                             label={gridImport ? "Importing" : "Exporting"}
-                            color={gridActive ? gridColor : DK.text3} />
+                            color={gridActive ? gridColor : T.text3} theme={T} />
                     </Node>
 
                     {/* House */}
                     <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
-                        <HouseIcon active={loadActive} size={72} />
+                        <HouseIcon active={loadActive} size={72} theme={T} isDark={isDark} />
                         <NodeLabel value={loadKw} unit="kW" label="Consumption"
-                            color={loadActive ? DK.purple : DK.text3} />
+                            color={loadActive ? T.purple : T.text3} theme={T} />
                     </Node>
 
                     {/* Battery */}
                     {hasBattery && (
                         <Node left={`${P.battery.x}px`} top={`${P.battery.y}px`}>
-                            <BatteryIcon soc={battSoc} active={battActive} size={64} />
+                            <BatteryIcon soc={battSoc} active={battActive} size={64} theme={T} isDark={isDark} />
                             <NodeLabel value={`${battSoc ?? 0}`} unit="%"
                                 label={battActive ? (battCharging ? "Charging" : "Discharging") : "Standby"}
-                                color={DK.green} />
+                                color={T.green} theme={T} />
                         </Node>
                     )}
                 </div>
@@ -493,51 +514,51 @@ export default function EnergyFlowPanel({
                 {/* RIGHT: Admin/Non-commercial only */}
                 {!isCommercial && (
                     <div style={{
-                        flex: "0 0 35%", borderLeft: `0.5px solid ${DK.border}`,
-                        display: "flex", flexDirection: "column", background: DK.surface,
+                        flex: "0 0 35%", borderLeft: `0.5px solid ${T.border}`,
+                        display: "flex", flexDirection: "column", background: T.surface,
                     }}>
                         {canAccessControlPanel ? (
                             <>
-                                <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${DK.border}` }}>
-                                    <p style={{ fontSize: 11, fontWeight: 500, color: DK.text1 }}>Control Panel</p>
+                                <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${T.border}` }}>
+                                    <p style={{ fontSize: 11, fontWeight: 500, color: T.text1 }}>Control Panel</p>
                                 </div>
                                 {controlActions.map((action, i) => (
                                     <button key={action.id} type="button"
                                         className="w-full text-left flex items-center cursor-pointer"
                                         style={{
                                             padding: "15px 20px", background: "transparent",
-                                            borderTop: i > 0 ? `0.5px solid ${DK.border}` : "none",
+                                            borderTop: i > 0 ? `0.5px solid ${T.border}` : "none",
                                             borderRight: "none", borderBottom: "none", borderLeft: "none",
                                         }}
                                         onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.025)"; }}
                                         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
                                         <action.Icon style={{ width: 15, height: 15, marginRight: 14, flexShrink: 0,
-                                            color: action.id === "stop" ? DK.red : DK.text3 }} />
+                                            color: action.id === "stop" ? T.red : T.text3 }} />
                                         <div>
-                                            <p style={{ fontSize: 13, color: DK.text1, lineHeight: 1.3 }}>{action.label}</p>
-                                            <p style={{ fontSize: 10, color: DK.text3, marginTop: 2 }}>{action.description}</p>
+                                            <p style={{ fontSize: 13, color: T.text1, lineHeight: 1.3 }}>{action.label}</p>
+                                            <p style={{ fontSize: 10, color: T.text3, marginTop: 2 }}>{action.description}</p>
                                         </div>
                                     </button>
                                 ))}
                             </>
                         ) : (
                             <>
-                                <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${DK.border}` }}>
-                                    <p style={{ fontSize: 11, fontWeight: 500, color: DK.text1 }}>System Status</p>
+                                <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${T.border}` }}>
+                                    <p style={{ fontSize: 11, fontWeight: 500, color: T.text1 }}>System Status</p>
                                 </div>
                                 {statsRows.map((row, i) => (
                                     <div key={row.label} style={{
                                         padding: "14px 20px",
-                                        borderBottom: i < statsRows.length - 1 ? `0.5px solid ${DK.border}` : "none",
+                                        borderBottom: i < statsRows.length - 1 ? `0.5px solid ${T.border}` : "none",
                                     }}>
-                                        <p style={{ fontSize: 10, color: DK.text3, textTransform: "uppercase",
+                                        <p style={{ fontSize: 10, color: T.text3, textTransform: "uppercase",
                                             letterSpacing: "0.10em", marginBottom: 5 }}>{row.label}</p>
                                         <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
                                             <span style={{ fontSize: 20, fontWeight: 200, color: row.color,
                                                 lineHeight: 1, letterSpacing: "-0.01em" }}>{row.value}</span>
-                                            <span style={{ fontSize: 10, color: DK.text2 }}>{row.unit}</span>
+                                            <span style={{ fontSize: 10, color: T.text2 }}>{row.unit}</span>
                                         </div>
-                                        <p style={{ fontSize: 10, color: DK.text3, marginTop: 3 }}>{row.sub}</p>
+                                        <p style={{ fontSize: 10, color: T.text3, marginTop: 3 }}>{row.sub}</p>
                                     </div>
                                 ))}
                             </>
@@ -590,7 +611,7 @@ export default function EnergyFlowPanel({
                 return (
                     <div style={{
                         margin: "0 24px 20px", borderRadius: 18,
-                        background: DK.surface, overflow: "hidden", position: "relative",
+                        background: T.surface, overflow: "hidden", position: "relative",
                         boxShadow: "0 8px 40px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04)",
                     }}>
                         {/* Amber glow */}
@@ -609,9 +630,9 @@ export default function EnergyFlowPanel({
                             <p style={{
                                 fontFamily: "'Caveat', cursive",
                                 fontSize: 24, fontWeight: 500,
-                                color: DK.amber, lineHeight: 1.2, marginBottom: 2,
+                                color: T.amber, lineHeight: 1.2, marginBottom: 2,
                             }}>{activeState.msg}</p>
-                            <p style={{ fontSize: 11, color: DK.text2, lineHeight: 1.5 }}>{activeState.desc}</p>
+                            <p style={{ fontSize: 11, color: T.text2, lineHeight: 1.5 }}>{activeState.desc}</p>
                             <div style={{
                                 display: "inline-flex", alignItems: "center", gap: 5,
                                 padding: "4px 10px", borderRadius: 99, marginTop: 4,
@@ -619,8 +640,8 @@ export default function EnergyFlowPanel({
                                 border: "0.5px solid rgba(230,184,92,0.2)",
                             }}>
                                 <span style={{ width: 5, height: 5, borderRadius: "50%",
-                                    background: DK.amber, boxShadow: `0 0 5px ${DK.amber}` }} />
-                                <span style={{ fontSize: 10, color: DK.amber, letterSpacing: "0.06em" }}>
+                                    background: T.amber, boxShadow: `0 0 5px ${T.amber}` }} />
+                                <span style={{ fontSize: 10, color: T.amber, letterSpacing: "0.06em" }}>
                                     {activeState.since}
                                 </span>
                             </div>
@@ -632,8 +653,8 @@ export default function EnergyFlowPanel({
                             {states.map((s, i) => (
                                 <span key={i} style={{
                                     width: s.active ? 16 : 5, height: 5, borderRadius: 99,
-                                    background: s.active ? DK.amber : "rgba(255,255,255,0.15)",
-                                    boxShadow: s.active ? `0 0 6px ${DK.amber}` : "none",
+                                    background: s.active ? T.amber : "rgba(255,255,255,0.15)",
+                                    boxShadow: s.active ? `0 0 6px ${T.amber}` : "none",
                                     transition: "all 0.4s ease",
                                 }} />
                             ))}
@@ -644,14 +665,14 @@ export default function EnergyFlowPanel({
 
             {/* Bottom bar */}
             <div className="flex items-center gap-8 flex-wrap"
-                style={{ padding: "12px 20px", borderTop: `0.5px solid ${DK.border}`, background: DK.surface }}>
+                style={{ padding: "12px 20px", borderTop: `0.5px solid ${T.border}`, background: T.surface }}>
                 {[
                     { label: "Autonomous", sub: "Default", active: autonomousMode,
                       onClick: () => { setAutonomousMode(true); setMaintenanceMode(false); },
-                      activeColor: DK.green },
+                      activeColor: T.green },
                     { label: "Maintenance", sub: "Requires confirmation", active: maintenanceMode,
                       onClick: () => setMaintenanceMode(prev => !prev),
-                      activeColor: DK.red },
+                      activeColor: T.red },
                 ].map(({ label, sub, active, onClick, activeColor }) => (
                     <div key={label} className="flex items-center gap-3">
                         <button type="button" onClick={onClick} style={{
@@ -666,8 +687,8 @@ export default function EnergyFlowPanel({
                             }} />
                         </button>
                         <div>
-                            <p style={{ fontSize: 12, fontWeight: 500, color: DK.text1 }}>{label}</p>
-                            <p style={{ fontSize: 10, color: DK.text3 }}>{sub}</p>
+                            <p style={{ fontSize: 12, fontWeight: 500, color: T.text1 }}>{label}</p>
+                            <p style={{ fontSize: 10, color: T.text3 }}>{sub}</p>
                         </div>
                     </div>
                 ))}
