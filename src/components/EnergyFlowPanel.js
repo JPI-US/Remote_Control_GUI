@@ -12,21 +12,18 @@ function getFireflyCount(timezone) {
     const h = now.hour;
     const m = now.minute;
     const totalMinutes = h * 60 + m;
-
     const SUNSET = 19 * 60 + 30; // 19:30
 
-    // Post-midnight (0:00 – ~1:30 AM) — decrease from 52 by 4 every 30 min
+    // Post-midnight (0:00–~1:30 AM) — decrease from 52 by 4 every 30 min
     if (h < 12) {
-        const minutesPastMidnight = totalMinutes; // 0–719
-        const decreaseIntervals = Math.floor(minutesPastMidnight / 30);
-        const val = 52 - decreaseIntervals * 4;
-        return Math.max(0, val);
+        const decreaseIntervals = Math.floor(totalMinutes / 30);
+        return Math.max(0, 52 - decreaseIntervals * 4);
     }
 
     // Daytime before sunset — no fireflies
     if (totalMinutes < SUNSET) return 0;
 
-    // Sunset → midnight — ramp up from 25 to 52
+    // Sunset → midnight — ramp up 25→52
     const minutesSinceSunset = totalMinutes - SUNSET;
     const intervals = Math.floor(minutesSinceSunset / 30);
     return Math.min(52, 25 + intervals * 3);
@@ -335,6 +332,7 @@ export default function EnergyFlowPanel({
     controlActions = [],
     isDark = true,
     systemTimezone = "America/Chicago",
+    isCommercial = false,
 }) {
     const [towerError, setTowerError] = useState(false);
 
@@ -347,6 +345,28 @@ export default function EnergyFlowPanel({
         const id = setInterval(tick, 60_000); // recheck every minute
         return () => clearInterval(id);
     }, [isDark, systemTimezone]);
+
+    // ── Tower personality message (commercial users only) ─────────────────────
+    const towerMessage = (() => {
+        if (!isCommercial) return null;
+        const angle    = parseFloat(orientationAngleNum);
+        const atHome   = !isNaN(angle) && Math.abs(angle - 90) < 3;
+        const h        = new Date().getHours();
+        const isNight  = h >= 20 || h < 6;
+        const isMorning = h >= 6 && h < 9;
+        const isPeak   = h >= 10 && h < 15;
+
+        if (maintenanceMode)              return "Taking a little break 🔧";
+        if (atHome && isNight)            return "Sleeping soundly... enjoy the fireflies ✨";
+        if (atHome && !isNight)           return "Resting at home position 🏠";
+        if (isMorning && pvPower > 50)    return "Good morning! Time to work 🌅";
+        if (isPeak && pvPower > 500)      return "Working hard today! ⚡";
+        if (pvPower > 50 && pvPower <= 500) return "Chasing every ray I can ☁️";
+        if (pvPower > 0)                  return "Chasing the sun ☀️";
+        if (isNight && !atHome)           return "Almost home... 🌙";
+        if (!isNight && pvPower === 0)    return "Waiting for the sun to come out 🌤️";
+        return "Here and ready ✨";
+    })();
 
     const pvKw   = (pvPower   / 1000).toFixed(2);
     const gridKw = (gridPower / 1000).toFixed(2);
@@ -573,6 +593,25 @@ export default function EnergyFlowPanel({
                                 <TowerSVGFallback />
                             </div>
                         )}
+                        {/* Tower personality whisper — commercial only */}
+                        {towerMessage && (
+                            <p style={{
+                                fontFamily: "'Caveat', cursive",
+                                fontSize: 15,
+                                fontStyle: "italic",
+                                fontWeight: 400,
+                                color: DK.text1,
+                                opacity: 0.62,
+                                letterSpacing: "0.01em",
+                                textAlign: "center",
+                                marginTop: 6,
+                                pointerEvents: "none",
+                                whiteSpace: "nowrap",
+                                textShadow: "0 1px 8px rgba(0,0,0,0.4)",
+                            }}>
+                                {towerMessage}
+                            </p>
+                        )}
                     </Node>
 
                     {/* Grid */}
@@ -611,7 +650,66 @@ export default function EnergyFlowPanel({
                     display: "flex", flexDirection: "column",
                     background: DK.surface,
                 }}>
-                    {canAccessControlPanel ? (
+                    {isCommercial ? (
+                        /* Commercial: status timeline with active state highlighted */
+                        <>
+                            <div style={{ padding: "14px 20px",
+                                borderBottom: `0.5px solid ${DK.border}` }}>
+                                <p style={{ fontSize: 11, fontWeight: 500,
+                                    color: DK.text1 }}>Tower Status</p>
+                            </div>
+                            <div style={{ padding: "8px 0", overflowY: "auto" }}>
+                                {[
+                                    { msg: "Sleeping soundly... enjoy the fireflies ✨",
+                                      active: (() => { const h = new Date().getHours(); const a = parseFloat(orientationAngleNum); return (h >= 20 || h < 6) && !isNaN(a) && Math.abs(a - 90) < 3; })() },
+                                    { msg: "Almost home... 🌙",
+                                      active: (() => { const h = new Date().getHours(); const a = parseFloat(orientationAngleNum); return (h >= 20 || h < 6) && !isNaN(a) && Math.abs(a - 90) >= 3; })() },
+                                    { msg: "Waiting for the sun to come out 🌤️",
+                                      active: (() => { const h = new Date().getHours(); return h >= 6 && h < 10 && pvPower <= 50; })() },
+                                    { msg: "Good morning! Time to work 🌅",
+                                      active: (() => { const h = new Date().getHours(); return h >= 6 && h < 9 && pvPower > 50; })() },
+                                    { msg: "Chasing the sun ☀️",
+                                      active: pvPower > 50 && pvPower <= 500 && (() => { const h = new Date().getHours(); return h >= 9 && h < 10; })() },
+                                    { msg: "Working hard today! ⚡",
+                                      active: (() => { const h = new Date().getHours(); return h >= 10 && h < 15 && pvPower > 500; })() },
+                                    { msg: "Chasing every ray I can ☁️",
+                                      active: pvPower > 50 && pvPower <= 500 && (() => { const h = new Date().getHours(); return h >= 10 && h < 15; })() },
+                                    { msg: "Resting at home position 🏠",
+                                      active: (() => { const h = new Date().getHours(); const a = parseFloat(orientationAngleNum); return h >= 6 && h < 20 && !isNaN(a) && Math.abs(a - 90) < 3 && pvPower <= 50; })() },
+                                    { msg: "Taking a little break 🔧",
+                                      active: !!maintenanceMode },
+                                ].map(({ msg, active }, i) => (
+                                    <div key={i} style={{
+                                        padding: "11px 20px",
+                                        borderBottom: `0.5px solid ${DK.border}`,
+                                        display: "flex", alignItems: "center", gap: 10,
+                                        background: active ? DK.amberDim : "transparent",
+                                        transition: "background 0.3s",
+                                    }}>
+                                        {/* Active indicator */}
+                                        <span style={{
+                                            width: 5, height: 5,
+                                            borderRadius: "50%", flexShrink: 0,
+                                            background: active ? DK.amber : "transparent",
+                                            boxShadow: active ? `0 0 6px ${DK.amber}` : "none",
+                                            border: active ? "none" : `1px solid ${DK.border2}`,
+                                            transition: "all 0.3s",
+                                        }} />
+                                        <p style={{
+                                            fontFamily: "'Caveat', cursive",
+                                            fontSize: 15,
+                                            fontStyle: "italic",
+                                            color: active ? DK.amber : DK.text3,
+                                            fontWeight: active ? 500 : 400,
+                                            transition: "color 0.3s",
+                                            lineHeight: 1.3,
+                                        }}>{msg}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : canAccessControlPanel ? (
+                        /* Admin: control panel buttons */
                         <>
                             <div style={{ padding: "14px 20px",
                                 borderBottom: `0.5px solid ${DK.border}` }}>
@@ -653,6 +751,7 @@ export default function EnergyFlowPanel({
                             ))}
                         </>
                     ) : (
+                        /* Neither commercial nor admin: system status stats */
                         <>
                             <div style={{ padding: "14px 20px",
                                 borderBottom: `0.5px solid ${DK.border}` }}>

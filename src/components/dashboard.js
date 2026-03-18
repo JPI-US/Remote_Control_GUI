@@ -37,8 +37,8 @@ const TEXT_MUTED = "#6A7B8F";
 // Dark mode palette — Rivian-inspired
 const DK = {
     bg:       "#14110f",
-    surface:  "#1c1814",
-    surface2: "#221e19",
+    surface:  "rgba(28,24,20,0.85)",
+    surface2: "rgba(34,30,25,0.9)",
     border:   "rgba(255,245,235,0.07)",
     border2:  "rgba(255,245,235,0.12)",
     text1:    "#f5f0ea",
@@ -467,7 +467,12 @@ export default function Dashboard() {
             <header
                 className="fixed top-0 left-64 right-0 z-40 flex items-center justify-between px-6 py-4"
                 style={isDark
-                    ? { background: DK.bg, borderBottom: `0.5px solid ${DK.border}` }
+                    ? {
+                        background: "rgba(20,17,15,0.75)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
+                        borderBottom: `0.5px solid ${DK.border}`,
+                      }
                     : { background: "#fff", boxShadow: "0 1px 2px rgba(0,0,0,0.06)", borderBottom: "1px solid #d1d5db" }
                 }
             >
@@ -843,25 +848,9 @@ export default function Dashboard() {
                                             <p style={{ fontSize: 12, color: DK.text3, marginTop: 8 }}>Carbon saved since installation</p>
                                         </div>
                                         {/* Equivalencies */}
-                                        <div style={{ display: "flex", gap: 24, marginTop: 20, marginBottom: 16 }}>
-                                            <div>
-                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                    {Math.round(carbonSaved / 21)}
-                                                </p>
-                                                <p style={{ fontSize: 10, color: DK.text3, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.10em" }}>
-                                                    Trees planted
-                                                </p>
-                                            </div>
-                                            <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
-                                            <div>
-                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                    {Math.round(carbonSaved * 4.3).toLocaleString()}
-                                                </p>
-                                                <p style={{ fontSize: 10, color: DK.text3, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.10em" }}>
-                                                    km not driven
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <p style={{ fontSize: 11, color: DK.text2, marginTop: 16, marginBottom: 12 }}>
+                                            ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
+                                        </p>
                                         {/* Progress bar */}
                                         <div>
                                             <div className="flex justify-between mb-2" style={{ fontSize: 10, color: DK.text3 }}>
@@ -1110,6 +1099,8 @@ export default function Dashboard() {
                                             controlActions={controlActions}
                                             isDark={isDark}
                                             systemTimezone={system_tz}
+                                            // isCommercial={session?.planTier === "COMMERCIAL"}
+                                            isCommercial={true}
                                         />
                                     </>
                                 ) : (
