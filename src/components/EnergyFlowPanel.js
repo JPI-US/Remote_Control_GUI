@@ -323,6 +323,9 @@ export default function EnergyFlowPanel({
     const cx = W / 2;
     const cy = H / 2 + H * CENTER_BIAS_Y_FRAC;
 
+    // Below this width: strip to sun + line + tower only (phone / collapsed view)
+    const isCompact = W < 480;
+
     // Scale tower & halo to available space so the ring radius stays meaningful.
     const towerSize = clamp(Math.round(Math.min(W, H) * 0.58), 220, 320);
     const haloSize = clamp(Math.round(towerSize * 1.12), 260, 380);
@@ -452,12 +455,14 @@ export default function EnergyFlowPanel({
                         {/* Ghost traces */}
                         <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
+                        {!isCompact && <>
                         <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-14} x2={P.grid.x-28} y2={P.grid.y+10}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
                         <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+20} x2={P.house.x-30} y2={P.house.y-22}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
                         {hasBattery && <line x1={P.battery.x+22} y1={P.battery.y-14} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+22}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />}
+                        </>}
                         {/* Active lines */}
                         {solarActive && <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
                             stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)"
@@ -500,13 +505,13 @@ export default function EnergyFlowPanel({
                     {(() => {
                         const r = haloSize * 0.48; // compass ring radius
                         const cx2 = P.tower.x;
-                        const cy2 = P.tower.y;
+                        const cy2 = P.tower.y - towerSize * 0.08; // offset up to tower mast midpoint
                         // needle angle: 90°=E(right), 180°=S(down), 270°=W(left)
                         const needleRad = ((towerRotationDeg - 90) * Math.PI) / 180;
                         const needleLen = r * 0.52;
                         const nx = cx2 + Math.cos(needleRad) * needleLen;
                         const ny = cy2 + Math.sin(needleRad) * needleLen;
-                        const labelColor = isDark ? "rgba(245,240,234,0.35)" : "rgba(60,40,20,0.35)";
+                        const labelColor = isDark ? "rgba(245,240,234,0.5)" : "rgba(60,40,20,0.5)";
                         const needleColor = T.amber;
                         const ringColor = isDark ? "rgba(255,245,235,0.08)" : "rgba(0,0,0,0.08)";
                         return (
@@ -520,7 +525,7 @@ export default function EnergyFlowPanel({
                                     const lx = cx2 + Math.cos(rad) * (r + 13);
                                     const ly = cy2 + Math.sin(rad) * (r + 13);
                                     return <text key={label} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
-                                        fontSize="11" fontWeight="600" letterSpacing="0.08em" fill={labelColor}>{label}</text>;
+                                        fontSize="17" fontWeight="700" letterSpacing="0.1em" fill={labelColor}>{label}</text>;
                                 })}
                                 {/* Rotating needle */}
                                 <line x1={cx2} y1={cy2} x2={nx} y2={ny}
@@ -529,7 +534,7 @@ export default function EnergyFlowPanel({
                                 {/* Angle readout below tower */}
                                 <text x={cx2} y={cy2 + towerSize * 0.52}
                                     textAnchor="middle" dominantBaseline="middle"
-                                    fontSize="12" fontWeight="500" fill={isDark ? "rgba(245,240,234,0.55)" : "rgba(60,40,20,0.55)"}>
+                                    fontSize="15" fontWeight="600" fill={isDark ? "rgba(245,240,234,0.65)" : "rgba(60,40,20,0.65)"}>
                                     {orientationAngleNum}°
                                 </text>
                             </svg>
@@ -550,23 +555,23 @@ export default function EnergyFlowPanel({
                         )}
                     </Node>
 
-                    {/* Grid — always show icon, hide numbers when inactive */}
+                    {/* Grid + House — hidden in compact mode */}
+                    {!isCompact && <>
                     <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
                         <GridIcon active={gridActive} importing={gridImport} size={66} theme={T} isDark={isDark} />
                         {gridActive && <NodeLabel value={gridKw} unit="kW"
                             label={gridImport ? "Importing" : "Exporting"}
                             color={gridColor} theme={T} />}
                     </Node>
-
-                    {/* House — always show icon, hide numbers when inactive */}
                     <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
                         <HouseIcon active={loadActive} size={72} theme={T} isDark={isDark} />
                         {loadActive && <NodeLabel value={loadKw} unit="kW" label="Consumption"
                             color={T.purple} theme={T} />}
                     </Node>
+                    </>}
 
-                    {/* Battery */}
-                    {hasBattery && (
+                    {/* Battery — hidden in compact mode */}
+                    {!isCompact && hasBattery && (
                         <Node left={`${P.battery.x}px`} top={`${P.battery.y}px`}>
                             <BatteryIcon soc={battSoc} active={battActive} size={64} theme={T} isDark={isDark} />
                             <NodeLabel value={`${battSoc ?? 0}`} unit="%"

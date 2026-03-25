@@ -162,12 +162,13 @@ export default function TowerModelViewer({
                     }, undefined, (e) => console.warn("Sun load failed:", e));
                 }
 
-                // Render loop — azimuth: 90°=east, 180°=south, 270°=west
+                // Render loop — azimuth: negate angle to match Three.js counter-clockwise convention
+                // ROTATION_OFFSET = 0 (no offset needed — model default forward already aligns)
                 function animate() {
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
                     if (towerModel) {
-                        towerModel.rotation.y = ((angleRef.current - 90) * Math.PI) / 180;
+                        towerModel.rotation.y = (-angleRef.current * Math.PI) / 180;
                     }
                     renderer.render(scene, camera);
                 }

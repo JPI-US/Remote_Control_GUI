@@ -459,8 +459,8 @@ export default function Dashboard() {
                     scrollToSection(refMap[id], `/dashboard${id !== "dashboard" ? "#" + id : ""}`);
                 }} systemName={system?.system_name} />
 
-                <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-64" style={isDark ? { background: DK.bg } : {}}>
-                    <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
+                <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-0 md:ml-64" style={isDark ? { background: DK.bg } : {}}>
+                    <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory pb-0 md:pb-0 [.mobile_&]:pb-16">
         {/* ── Header ── */}
                         <header
                             className="flex items-center justify-between px-6 py-4"

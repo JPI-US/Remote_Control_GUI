@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, BarChart3, Sliders, History } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from '@/context/ThemeContext';
@@ -15,6 +15,15 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
 
   const { isDark } = useTheme();
   const [hoveredId, setHoveredId] = useState(null);
+  const [isSmall, setIsSmall] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsSmall(mq.matches);
+    const handler = (e) => setIsSmall(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const DK = {
     bg:      '#14110f',
@@ -26,6 +35,47 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
     amber:   '#e6b85c',
     amberDim:'rgba(230,184,92,0.12)',
   };
+
+  // Bottom tab bar for small screens
+  if (isSmall) {
+    return (
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-2 py-2"
+        style={{
+          background: isDark ? '#14110f' : 'linear-gradient(to right, #2A1C0E, #1E1408)',
+          borderTop: isDark ? '0.5px solid rgba(255,245,235,0.07)' : '1px solid rgba(255,220,150,0.12)',
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.25)',
+        }}
+      >
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeSection === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => onSectionChange(item.id)}
+              className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all"
+              style={{
+                background: isActive ? 'rgba(230,184,92,0.15)' : 'transparent',
+                border: 'none', cursor: 'pointer', minWidth: 56,
+              }}
+            >
+              <Icon style={{
+                width: 20, height: 20,
+                color: isActive ? '#e6b85c' : 'rgba(245,240,234,0.4)',
+                transition: 'color 0.2s',
+              }} />
+              <span style={{
+                fontSize: 10, fontWeight: isActive ? 600 : 400,
+                color: isActive ? '#e6b85c' : 'rgba(245,240,234,0.4)',
+                transition: 'color 0.2s',
+              }}>{item.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+    );
+  }
 
   return (
     <aside
