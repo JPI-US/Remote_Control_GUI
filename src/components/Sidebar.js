@@ -5,7 +5,7 @@ import { LayoutDashboard, BarChart3, Sliders, History } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from '@/context/ThemeContext';
 
-const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
+const Sidebar = ({ activeSection, onSectionChange, systemName, isNarrow = false }) => {
   const navItems = [
     { id: 'dashboard',   label: 'Dashboard',     icon: LayoutDashboard },
     { id: 'diagnostics', label: 'Diagnostics',    icon: BarChart3 },
@@ -26,6 +26,41 @@ const Sidebar = ({ activeSection, onSectionChange, systemName }) => {
     amber:   '#e6b85c',
     amberDim:'rgba(230,184,92,0.12)',
   };
+
+  if (isNarrow) {
+    return (
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-2 py-2"
+        style={{
+          background: isDark ? '#14110f' : '#1A2535',
+          borderTop: isDark ? '0.5px solid rgba(255,245,235,0.07)' : '1px solid rgba(255,220,150,0.12)',
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.25)',
+        }}
+      >
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeSection === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => onSectionChange(item.id)}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 4, padding: '6px 16px', borderRadius: 10, border: 'none',
+                cursor: 'pointer', minWidth: 56,
+                background: isActive ? 'rgba(230,184,92,0.15)' : 'transparent',
+              }}
+            >
+              <Icon style={{
+                width: 20, height: 20,
+                color: isActive ? '#e6b85c' : 'rgba(245,240,234,0.4)',
+              }} />
+            </button>
+          );
+        })}
+      </nav>
+    );
+  }
 
   return (
     <aside

@@ -324,7 +324,7 @@ export default function EnergyFlowPanel({
     const cy = H / 2 + H * CENTER_BIAS_Y_FRAC;
 
     // Below this width: strip to sun + line + tower only (phone / collapsed view)
-    const isCompact = W < 480;
+    const isCompact = W < 1000;
 
     // Scale tower & halo to available space so the ring radius stays meaningful.
     const towerSize = clamp(Math.round(Math.min(W, H) * 0.58), 220, 320);
@@ -487,7 +487,7 @@ export default function EnergyFlowPanel({
                     {/* Sun — always show icon, only show value when producing */}
                     <Node left={`${P.sun.x}px`} top={`${P.sun.y}px`}>
                         <SunIcon active={solarActive} size={72} theme={T} isDark={isDark} />
-                        {solarActive && <NodeLabel value={pvKw} unit="kW" label="Solar"
+                        {solarActive && !isCompact && <NodeLabel value={pvKw} unit="kW" label="Solar"
                             sub={`Today ${(todaysProduction ?? 0).toFixed(1)} kWh`}
                             color={T.amber} theme={T} />}
                     </Node>
@@ -531,12 +531,12 @@ export default function EnergyFlowPanel({
                                 <line x1={cx2} y1={cy2} x2={nx} y2={ny}
                                     stroke={needleColor} strokeWidth="1.5" strokeLinecap="round" opacity="0.75" />
                                 <circle cx={cx2} cy={cy2} r="3" fill={needleColor} opacity="0.6" />
-                                {/* Angle readout below tower */}
-                                <text x={cx2} y={cy2 + towerSize * 0.52}
+                                {/* Angle readout below tower — hidden when compact */}
+                                {!isCompact && <text x={cx2} y={cy2 + towerSize * 0.52}
                                     textAnchor="middle" dominantBaseline="middle"
                                     fontSize="15" fontWeight="600" fill={isDark ? "rgba(245,240,234,0.65)" : "rgba(60,40,20,0.65)"}>
                                     {orientationAngleNum}°
-                                </text>
+                                </text>}
                             </svg>
                         );
                     })()}

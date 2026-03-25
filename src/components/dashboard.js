@@ -313,6 +313,15 @@ export default function Dashboard() {
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const [isNarrow, setIsNarrow] = useState(false);
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const mq = window.matchMedia('(max-width: 1000px)');
+        setIsNarrow(mq.matches);
+        const handler = (e) => setIsNarrow(e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
     const [tempUnit, setTempUnit] = useState(() => {
         if (typeof window !== 'undefined') return localStorage.getItem('tempUnit') || 'F';
         return 'F';
@@ -505,9 +514,9 @@ export default function Dashboard() {
                     setActiveSection(id);
                     const refMap = { dashboard: section1Ref, diagnostics: diagnosticsRef, control: controlRef, historical: historicalRef };
                     scrollToSection(refMap[id], `/dashboard${id !== "dashboard" ? "#" + id : ""}`);
-                }} systemName={system?.system_name} />
+                }} systemName={system?.system_name} isNarrow={isNarrow} />
 
-                <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-0 md:ml-64" style={isDark ? { background: DK.bg } : {}}>
+                <div className="flex-1 flex flex-col min-w-0 min-h-0" style={{ marginLeft: isNarrow ? 0 : 256, ...(isDark ? { background: DK.bg } : {}) }}>
                     <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory pb-0 md:pb-0 [.mobile_&]:pb-16">
         {/* ── Header ── */}
                         <header
