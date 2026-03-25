@@ -470,8 +470,8 @@ export default function Dashboard() {
                                     borderBottom: `0.5px solid ${DK.border}`,
                                   }
                                 : {
-                                    background: "linear-gradient(to right, rgba(42,28,14,0.96) 0%, rgba(58,38,20,0.80) 25%, rgba(80,58,36,0.45) 55%, rgba(242,242,242,0.0) 100%)",
-                                    borderBottom: "1px solid rgba(42,28,14,0.15)",
+                                    background: "linear-gradient(to right, rgba(26,37,53,0.96) 0%, rgba(26,37,53,0.80) 25%, rgba(26,37,53,0.45) 55%, rgba(242,242,242,0.0) 100%)",
+                                    borderBottom: "1px solid rgba(26,37,53,0.15)",
                                   }
                             }
                         >
@@ -536,7 +536,7 @@ export default function Dashboard() {
                                 {/* Card 1: Power Output */}
                                 {isDark ? (
                                     <div
-                                        className="dk-fade-in dk-fade-in-1 rounded-xl flex flex-col items-center p-6"
+                                        className="dk-fade-in dk-fade-in-1 rounded-xl flex flex-col items-center p-6 justify-between"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
                                         {/* Large gauge ring */}
@@ -568,13 +568,13 @@ export default function Dashboard() {
                                         {/* Stat footer */}
                                         <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Daily Total</p>
-                                                <p style={{ fontSize: 16, fontWeight: 300, color: DK.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
+                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Daily Total</p>
+                                                <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
                                             </div>
                                             <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
                                             <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 4 }}>Peak Today</p>
-                                                <p style={{ fontSize: 16, fontWeight: 300, color: DK.text1 }}>{maxHourlyPower} kW</p>
+                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Peak Today</p>
+                                                <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{maxHourlyPower} kW</p>
                                             </div>
                                         </div>
                                     </div>
@@ -596,7 +596,7 @@ export default function Dashboard() {
                                 {/* Card 2: Tower Angle */}
                                 {isDark ? (
                                     <div
-                                        className="dk-fade-in dk-fade-in-2 rounded-xl flex flex-col items-center p-6"
+                                        className="dk-fade-in dk-fade-in-2 rounded-xl flex flex-col items-center p-6 justify-between"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
                                         {/* Sweep track + rotating panel */}
@@ -972,7 +972,7 @@ export default function Dashboard() {
                                                         maintainAspectRatio: false,
                                                         scales: {
                                                             x: { type: "time", adapters: { date: { zone: system_tz } }, min: fullDayDates[0], max: fullDayDates[fullDayDates.length - 1], grid: { display: false } },
-                                                            y: { beginAtZero: true, title: { display: true, text: "Power (KW)" }, grid: { color: "#EDE4D6" } },
+                                                            y: { beginAtZero: true, title: { display: true, text: "Power (KW)" }, grid: { color: "#E0E0E0" } },
                                                         },
                                                         plugins: { legend: { display: false } },
                                                     }}
@@ -1111,8 +1111,8 @@ export default function Dashboard() {
                                             controlActions={controlActions}
                                             isDark={isDark}
                                             systemTimezone={system_tz}
-                                            isCommercial={session?.planTier === "COMMERCIAL"}
-                                            // isCommercial={true}
+                                            isCommercial={true}
+                                            // isCommercial={session?.planTier === "COMMERCIAL" || session?.role === "ADMIN"}
                                         />
                                     </>
                                 ) : (
@@ -1248,7 +1248,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-2xl p-6 mb-6" style={LT_CARD}>
+                                    <div className="bg-white rounded-2xl p-6 mb-6" style={{ ...LT_CARD, boxShadow: "0 4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)" }}>
                                         <h3 className="text-base font-medium text-[#5C4A38]">Historical Power Data</h3>
                                         <p className="text-sm text-[#A8978A] mt-0.5 mb-4">Energy produced over time</p>
                                         <div className="flex flex-wrap gap-2 mb-4">
@@ -1260,23 +1260,23 @@ export default function Dashboard() {
                                                 >{label}</button>
                                             ))}
                                         </div>
-                                        <div className="rounded-lg p-4" style={{ backgroundColor: "#F5EFE4", minHeight: "280px" }}>
+                                        <div className="rounded-xl p-4" style={{ backgroundColor: "#EFEFEF", minHeight: "280px" }}>
                                             {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
                                                 <div style={{ height: "260px" }}>
                                                     <Bar data={{ labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length), datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E8DDD0" } }, x: { grid: { display: false }, title: { display: true, text: "Day" } } }, plugins: { legend: { display: false } } }} />
+                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E0E0E0" } }, x: { grid: { display: false }, title: { display: true, text: "Day" } } }, plugins: { legend: { display: false } } }} />
                                                 </div>
                                             )}
                                             {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
                                                 <div style={{ height: "260px" }}>
                                                     <Bar data={{ labels: monthLabels.slice(0, (monthlyProduction.values || []).length), datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E8DDD0" } }, x: { grid: { display: false }, title: { display: true, text: "Month" } } }, plugins: { legend: { display: false } } }} />
+                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E0E0E0" } }, x: { grid: { display: false }, title: { display: true, text: "Month" } } }, plugins: { legend: { display: false } } }} />
                                                 </div>
                                             )}
                                             {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
                                                 <div style={{ height: "260px" }}>
                                                     <Bar data={{ labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length), datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.4, categoryPercentage: 0.5 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (MWh)" }, grid: { color: "#E8DDD0" } }, x: { grid: { display: false }, title: { display: true, text: "Year" } } }, plugins: { legend: { display: false } } }} />
+                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (MWh)" }, grid: { color: "#E0E0E0" } }, x: { grid: { display: false }, title: { display: true, text: "Year" } } }, plugins: { legend: { display: false } } }} />
                                                 </div>
                                             )}
                                             {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
