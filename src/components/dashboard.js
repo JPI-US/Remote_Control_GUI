@@ -482,28 +482,7 @@ export default function Dashboard() {
                             >
                                 {system?.system_name || "System"} • {currentTime}
                             </p>
-                            <div className="flex items-center gap-3">
-                                {/* °F / °C toggle */}
-                                <button
-                                    type="button"
-                                    onClick={toggleTempUnit}
-                                    className="flex items-center rounded-full text-xs font-semibold overflow-hidden transition-all"
-                                    style={{ border: "1px solid rgba(255,255,255,0.25)" }}
-                                    aria-label="Toggle temperature unit"
-                                >
-                                    <span style={{
-                                        padding: "3px 8px",
-                                        background: tempUnit === "F" ? "rgba(255,255,255,0.25)" : "transparent",
-                                        color: "rgba(245,235,220,0.9)",
-                                        transition: "background 0.2s",
-                                    }}>°F</span>
-                                    <span style={{
-                                        padding: "3px 8px",
-                                        background: tempUnit === "C" ? "rgba(255,255,255,0.25)" : "transparent",
-                                        color: "rgba(245,235,220,0.9)",
-                                        transition: "background 0.2s",
-                                    }}>°C</span>
-                                </button>
+                            <div className="flex items-center gap-2">
                                 <button
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
@@ -720,9 +699,19 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-1 rounded-xl overflow-hidden"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
-                                        <p className="px-5 pt-4 pb-3" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
-                                            Environmental
-                                        </p>
+                                        <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
+                                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }}>Environmental</p>
+                                            <button
+                                                type="button"
+                                                onClick={toggleTempUnit}
+                                                className="flex items-center rounded-full overflow-hidden"
+                                                style={{ border: `0.5px solid ${DK.border2}`, fontSize: 11, fontWeight: 600 }}
+                                                aria-label="Toggle temperature unit"
+                                            >
+                                                <span style={{ padding: "2px 7px", background: tempUnit === "F" ? DK.amber : "transparent", color: tempUnit === "F" ? "#000" : DK.text3, transition: "all 0.2s" }}>°F</span>
+                                                <span style={{ padding: "2px 7px", background: tempUnit === "C" ? DK.amber : "transparent", color: tempUnit === "C" ? "#000" : DK.text3, transition: "all 0.2s" }}>°C</span>
+                                            </button>
+                                        </div>
                                         <div className="grid grid-cols-2">
                                             {/* Humidity */}
                                             <div className="flex flex-col px-5 py-5" style={{ borderRight: `0.5px solid ${DK.border}` }}>
@@ -757,7 +746,19 @@ export default function Dashboard() {
                                 ) : (
                                     <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
                                         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
-                                        <h3 className="text-xs font-medium uppercase tracking-widest mb-4 shrink-0" style={{ color: WM.label }}>Environmental</h3>
+                                        <div className="flex items-center justify-between mb-4 shrink-0">
+                                            <h3 className="text-xs font-medium uppercase tracking-widest" style={{ color: WM.label }}>Environmental</h3>
+                                            <button
+                                                type="button"
+                                                onClick={toggleTempUnit}
+                                                className="flex items-center rounded-full overflow-hidden text-xs font-semibold"
+                                                style={{ border: `1px solid ${WM.label}40` }}
+                                                aria-label="Toggle temperature unit"
+                                            >
+                                                <span style={{ padding: "2px 7px", background: tempUnit === "F" ? WM.amber : "transparent", color: tempUnit === "F" ? "#fff" : WM.muted, transition: "all 0.2s" }}>°F</span>
+                                                <span style={{ padding: "2px 7px", background: tempUnit === "C" ? WM.amber : "transparent", color: tempUnit === "C" ? "#fff" : WM.muted, transition: "all 0.2s" }}>°C</span>
+                                            </button>
+                                        </div>
                                         <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
                                             <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
                                                 <Droplets className="w-12 h-12 text-[#7BAFD4] mb-2" />

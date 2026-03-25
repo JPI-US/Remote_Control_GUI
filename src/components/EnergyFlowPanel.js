@@ -443,6 +443,10 @@ export default function EnergyFlowPanel({
                                     from { stroke-dashoffset: 200; }
                                     to   { stroke-dashoffset: 0; }
                                 }
+                                @keyframes ghostPulse {
+                                    0%, 100% { opacity: 0.06; }
+                                    50%      { opacity: 0.14; }
+                                }
                             `}</style>
                         </defs>
                         {/* Ghost traces */}
@@ -457,22 +461,22 @@ export default function EnergyFlowPanel({
                         {/* Active lines */}
                         {solarActive && <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
                             stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)"
-                            style={{ animation: "solarFlow 1.2s linear infinite" }} />}
+                            style={{ animation: "solarFlow 12s linear infinite" }} />}
                         {gridActive && gridImport && <line x1={P.grid.x-26} y1={P.grid.y+8} x2={P.tower.x+TOWER_HALF} y2={P.tower.y-12}
                             stroke={T.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)"
-                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
+                            style={{ animation: "lineFlow 18s linear infinite" }} />}
                         {gridActive && !gridImport && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-12} x2={P.grid.x-26} y2={P.grid.y+8}
                             stroke={T.teal} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-tel)"
-                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
+                            style={{ animation: "lineFlow 18s linear infinite" }} />}
                         {loadActive && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+18} x2={P.house.x-28} y2={P.house.y-20}
                             stroke={T.purple} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-pur)"
-                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
+                            style={{ animation: "lineFlow 18s linear infinite 0.5s" }} />}
                         {battActive && battCharging && <line x1={P.battery.x+20} y1={P.battery.y-12} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+20}
                             stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)"
-                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
+                            style={{ animation: "lineFlow 22s linear infinite 1s" }} />}
                         {battActive && !battCharging && <line x1={P.tower.x-TOWER_HALF} y1={P.tower.y+20} x2={P.battery.x+20} y2={P.battery.y-12}
                             stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)"
-                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
+                            style={{ animation: "lineFlow 22s linear infinite 1s" }} />}
                     </svg>
 
                     {/* Sun — always show icon, only show value when producing */}
@@ -492,6 +496,46 @@ export default function EnergyFlowPanel({
                         pointerEvents: "none", zIndex: 2,
                     }} />
 
+                    {/* Compass — ring, E/W/S labels, rotating needle, angle readout */}
+                    {(() => {
+                        const r = haloSize * 0.48; // compass ring radius
+                        const cx2 = P.tower.x;
+                        const cy2 = P.tower.y;
+                        // needle angle: 90°=E(right), 180°=S(down), 270°=W(left)
+                        const needleRad = ((towerRotationDeg - 90) * Math.PI) / 180;
+                        const needleLen = r * 0.52;
+                        const nx = cx2 + Math.cos(needleRad) * needleLen;
+                        const ny = cy2 + Math.sin(needleRad) * needleLen;
+                        const labelColor = isDark ? "rgba(245,240,234,0.35)" : "rgba(60,40,20,0.35)";
+                        const needleColor = T.amber;
+                        const ringColor = isDark ? "rgba(255,245,235,0.08)" : "rgba(0,0,0,0.08)";
+                        return (
+                            <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 3, overflow: "visible" }}
+                                viewBox={`0 0 ${Math.max(1,W)} ${Math.max(1,H)}`} preserveAspectRatio="none">
+                                {/* Compass ring */}
+                                <circle cx={cx2} cy={cy2} r={r} fill="none" stroke={ringColor} strokeWidth="1" strokeDasharray="3 6" strokeLinecap="round" />
+                                {/* Cardinal labels — E, S, W only */}
+                                {[{ label: "E", a: 0 }, { label: "S", a: 90 }, { label: "W", a: 180 }].map(({ label, a }) => {
+                                    const rad = (a * Math.PI) / 180;
+                                    const lx = cx2 + Math.cos(rad) * (r + 13);
+                                    const ly = cy2 + Math.sin(rad) * (r + 13);
+                                    return <text key={label} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
+                                        fontSize="11" fontWeight="600" letterSpacing="0.08em" fill={labelColor}>{label}</text>;
+                                })}
+                                {/* Rotating needle */}
+                                <line x1={cx2} y1={cy2} x2={nx} y2={ny}
+                                    stroke={needleColor} strokeWidth="1.5" strokeLinecap="round" opacity="0.75" />
+                                <circle cx={cx2} cy={cy2} r="3" fill={needleColor} opacity="0.6" />
+                                {/* Angle readout below tower */}
+                                <text x={cx2} y={cy2 + towerSize * 0.52}
+                                    textAnchor="middle" dominantBaseline="middle"
+                                    fontSize="12" fontWeight="500" fill={isDark ? "rgba(245,240,234,0.55)" : "rgba(60,40,20,0.55)"}>
+                                    {orientationAngleNum}°
+                                </text>
+                            </svg>
+                        );
+                    })()}
+
                     {/* Tower */}
                     <Node left={`${P.tower.x}px`} top={`${P.tower.y}px`}>
                         {!towerError ? (
@@ -506,24 +550,20 @@ export default function EnergyFlowPanel({
                         )}
                     </Node>
 
-                    {/* Grid — only show when active */}
-                    {gridActive && (
-                        <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
-                            <GridIcon active={gridActive} importing={gridImport} size={66} theme={T} isDark={isDark} />
-                            <NodeLabel value={gridKw} unit="kW"
-                                label={gridImport ? "Importing" : "Exporting"}
-                                color={gridActive ? gridColor : T.text3} theme={T} />
-                        </Node>
-                    )}
+                    {/* Grid — always show icon, hide numbers when inactive */}
+                    <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
+                        <GridIcon active={gridActive} importing={gridImport} size={66} theme={T} isDark={isDark} />
+                        {gridActive && <NodeLabel value={gridKw} unit="kW"
+                            label={gridImport ? "Importing" : "Exporting"}
+                            color={gridColor} theme={T} />}
+                    </Node>
 
-                    {/* House — only show when active */}
-                    {loadActive && (
-                        <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
-                            <HouseIcon active={loadActive} size={72} theme={T} isDark={isDark} />
-                            <NodeLabel value={loadKw} unit="kW" label="Consumption"
-                                color={loadActive ? T.purple : T.text3} theme={T} />
-                        </Node>
-                    )}
+                    {/* House — always show icon, hide numbers when inactive */}
+                    <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
+                        <HouseIcon active={loadActive} size={72} theme={T} isDark={isDark} />
+                        {loadActive && <NodeLabel value={loadKw} unit="kW" label="Consumption"
+                            color={T.purple} theme={T} />}
+                    </Node>
 
                     {/* Battery */}
                     {hasBattery && (
