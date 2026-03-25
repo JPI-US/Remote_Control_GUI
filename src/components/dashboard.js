@@ -639,16 +639,21 @@ export default function Dashboard() {
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
                                         {/* Sweep track + rotating panel */}
-                                        <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
+                                        <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
                                             {/* Dashed sweep arc */}
-                                            <svg className="absolute" width={140} height={140} viewBox="0 0 140 140">
-                                                <circle cx="70" cy="70" r="62" fill="none"
+                                            <svg className="absolute" width={220} height={220} viewBox="0 0 220 220">
+                                                <circle cx="110" cy="110" r="100" fill="none"
                                                     stroke={DK.border2} strokeWidth="1"
                                                     strokeDasharray="3 6" strokeLinecap="round" />
                                             </svg>
-                                            <img src="/images/tower_Design.svg" alt="Tower"
-                                                className="w-24 h-24 object-contain relative z-10"
-                                                style={{ filter: "invert(1) opacity(0.7)" }} />
+                                            <div style={{
+                                                width: "220px", height: "220px",
+                                                backgroundImage: "url('/images/White_with_Yellow_Sun_Fix.png')",
+                                                backgroundSize: "420px",
+                                                backgroundPosition: "52% -60%",
+                                                backgroundRepeat: "no-repeat",
+                                                position: "relative", zIndex: 10,
+                                            }} />
                                         </div>
                                         <div className="mt-4 text-center">
                                             <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, marginBottom: 8 }}>Direction</p>
