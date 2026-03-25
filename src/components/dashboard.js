@@ -452,6 +452,17 @@ export default function Dashboard() {
     const orientationAngle = selectedTower?.current_angle ?? null;
     const orientationAngleNum = !isNaN(parseFloat(orientationAngle)) ? parseFloat(orientationAngle).toFixed(2) : "—";
     const towerRotationDeg = !isNaN(parseFloat(orientationAngle)) ? parseFloat(orientationAngle) : 0;
+    const getDirection = (deg) => {
+        const d = parseFloat(deg);
+        if (isNaN(d)) return "—";
+        if (d >= 67.5  && d < 112.5) return "East";
+        if (d >= 112.5 && d < 157.5) return "South-East";
+        if (d >= 157.5 && d < 202.5) return "South";
+        if (d >= 202.5 && d < 247.5) return "South-West";
+        if (d >= 247.5 && d < 292.5) return "West";
+        return "South";
+    };
+    const towerDirection = getDirection(angleNum);
     const powerPercentDisplay = MAX_PV_POWER > 0 ? Math.min(100, (pvPowerKw / (MAX_PV_POWER / 1000)) * 100) : 0;
     const canAccessControlPanel = session?.role === "ADMIN" || session?.planTier === "COMMERCIAL";
 
@@ -551,15 +562,6 @@ export default function Dashboard() {
                             id="section-1"
                             style={isDark ? { background: DK.bg } : { background: WM.section1 }}
                         >
-                            {/* Page title */}
-                            {isDark ? (
-                                <h1 style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, marginBottom: 24 }}>
-                                    {system.system_name}
-                                </h1>
-                            ) : (
-                                <h1 className="text-2xl font-bold uppercase tracking-wide mb-8 mt-2" style={{ color: WM.title }}>{system.system_name}</h1>
-                            )}
-
                             {/* TOWER STATUS label */}
                             {isDark ? (
                                 <p style={{ ...sectionLabel, marginBottom: 16 }}>Tower Status</p>
@@ -649,15 +651,15 @@ export default function Dashboard() {
                                                 style={{ filter: "invert(1) opacity(0.7)" }} />
                                         </div>
                                         <div className="mt-4 text-center">
-                                            <p style={{ fontSize: 48, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                {angleNum}<span style={{ fontSize: 24, fontWeight: 200 }}>°</span>
+                                            <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, marginBottom: 8 }}>Direction</p>
+                                            <p style={{ fontSize: 20, fontWeight: 300, color: DK.text1, lineHeight: 1, letterSpacing: "0.02em" }}>
+                                                {towerDirection}
                                             </p>
-                                            <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginTop: 6 }}>Tower Angle</p>
                                         </div>
                                         {/* Footer stats */}
                                         <div className="w-full mt-4 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
                                             <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Azimuth</p>
+                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Tower Angle</p>
                                                 <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{angleNum}°</p>
                                             </div>
                                             <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
@@ -753,19 +755,13 @@ export default function Dashboard() {
                                         {/* Two stats — mirrors Daily Peak | Power Output */}
                                         <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${DK.border}` }}>
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <Droplets style={{ width: 14, height: 14, color: "#7BAFD4", opacity: 0.7, flexShrink: 0 }} />
-                                                    <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em" }}>Humidity</p>
-                                                </div>
+                                                <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Humidity</p>
                                                 <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>
                                                     {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>%</span>
                                                 </p>
                                             </div>
                                             <div className="px-5 py-4">
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <Thermometer style={{ width: 14, height: 14, color: "#f97316", opacity: 0.7, flexShrink: 0 }} />
-                                                    <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em" }}>Temperature</p>
-                                                </div>
+                                                <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Temperature</p>
                                                 <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>
                                                     {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>{tempSymbol}</span>
                                                 </p>
