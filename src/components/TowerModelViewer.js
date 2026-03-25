@@ -162,13 +162,12 @@ export default function TowerModelViewer({
                     }, undefined, (e) => console.warn("Sun load failed:", e));
                 }
 
-                // Render loop — no fireflies, just tower rotation
+                // Render loop — azimuth: 90°=east, 180°=south, 270°=west
                 function animate() {
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
                     if (towerModel) {
-                        const eff = Math.max(90, Math.min(270, angleRef.current));
-                        towerModel.rotation.y = ((360 - eff) * Math.PI) / 180;
+                        towerModel.rotation.y = ((angleRef.current - 90) * Math.PI) / 180;
                     }
                     renderer.render(scene, camera);
                 }

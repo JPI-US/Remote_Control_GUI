@@ -434,6 +434,16 @@ export default function EnergyFlowPanel({
                                     <path d="M2 1L8 5L2 9" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" />
                                 </marker>
                             ))}
+                            <style>{`
+                                @keyframes solarFlow {
+                                    from { stroke-dashoffset: 280; }
+                                    to   { stroke-dashoffset: 0; }
+                                }
+                                @keyframes lineFlow {
+                                    from { stroke-dashoffset: 200; }
+                                    to   { stroke-dashoffset: 0; }
+                                }
+                            `}</style>
                         </defs>
                         {/* Ghost traces */}
                         <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
@@ -446,25 +456,31 @@ export default function EnergyFlowPanel({
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />}
                         {/* Active lines */}
                         {solarActive && <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
-                            stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)" />}
+                            stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)"
+                            style={{ animation: "solarFlow 1.2s linear infinite" }} />}
                         {gridActive && gridImport && <line x1={P.grid.x-26} y1={P.grid.y+8} x2={P.tower.x+TOWER_HALF} y2={P.tower.y-12}
-                            stroke={T.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)" />}
+                            stroke={T.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)"
+                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
                         {gridActive && !gridImport && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-12} x2={P.grid.x-26} y2={P.grid.y+8}
-                            stroke={T.teal} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-tel)" />}
+                            stroke={T.teal} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-tel)"
+                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
                         {loadActive && <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y+18} x2={P.house.x-28} y2={P.house.y-20}
-                            stroke={T.purple} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-pur)" />}
+                            stroke={T.purple} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-pur)"
+                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
                         {battActive && battCharging && <line x1={P.battery.x+20} y1={P.battery.y-12} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+20}
-                            stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
+                            stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)"
+                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
                         {battActive && !battCharging && <line x1={P.tower.x-TOWER_HALF} y1={P.tower.y+20} x2={P.battery.x+20} y2={P.battery.y-12}
-                            stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)" />}
+                            stroke={T.green} strokeWidth="2" strokeDasharray="7 5" strokeLinecap="round" markerEnd="url(#ef-grn)"
+                            style={{ animation: "lineFlow 1.4s linear infinite" }} />}
                     </svg>
 
-                    {/* Sun */}
+                    {/* Sun — always show icon, only show value when producing */}
                     <Node left={`${P.sun.x}px`} top={`${P.sun.y}px`}>
                         <SunIcon active={solarActive} size={72} theme={T} isDark={isDark} />
-                        <NodeLabel value={pvKw} unit="kW" label="Solar"
+                        {solarActive && <NodeLabel value={pvKw} unit="kW" label="Solar"
                             sub={`Today ${(todaysProduction ?? 0).toFixed(1)} kWh`}
-                            color={solarActive ? T.amber : T.text3} theme={T} />
+                            color={T.amber} theme={T} />}
                     </Node>
 
                     {/* Tower halo */}
@@ -490,20 +506,24 @@ export default function EnergyFlowPanel({
                         )}
                     </Node>
 
-                    {/* Grid */}
-                    <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
-                        <GridIcon active={gridActive} importing={gridImport} size={66} theme={T} isDark={isDark} />
-                        <NodeLabel value={gridKw} unit="kW"
-                            label={gridImport ? "Importing" : "Exporting"}
-                            color={gridActive ? gridColor : T.text3} theme={T} />
-                    </Node>
+                    {/* Grid — only show when active */}
+                    {gridActive && (
+                        <Node left={`${P.grid.x}px`} top={`${P.grid.y}px`}>
+                            <GridIcon active={gridActive} importing={gridImport} size={66} theme={T} isDark={isDark} />
+                            <NodeLabel value={gridKw} unit="kW"
+                                label={gridImport ? "Importing" : "Exporting"}
+                                color={gridActive ? gridColor : T.text3} theme={T} />
+                        </Node>
+                    )}
 
-                    {/* House */}
-                    <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
-                        <HouseIcon active={loadActive} size={72} theme={T} isDark={isDark} />
-                        <NodeLabel value={loadKw} unit="kW" label="Consumption"
-                            color={loadActive ? T.purple : T.text3} theme={T} />
-                    </Node>
+                    {/* House — only show when active */}
+                    {loadActive && (
+                        <Node left={`${P.house.x}px`} top={`${P.house.y}px`}>
+                            <HouseIcon active={loadActive} size={72} theme={T} isDark={isDark} />
+                            <NodeLabel value={loadKw} unit="kW" label="Consumption"
+                                color={loadActive ? T.purple : T.text3} theme={T} />
+                        </Node>
+                    )}
 
                     {/* Battery */}
                     {hasBattery && (

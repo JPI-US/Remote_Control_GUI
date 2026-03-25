@@ -276,6 +276,21 @@ export default function Dashboard() {
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const [tempUnit, setTempUnit] = useState(() => {
+        if (typeof window !== 'undefined') return localStorage.getItem('tempUnit') || 'F';
+        return 'F';
+    });
+    const toDisplayTemp = (celsius) => {
+        if (celsius == null || celsius === '—') return '—';
+        if (tempUnit === 'F') return Math.round(celsius * 9/5 + 32);
+        return celsius;
+    };
+    const tempSymbol = tempUnit === 'F' ? '°F' : '°C';
+    const toggleTempUnit = () => setTempUnit(prev => {
+        const next = prev === 'F' ? 'C' : 'F';
+        if (typeof window !== 'undefined') localStorage.setItem('tempUnit', next);
+        return next;
+    });
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [autonomousMode, setAutonomousMode] = useState(true);
     const [maintenanceMode, setMaintenanceMode] = useState(false);
@@ -438,7 +453,11 @@ export default function Dashboard() {
             style={isDark ? { background: DK.bg } : { background: WM.bg, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", textRendering: "optimizeLegibility" }}
         >
             <div className="flex flex-1 min-h-0">
-                <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} systemName={system?.system_name} />
+                <Sidebar activeSection={activeSection} onSectionChange={(id) => {
+                    setActiveSection(id);
+                    const refMap = { dashboard: section1Ref, diagnostics: diagnosticsRef, control: controlRef, historical: historicalRef };
+                    scrollToSection(refMap[id], `/dashboard${id !== "dashboard" ? "#" + id : ""}`);
+                }} systemName={system?.system_name} />
 
                 <div className="flex-1 flex flex-col min-w-0 min-h-0 ml-64" style={isDark ? { background: DK.bg } : {}}>
                     <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory">
@@ -463,7 +482,28 @@ export default function Dashboard() {
                             >
                                 {system?.system_name || "System"} • {currentTime}
                             </p>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3">
+                                {/* °F / °C toggle */}
+                                <button
+                                    type="button"
+                                    onClick={toggleTempUnit}
+                                    className="flex items-center rounded-full text-xs font-semibold overflow-hidden transition-all"
+                                    style={{ border: "1px solid rgba(255,255,255,0.25)" }}
+                                    aria-label="Toggle temperature unit"
+                                >
+                                    <span style={{
+                                        padding: "3px 8px",
+                                        background: tempUnit === "F" ? "rgba(255,255,255,0.25)" : "transparent",
+                                        color: "rgba(245,235,220,0.9)",
+                                        transition: "background 0.2s",
+                                    }}>°F</span>
+                                    <span style={{
+                                        padding: "3px 8px",
+                                        background: tempUnit === "C" ? "rgba(255,255,255,0.25)" : "transparent",
+                                        color: "rgba(245,235,220,0.9)",
+                                        transition: "background 0.2s",
+                                    }}>°C</span>
+                                </button>
                                 <button
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
@@ -705,12 +745,12 @@ export default function Dashboard() {
                                                     <span style={{ fontSize: 14, color: DK.text3 }}>Temperature</span>
                                                 </div>
                                                 <p style={{ fontSize: 40, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                    {weather?.current?.temp ?? "—"}<span style={{ fontSize: 20, fontWeight: 300 }}>°C</span>
+                                                    {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 20, fontWeight: 300 }}>{tempSymbol}</span>
                                                 </p>
                                                 <div className="mt-3">
                                                     <Sparkline values={[12,13,14,14,15,15,14,weather?.current?.temp ?? 15]} color="#f97316" />
                                                 </div>
-                                                <p style={{ fontSize: 13, color: DK.text3, marginTop: 6 }}>Feels like {(weather?.current?.temp ?? 15) - 2}°C</p>
+                                                <p style={{ fontSize: 13, color: DK.text3, marginTop: 6 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -726,7 +766,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
                                                 <Thermometer className="w-12 h-12 text-orange-500 mb-2" />
-                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{weather?.current?.temp ?? "—"}<span className="text-lg font-medium">°C</span></p>
+                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{toDisplayTemp(weather?.current?.temp)}<span className="text-lg font-medium">{tempSymbol}</span></p>
                                                 <p className="text-sm text-[#A8978A]">Temperature</p>
                                             </div>
                                         </div>
@@ -1092,7 +1132,7 @@ export default function Dashboard() {
                                             onTowerSelect={setSelectedTowerIndex}
                                             towerRotationDeg={towerRotationDeg}
                                             orientationAngleNum={orientationAngleNum}
-                                            canAccessControlPanel={false}
+                                            canAccessControlPanel={canAccessControlPanel}
                                             autonomousMode={autonomousMode}
                                             setAutonomousMode={setAutonomousMode}
                                             maintenanceMode={maintenanceMode}

@@ -5,7 +5,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 const ThemeContext = createContext({ isDark: false, toggleDark: () => {} });
 
 export function ThemeProvider({ children }) {
-    const [isDark, setIsDark] = useState(false);
+    const [isDark, setIsDark] = useState(true); // dark by default
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -15,7 +15,7 @@ export function ThemeProvider({ children }) {
     useEffect(() => {
         if (!mounted) return;
         const stored = localStorage.getItem("theme");
-        const prefersDark = stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        const prefersDark = stored ? stored === "dark" : true; // default to dark
         setIsDark(prefersDark);
     }, [mounted]);
 
