@@ -83,19 +83,56 @@ function dkCard(isDark, extraLight = "", extraDark = "") {
 }
 
 // Tiny sparkline component (dark mode only)
-function Sparkline({ values = [], color = DK.amber }) {
+function Sparkline({ values = [], color = DK.amber, unit = "", startHour = 0 }) {
+    const [hovered, setHovered] = React.useState(null);
     if (!values.length) return null;
-    const w = 120, h = 32;
+    const w = 180, h = 48;
     const max = Math.max(...values, 0.001);
+    const min = Math.min(...values, 0);
+    const range = max - min || 0.001;
     const pts = values.map((v, i) => {
-        const x = (i / (values.length - 1)) * w;
-        const y = h - (v / max) * (h - 4) - 2;
-        return `${x},${y}`;
-    }).join(" ");
+        const x = (i / Math.max(values.length - 1, 1)) * w;
+        const y = h - ((v - min) / range) * (h - 4) - 2;
+        return { x, y, v, i };
+    });
+    const ptsStr = pts.map(p => `${p.x},${p.y}`).join(" ");
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const relX = (e.clientX - rect.left) / rect.width * w;
+        let closest = pts[0];
+        pts.forEach(p => { if (Math.abs(p.x - relX) < Math.abs(closest.x - relX)) closest = p; });
+        setHovered(closest);
+    };
+
+    const tooltipX = hovered ? Math.min(Math.max(hovered.x, 20), w - 20) : 0;
+    const tooltipY = hovered ? Math.max(hovered.y - 14, 8) : 0;
+    const hour = hovered ? (startHour + hovered.i) % 24 : 0;
+    const label = hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`;
+
     return (
-        <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: "visible" }}>
-            <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <div style={{ position: "relative" }}>
+            <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none"
+                style={{ overflow: "visible", display: "block", cursor: "crosshair" }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={() => setHovered(null)}
+            >
+                <polyline points={ptsStr} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                {hovered && <>
+                    <line x1={hovered.x} y1={0} x2={hovered.x} y2={h}
+                        stroke={color} strokeWidth="0.5" strokeDasharray="2 2" opacity="0.5" />
+                    <circle cx={hovered.x} cy={hovered.y} r="3" fill={color} opacity="0.9" />
+                    <rect x={tooltipX - 22} y={tooltipY - 13} width="44" height="24" rx="4"
+                        fill="rgba(20,17,15,0.88)" stroke={color} strokeWidth="0.5" />
+                    <text x={tooltipX} y={tooltipY - 3} textAnchor="middle" fontSize="9" fill={color} fontWeight="600">
+                        {Math.round(hovered.v)}{unit}
+                    </text>
+                    <text x={tooltipX} y={tooltipY + 7} textAnchor="middle" fontSize="8" fill="rgba(245,240,234,0.5)">
+                        {label}
+                    </text>
+                </>}
+            </svg>
+        </div>
     );
 }
 
@@ -699,6 +736,7 @@ export default function Dashboard() {
                                         className="dk-fade-in dk-fade-in-1 rounded-xl overflow-hidden"
                                         style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
                                     >
+                                        {/* Header */}
                                         <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
                                             <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }}>Environmental</p>
                                             <button
@@ -712,34 +750,49 @@ export default function Dashboard() {
                                                 <span style={{ padding: "2px 7px", background: tempUnit === "C" ? DK.amber : "transparent", color: tempUnit === "C" ? "#000" : DK.text3, transition: "all 0.2s" }}>°C</span>
                                             </button>
                                         </div>
-                                        <div className="grid grid-cols-2">
-                                            {/* Humidity */}
-                                            <div className="flex flex-col px-5 py-5" style={{ borderRight: `0.5px solid ${DK.border}` }}>
+                                        {/* Two stats — mirrors Daily Peak | Power Output */}
+                                        <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
+                                            <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${DK.border}` }}>
                                                 <div className="flex items-center gap-2 mb-3">
-                                                    <Droplets style={{ width: 16, height: 16, color: "#7BAFD4", opacity: 0.7, flexShrink: 0 }} />
-                                                    <span style={{ fontSize: 14, color: DK.text3 }}>Humidity</span>
+                                                    <Droplets style={{ width: 14, height: 14, color: "#7BAFD4", opacity: 0.7, flexShrink: 0 }} />
+                                                    <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em" }}>Humidity</p>
                                                 </div>
-                                                <p style={{ fontSize: 40, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                    {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 20, fontWeight: 300 }}>%</span>
+                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>
+                                                    {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>%</span>
                                                 </p>
-                                                <div className="mt-3">
-                                                    <Sparkline values={[22,24,23,25,24,26,25,weather?.current?.humidity ?? 24]} color="#7BAFD4" />
-                                                </div>
-                                                <p style={{ fontSize: 13, color: DK.text3, marginTop: 6 }}>Updated {currentTime}</p>
                                             </div>
-                                            {/* Temperature */}
-                                            <div className="flex flex-col px-5 py-5">
+                                            <div className="px-5 py-4">
                                                 <div className="flex items-center gap-2 mb-3">
-                                                    <Thermometer style={{ width: 16, height: 16, color: "#f97316", opacity: 0.7, flexShrink: 0 }} />
-                                                    <span style={{ fontSize: 14, color: DK.text3 }}>Temperature</span>
+                                                    <Thermometer style={{ width: 14, height: 14, color: "#f97316", opacity: 0.7, flexShrink: 0 }} />
+                                                    <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em" }}>Temperature</p>
                                                 </div>
-                                                <p style={{ fontSize: 40, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                    {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 20, fontWeight: 300 }}>{tempSymbol}</span>
+                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>
+                                                    {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>{tempSymbol}</span>
                                                 </p>
-                                                <div className="mt-3">
-                                                    <Sparkline values={[12,13,14,14,15,15,14,weather?.current?.temp ?? 15]} color="#f97316" />
+                                            </div>
+                                        </div>
+                                        {/* Trend sparklines using real hourly data */}
+                                        <div className="px-5 py-4">
+                                            <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Today&apos;s Conditions</p>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <Sparkline
+                                                        values={weather?.hourly?.slice(0, 24).map(h => h.humidity ?? 0) ?? [weather?.current?.humidity ?? 0]}
+                                                        color="#7BAFD4"
+                                                        unit="%"
+                                                        startHour={new Date().getHours()}
+                                                    />
+                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 4 }}>Updated {currentTime}</p>
                                                 </div>
-                                                <p style={{ fontSize: 13, color: DK.text3, marginTop: 6 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
+                                                <div>
+                                                    <Sparkline
+                                                        values={weather?.hourly?.slice(0, 24).map(h => toDisplayTemp(h.temp) ?? 0) ?? [toDisplayTemp(weather?.current?.temp) ?? 0]}
+                                                        color="#f97316"
+                                                        unit={tempSymbol}
+                                                        startHour={new Date().getHours()}
+                                                    />
+                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 4 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
