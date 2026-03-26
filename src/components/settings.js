@@ -334,7 +334,7 @@ export default function Settings() {
                                 type="button"
                                 aria-label={isDark ? "Light mode" : "Dark mode"}
                                 className="p-2 rounded-lg transition-colors"
-                                style={{ color: isDark ? "rgba(245,240,234,0.6)" : "rgba(245,235,220,0.9)" }}
+                                style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                 onClick={toggleDark}
                             >
                                 {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -343,7 +343,7 @@ export default function Settings() {
                                 type="button"
                                 aria-label="Menu"
                                 className="p-2 rounded-lg transition-colors cursor-pointer"
-                                style={{ color: isDark ? "rgba(245,240,234,0.6)" : "rgba(245,235,220,0.9)" }}
+                                style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                 onClick={() => setMenuOpen(!menuOpen)}
                             >
                                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
