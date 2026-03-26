@@ -269,6 +269,7 @@ export default function EnergyFlowPanel({
     towerCount = 1, selectedTowerIndex = 0, onTowerSelect,
     towerRotationDeg = 0, orientationAngleNum = "—",
     canAccessControlPanel = false,
+    showAutonomousToggle = false,
     autonomousMode, setAutonomousMode, maintenanceMode, setMaintenanceMode,
     controlActions = [],
     isDark = true,
@@ -286,7 +287,7 @@ export default function EnergyFlowPanel({
         if (!isDark) return;
         const tick = () => setFireflyCount(getFireflyCount(systemTimezone));
         tick();
-        const id = setInterval(tick, 60_000);
+        const id = setInterval(tick, 60000);
         return () => clearInterval(id);
     }, [isDark, systemTimezone]);
 
@@ -734,35 +735,41 @@ export default function EnergyFlowPanel({
             })()}
 
             {/* Bottom bar */}
-            <div className="flex items-center gap-8 flex-wrap"
-                style={{ padding: "12px 20px", borderTop: `0.5px solid ${T.border}`, background: T.surface }}>
-                {[
-                    { label: "Autonomous", sub: "Default", active: autonomousMode,
-                      onClick: () => { setAutonomousMode(true); setMaintenanceMode(false); },
-                      activeColor: T.green },
+            {(() => {
+                const modeToggles = [
+                    ...(showAutonomousToggle ? [{ label: "Autonomous", sub: "Default", active: autonomousMode,
+                        onClick: () => { setAutonomousMode(true); setMaintenanceMode(false); },
+                        activeColor: T.green }] : []),
                     ...(canAccessControlPanel ? [{ label: "Maintenance", sub: "Requires confirmation", active: maintenanceMode,
-                      onClick: () => setMaintenanceMode(prev => !prev),
-                      activeColor: T.red }] : []),
-                ].map(({ label, sub, active, onClick, activeColor }) => (
-                    <div key={label} className="flex items-center gap-3">
-                        <button type="button" onClick={onClick} style={{
-                            position: "relative", width: 40, height: 22, borderRadius: 11,
-                            background: active ? activeColor : "rgba(255,255,255,0.10)",
-                            transition: "background 0.2s", border: "none", cursor: "pointer", flexShrink: 0,
-                        }}>
-                            <span style={{
-                                position: "absolute", top: 2, left: active ? 20 : 2,
-                                width: 18, height: 18, borderRadius: "50%", background: "#fff",
-                                transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
-                            }} />
-                        </button>
-                        <div>
-                            <p style={{ fontSize: 12, fontWeight: 500, color: T.text1 }}>{label}</p>
-                            <p style={{ fontSize: 10, color: T.text3 }}>{sub}</p>
-                        </div>
+                        onClick: () => setMaintenanceMode(prev => !prev),
+                        activeColor: T.red }] : []),
+                ];
+                if (modeToggles.length === 0) return null;
+                return (
+                    <div className="flex items-center gap-8 flex-wrap"
+                        style={{ padding: "12px 20px", borderTop: `0.5px solid ${T.border}`, background: T.surface }}>
+                        {modeToggles.map(({ label, sub, active, onClick, activeColor }) => (
+                            <div key={label} className="flex items-center gap-3">
+                                <button type="button" onClick={onClick} style={{
+                                    position: "relative", width: 40, height: 22, borderRadius: 11,
+                                    background: active ? activeColor : "rgba(255,255,255,0.10)",
+                                    transition: "background 0.2s", border: "none", cursor: "pointer", flexShrink: 0,
+                                }}>
+                                    <span style={{
+                                        position: "absolute", top: 2, left: active ? 20 : 2,
+                                        width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                                        transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+                                    }} />
+                                </button>
+                                <div>
+                                    <p style={{ fontSize: 12, fontWeight: 500, color: T.text1 }}>{label}</p>
+                                    <p style={{ fontSize: 10, color: T.text3 }}>{sub}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                );
+            })()}
         </div>
     );
 }

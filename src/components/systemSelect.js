@@ -86,7 +86,7 @@ export default function SystemSelect() {
                         <button
                             type="button"
                             aria-label="Dark mode"
-                            className="p-2 rounded-lg text-[#2F3E4D] dark:text-gray-200 hover:bg-[#F2F2F2] dark:hover:bg-gray-700 transition"
+                            className="p-2 rounded-lg text-[#2F3E4D] dark:text-gray-200 hover:bg-[#F2F2F2] dark:hover:bg-gray-700 transition cursor-pointer"
                         >
                             <Moon className="w-5 h-5" />
                         </button>

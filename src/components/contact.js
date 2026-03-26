@@ -49,7 +49,7 @@ function getTheme(isDark) {
 }
 
 export default function Contact() {
-    const { user } = useSession();
+    const { user, session } = useSession();
     const { system } = useSystem();
     const [menuOpen, setMenuOpen] = useState(false);
     const { isDark, toggleDark } = useTheme();
@@ -204,7 +204,7 @@ export default function Contact() {
                             <button
                                 type="button"
                                 aria-label={isDark ? "Light mode" : "Dark mode"}
-                                className="p-2 rounded-lg transition-colors"
+                                className="p-2 rounded-lg transition-colors cursor-pointer"
                                 style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                 onClick={toggleDark}
                             >
@@ -248,6 +248,16 @@ export default function Contact() {
                                 onClick={() => setMenuOpen(false)}>
                                 Settings
                             </Link>
+                            {session?.role === "ADMIN" && (
+                                <Link href="/systemselect"
+                                    className="block px-4 py-2 text-sm transition-colors"
+                                    style={{ color: T.text2 }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                                    onClick={() => setMenuOpen(false)}>
+                                    Systems
+                                </Link>
+                            )}
                             <button
                                 onClick={async () => {
                                     try { await fetch("/api/logout", { method: "GET" }); window.location.href = "/?loggedout=true"; }

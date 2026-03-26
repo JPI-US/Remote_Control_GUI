@@ -333,7 +333,7 @@ export default function Settings() {
                             <button
                                 type="button"
                                 aria-label={isDark ? "Light mode" : "Dark mode"}
-                                className="p-2 rounded-lg transition-colors"
+                                className="p-2 rounded-lg transition-colors cursor-pointer"
                                 style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                 onClick={toggleDark}
                             >
@@ -369,16 +369,6 @@ export default function Settings() {
                                 onClick={() => setMenuOpen(false)}>
                                 Dashboard
                             </Link>
-                            {session?.role === "ADMIN" && (
-                                <Link href="/systemselect"
-                                    className="block px-4 py-2 text-sm transition-colors"
-                                    style={{ color: T.amber }}
-                                    onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
-                                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-                                    onClick={() => setMenuOpen(false)}>
-                                    System Select
-                                </Link>
-                            )}
                             <Link href="/contact"
                                 className="block px-4 py-2 text-sm transition-colors"
                                 style={{ color: T.text2 }}
@@ -387,6 +377,16 @@ export default function Settings() {
                                 onClick={() => setMenuOpen(false)}>
                                 Contact us
                             </Link>
+                            {session?.role === "ADMIN" && (
+                                <Link href="/systemselect"
+                                    className="block px-4 py-2 text-sm transition-colors"
+                                    style={{ color: T.text2 }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                                    onClick={() => setMenuOpen(false)}>
+                                    Systems
+                                </Link>
+                            )}
                             <button
                                 onClick={async () => {
                                     try { await fetch("/api/logout", { method: "GET" }); window.location.href = "/?loggedout=true"; }

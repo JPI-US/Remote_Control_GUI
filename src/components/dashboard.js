@@ -624,7 +624,7 @@ export default function Dashboard() {
                                 <button
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
-                                    className="p-2 rounded-lg transition-colors"
+                                    className="p-2 rounded-lg transition-colors cursor-pointer"
                                     style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                     onClick={toggleDark}
                                 >
@@ -1020,6 +1020,7 @@ export default function Dashboard() {
                                     towerRotationDeg={towerRotationDeg}
                                     orientationAngleNum={orientationAngleNum}
                                     canAccessControlPanel={canAccessControlPanel}
+                                    showAutonomousToggle={session?.role === "ADMIN"}
                                     autonomousMode={autonomousMode}
                                     setAutonomousMode={setAutonomousMode}
                                     maintenanceMode={maintenanceMode}
@@ -1098,13 +1099,6 @@ export default function Dashboard() {
                 >
                     <p className="px-4 py-2 text-base font-semibold" style={{ color: T.text1 }}>{user?.name || "Guest"}</p>
                     <div style={{ borderTop: `0.5px solid ${T.border}` }} aria-hidden />
-                    {session?.role === "ADMIN" && (
-                        <Link href="/systemselect" className="block px-4 py-2 text-sm transition-colors"
-                            style={{ color: T.amber }}
-                            onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
-                            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-                            onClick={() => setMenuOpen(false)}>System Select</Link>
-                    )}
                     <Link href="/settings" className="block px-4 py-2 text-sm transition-colors"
                         style={{ color: T.text2 }}
                         onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
@@ -1115,6 +1109,13 @@ export default function Dashboard() {
                         onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
                         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                         onClick={() => setMenuOpen(false)}>Contact us</Link>
+                    {session?.role === "ADMIN" && (
+                        <Link href="/systemselect" className="block px-4 py-2 text-sm transition-colors"
+                            style={{ color: T.text2 }}
+                            onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                            onClick={() => setMenuOpen(false)}>Systems</Link>
+                    )}
                     <button
                         onClick={async () => {
                             try { await fetch("/api/logout", { method: "GET" }); window.location.href = "/?loggedout=true"; }

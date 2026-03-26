@@ -284,7 +284,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/mudit/dev/Remote_Control_GUI/updated/Remote_Control_GUI_repo/src/generated/prisma",
+      "value": "/home/msalla/Desktop/Github/Remote_Control_GUI/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -318,7 +318,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/mudit/dev/Remote_Control_GUI/updated/Remote_Control_GUI_repo/prisma/schema.prisma",
+    "sourceFilePath": "/home/msalla/Desktop/Github/Remote_Control_GUI/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -332,7 +332,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
