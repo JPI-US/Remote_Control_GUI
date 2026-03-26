@@ -581,7 +581,7 @@ export default function Dashboard() {
     // Resolved theme tokens for this render
     const T = getTheme(isDark);
 
-    const GAUGE_R = isDark ? 54 : RADIUS;
+    const GAUGE_R = 54;
     const GAUGE_CIRC = 2 * Math.PI * GAUGE_R;
     const gaugeDashOffset = GAUGE_CIRC * (1 - safePowerPercent);
 
