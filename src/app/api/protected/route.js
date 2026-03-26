@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
-  const token = req.cookies.get('token')?.value;
+  const token = req.cookies.get('session')?.value;
 
   const decoded = verifyJwt(token);
 

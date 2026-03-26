@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +32,7 @@ export async function GET(request, context){
         }
 
         // Only allow the user to access their own data
-        if (userId !== authUserId) {
+        if (String(customerId) !== String(authUserId)) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
@@ -58,19 +59,30 @@ export async function GET(request, context){
 }
 
 export async function PUT(req, context) {
-    const { params } = context;
-    const customerId = parseInt(params.customer_id);
-
-    console.log("Customer ID:", customerId);
-
     try {
-        const body = await req.json();
+        // Authenticate request
+        const token = req.cookies.get('session')?.value;
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
 
-        console.log("Request body:", body);
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const authUserId = decoded.sub;
+
+        // Resolve URL param
+        const { customer_id } = await context.params;
+        const customerId = parseInt(customer_id);
 
         if (isNaN(customerId)) {
             return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
         }
+
+        // Only allow users to update their own notifications
+        if (String(customerId) !== String(authUserId)) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
+        const body = await req.json();
 
         const updatedNotifications = await prisma.notifications.update({
             where: { customer_id: customerId },
@@ -81,9 +93,9 @@ export async function PUT(req, context) {
             },
         });
 
-        return NextResponse.json( updatedNotifications );
+        return NextResponse.json(updatedNotifications);
     } catch (error) {
-        console.error('Prisme update error:', error);
+        console.error('Notifications update error:', error);
         return NextResponse.json({ error: 'Update failed' }, { status: 500 });
     }
 }

@@ -1,139 +1,378 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Moon, Sun, ArrowLeft } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
+import { useSystem } from "@/hooks/useSystem";
 import { useTheme } from "@/context/ThemeContext";
 
-const ORANGE = "#F3B664";
+// ── Exact same token system as dashboard.js / settings.js ─────────────
+function getTheme(isDark) {
+    if (isDark) return {
+        pageBg:      "#14110f",
+        sectionBg:   "#14110f",
+        cardBg:      "rgba(28,24,20,0.85)",
+        cardBorder:  "0.5px solid rgba(255,245,235,0.07)",
+        cardShadow:  "none",
+        cardRadius:  12,
+        text1:       "#f5f0ea",
+        text2:       "rgba(245,240,234,0.6)",
+        text3:       "rgba(245,240,234,0.38)",
+        border:      "rgba(255,245,235,0.07)",
+        border2:     "rgba(255,245,235,0.12)",
+        amber:       "#e6b85c",
+        amberDim:    "rgba(230,184,92,0.14)",
+        green:       "rgba(74,222,128,0.75)",
+        red:         "#ef4444",
+        inputBg:     "rgba(255,255,255,0.05)",
+        inputBorder: "rgba(255,245,235,0.12)",
+    };
+    return {
+        pageBg:      "#F4F6F9",
+        sectionBg:   "#F4F6F9",
+        cardBg:      "#FFFFFF",
+        cardBorder:  "1px solid rgba(26,37,53,0.07)",
+        cardShadow:  "0 4px 6px rgba(26,37,53,0.04), 0 8px 24px rgba(26,37,53,0.08), 0 1px 2px rgba(26,37,53,0.06)",
+        cardRadius:  20,
+        text1:       "#1A2535",
+        text2:       "#3D5068",
+        text3:       "#7A90A8",
+        border:      "rgba(26,37,53,0.08)",
+        border2:     "rgba(26,37,53,0.14)",
+        amber:       "#E8A020",
+        amberDim:    "rgba(232,160,32,0.12)",
+        green:       "#4A9E78",
+        red:         "#e53e3e",
+        inputBg:     "#FFFFFF",
+        inputBorder: "rgba(26,37,53,0.20)",
+    };
+}
 
 export default function Contact() {
     const { user } = useSession();
+    const { system } = useSystem();
     const [menuOpen, setMenuOpen] = useState(false);
     const { isDark, toggleDark } = useTheme();
+    const T = getTheme(isDark);
+
+    const inputStyle = {
+        width: "100%", padding: "10px 14px", borderRadius: 8,
+        border: `1px solid ${T.inputBorder}`, background: T.inputBg,
+        color: T.text1, fontSize: 14, outline: "none", boxSizing: "border-box",
+    };
+    const labelStyle = {
+        fontSize: 12, fontWeight: 700, letterSpacing: "0.10em",
+        textTransform: "uppercase", color: T.text3, marginBottom: 6, display: "block",
+    };
+    const sectionLabel = {
+        fontSize: 13, fontWeight: 700, letterSpacing: "0.15em",
+        textTransform: "uppercase", color: T.text3, marginBottom: 20,
+    };
 
     return (
-        <div className="flex flex-col min-h-screen w-full bg-[#F2F2F2] text-[#2F3E4D] dark:bg-gray-900 dark:text-gray-100">
-            {/* Header - same as dashboard and settings */}
-            <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-4 bg-white shadow-sm border-b border-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:shadow-gray-900">
-                <Link href="/dashboard" className="flex items-center shrink-0">
-                    <img
-                        src="/images/Janta%20Power%20Business%20Card%20Logo%202.svg"
-                        alt="Janta Power"
-                        className="h-14 w-auto min-w-[160px] object-contain md:h-16 md:min-w-[200px]"
-                    />
-                </Link>
-                <div className="flex items-center gap-2">
-                    <button type="button" aria-label={isDark ? "Light mode" : "Dark mode"} className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200" onClick={toggleDark}>
-                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                    </button>
-                    <button type="button" aria-label="Menu" className="p-2 rounded-lg hover:bg-[#F2F2F2] dark:hover:bg-gray-700 text-[#2F3E4D] dark:text-gray-200 cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
-                        {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                    </button>
-                </div>
-            </header>
+        // ── Outer shell — exact same as dashboard.js / settings.js ──────
+        <div
+            className="flex flex-col h-screen overflow-hidden w-full"
+            style={{
+                background: T.pageBg, color: T.text1,
+                backgroundColor: T.pageBg,
+                WebkitFontSmoothing: "antialiased",
+                MozOsxFontSmoothing: "grayscale",
+                textRendering: "optimizeLegibility",
+            }}
+        >
+            <div className="flex flex-1 min-h-0">
 
-            {/* Dropdown from top bar menu - same as dashboard and settings */}
-            {menuOpen && (
-                <div className="fixed top-24 right-6 w-56 bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-600 rounded-lg shadow-lg py-2 z-50">
-                    <p className="px-4 py-2 text-base font-semibold dark:text-gray-200">{user?.name || "Guest"}</p>
-                    <div className="border-t border-gray-200 dark:border-gray-600" aria-hidden="true" />
-                    <Link href="/dashboard" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Dashboard</Link>
-                    <Link href="/settings" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200" onClick={() => setMenuOpen(false)}>Settings</Link>
-                    <button
-                        onClick={async () => {
-                            try {
-                                await fetch("/api/logout", { method: "GET" });
-                                window.location.href = "/?loggedout=true";
-                            } catch (err) {
-                                console.error("Logout failed:", err);
-                            }
+                {/* ── SIDEBAR — mirrors Sidebar.js / settings.js 1:1 ── */}
+                <aside style={{
+                    position: "fixed", top: 0, left: 0, bottom: 0, width: 256, zIndex: 30,
+                    background: isDark ? "#14110f" : "#1A2535",
+                    borderRight: isDark
+                        ? "0.5px solid rgba(255,245,235,0.07)"
+                        : "none",
+                    boxShadow: isDark ? "none" : "2px 0 16px rgba(0,0,0,0.25)",
+                    display: "flex", flexDirection: "column", overflowY: "auto",
+                }}>
+                    {/* Logo */}
+                    <Link href="/dashboard"
+                        className="flex items-center justify-center px-4 shrink-0"
+                        style={{
+                            padding: "18px 16px",
+                            borderBottom: isDark
+                                ? "0.5px solid rgba(255,245,235,0.07)"
+                                : "none",
+                            textDecoration: "none",
+                            transition: "background 0.2s ease",
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200 cursor-pointer"
+                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(230,184,92,0.04)"; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                     >
-                        Log Out
-                    </button>
-                </div>
-            )}
+                        <img
+                            src="/images/Janta_Power_Business_Card_Logo.jpeg"
+                            alt="Janta Power"
+                            style={{ width: "100%", maxWidth: 180, height: "auto", objectFit: "contain" }}
+                        />
+                    </Link>
 
-            {/* Main content */}
-            <main className="flex-1 overflow-y-auto min-h-0 pt-28 pb-8 px-6 dark:bg-gray-900">
-                <Link
-                    href="/dashboard"
-                    className="inline-flex items-center gap-2 text-[#2F3E4D] dark:text-gray-200 hover:text-[#F3B664] font-medium transition-colors cursor-pointer mb-6"
-                    aria-label="Back to dashboard"
-                >
-                    <ArrowLeft className="w-5 h-5 flex-shrink-0" />
-                    Back to Dashboard
-                </Link>
-                <div className="max-w-2xl mx-auto">
-                    <h1 className="text-xl font-bold uppercase tracking-wide text-[#2F3E4D] dark:text-gray-100 text-center mb-8">
-                        Contact us
-                    </h1>
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-400 dark:border-gray-600 p-6">
-                        <form method="post">
-                            <div className="mb-4">
-                                <label htmlFor="fullname" className="block text-sm font-medium text-[#6A7B8F] mb-1">
-                                    Full Name <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="fullname"
-                                    name="fullname"
-                                    required
-                                    className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="email" className="block text-sm font-medium text-[#6A7B8F] mb-1">
-                                    Email <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    required
-                                    className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-sm font-medium text-[#6A7B8F] mb-1">
-                                    Message <span className="text-red-500">*</span>
-                                </label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    placeholder="Draft a message..."
-                                    required
-                                    rows={5}
-                                    className="w-full border border-gray-400 dark:border-gray-600 rounded-lg px-3 py-2 text-[#2F3E4D] dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent resize-y"
-                                />
-                            </div>
-                            <div className="mb-6 flex items-start gap-2">
-                                <input
-                                    type="radio"
-                                    id="privacy-policy"
-                                    name="privacy-policy"
-                                    required
-                                    className="mt-1 rounded-full border-gray-400 dark:border-gray-600 text-[#2A9D8F] focus:ring-[#2A9D8F]"
-                                />
-                                <label htmlFor="privacy-policy" className="text-sm text-[#6A7B8F]">
-                                    I accept the terms <span className="text-red-500">*</span>
-                                </label>
-                            </div>
-                            <div className="flex justify-end">
-                                <button
-                                    type="submit"
-                                    className="px-5 py-2.5 rounded-lg font-bold text-white transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F3B664] cursor-pointer"
-                                    style={{ backgroundColor: ORANGE }}
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
+                    {/* Nav */}
+                    <nav className="flex flex-col p-3 pt-5 gap-1">
+                        <span className="px-3 pb-3 text-xs font-bold uppercase tracking-widest"
+                            style={{ color: "rgba(230,184,92,0.5)" }}>
+                            Support
+                        </span>
+                        <Link
+                            href="/dashboard"
+                            style={{
+                                display: "flex", alignItems: "center", gap: 10,
+                                padding: "10px 14px", borderRadius: 10,
+                                textDecoration: "none", fontSize: 13,
+                                color: "rgba(245,240,234,0.5)",
+                                transition: "all 0.22s ease",
+                            }}
+                            onMouseEnter={e => {
+                                e.currentTarget.style.background = "rgba(245,240,234,0.04)";
+                                e.currentTarget.style.color = "#f5f0ea";
+                            }}
+                            onMouseLeave={e => {
+                                e.currentTarget.style.background = "transparent";
+                                e.currentTarget.style.color = "rgba(245,240,234,0.5)";
+                            }}
+                        >
+                            ← Dashboard
+                        </Link>
+                        <div style={{
+                            display: "flex", alignItems: "center", gap: 10,
+                            padding: "10px 14px", borderRadius: 10,
+                            fontSize: 13, fontWeight: 500,
+                            color: "#f5f0ea",
+                            background: "rgba(230,184,92,0.12)",
+                            boxShadow: "0 0 16px rgba(230,184,92,0.08)",
+                            position: "relative",
+                        }}>
+                            <span style={{ color: "#e6b85c", fontSize: 14 }}>✉</span>
+                            <span>Contact Us</span>
+                            <span style={{
+                                position: "absolute", right: 12,
+                                width: 5, height: 5, borderRadius: "50%",
+                                background: "#e6b85c", boxShadow: "0 0 6px #e6b85c",
+                                opacity: 0.85,
+                            }} />
+                        </div>
+                    </nav>
+
+                    {/* Footer */}
+                    <div className="mt-auto p-4" style={{
+                        borderTop: isDark
+                            ? "0.5px solid rgba(255,245,235,0.07)"
+                            : "1px solid rgba(255,255,255,0.1)",
+                        background: isDark ? "transparent" : "rgba(255,255,255,0.05)",
+                    }}>
+                        <p className="text-xs font-medium truncate" style={{
+                            color: isDark ? "rgba(245,240,234,0.28)" : "rgba(230,184,92,0.5)",
+                        }}>
+                            {system?.system_name || "System"}
+                        </p>
                     </div>
+                </aside>
+
+                {/* ── RIGHT COLUMN ── */}
+                <div
+                    className="flex-1 flex flex-col min-w-0 min-h-0"
+                    style={{ marginLeft: 256, background: T.pageBg, backgroundColor: T.pageBg }}
+                >
+                    {/* ── HEADER — matches dashboard.js / settings.js exactly ── */}
+                    <header
+                        className="flex items-center justify-between px-6 py-4"
+                        style={isDark
+                            ? {
+                                background: "#1c1916",
+                                borderBottom: "0.5px solid rgba(255,245,235,0.07)",
+                            }
+                            : {
+                                background: "linear-gradient(to right, rgba(26,37,53,0.96) 0%, rgba(26,37,53,0.80) 25%, rgba(26,37,53,0.45) 55%, rgba(242,242,242,0.0) 100%)",
+                                borderBottom: "1px solid rgba(26,37,53,0.15)",
+                            }
+                        }
+                    >
+                        <p className="text-sm font-medium" style={{ color: "rgba(245,235,220,0.9)" }}>
+                            {system?.system_name
+                                ? `${system.system_name} • Contact Us`
+                                : "Contact Us"}
+                        </p>
+
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                aria-label={isDark ? "Light mode" : "Dark mode"}
+                                className="p-2 rounded-lg transition-colors"
+                                style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
+                                onClick={toggleDark}
+                            >
+                                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            </button>
+                            <button
+                                type="button"
+                                aria-label="Menu"
+                                className="p-2 rounded-lg transition-colors cursor-pointer"
+                                style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
+                                onClick={() => setMenuOpen(!menuOpen)}
+                            >
+                                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* ── DROPDOWN — matches dashboard.js / settings.js ── */}
+                    {menuOpen && (
+                        <div
+                            className="fixed top-[64px] right-6 w-56 rounded-lg shadow-lg py-2 z-50"
+                            style={{ background: T.cardBg, border: T.cardBorder, borderRadius: 8 }}
+                        >
+                            <p className="px-4 py-2 text-base font-semibold" style={{ color: T.text1 }}>
+                                {user?.name || "Guest"}
+                            </p>
+                            <div style={{ borderTop: `0.5px solid ${T.border}` }} aria-hidden />
+                            <Link href="/dashboard"
+                                className="block px-4 py-2 text-sm transition-colors"
+                                style={{ color: T.text2 }}
+                                onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                                onClick={() => setMenuOpen(false)}>
+                                Dashboard
+                            </Link>
+                            <Link href="/settings"
+                                className="block px-4 py-2 text-sm transition-colors"
+                                style={{ color: T.text2 }}
+                                onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                                onClick={() => setMenuOpen(false)}>
+                                Settings
+                            </Link>
+                            <button
+                                onClick={async () => {
+                                    try { await fetch("/api/logout", { method: "GET" }); window.location.href = "/?loggedout=true"; }
+                                    catch (err) { console.error("Logout failed:", err); }
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm transition-colors cursor-pointer"
+                                style={{ color: T.text2, background: "transparent", border: "none" }}
+                                onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                            >
+                                Log Out
+                            </button>
+                        </div>
+                    )}
+
+                    {/* ── SCROLL AREA ── */}
+                    <main
+                        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden"
+                        style={{ background: T.sectionBg }}
+                    >
+                        <section className="py-10 px-8" style={{ background: T.sectionBg }}>
+                            <div style={{ maxWidth: 640 }}>
+
+                                {/* Section label — matches "PROFILE", "SECURITY" etc. */}
+                                <p style={sectionLabel}>Contact Us</p>
+
+                                <div style={{
+                                    background: T.cardBg, border: T.cardBorder,
+                                    boxShadow: T.cardShadow, borderRadius: T.cardRadius,
+                                    overflow: "hidden",
+                                }}>
+                                    {/* Card header row */}
+                                    <div className="flex items-center"
+                                        style={{ padding: "14px 24px", borderBottom: `0.5px solid ${T.border}` }}>
+                                        <span style={{
+                                            fontSize: 13, fontWeight: 700,
+                                            letterSpacing: "0.15em", textTransform: "uppercase",
+                                            color: T.text3,
+                                        }}>
+                                            Send a Message
+                                        </span>
+                                    </div>
+
+                                    {/* Form */}
+                                    <form method="post">
+                                        <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+
+                                            <div>
+                                                <label htmlFor="fullname" style={labelStyle}>
+                                                    Full Name <span style={{ color: T.red }}>*</span>
+                                                </label>
+                                                <input
+                                                    type="text" id="fullname" name="fullname" required
+                                                    style={inputStyle}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="email" style={labelStyle}>
+                                                    Email <span style={{ color: T.red }}>*</span>
+                                                </label>
+                                                <input
+                                                    type="email" id="email" name="email" required
+                                                    style={inputStyle}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="message" style={labelStyle}>
+                                                    Message <span style={{ color: T.red }}>*</span>
+                                                </label>
+                                                <textarea
+                                                    id="message" name="message"
+                                                    placeholder="Draft a message..."
+                                                    required rows={5}
+                                                    style={{
+                                                        ...inputStyle,
+                                                        resize: "vertical",
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                />
+                                            </div>
+
+                                            {/* Terms checkbox */}
+                                            <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                                                <input
+                                                    type="checkbox" id="privacy-policy"
+                                                    name="privacy-policy" required
+                                                    style={{ marginTop: 3, accentColor: T.amber, flexShrink: 0 }}
+                                                />
+                                                <label htmlFor="privacy-policy" style={{
+                                                    fontSize: 13, color: T.text3, cursor: "pointer",
+                                                }}>
+                                                    I accept the terms <span style={{ color: T.red }}>*</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* Footer row with submit */}
+                                        <div style={{
+                                            padding: "14px 24px",
+                                            borderTop: `0.5px solid ${T.border}`,
+                                            display: "flex", justifyContent: "flex-end",
+                                        }}>
+                                            <button
+                                                type="submit"
+                                                style={{
+                                                    padding: "8px 24px", borderRadius: 8,
+                                                    background: T.amber,
+                                                    color: isDark ? "#000" : "#fff",
+                                                    fontWeight: 700, fontSize: 13,
+                                                    border: "none", cursor: "pointer",
+                                                }}
+                                            >
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </section>
+                    </main>
                 </div>
-            </main>
+            </div>
         </div>
     );
 }

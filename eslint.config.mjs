@@ -1,35 +1,40 @@
 import js from "@eslint/js";
 import globals from "globals";
 import pluginReact from "eslint-plugin-react";
-import pluginTailwind from "eslint-plugin-tailwindcss";
-import pluginPrettier from "eslint-plugin-prettier";
-import { defineConfig } from "eslint/config";
 
-export default defineConfig([
-  // 1️⃣ Basic JS rules for browser files
-  { 
-    files: ["**/*.{js,mjs,cjs,jsx,ts,tsx}"], 
-    plugins: { js }, 
-    extends: ["js/recommended"], 
-    languageOptions: { globals: { ...globals.browser, ...globals.node } } 
-  },
-
-  // 2️⃣ React, Tailwind, and Prettier rules
+export default [
   {
-    ...pluginReact.configs.flat.recommended,
-    plugins: { tailwindcss: pluginTailwind, prettier: pluginPrettier },
-    extends: ["plugin:tailwindcss/recommended", "plugin:prettier/recommended"],
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "dist/**",
+      "build/**",
+      "src/generated/**",
+    ],
+  },
+  {
+    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+      ecmaVersion: 2020,
+      sourceType: "module",
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+    },
+    plugins: {
+      react: pluginReact,
+      "@eslint/js": js,
+    },
     rules: {
-      "react/react-in-jsx-scope": "off", // Next.js no longer requires React import
-      "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx", ".ts", ".tsx"] }],
-      "tailwindcss/classnames-order": "warn",
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
-      "no-console": "warn",
-      "no-unused-vars": ["warn"]
+      ...js.configs.recommended.rules,
+      ...pluginReact.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     },
     settings: {
-      react: { version: "detect" } // Automatically detect React version
+      react: { version: "detect" },
     },
-    files: ["**/*.{js,jsx,ts,tsx}"]
-  }
-]);
+  },
+];

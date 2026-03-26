@@ -39,7 +39,7 @@ export async function GET(request) {
         }
         // Validation check
         else{
-            console.error("Error fetching user role:", err);
+            console.error("Error fetching user role: unexpected role", userRole);
             return NextResponse.json(
                 { error: "Incorrect USER Role value" },
                 { status: 404 }

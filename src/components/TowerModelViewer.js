@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-const MODEL_PATH = "/Model/";
+const MODEL_PATH = "/Model/5.6k_10x4_panels/";
 const MODEL_FILE = "5.6k_10x4_panels.gltf";
 const SUN_FILE = "sun.glb";
 
@@ -17,7 +17,6 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
     const cameraRef = useRef(null);
     angleRef.current = angleDeg;
 
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [containerSize, setContainerSize] = useState(fillContainer ? null : { width, height });
 
@@ -45,12 +44,12 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
         const container = containerRef.current;
         if (!container) return;
 
-        let scene, camera, renderer, towerModel, sunLight, animationId;
+        let scene, camera, renderer, towerModel, animationId;
 
         function init() {
             try {
                 scene = new THREE.Scene();
-                scene.background = new THREE.Color(0xe8e8e8);
+                scene.background = null;
 
                 camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
                 camera.position.set(0, 14, 44);
@@ -70,9 +69,21 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                 }
                 container.appendChild(renderer.domElement);
 
-                const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-                scene.add(ambient);
+                // Lighting — neutral white for both modes
+                scene.add(new THREE.AmbientLight(0xffffff, isDark ? 0.9 : 1.8));
+                scene.add(new THREE.HemisphereLight(
+                    isDark ? 0x1a1a2e : 0xffffff,
+                    isDark ? 0x0c0c0d : 0xd0d0d0,
+                    isDark ? 0.55 : 0.9
+                ));
+                const fill = new THREE.PointLight(0xffffff, isDark ? 0.4 : 0.5, 60);
+                fill.position.set(-10, 2, 10);
+                scene.add(fill);
+                const uplight = new THREE.PointLight(0xffffff, isDark ? 0.9 : 0.6, 55);
+                uplight.position.set(0, -4, 22);
+                scene.add(uplight);
 
+                // Tower model
                 const loader = new GLTFLoader();
                 loader.setPath(MODEL_PATH);
                 loader.load(
@@ -80,25 +91,29 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                     (gltf) => {
                         if (!mountedRef.current || !scene) return;
                         towerModel = gltf.scene;
-                        const box = new THREE.Box3().setFromObject(towerModel);
+                        const box    = new THREE.Box3().setFromObject(towerModel);
                         const center = box.getCenter(new THREE.Vector3());
-                        const size = box.getSize(new THREE.Vector3());
-                        const maxDim = Math.max(size.x, size.y, size.z);
-                        const scale = 18 / maxDim;
+                        const size_  = box.getSize(new THREE.Vector3());
+                        const scale  = 18 / Math.max(size_.x, size_.y, size_.z);
                         towerModel.scale.setScalar(scale);
                         towerModel.position.x = -center.x * scale;
                         towerModel.position.y = -box.min.y * scale;
                         towerModel.position.z = -center.z * scale;
                         towerModel.traverse((child) => {
                             if (child.isMesh) {
-                                child.castShadow = true;
+                                child.castShadow    = true;
                                 child.receiveShadow = true;
-                                if (child.material) {
-                                    const materials = Array.isArray(child.material) ? child.material : [child.material];
-                                    materials.forEach((mat) => {
-                                        if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshPhysicalMaterial) {
-                                            mat.metalness = 0.7;
-                                            mat.roughness = 0.3;
+                                if (child.material && isDark) {
+                                    // Only override materials in dark mode
+                                    const mats = Array.isArray(child.material)
+                                        ? child.material : [child.material];
+                                    mats.forEach((m) => {
+                                        if (
+                                            m instanceof THREE.MeshStandardMaterial ||
+                                            m instanceof THREE.MeshPhysicalMaterial
+                                        ) {
+                                            m.metalness = 0.75;
+                                            m.roughness = 0.25;
                                         }
                                     });
                                 }
@@ -107,70 +122,63 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                         scene.add(towerModel);
                         loadSun();
                         setLoading(false);
-                        setError(null);
                     },
-                    (progress) => {
-                        if (progress.total > 0 && progress.loaded === progress.total) {
-                            setLoading(false);
-                        }
-                    },
+                    undefined,
                     (err) => {
                         console.error("Tower model load error:", err);
-                        setError(err?.message || "Failed to load model");
                         setLoading(false);
+                        onError?.();
                     }
                 );
 
+                // Sun model
                 function loadSun() {
-                    loader.load(
-                        SUN_FILE,
-                        (gltf) => {
-                            if (!mountedRef.current || !scene) return;
-                            const sunObject = gltf.scene;
-                            const sunBox = new THREE.Box3().setFromObject(sunObject);
-                            const sunSize = sunBox.getSize(new THREE.Vector3());
-                            const maxSunDim = Math.max(sunSize.x, sunSize.y, sunSize.z);
-                            const sunScale = 8 / maxSunDim;
-                            sunObject.scale.set(sunScale, sunScale, sunScale);
-                            sunObject.traverse((child) => {
-                                if (child.isMesh && child.material) {
-                                    const materials = Array.isArray(child.material) ? child.material : [child.material];
-                                    materials.forEach((mat) => {
-                                        if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshPhysicalMaterial) {
-                                            mat.emissive = new THREE.Color(0xffaa00);
-                                            mat.emissiveIntensity = 2.0;
-                                        }
-                                    });
-                                }
-                            });
-                            const sunX = 18;
-                            const sunY = 22;
-                            const sunZ = 14;
-                            sunObject.position.set(sunX, sunY, sunZ);
-                            scene.add(sunObject);
-                            sunLight = new THREE.DirectionalLight(0xffcc66, 2.2);
-                            sunLight.position.set(sunX, sunY, sunZ);
-                            sunLight.target.position.set(0, 10, 0);
-                            sunLight.castShadow = true;
-                            sunLight.shadow.mapSize.width = 4096;
-                            sunLight.shadow.mapSize.height = 4096;
-                            sunLight.shadow.radius = 4;
-                            sunLight.shadow.camera.near = 0.5;
-                            sunLight.shadow.camera.far = 80;
-                            sunLight.shadow.camera.left = -25;
-                            sunLight.shadow.camera.right = 25;
-                            sunLight.shadow.camera.top = 25;
-                            sunLight.shadow.camera.bottom = -25;
-                            scene.add(sunLight);
-                            const sunPointLight = new THREE.PointLight(0xffaa00, 0.8, 50);
-                            sunPointLight.position.set(sunX, sunY, sunZ);
-                            scene.add(sunPointLight);
-                        },
-                        undefined,
-                        (err) => console.warn("Sun model load failed:", err)
-                    );
+                    const sl = new GLTFLoader();
+                    sl.setPath(SUN_PATH);
+                    sl.load(SUN_FILE, (gltf) => {
+                        if (!mountedRef.current || !scene) return;
+                        const sunObj = gltf.scene;
+                        const sunBox = new THREE.Box3().setFromObject(sunObj);
+                        const sunSz  = sunBox.getSize(new THREE.Vector3());
+                        const sunSc  = 8 / Math.max(sunSz.x, sunSz.y, sunSz.z);
+                        sunObj.scale.set(sunSc, sunSc, sunSc);
+                        sunObj.traverse((child) => {
+                            if (child.isMesh && child.material) {
+                                const ms = Array.isArray(child.material)
+                                    ? child.material : [child.material];
+                                ms.forEach((m) => {
+                                    if (
+                                        m instanceof THREE.MeshStandardMaterial ||
+                                        m instanceof THREE.MeshPhysicalMaterial
+                                    ) {
+                                        m.emissive          = new THREE.Color(0xffaa00);
+                                        m.emissiveIntensity = 2.0;
+                                    }
+                                });
+                            }
+                        });
+                        const [sx, sy, sz] = [18, 22, 14];
+                        sunObj.position.set(sx, sy, sz);
+                        scene.add(sunObj);
+                        const dl = new THREE.DirectionalLight(0xffffff, isDark ? 1.6 : 1.4);
+                        dl.position.set(sx, sy, sz);
+                        dl.target.position.set(0, 10, 0);
+                        dl.castShadow            = true;
+                        dl.shadow.mapSize.width   = 2048;
+                        dl.shadow.mapSize.height  = 2048;
+                        dl.shadow.camera.left     = -25;
+                        dl.shadow.camera.right    = 25;
+                        dl.shadow.camera.top      = 25;
+                        dl.shadow.camera.bottom   = -25;
+                        scene.add(dl);
+                        const pl = new THREE.PointLight(0xffffff, isDark ? 0.4 : 0.3, 50);
+                        pl.position.set(sx, sy, sz);
+                        scene.add(pl);
+                    }, undefined, (e) => console.warn("Sun load failed:", e));
                 }
 
+                // Render loop — azimuth: negate angle to match Three.js counter-clockwise convention
+                // ROTATION_OFFSET = 0 (no offset needed — model default forward already aligns)
                 function animate() {
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
@@ -182,11 +190,12 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                     if (renderer && scene && camera) {
                         renderer.render(scene, camera);
                     }
+                    renderer.render(scene, camera);
                 }
                 animate();
+
             } catch (e) {
                 console.error("TowerModelViewer init error:", e);
-                setError(e?.message || "Failed to init 3D viewer");
                 setLoading(false);
             }
         }
@@ -196,7 +205,8 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
         return () => {
             mountedRef.current = false;
             if (animationId) cancelAnimationFrame(animationId);
-            if (renderer && container && renderer.domElement.parentNode === container) {
+            if (renderer && container &&
+                renderer.domElement.parentNode === container) {
                 container.removeChild(renderer.domElement);
             }
             renderer?.dispose();
@@ -228,37 +238,12 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                 style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}
             />
             {loading && (
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.875rem",
-                        color: "#6A7B8F",
-                        pointerEvents: "none",
-                    }}
-                >
-                    Loading 3D model…
-                </div>
-            )}
-            {error && (
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.875rem",
-                        color: "#b91c1c",
-                        padding: 8,
-                        textAlign: "center",
-                    }}
-                >
-                    {error}
-                </div>
+                <div style={{
+                    position: "absolute", inset: 0,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "0.7rem", color: "rgba(255,255,255,0.2)",
+                    pointerEvents: "none",
+                }}>Loading…</div>
             )}
         </div>
     );

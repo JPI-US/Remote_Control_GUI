@@ -52,7 +52,7 @@ export async function PUT(req) {
         });
       
         return NextResponse.json({ message: 'Password changed successfully' });
-    } catch{
+    } catch (error) {
         console.error('Error changing password:', error);
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
