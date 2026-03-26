@@ -6,9 +6,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const MODEL_PATH = "/Model/5.6k_10x4_panels/";
 const MODEL_FILE = "5.6k_10x4_panels.gltf";
+const SUN_PATH   = "/Model/";
 const SUN_FILE = "sun.glb";
 
-export default function TowerModelViewer({ angleDeg = 0, className = "", width = 280, height = 280, fillContainer = false }) {
+export default function TowerModelViewer({ angleDeg = 0, className = "", width = 280, height = 280, fillContainer = false, isDark = true, onError }) {
     const rootRef = useRef(null);
     const containerRef = useRef(null);
     const angleRef = useRef(angleDeg);
@@ -183,14 +184,11 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
                     if (towerModel) {
-                        const effectiveAngle = Math.max(90, Math.min(270, 90)); // TODO: testing 270° — restore angleRef.current angleRef.current
-                        const modelAngle = 360 - effectiveAngle;
-                        towerModel.rotation.y = (modelAngle * Math.PI) / 180;
+                        towerModel.rotation.y = (-angleRef.current * Math.PI) / 180;
                     }
                     if (renderer && scene && camera) {
                         renderer.render(scene, camera);
                     }
-                    renderer.render(scene, camera);
                 }
                 animate();
 
@@ -230,7 +228,7 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
             style={{
                 ...(fillContainer ? { width: "100%", height: "100%", minWidth: 0, minHeight: 0 } : { width, height, minWidth: width, minHeight: height }),
                 position: "relative",
-                background: "#e8e8e8",
+                background: "transparent",
             }}
         >
             <div
