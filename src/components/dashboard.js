@@ -883,7 +883,7 @@ export default function Dashboard() {
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, minHeight: 200 }}
                                 >
                                     <div>
-                                        <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
+                                        <p style={{ fontSize: 13, fontWeight: 700, color: T.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
                                             Environmental Impact
                                         </p>
                                         <p style={{ fontSize: 44, fontWeight: 200, color: T.amber, lineHeight: 1, letterSpacing: "-0.02em" }}>
