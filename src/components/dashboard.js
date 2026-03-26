@@ -119,33 +119,33 @@ function getTheme(isDark) {
     };
     return {
         // Page backgrounds
-        pageBg:      "#F7F5F2",
-        sectionBg:   "#F7F5F2",
-        section2Bg:  "#F2F2F2",
+        pageBg:      "#F4F6F9",
+        sectionBg:   "#F4F6F9",
+        section2Bg:  "#EEF1F5",
         // Cards
         cardBg:      "#FFFFFF",
-        cardBorder:  "1px solid rgba(0,0,0,0.04)",
-        cardShadow:  "0 4px 6px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
+        cardBorder:  "1px solid rgba(26,37,53,0.07)",
+        cardShadow:  "0 4px 6px rgba(26,37,53,0.04), 0 8px 24px rgba(26,37,53,0.08), 0 1px 2px rgba(26,37,53,0.06)",
         cardRadius:  20,
-        // Text hierarchy
-        text1:       "#5C4A38",
-        text2:       "#8B7355",
-        text3:       "#A8978A",
-        label:       "#8B7355",
+        // Text hierarchy — navy blue family matching #1A2535 sidebar
+        text1:       "#1A2535",
+        text2:       "#3D5068",
+        text3:       "#7A90A8",
+        label:       "#3D5068",
         // Dividers
-        border:      "rgba(0,0,0,0.06)",
-        border2:     "rgba(0,0,0,0.10)",
-        divider:     "#e5e7eb",
+        border:      "rgba(26,37,53,0.08)",
+        border2:     "rgba(26,37,53,0.14)",
+        divider:     "rgba(26,37,53,0.08)",
         // Accents
         amber:       "#E8A020",
         amberDim:    "rgba(232,160,32,0.12)",
         green:       "#4A9E78",
         // Gauge
-        gaugeTrack:  "#e5e7eb",
+        gaugeTrack:  "rgba(26,37,53,0.10)",
         gaugeRing:   "#F3B664",
         // Charts
-        chartBg:     "#EFEFEF",
-        chartGrid:   "#E0E0E0",
+        chartBg:     "#EEF1F5",
+        chartGrid:   "rgba(26,37,53,0.08)",
         // Typography scale
         heroSize:    52,
         heroWeight:  200,
