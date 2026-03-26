@@ -76,6 +76,86 @@ const DK = {
     earth:    "#8b7355",
 };
 
+// ── Theme token system ────────────────────────────────────────────────
+// Single source of truth for both light and dark mode.
+// All card UI should reference T.* instead of DK.* or WM.* directly.
+function getTheme(isDark) {
+    if (isDark) return {
+        // Page backgrounds
+        pageBg:      "#14110f",
+        sectionBg:   "#14110f",
+        section2Bg:  "#14110f",
+        // Cards
+        cardBg:      "rgba(28,24,20,0.85)",
+        cardBorder:  "0.5px solid rgba(255,245,235,0.07)",
+        cardShadow:  "none",
+        cardRadius:  12,
+        // Text hierarchy
+        text1:       "#f5f0ea",
+        text2:       "rgba(245,240,234,0.6)",
+        text3:       "rgba(245,240,234,0.38)",
+        label:       "rgba(245,240,234,0.38)",
+        // Dividers
+        border:      "rgba(255,245,235,0.07)",
+        border2:     "rgba(255,245,235,0.12)",
+        divider:     "rgba(255,245,235,0.07)",
+        // Accents
+        amber:       "#e6b85c",
+        amberDim:    "rgba(230,184,92,0.14)",
+        green:       "rgba(74,222,128,0.75)",
+        // Gauge
+        gaugeTrack:  "rgba(230,184,92,0.14)",
+        gaugeRing:   "#e6b85c",
+        // Charts
+        chartBg:     "rgba(255,255,255,0.03)",
+        chartGrid:   "rgba(255,255,255,0.04)",
+        // Typography scale
+        heroSize:    52,
+        heroWeight:  200,
+        statSize:    28,
+        statWeight:  200,
+        // Surface (alias for cardBg)
+        surface:     "rgba(28,24,20,0.85)",
+    };
+    return {
+        // Page backgrounds
+        pageBg:      "#F7F5F2",
+        sectionBg:   "#F7F5F2",
+        section2Bg:  "#F2F2F2",
+        // Cards
+        cardBg:      "#FFFFFF",
+        cardBorder:  "1px solid rgba(0,0,0,0.04)",
+        cardShadow:  "0 4px 6px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
+        cardRadius:  20,
+        // Text hierarchy
+        text1:       "#5C4A38",
+        text2:       "#8B7355",
+        text3:       "#A8978A",
+        label:       "#8B7355",
+        // Dividers
+        border:      "rgba(0,0,0,0.06)",
+        border2:     "rgba(0,0,0,0.10)",
+        divider:     "#e5e7eb",
+        // Accents
+        amber:       "#E8A020",
+        amberDim:    "rgba(232,160,32,0.12)",
+        green:       "#4A9E78",
+        // Gauge
+        gaugeTrack:  "#e5e7eb",
+        gaugeRing:   "#F3B664",
+        // Charts
+        chartBg:     "#EFEFEF",
+        chartGrid:   "#E0E0E0",
+        // Typography scale
+        heroSize:    52,
+        heroWeight:  200,
+        statSize:    28,
+        statWeight:  200,
+        // Surface (alias for cardBg)
+        surface:     "#FFFFFF",
+    };
+}
+
 // Helper: returns className string for a dark-mode-aware card
 function dkCard(isDark, extraLight = "", extraDark = "") {
     if (isDark) return `rounded-xl border ${extraDark}`;
@@ -500,14 +580,17 @@ export default function Dashboard() {
         : {};
     const sectionLabelCls = isDark ? "" : "text-sm font-bold uppercase tracking-wider text-[#5C4A38]";
 
+    // Resolved theme tokens for this render
+    const T = getTheme(isDark);
+
     const GAUGE_R = isDark ? 54 : RADIUS;
     const GAUGE_CIRC = 2 * Math.PI * GAUGE_R;
     const gaugeDashOffset = GAUGE_CIRC * (1 - safePowerPercent);
 
     return (
         <div
-            className="flex flex-col h-screen overflow-hidden w-full text-[#5C4A38] dark:text-gray-100"
-            style={isDark ? { background: DK.bg } : { background: WM.bg, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", textRendering: "optimizeLegibility" }}
+            className="flex flex-col h-screen overflow-hidden w-full"
+            style={{ background: T.pageBg, color: T.text1, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", textRendering: "optimizeLegibility" }}
         >
             <div className="flex flex-1 min-h-0">
                 <Sidebar activeSection={activeSection} onSectionChange={(id) => {
@@ -516,7 +599,7 @@ export default function Dashboard() {
                     scrollToSection(refMap[id], `/dashboard${id !== "dashboard" ? "#" + id : ""}`);
                 }} systemName={system?.system_name} isNarrow={isNarrow} />
 
-                <div className="flex-1 flex flex-col min-w-0 min-h-0" style={{ marginLeft: isNarrow ? 0 : 256, ...(isDark ? { background: DK.bg } : {}) }}>
+                <div className="flex-1 flex flex-col min-w-0 min-h-0" style={{ marginLeft: isNarrow ? 0 : 256, background: T.pageBg }}>
                     <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory pb-0 md:pb-0 [.mobile_&]:pb-16">
         {/* ── Header ── */}
                         <header
@@ -569,92 +652,68 @@ export default function Dashboard() {
                             ref={section1Ref}
                             className="py-10 px-8 pb-6"
                             id="section-1"
-                            style={isDark ? { background: DK.bg } : { background: WM.section1 }}
+                            style={{ background: T.sectionBg }}
                         >
                             {/* TOWER STATUS label */}
-                            {isDark ? (
-                                <p style={{ ...sectionLabel, marginBottom: 16 }}>Tower Status</p>
-                            ) : (
-                                <h2 className="text-xs font-medium uppercase tracking-widest mb-4" style={{ color: WM.label, marginBottom: "20px" }}>Tower Status</h2>
-                            )}
+                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 }}>Tower Status</p>
 
                             {/* ── Tower Status Cards ── */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
 
                                 {/* Card 1: Power Output */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-1 rounded-xl flex flex-col items-center p-6 justify-between"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                    >
-                                        {/* Large gauge ring */}
-                                        <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
-                                            <div className="flex flex-col items-center z-10 gap-1">
-                                                <span style={{ fontSize: 52, fontWeight: 200, color: DK.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                    {pvPowerKw.toFixed(2)}
-                                                </span>
-                                                <span style={{ fontSize: 14, fontWeight: 400, color: DK.text3, letterSpacing: "0.15em", textTransform: "uppercase" }}>
-                                                    kilowatts
-                                                </span>
-                                            </div>
-                                            <svg className="absolute" width={200} height={200} viewBox="0 0 120 120">
-                                                <circle cx="60" cy="60" r={GAUGE_R} fill="transparent" stroke={DK.amberDim} strokeWidth="6" />
-                                                <circle
-                                                    cx="60" cy="60" r={GAUGE_R}
-                                                    fill="transparent"
-                                                    stroke={DK.amber}
-                                                    strokeWidth="6"
-                                                    strokeDasharray={GAUGE_CIRC}
-                                                    strokeDashoffset={gaugeDashOffset}
-                                                    strokeLinecap="round"
-                                                    transform="rotate(-90 60 60)"
-                                                    className={safePowerPercent > 0 ? "power-ring-active" : ""}
-                                                    style={{ transition: "stroke-dashoffset 1s ease-out" }}
-                                                />
-                                            </svg>
+                                <div
+                                    className="rounded-xl flex flex-col items-center p-6 justify-between"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
+                                        <div className="flex flex-col items-center z-10 gap-1">
+                                            <span style={{ fontSize: T.heroSize, fontWeight: T.heroWeight, color: T.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
+                                                {pvPowerKw.toFixed(2)}
+                                            </span>
+                                            <span style={{ fontSize: 14, fontWeight: 400, color: T.text3, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                                                kilowatts
+                                            </span>
                                         </div>
-                                        {/* Stat footer */}
-                                        <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
-                                            <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Daily Total</p>
-                                                <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
-                                            </div>
-                                            <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
-                                            <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Peak Today</p>
-                                                <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{maxHourlyPower} kW</p>
-                                            </div>
+                                        <svg className="absolute" width={200} height={200} viewBox="0 0 120 120">
+                                            <circle cx="60" cy="60" r={GAUGE_R} fill="transparent" stroke={T.gaugeTrack} strokeWidth="6" />
+                                            <circle
+                                                cx="60" cy="60" r={GAUGE_R}
+                                                fill="transparent"
+                                                stroke={T.gaugeRing}
+                                                strokeWidth="6"
+                                                strokeDasharray={GAUGE_CIRC}
+                                                strokeDashoffset={gaugeDashOffset}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 60 60)"
+                                                style={{ transition: "stroke-dashoffset 1s ease-out" }}
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${T.border}` }}>
+                                        <div className="text-center">
+                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Daily Total</p>
+                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
+                                        </div>
+                                        <div style={{ width: "0.5px", background: T.border, alignSelf: "stretch" }} />
+                                        <div className="text-center">
+                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Peak Today</p>
+                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>{maxHourlyPower} kW</p>
                                         </div>
                                     </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#5C4A38]" style={LT_CARD}>
-                                        <div className="relative w-40 h-40 flex items-center justify-center">
-                                            <span className="text-3xl font-bold z-10 tracking-tight">{pvPowerKw.toFixed(2)} <span className="text-lg font-medium">kW</span></span>
-                                            <svg className="w-40 h-40 absolute" viewBox="0 0 100 100">
-                                                <circle cx="50" cy="50" r={RADIUS} fill="transparent" stroke="#e5e7eb" strokeWidth="8" />
-                                                <circle cx="50" cy="50" r={RADIUS} fill="transparent" stroke={ORANGE} strokeWidth="8"
-                                                    strokeDasharray={CIRCUMFERENCE} strokeDashoffset={dashOffset}
-                                                    strokeLinecap="round" transform="rotate(-90 50 50)" className="transition-all duration-1000" />
-                                            </svg>
-                                        </div>
-                                        <p className="mt-3 text-sm text-[#A8978A]">Current Power Output</p>
-                                    </div>
-                                )}
+                                </div>
 
                                 {/* Card 2: Tower Angle */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-2 rounded-xl flex flex-col items-center p-6 justify-between"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                    >
-                                        {/* Sweep track + rotating panel */}
-                                        <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
-                                            {/* Dashed sweep arc */}
-                                            <svg className="absolute" width={220} height={220} viewBox="0 0 220 220">
-                                                <circle cx="110" cy="110" r="100" fill="none"
-                                                    stroke={DK.border2} strokeWidth="1"
-                                                    strokeDasharray="3 6" strokeLinecap="round" />
-                                            </svg>
+                                <div
+                                    className="rounded-xl flex flex-col items-center p-6 justify-between"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
+                                        <svg className="absolute" width={220} height={220} viewBox="0 0 220 220">
+                                            <circle cx="110" cy="110" r="100" fill="none"
+                                                stroke={T.border2} strokeWidth="1"
+                                                strokeDasharray="3 6" strokeLinecap="round" />
+                                        </svg>
+                                        {isDark ? (
                                             <div style={{
                                                 width: "220px", height: "220px",
                                                 backgroundImage: "url('/images/White_with_Yellow_Sun_Fix.png')",
@@ -663,77 +722,52 @@ export default function Dashboard() {
                                                 backgroundRepeat: "no-repeat",
                                                 position: "relative", zIndex: 10,
                                             }} />
+                                        ) : (
+                                            <img src="/images/tower_Design.svg" alt="Tower"
+                                                className="object-contain relative z-10"
+                                                style={{ width: 160, height: 160 }} />
+                                        )}
+                                    </div>
+                                    <div className="mt-4 text-center">
+                                        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 8 }}>Direction</p>
+                                        <p style={{ fontSize: 20, fontWeight: 300, color: T.text1, lineHeight: 1, letterSpacing: "0.02em" }}>{towerDirection}</p>
+                                    </div>
+                                    <div className="w-full mt-4 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${T.border}` }}>
+                                        <div className="text-center">
+                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Tower Angle</p>
+                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>{angleNum}°</p>
                                         </div>
-                                        <div className="mt-4 text-center">
-                                            <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, marginBottom: 8 }}>Direction</p>
-                                            <p style={{ fontSize: 20, fontWeight: 300, color: DK.text1, lineHeight: 1, letterSpacing: "0.02em" }}>
-                                                {towerDirection}
-                                            </p>
-                                        </div>
-                                        {/* Footer stats */}
-                                        <div className="w-full mt-4 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${DK.border}` }}>
-                                            <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Tower Angle</p>
-                                                <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>{angleNum}°</p>
-                                            </div>
-                                            <div style={{ width: "0.5px", background: DK.border, alignSelf: "stretch" }} />
-                                            <div className="text-center">
-                                                <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Elevation</p>
-                                                <p style={{ fontSize: 15, fontWeight: 300, color: DK.text1 }}>32°</p>
-                                            </div>
+                                        <div style={{ width: "0.5px", background: T.border, alignSelf: "stretch" }} />
+                                        <div className="text-center">
+                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Elevation</p>
+                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>32°</p>
                                         </div>
                                     </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-6 flex flex-col items-center text-[#5C4A38]" style={LT_CARD}>
-                                        <div className="relative flex items-center justify-center">
-                                            <img src="/images/tower_Design.svg" alt="Tower" className="w-32 h-32 object-contain" />
-                                        </div>
-                                        <p className="text-3xl font-bold text-[#5C4A38] mt-2 tracking-tight">{angleNum}<span className="text-lg font-medium">°</span></p>
-                                        <p className="text-sm text-[#A8978A]">Tower Angle</p>
-                                    </div>
-                                )}
+                                </div>
 
                                 {/* Card 3: System Health */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-3 rounded-xl overflow-hidden"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                    >
-                                        {/* Header row */}
-                                        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                            <span style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>System Health</span>
-                                            <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: DK.green, fontWeight: 600, letterSpacing: "0.08em" }}>
-                                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, display: "inline-block" }} />
-                                                All nominal
-                                            </span>
+                                <div
+                                    className="rounded-xl overflow-hidden"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <span style={{ fontSize: 13, fontWeight: 500, color: T.text1 }}>System Health</span>
+                                        <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: T.green, fontWeight: 600, letterSpacing: "0.08em" }}>
+                                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, display: "inline-block" }} />
+                                            All nominal
+                                        </span>
+                                    </div>
+                                    {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item, i, arr) => (
+                                        <div
+                                            key={item}
+                                            className="flex items-center justify-between px-5 py-3"
+                                            style={i < arr.length - 1 ? { borderBottom: `0.5px solid ${T.border}` } : {}}
+                                        >
+                                            <span style={{ fontSize: 13, color: T.text2 }}>{item}</span>
+                                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, display: "inline-block" }} />
                                         </div>
-                                        {/* Flat rows */}
-                                        {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item, i, arr) => (
-                                            <div
-                                                key={item}
-                                                className="flex items-center justify-between px-5 py-3"
-                                                style={i < arr.length - 1 ? { borderBottom: `0.5px solid ${DK.border}` } : {}}
-                                            >
-                                                <span style={{ fontSize: 13, color: DK.text2 }}>{item}</span>
-                                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, display: "inline-block" }} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-6" style={LT_CARD}>
-                                        <h3 className="text-sm font-medium text-[#5C4A38] mb-3">System Health</h3>
-                                        <ul className="space-y-2">
-                                            {["Inverter", "Motor", "Sensors", "Network", "PV Panels"].map((item) => (
-                                                <li key={item} className="flex items-center justify-between text-sm">
-                                                    <span className="text-[#5C4A38]">{item}</span>
-                                                    <span className="flex items-center gap-1.5 text-[#4A9E78] font-medium">
-                                                        <span className="w-2 h-2 rounded-full bg-[#4A9E78]" /> FUNCTIONAL
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
+                                    ))}
+                                </div>
                             </div>
 
                             {/* TODAY AT A GLANCE label */}
