@@ -362,11 +362,11 @@ export default function EnergyFlowPanel({
         { label: "Solar",  value: pvKw,  unit: "kW",
           sub: `${(todaysProduction ?? 0).toFixed(1)} kWh today`,
           color: solarActive ? T.amber : T.text3 },
-        { label: gridImport ? "Importing" : "Exporting",
+        ...(gridActive ? [{ label: gridImport ? "Importing" : "Exporting",
           value: gridKw, unit: "kW", sub: "Grid",
-          color: gridActive ? gridColor : T.text3 },
-        { label: "Load",  value: loadKw, unit: "kW", sub: "Consumption",
-          color: loadActive ? T.purple : T.text3 },
+          color: gridActive ? gridColor : T.text3 }] : []),
+        ...(loadActive ? [{ label: "Load",  value: loadKw, unit: "kW", sub: "Consumption",
+          color: loadActive ? T.purple : T.text3 }] : []),
         { label: "Peak",  value: `${maxHourlyPower}`, unit: "kW",
           sub: "Today's max", color: T.text2 },
         ...(hasBattery ? [{
@@ -740,9 +740,9 @@ export default function EnergyFlowPanel({
                     { label: "Autonomous", sub: "Default", active: autonomousMode,
                       onClick: () => { setAutonomousMode(true); setMaintenanceMode(false); },
                       activeColor: T.green },
-                    { label: "Maintenance", sub: "Requires confirmation", active: maintenanceMode,
+                    ...(canAccessControlPanel ? [{ label: "Maintenance", sub: "Requires confirmation", active: maintenanceMode,
                       onClick: () => setMaintenanceMode(prev => !prev),
-                      activeColor: T.red },
+                      activeColor: T.red }] : []),
                 ].map(({ label, sub, active, onClick, activeColor }) => (
                     <div key={label} className="flex items-center gap-3">
                         <button type="button" onClick={onClick} style={{

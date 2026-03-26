@@ -1020,7 +1020,7 @@ export default function Dashboard() {
                                     controlActions={controlActions}
                                     isDark={isDark}
                                     systemTimezone={system_tz}
-                                    isCommercial={session?.planTier === "COMMERCIAL" || session?.role === "ADMIN"}
+                                    isCommercial={session?.planTier === "COMMERCIAL"}
                                 />
                             </div>
 
