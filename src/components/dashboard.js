@@ -575,10 +575,8 @@ export default function Dashboard() {
     ];
 
     // ─── Shared style helpers ───────────────────────────────────────────────
-    const sectionLabel = isDark
-        ? { fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }
-        : {};
-    const sectionLabelCls = isDark ? "" : "text-sm font-bold uppercase tracking-wider text-[#5C4A38]";
+    // sectionLabel replaced by T.text3 inline — kept for safety
+    const sectionLabel = { fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "inherit" };
 
     // Resolved theme tokens for this render
     const T = getTheme(isDark);
@@ -607,7 +605,7 @@ export default function Dashboard() {
                             style={isDark
                                 ? {
                                     background: "rgba(20,17,15,0.75)",
-                                    borderBottom: `0.5px solid ${DK.border}`,
+                                    borderBottom: `0.5px solid ${T.border}`,
                                   }
                                 : {
                                     background: "linear-gradient(to right, rgba(26,37,53,0.96) 0%, rgba(26,37,53,0.80) 25%, rgba(26,37,53,0.45) 55%, rgba(242,242,242,0.0) 100%)",
@@ -618,7 +616,7 @@ export default function Dashboard() {
 
                             <p
                                 className="text-sm font-medium"
-                                style={isDark ? { color: DK.text2 } : { color: "rgba(245,235,220,0.9)" }}
+                                style={{ color: "rgba(245,235,220,0.9)" }}
                             >
                                 {system?.system_name || "System"} • {currentTime}
                             </p>
@@ -627,7 +625,7 @@ export default function Dashboard() {
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
                                     className="p-2 rounded-lg transition-colors"
-                                    style={isDark ? { color: DK.text2 } : { color: "#2F3E4D" }}
+                                    style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                     onClick={toggleDark}
                                 >
                                     {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -636,7 +634,7 @@ export default function Dashboard() {
                                     type="button"
                                     aria-label="Menu"
                                     className="p-2 rounded-lg transition-colors cursor-pointer"
-                                    style={isDark ? { color: DK.text2 } : { color: "#2F3E4D" }}
+                                    style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                     onClick={() => setMenuOpen(!menuOpen)}
                                 >
                                     {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -971,298 +969,114 @@ export default function Dashboard() {
                             ref={diagnosticsRef}
                             className="py-10 px-8 pt-8 scroll-mt-24"
                             id="diagnostics"
-                            style={isDark ? { background: DK.bg } : { background: "#F2F2F2" }}
+                            style={{ background: T.section2Bg }}
                         >
                             {/* Section label */}
-                            {isDark ? (
-                                <p style={{ ...sectionLabel, marginBottom: 16 }}>System Diagnostics</p>
-                            ) : (
-                                <h2 className="text-xs font-medium uppercase tracking-widest mb-4" style={{ color: WM.label, marginBottom: "20px" }}>System Diagnostics</h2>
-                            )}
+                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 }}>System Diagnostics</p>
 
                             {/* ── Diagnostics ── */}
-                            {isDark ? (
-                                !isWide ? (
-                                    /* Compact flat list — small/medium screens */
+                            <div className="rounded-xl overflow-hidden mb-6"
+                                style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                            >
+                                {sensors.map((s, i) => (
                                     <div
-                                        className="rounded-xl overflow-hidden mb-6"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
+                                        key={s.name}
+                                        className="flex items-center px-5 py-4"
+                                        style={i > 0 ? { borderTop: `0.5px solid ${T.border}` } : {}}
                                     >
-                                        {sensors.map((s, i) => (
-                                            <div
-                                                key={s.name}
-                                                className="flex items-center px-5 py-4"
-                                                style={i > 0 ? { borderTop: `0.5px solid ${DK.border}` } : {}}
-                                            >
-                                                <s.Icon style={{ width: 15, height: 15, color: s.color, opacity: 0.7, flexShrink: 0, marginRight: 14 }} />
-                                                <div className="flex-1 min-w-0">
-                                                    <p style={{ fontSize: 13, color: DK.text1, fontWeight: 400 }}>{s.name}</p>
-                                                    <p style={{ fontSize: 14, color: DK.text3, marginTop: 1 }}>{s.description}</p>
-                                                </div>
-                                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: DK.green, flexShrink: 0 }} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    /* 2×3 grid cards — large screens */
-                                    <div className="grid grid-cols-2 gap-3 mb-6">
-                                        {sensors.map((s) => (
-                                            <div
-                                                key={s.name}
-                                                className="rounded-xl flex items-start gap-4 p-5"
-                                                style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                            >
-                                                <div style={{
-                                                    width: 42, height: 42, borderRadius: 8, flexShrink: 0,
-                                                    background: `${s.color}14`,
-                                                    border: `0.5px solid ${s.color}40`,
-                                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                                }}>
-                                                    <s.Icon style={{ width: 20, height: 20, color: s.color, opacity: 0.85 }} />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>{s.name}</p>
-                                                    <p style={{ fontSize: 14, color: DK.text3, marginTop: 4, lineHeight: 1.5 }}>{s.description}</p>
-                                                </div>
-                                                <div style={{
-                                                    display: "flex", alignItems: "center", gap: 5,
-                                                    padding: "4px 10px", borderRadius: 99, flexShrink: 0,
-                                                    background: "rgba(74,222,128,0.08)",
-                                                    border: "0.5px solid rgba(74,222,128,0.2)",
-                                                }}>
-                                                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: DK.green }} />
-                                                    <span style={{ fontSize: 13, fontWeight: 600, color: DK.green, letterSpacing: "0.06em" }}>Online</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )
-                            ) : (
-                                /* Light: original grid of cards */
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                                    {[
-                                        { name: "Light Sensor", description: "Sun tracking and positioning" },
-                                        { name: "Relay", description: "Power distribution and switching system" },
-                                        { name: "Atmospheric Pressure Sensor", description: "Environmental pressure monitoring" },
-                                        { name: "Humidity Sensor", description: "Moisture detection and monitoring" },
-                                        { name: "Temperature Sensor", description: "Heat monitoring and thermal control" },
-                                        { name: "Limit Switches", description: "Safety controls and position limits" },
-                                    ].map((item) => (
-                                        <div key={item.name} className="bg-white rounded-2xl p-4 flex items-center justify-between gap-4" style={LT_CARD}>
-                                            <div>
-                                                <h3 className="font-semibold text-[#5C4A38]">{item.name}</h3>
-                                                <p className="text-sm text-[#A8978A] mt-0.5">{item.description}</p>
-                                            </div>
-                                            <span className="flex items-center gap-2 shrink-0 px-3 py-1.5 rounded-full text-sm font-medium text-[#4A9E78]" style={{ backgroundColor: WM.pill }}>
-                                                <span className="w-2 h-2 rounded-full bg-[#4A9E78]" /> Online
-                                            </span>
+                                        <s.Icon style={{ width: 15, height: 15, color: s.color, opacity: 0.7, flexShrink: 0, marginRight: 14 }} />
+                                        <div className="flex-1 min-w-0">
+                                            <p style={{ fontSize: 13, color: T.text1, fontWeight: 400 }}>{s.name}</p>
+                                            <p style={{ fontSize: 12, color: T.text3, marginTop: 1 }}>{s.description}</p>
                                         </div>
-                                    ))}
-                                </div>
-                            )}
+                                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, flexShrink: 0 }} />
+                                    </div>
+                                ))}
+                            </div>
 
                             {/* ── System Controls ── */}
                             <div ref={controlRef} id="control" className="scroll-mt-24">
-                                {isDark ? (
-                                    <>
-                                        <p style={{ ...sectionLabel, marginBottom: 16, marginTop: 32 }}>System Controls</p>
-                                        <EnergyFlowPanel
-                                            pvPower={pvPower}
-                                            gridPower={gridPower}
-                                            gridImport={gridImport}
-                                            loadPower={loadPower}
-                                            battSoc={battSoc}
-                                            hasBattery={hasBattery}
-                                            battChargePower={battChargePower}
-                                            todaysProduction={todaysProduction}
-                                            maxHourlyPower={maxHourlyPower}
-                                            towerCount={towerCount}
-                                            selectedTowerIndex={selectedTowerIndex}
-                                            onTowerSelect={setSelectedTowerIndex}
-                                            towerRotationDeg={towerRotationDeg}
-                                            orientationAngleNum={orientationAngleNum}
-                                            canAccessControlPanel={canAccessControlPanel}
-                                            autonomousMode={autonomousMode}
-                                            setAutonomousMode={setAutonomousMode}
-                                            maintenanceMode={maintenanceMode}
-                                            setMaintenanceMode={setMaintenanceMode}
-                                            controlActions={controlActions}
-                                            isDark={isDark}
-                                            systemTimezone={system_tz}
-                                            isCommercial={true}
-                                            // isCommercial={session?.planTier === "COMMERCIAL" || session?.role === "ADMIN"}
-                                        />
-                                    </>
-                                ) : (
-                                    <>
-                                        <h2 className="text-xs font-medium uppercase tracking-widest mt-10 mb-4" style={{ color: WM.label, marginTop: "56px" }}>System Controls</h2>
-                                        <EnergyFlowPanel
-                                            pvPower={pvPower}
-                                            gridPower={gridPower}
-                                            gridImport={gridImport}
-                                            loadPower={loadPower}
-                                            battSoc={battSoc}
-                                            hasBattery={hasBattery}
-                                            battChargePower={battChargePower}
-                                            todaysProduction={todaysProduction}
-                                            maxHourlyPower={maxHourlyPower}
-                                            towerCount={towerCount}
-                                            selectedTowerIndex={selectedTowerIndex}
-                                            onTowerSelect={setSelectedTowerIndex}
-                                            towerRotationDeg={towerRotationDeg}
-                                            orientationAngleNum={orientationAngleNum}
-                                            canAccessControlPanel={canAccessControlPanel}
-                                            autonomousMode={autonomousMode}
-                                            setAutonomousMode={setAutonomousMode}
-                                            maintenanceMode={maintenanceMode}
-                                            setMaintenanceMode={setMaintenanceMode}
-                                            controlActions={controlActions}
-                                            isDark={false}
-                                            systemTimezone={system_tz}
-                                            isCommercial={true}
-                                        />
-                                    </>
-                                )}
+                                <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 16, marginTop: 32 }}>System Controls</p>
+                                <EnergyFlowPanel
+                                    pvPower={pvPower}
+                                    gridPower={gridPower}
+                                    gridImport={gridImport}
+                                    loadPower={loadPower}
+                                    battSoc={battSoc}
+                                    hasBattery={hasBattery}
+                                    battChargePower={battChargePower}
+                                    todaysProduction={todaysProduction}
+                                    maxHourlyPower={maxHourlyPower}
+                                    towerCount={towerCount}
+                                    selectedTowerIndex={selectedTowerIndex}
+                                    onTowerSelect={setSelectedTowerIndex}
+                                    towerRotationDeg={towerRotationDeg}
+                                    orientationAngleNum={orientationAngleNum}
+                                    canAccessControlPanel={canAccessControlPanel}
+                                    autonomousMode={autonomousMode}
+                                    setAutonomousMode={setAutonomousMode}
+                                    maintenanceMode={maintenanceMode}
+                                    setMaintenanceMode={setMaintenanceMode}
+                                    controlActions={controlActions}
+                                    isDark={isDark}
+                                    systemTimezone={system_tz}
+                                    isCommercial={session?.planTier === "COMMERCIAL" || session?.role === "ADMIN"}
+                                />
                             </div>
 
 
                             {/* ── Historical Data ── */}
                             <div ref={historicalRef} id="historical" className="scroll-mt-24">
-                                {isDark ? (
-                                    <p style={{ ...sectionLabel, marginBottom: 16, marginTop: 32 }}>Historical Data</p>
-                                ) : (
-                                    <h2 className="text-xs font-medium uppercase tracking-widest mt-10 mb-4" style={{ color: WM.label, marginTop: "56px" }}>Historical Data</h2>
-                                )}
-
-                                {isDark ? (
-                                    <div
-                                        className="rounded-xl overflow-hidden mb-6"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                    >
-                                        <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                            <div>
-                                                <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>Historical Power Data</p>
-                                                <p style={{ fontSize: 14, color: DK.text3, marginTop: 2 }}>Energy produced over time</p>
-                                            </div>
-                                            {/* Period toggles */}
-                                            <div className="flex items-center gap-1">
-                                                {[{ id: "monthly", label: "Monthly" }, { id: "yearly", label: "Yearly" }, { id: "total", label: "Total" }].map(({ id, label }) => (
-                                                    <button
-                                                        key={id}
-                                                        type="button"
-                                                        onClick={() => setHistoricalPeriod(id)}
-                                                        style={{
-                                                            fontSize: 13, fontWeight: 500, padding: "5px 12px", borderRadius: 4, cursor: "pointer", transition: "all 0.15s",
-                                                            background: historicalPeriod === id ? DK.amber : "transparent",
-                                                            color: historicalPeriod === id ? "#000" : DK.text2,
-                                                            border: `0.5px solid ${historicalPeriod === id ? DK.amber : DK.border}`,
-                                                        }}
-                                                    >
-                                                        {label}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 16, marginTop: 32 }}>Historical Data</p>
+                                <div className="rounded-xl overflow-hidden mb-6"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <div>
+                                            <p style={{ fontSize: 13, fontWeight: 500, color: T.text1 }}>Historical Power Data</p>
+                                            <p style={{ fontSize: 13, color: T.text3, marginTop: 2 }}>Energy produced over time</p>
                                         </div>
-                                        <div className="p-5" style={{ minHeight: 300 }}>
-                                            {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
-                                                <div style={{ height: 260 }}>
-                                                    <Bar
-                                                        data={{
-                                                            labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length),
-                                                            datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: DK.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }],
-                                                        }}
-                                                        options={{
-                                                            responsive: true, maintainAspectRatio: false,
-                                                            scales: {
-                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 13 } } },
-                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 13 } } },
-                                                            },
-                                                            plugins: { legend: { display: false } },
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
-                                            {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
-                                                <div style={{ height: 260 }}>
-                                                    <Bar
-                                                        data={{
-                                                            labels: monthLabels.slice(0, (monthlyProduction.values || []).length),
-                                                            datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: DK.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }],
-                                                        }}
-                                                        options={{
-                                                            responsive: true, maintainAspectRatio: false,
-                                                            scales: {
-                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 13 } } },
-                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 13 } } },
-                                                            },
-                                                            plugins: { legend: { display: false } },
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
-                                            {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
-                                                <div style={{ height: 260 }}>
-                                                    <Bar
-                                                        data={{
-                                                            labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length),
-                                                            datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: DK.amber, borderRadius: 3, barPercentage: 0.4, categoryPercentage: 0.5 }],
-                                                        }}
-                                                        options={{
-                                                            responsive: true, maintainAspectRatio: false,
-                                                            scales: {
-                                                                y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.04)", drawBorder: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 13 } } },
-                                                                x: { grid: { display: false }, border: { display: false }, ticks: { color: DK.text3, font: { size: 13 } } },
-                                                            },
-                                                            plugins: { legend: { display: false } },
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
-                                            {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
-                                                <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                    <p style={{ fontSize: 14, color: DK.text3 }}>Loading chart data...</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-6 mb-6" style={{ ...LT_CARD, boxShadow: "0 4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)" }}>
-                                        <h3 className="text-base font-medium text-[#5C4A38]">Historical Power Data</h3>
-                                        <p className="text-sm text-[#A8978A] mt-0.5 mb-4">Energy produced over time</p>
-                                        <div className="flex flex-wrap gap-2 mb-4">
+                                        <div className="flex items-center gap-1">
                                             {[{ id: "monthly", label: "Monthly" }, { id: "yearly", label: "Yearly" }, { id: "total", label: "Total" }].map(({ id, label }) => (
-                                                <button
-                                                    key={id} type="button" onClick={() => setHistoricalPeriod(id)}
-                                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${historicalPeriod === id ? "bg-[#F3B664] text-white" : "text-[#5C4A38] hover:bg-[#E8E0D4]"}`}
-                                                    style={historicalPeriod === id ? {} : { backgroundColor: WM.pill }}
+                                                <button key={id} type="button" onClick={() => setHistoricalPeriod(id)}
+                                                    style={{ fontSize: 13, fontWeight: 500, padding: "5px 12px", borderRadius: 4, cursor: "pointer", transition: "all 0.15s",
+                                                        background: historicalPeriod === id ? T.amber : "transparent",
+                                                        color: historicalPeriod === id ? (isDark ? "#000" : "#fff") : T.text2,
+                                                        border: `0.5px solid ${historicalPeriod === id ? T.amber : T.border}`,
+                                                    }}
                                                 >{label}</button>
                                             ))}
                                         </div>
-                                        <div className="rounded-xl p-4" style={{ backgroundColor: "#EFEFEF", minHeight: "280px" }}>
-                                            {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
-                                                <div style={{ height: "260px" }}>
-                                                    <Bar data={{ labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length), datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E0E0E0" } }, x: { grid: { display: false }, title: { display: true, text: "Day" } } }, plugins: { legend: { display: false } } }} />
-                                                </div>
-                                            )}
-                                            {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
-                                                <div style={{ height: "260px" }}>
-                                                    <Bar data={{ labels: monthLabels.slice(0, (monthlyProduction.values || []).length), datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (kWh)" }, grid: { color: "#E0E0E0" } }, x: { grid: { display: false }, title: { display: true, text: "Month" } } }, plugins: { legend: { display: false } } }} />
-                                                </div>
-                                            )}
-                                            {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
-                                                <div style={{ height: "260px" }}>
-                                                    <Bar data={{ labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length), datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: "#F3B664", borderRadius: 4, barPercentage: 0.4, categoryPercentage: 0.5 }] }}
-                                                        options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: "Energy (MWh)" }, grid: { color: "#E0E0E0" } }, x: { grid: { display: false }, title: { display: true, text: "Year" } } }, plugins: { legend: { display: false } } }} />
-                                                </div>
-                                            )}
-                                            {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
-                                                <p className="text-sm text-[#A8978A] py-12 text-center">Loading chart data...</p>
-                                            )}
-                                        </div>
                                     </div>
-                                )}
+                                    <div className="p-5" style={{ backgroundColor: T.chartBg, minHeight: 300 }}>
+                                        {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
+                                            <div style={{ height: 260 }}>
+                                                <Bar data={{ labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length), datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
+                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
+                                                />
+                                            </div>
+                                        )}
+                                        {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
+                                            <div style={{ height: 260 }}>
+                                                <Bar data={{ labels: monthLabels.slice(0, (monthlyProduction.values || []).length), datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
+                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
+                                                />
+                                            </div>
+                                        )}
+                                        {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
+                                            <div style={{ height: 260 }}>
+                                                <Bar data={{ labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length), datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.4, categoryPercentage: 0.5 }] }}
+                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
+                                                />
+                                            </div>
+                                        )}
+                                        {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
+                                            <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                <p style={{ fontSize: 14, color: T.text3 }}>Loading chart data...</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </main>
@@ -1273,22 +1087,19 @@ export default function Dashboard() {
             {menuOpen && (
                 <div
                     className="fixed top-24 right-6 w-56 rounded-lg shadow-lg py-2 z-50"
-                    style={isDark
-                        ? { background: DK.surface, border: `0.5px solid ${DK.border2}` }
-                        : { background: "#fff", border: "1px solid #d1d5db" }
-                    }
+                    style={{ background: T.cardBg, border: T.cardBorder, borderRadius: 8 }}
                 >
-                    <p className="px-4 py-2 text-base font-semibold" style={isDark ? { color: DK.text1 } : { color: TITLE_COLOR }}>{user?.name || "Guest"}</p>
-                    <div style={isDark ? { borderTop: `0.5px solid ${DK.border}` } : { borderTop: "1px solid #e5e7eb" }} aria-hidden />
+                    <p className="px-4 py-2 text-base font-semibold" style={{ color: T.text1 }}>{user?.name || "Guest"}</p>
+                    <div style={{ borderTop: `0.5px solid ${T.border}` }} aria-hidden />
                     <Link href="/settings" className="block px-4 py-2 text-sm transition-colors"
-                        style={isDark ? { color: DK.text2 } : { color: TITLE_COLOR }}
-                        onMouseEnter={e => { if (isDark) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                        onMouseLeave={e => { if (isDark) e.currentTarget.style.background = "transparent"; }}
+                        style={{ color: T.text2 }}
+                        onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                         onClick={() => setMenuOpen(false)}>Settings</Link>
                     <Link href="/contact" className="block px-4 py-2 text-sm transition-colors"
-                        style={isDark ? { color: DK.text2 } : { color: TITLE_COLOR }}
-                        onMouseEnter={e => { if (isDark) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                        onMouseLeave={e => { if (isDark) e.currentTarget.style.background = "transparent"; }}
+                        style={{ color: T.text2 }}
+                        onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                         onClick={() => setMenuOpen(false)}>Contact us</Link>
                     <button
                         onClick={async () => {
@@ -1296,9 +1107,9 @@ export default function Dashboard() {
                             catch (err) { console.error("Logout failed:", err); }
                         }}
                         className="block w-full text-left px-4 py-2 text-sm transition-colors cursor-pointer"
-                        style={isDark ? { color: DK.text2, background: "transparent", border: "none" } : { color: TITLE_COLOR, background: "transparent", border: "none" }}
-                        onMouseEnter={e => { if (isDark) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                        onMouseLeave={e => { if (isDark) e.currentTarget.style.background = "transparent"; }}
+                        style={{ color: T.text2, background: "transparent", border: "none" }}
+                        onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                     >Log Out</button>
                 </div>
             )}
