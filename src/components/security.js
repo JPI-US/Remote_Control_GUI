@@ -4,10 +4,53 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
-import { ArrowLeft, Pencil} from "lucide-react";
+import { ArrowLeft, Pencil, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
-export default function Security(){
+function getTheme(isDark) {
+    if (isDark) return {
+        pageBg:     "#14110f",
+        cardBg:     "rgba(28,24,20,0.85)",
+        cardBorder: "0.5px solid rgba(255,245,235,0.07)",
+        cardShadow: "none",
+        cardRadius: 12,
+        text1:      "#f5f0ea",
+        text2:      "rgba(245,240,234,0.6)",
+        text3:      "rgba(245,240,234,0.38)",
+        border:     "rgba(255,245,235,0.07)",
+        border2:    "rgba(255,245,235,0.12)",
+        amber:      "#e6b85c",
+        amberDim:   "rgba(230,184,92,0.14)",
+        green:      "rgba(74,222,128,0.75)",
+        red:        "#ef4444",
+        inputBg:    "rgba(255,255,255,0.05)",
+        inputBorder:"rgba(255,245,235,0.12)",
+    };
+    return {
+        pageBg:     "#F4F6F9",
+        cardBg:     "#FFFFFF",
+        cardBorder: "1px solid rgba(26,37,53,0.07)",
+        cardShadow: "0 4px 6px rgba(26,37,53,0.04), 0 8px 24px rgba(26,37,53,0.08), 0 1px 2px rgba(26,37,53,0.06)",
+        cardRadius: 20,
+        text1:      "#1A2535",
+        text2:      "#3D5068",
+        text3:      "#7A90A8",
+        border:     "rgba(26,37,53,0.08)",
+        border2:    "rgba(26,37,53,0.14)",
+        amber:      "#E8A020",
+        amberDim:   "rgba(232,160,32,0.12)",
+        green:      "#4A9E78",
+        red:        "#e53e3e",
+        inputBg:    "#FFFFFF",
+        inputBorder:"rgba(26,37,53,0.20)",
+    };
+}
+
+export default function Security() {
     const router = useRouter();
+    const { isDark, toggleDark } = useTheme();
+    const T = getTheme(isDark);
+
     const [userId, setUserId] = useState(null);
     const [showMessage, setShowMessage] = useState(false);
     const [showError, setShowError] = useState(false);
@@ -22,376 +65,225 @@ export default function Security(){
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
     const [messagesuccess, setmessagesuccess] = useState('');
+    const [showEmailInput, setShowEmailInput] = useState(false);
+    const [newEmail, setnewEmail] = useState("");
+    const [showPhoneInput, setShowPhoneInput] = useState(false);
+    const [newPhone, setNewPhone] = useState("");
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-    
-        if (!token) {
-            router.push('/');
-            return;
-        }
-    
+        if (!token) { router.push('/'); return; }
         try {
-            const decoded = jwtDecode(token); // ✅ should be { id }
-            setUserId(decoded.id); // ✅ correctly store in state
-        } catch (error) {
-            console.error('Invalid token', error);
+            const decoded = jwtDecode(token);
+            setUserId(decoded.id);
+        } catch {
             localStorage.removeItem('token');
             router.push('/');
-            return;
         }
     }, []);
 
     useEffect(() => {
-        if (!userId) return; // Don't fetch until ID is set
-
+        if (!userId) return;
         async function fetchUserSettings() {
-            try{
-                const userResponse = await fetch(`/api/settings/${userId}`);
-                const userData = await userResponse.json();
-                setUserSettings(userData);
-            } catch (error){
-                console.log("Fetch error:", error)
-                // router.push('/login');
-            }
+            try {
+                const res = await fetch(`/api/settings/${userId}`);
+                const data = await res.json();
+                setUserSettings(data);
+            } catch (e) { console.log("Fetch error:", e); }
         }
         fetchUserSettings();
     }, [userId]);
 
     const handleUpdate = async (updatedData) => {
-        if (!userId) {
-            setShowError(true);
-            setTimeout(() => setShowError(false), 4000);
-            // setMessage("Missing user ID");
-            return;
-        }
-
+        if (!userId) { setShowError(true); setTimeout(() => setShowError(false), 4000); return; }
         const res = await fetch(`/api/settings/${userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData),
         });
-      
-        const data = await res.json();
-      
-        if (res.ok) {
-            setShowMessage(true);
-            setTimeout(() => setShowMessage(false), 4000);
-            // setMessage('Profile updated successfully!');
-        } else {
-            setShowError(true);
-            setTimeout(() => setShowError(false), 4000);
-            // setMessage(data.error || 'Failed to update profile');
-        }
+        if (res.ok) { setShowMessage(true); setTimeout(() => setShowMessage(false), 4000); }
+        else { setShowError(true); setTimeout(() => setShowError(false), 4000); }
     };
 
-    const [showEmailInput, setShowEmailInput] = useState(false);
-    const [newEmail, setnewEmail] = useState("");
-    const isValidEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+    const isValidEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    const isValidUSPhone = (p) => { const c = p.replace(/[^\d]/g, ''); return c.length === 10 || (c.length === 11 && c.startsWith('1')); };
 
-    const [showPhoneInput, setShowPhoneInput] = useState(false);
-    const [newPhone, setNewPhone] = useState("");
-    const isValidUSPhone = (phone) => {
-        // Allow formats like (123) 456-7890, 123-456-7890, 1234567890, +1 123 456 7890
-        const cleaned = phone.replace(/[^\d]/g, '');
-        return cleaned.length === 10 || (cleaned.length === 11 && cleaned.startsWith('1'));
-    };  
-      
     const handlePasswordChange = async (e) => {
         e.preventDefault();
-    
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            setMessage('Please fill in all fields.');
-            setTimeout(() => {
-                setMessage('');
-            }, 3000);
-            return;
-        }
-    
-        if (newPassword !== confirmPassword) {
-            setMessage('New passwords do not match.');
-            setTimeout(() => {
-                setMessage('');
-            }, 3000);
-            return;
-        }
-
-        if (currentPassword === newPassword) {
-            setMessage('New password is the same as old password');
-            setTimeout(() => {
-                setMessage('');
-            }, 3000);
-            return;
-        }
-    
+        if (!currentPassword || !newPassword || !confirmPassword) { setMessage('Please fill in all fields.'); setTimeout(() => setMessage(''), 3000); return; }
+        if (newPassword !== confirmPassword) { setMessage('New passwords do not match.'); setTimeout(() => setMessage(''), 3000); return; }
+        if (currentPassword === newPassword) { setMessage('New password is the same as old password.'); setTimeout(() => setMessage(''), 3000); return; }
         const res = await fetch(`/api/user/${userId}/change-password`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ currentPassword, newPassword }),
         });
-    
         const data = await res.json();
-    
         if (res.ok) {
             setmessagesuccess('Password updated successfully.');
-            setTimeout(() => {
-                setmessagesuccess('');
-            }, 3000);
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
+            setTimeout(() => setmessagesuccess(''), 3000);
+            setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
         } else {
             setMessage(data.error || 'Password update failed.');
-            setTimeout(() => {
-                setMessage('');
-            }, 3000);
+            setTimeout(() => setMessage(''), 3000);
         }
-    }
-    
-    if (!userId) {
-        return <p className="bg-[#f7e2cc] w-screen h-screen flex items-center justify-center text-black text-2xl ">Loading...</p>;
-    }
-     
-    return(
-        <div className='w-screen max-w-screen overflow-hidden h-auto md:h-screen pb-4 text-center bg-[#f7e2cc] text-black'>     
-            <div className='py-8 relative w-full h-32'>
-                {/* Back Button */}
-                <Link href="/settings" className="absolute top-7 left-8">
-                    <ArrowLeft size={32} className="text-black" />
-                </Link>
+    };
 
-                {/* Janta Logo */}
-                <img
-                    className='absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 object-cover'
-                    src='images/Logo Type_Mix1.png'
-                    alt='Janta logo' 
-                    style={{height:'15em', width:'15em'}} 
-                />
+    const inputStyle = {
+        width: "100%", padding: "10px 14px", borderRadius: 8,
+        border: `1px solid ${T.inputBorder}`, background: T.inputBg,
+        color: T.text1, fontSize: 14, outline: "none", boxSizing: "border-box",
+    };
+    const labelStyle = { fontSize: 12, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: T.text3, marginBottom: 6, display: "block" };
+    const sectionHeader = { fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 };
+    const saveBtn = { padding: "8px 20px", borderRadius: 8, background: T.amber, color: isDark ? "#000" : "#fff", fontWeight: 700, fontSize: 13, border: "none", cursor: "pointer" };
+
+    if (!userId) {
+        return (
+            <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: T.pageBg, color: T.text2, fontSize: 16 }}>
+                Loading...
             </div>
-            <div className='border-2 border-black shadow-md shadow-black rounded-lg bg-white py-8 mx-2 md:mx-auto md:w-2/3 px-4'>
-                <div className='pb-4'>
-                    {showMessage && (
-                        <div className="bg-green-200 border border-green-600 text-green-800 px-4 py-2 rounded mb-4 text-center">
-                            Settings updated successfully.
-                        </div>
-                    )}
-                    {showError && (
-                        <div className="bg-red-400 border border-green-600 text-green-800 px-4 py-2 rounded mb-4 text-center">
-                            Failed to update Settings.
-                        </div>
-                    )}
-                    <h1 className='text-4xl font-bold'>Sign In & Security</h1>
-                </div>                
-                <div className='text-left p-2'>
+        );
+    }
+
+    return (
+        <div style={{ minHeight: "100vh", background: T.pageBg, color: T.text1 }}>
+
+            {/* ── Header ── */}
+            <header style={{
+                position: "fixed", top: 0, left: 0, right: 0, zIndex: 40,
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "14px 24px",
+                background: isDark
+                    ? "rgba(20,17,15,0.95)"
+                    : "linear-gradient(to right, rgba(26,37,53,0.96) 0%, rgba(26,37,53,0.80) 30%, rgba(26,37,53,0.45) 60%, rgba(244,246,249,0.0) 100%)",
+                borderBottom: isDark ? "0.5px solid rgba(255,245,235,0.07)" : "1px solid rgba(26,37,53,0.15)",
+                backdropFilter: "blur(8px)",
+            }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <Link href="/settings" style={{ color: "rgba(245,235,220,0.9)", display: "flex", alignItems: "center" }}>
+                        <ArrowLeft size={20} />
+                    </Link>
+                    <img src="/images/Janta_Power_Business_Card_Logo.jpeg" alt="Janta Power"
+                        style={{ height: 40, width: "auto", objectFit: "contain" }} />
+                </div>
+                <button type="button" onClick={toggleDark} aria-label={isDark ? "Light mode" : "Dark mode"}
+                    style={{ padding: 8, borderRadius: 8, border: "none", background: "transparent", color: "rgba(245,235,220,0.9)", cursor: "pointer" }}>
+                    {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
+            </header>
+
+            {/* ── Content ── */}
+            <div style={{ paddingTop: 88, paddingBottom: 40, paddingLeft: 24, paddingRight: 24, maxWidth: 720, margin: "0 auto" }}>
+
+                {showMessage && (
+                    <div style={{ background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.3)", color: T.green, padding: "10px 16px", borderRadius: 8, marginBottom: 20, fontSize: 13 }}>
+                        ✓ Settings updated successfully.
+                    </div>
+                )}
+                {showError && (
+                    <div style={{ background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.3)", color: T.red, padding: "10px 16px", borderRadius: 8, marginBottom: 20, fontSize: 13 }}>
+                        Failed to update. Please try again.
+                    </div>
+                )}
+
+                {/* Change Password */}
+                <p style={sectionHeader}>Sign In & Security</p>
+                <div style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, padding: 24, marginBottom: 20 }}>
+                    <p style={{ fontSize: 13, color: T.text3, marginBottom: 20 }}>Update your password below.</p>
                     <form onSubmit={handlePasswordChange}>
-                        <h1 className='text-2xl'>Change Password</h1>
-                        <div className='py-2 flex items-center border-b-2 border-gray-300'>
-                            <p className='pr-2 text-lg'>Current password:</p>
-                            <input 
-                                type="password" 
-                                className='border-2 border-black p-1'
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                            />
+                        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 20 }}>
+                            {[["Current Password", "password", currentPassword, setCurrentPassword], ["New Password", "password", newPassword, setNewPassword], ["Confirm New Password", "password", confirmPassword, setConfirmPassword]].map(([lbl, type, val, setter]) => (
+                                <div key={lbl}>
+                                    <label style={labelStyle}>{lbl}</label>
+                                    <input type={type} value={val} onChange={e => setter(e.target.value)} style={inputStyle} />
+                                </div>
+                            ))}
                         </div>
-                        <div className='py-2 flex items-center border-b-2 border-gray-300'>
-                            <p className='pr-2 text-lg'>New password:</p>
-                            <input 
-                                type="password" 
-                                className='border-2 border-black p-1'
-                                value={newPassword}        
-                                onChange={(e) => setNewPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className='py-2 flex items-center'>
-                            <p className='pr-2 text-lg'>Confirm new password:</p>
-                            <input 
-                                type="password" 
-                                className='border-2 border-black p-1'
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className='py-2'>
-                            <button 
-                                type='submit' 
-                                className='border-2 p-1 cursor-pointer rounded-md hover:focus hover:bg-white bg-orange-400'
-                            >
-                                Save
-                            </button>
-                            {message && <p className="mt-3 text-red-600">{message}</p>}
-                            {messagesuccess && <p className="mt-3 text-green-200">{messagesuccess}</p>}
+                        {message && <p style={{ fontSize: 13, color: T.red, marginBottom: 12 }}>{message}</p>}
+                        {messagesuccess && <p style={{ fontSize: 13, color: T.green, marginBottom: 12 }}>{messagesuccess}</p>}
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                            <button type="submit" style={saveBtn}>Update Password</button>
                         </div>
                     </form>
-                </div> 
-                {/* <div className='text-left p-2 hidden'>
-                    <h1 className='text-2xl'>Two-Factor Authentication (2FA)</h1>
-                    <div className='py-2 flex border-b-2 border-gray-300'>
-                        <p className='pr-2 text-lg'>Enable/Disable 2FA:</p>
-                        <input 
-                            type="checkbox"
-                            id="two_factor_auth" 
-                            checked={!!userSettings?.two_factor_auth}
-                            onChange={(e) => setUserSettings(prev => ({ ...prev, two_factor_auth: e.target.checked }))}
-                        />
-                    </div>
-                </div> */}
-                <div className='text-left p-2'>
-                    <h1 className='text-2xl'>Trusted Devices</h1>
-                    <div className='flex py-2 text-lg'>
-                        <p className='pr-2'>List of Devices:</p>
-                        <p className='text-gray-600'>{userSettings.last_login_device}</p>
-                    </div>
-                    <div className='flex py-2 text-lg'>
-                        <p className='pr-2'>Last sign in:</p>
-                        <p className='text-gray-600'>
-                            {userSettings.last_login
-                            ? new Date(userSettings.last_login).toLocaleString('en-US', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: 'numeric',
-                                minute: '2-digit',
-                                hour12: true,
-                            })
-                            : 'No login yet'}
-
-                        </p>
-                    </div>
                 </div>
-                <div className='text-left p-2'>
-                    <h1 className='text-2xl'>Account Recovery settings</h1>
-                    <div className='py-2 flex items-center border-b-2 border-gray-300'>
-                        {/* Recovery Email */}
-                        <p className='pr-2 text-lg'>Recovery Email:</p>
-                        <p  
-                            className={
-                                `pr-2 text-lg 
-                                ${showEmailInput ? 'hidden sm:block' : 'block'}
-                            `}
-                        >
-                            {userSettings?.email_recovery || "Not set"}
-                        </p>
-                        <button
-                            onClick={() => {
-                                setShowEmailInput(!showEmailInput);
-                                setnewEmail(userSettings.email_recovery || '');
-                            }}
-                            className={
-                                `text-gray-800 hover:text-blue-800 -mt-2
-                                ${showEmailInput ? 'hidden sm:block' : 'block'}
-                            `}
-                        >
-                            <Pencil size={18} />
-                        </button>
 
-                        {/* Conditional input */}
-                        {showEmailInput && (
-                        <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0 w-full sm:w-auto">
-                            <input
-                                type="email"
-                                placeholder="Enter new recovery email"
-                                className="ml-4 -mt-2 border-2 border-black p-1"
-                                value={newEmail}
-                                onChange={(e) => setnewEmail(e.target.value)}
-                            />
-                            <button
-                                onClick={async () => {
-                                    if (!isValidEmail(newEmail)) {
-                                        alert("Please enter a valid email address.");
-                                        return;
-                                    }
-
-                                    const updatedSettings = {
-                                        ...userSettings,
-                                        email_recovery: newEmail,
-                                    };
-
-                                    // Update local state
-                                    setUserSettings(updatedSettings);
-
-                                    // Update backend
-                                    await handleUpdate(updatedSettings);
-
-                                    // Reset
-                                    setShowEmailInput(false);
-                                    setnewEmail(""); // clear input
-                                }}
-                                className="ml-4 border-2 p-1 cursor-pointer rounded-md hover:focus hover:bg-white bg-orange-400"
-                            >
-                            Save
-                            </button>
+                {/* Trusted Devices */}
+                <p style={{ ...sectionHeader, marginTop: 32 }}>Trusted Devices</p>
+                <div style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, overflow: "hidden", marginBottom: 20 }}>
+                    {[["Last Device", userSettings.last_login_device || "—"], ["Last Sign In", userSettings.last_login ? new Date(userSettings.last_login).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }) : "No login yet"]].map(([lbl, val], i, arr) => (
+                        <div key={lbl} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: i < arr.length - 1 ? `0.5px solid ${T.border}` : "none" }}>
+                            <span style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em" }}>{lbl}</span>
+                            <span style={{ fontSize: 13, color: T.text1, fontWeight: 300 }}>{val}</span>
                         </div>
+                    ))}
+                </div>
+
+                {/* Account Recovery */}
+                <p style={{ ...sectionHeader, marginTop: 32 }}>Account Recovery</p>
+                <div style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, overflow: "hidden" }}>
+
+                    {/* Recovery Email */}
+                    <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${T.border}` }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em" }}>Recovery Email</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                {!showEmailInput && <span style={{ fontSize: 13, color: T.text1, fontWeight: 300 }}>{userSettings?.email_recovery || "Not set"}</span>}
+                                {!showEmailInput && (
+                                    <button onClick={() => { setShowEmailInput(true); setnewEmail(userSettings.email_recovery || ''); }}
+                                        style={{ background: "transparent", border: "none", cursor: "pointer", color: T.text3, display: "flex", alignItems: "center" }}>
+                                        <Pencil size={14} />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        {showEmailInput && (
+                            <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+                                <input type="email" placeholder="Enter new recovery email" value={newEmail} onChange={e => setnewEmail(e.target.value)} style={{ ...inputStyle, flex: 1 }} />
+                                <button onClick={async () => {
+                                    if (!isValidEmail(newEmail)) { alert("Please enter a valid email address."); return; }
+                                    const updated = { ...userSettings, email_recovery: newEmail };
+                                    setUserSettings(updated);
+                                    await handleUpdate(updated);
+                                    setShowEmailInput(false); setnewEmail("");
+                                }} style={saveBtn}>Save</button>
+                                <button onClick={() => setShowEmailInput(false)}
+                                    style={{ ...saveBtn, background: "transparent", color: T.text2, border: `1px solid ${T.border2}` }}>Cancel</button>
+                            </div>
                         )}
                     </div>
 
-                    {/* Recovery Phone Number */}
-                    <div className='py-2 flex items-center'>
-                        <p className='pr-2 text-lg'>Recovery Phone Number:</p>
-                        <p  
-                            className={
-                                `pr-2 text-lg 
-                                ${showPhoneInput ? 'hidden sm:block' : 'block'}
-                            `}
-                        >
-                            {userSettings?.phone_recovery || "Not set"}
-                        </p>
-                        <button
-                            onClick={() => {
-                                setShowPhoneInput(!showPhoneInput);
-                                setNewPhone(userSettings?.phone_recovery || '');
-                            }}
-                            className={
-                                `text-gray-800 hover:text-blue-800 -mt-2
-                                ${showPhoneInput ? 'hidden sm:block' : 'block'}
-                            `}
-                        >
-                            <Pencil size={18} />
-                        </button>
-
-                        {/* Conditional input */}
-                        {showPhoneInput && (
-                        <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0 w-full sm:w-auto">
-                            <input
-                                type="tel"
-                                placeholder="Enter new recovery phone"
-                                className="ml-4 border-2 border-black p-1"
-                                value={newPhone}
-                                onChange={(e) => setNewPhone(e.target.value)}
-                            />
-                            <button
-                                onClick={async () => {
-                                    if (!isValidUSPhone(newPhone)) {
-                                        alert("Please enter a valid U.S. phone number (e.g. 123-456-7890).");
-                                        return;
-                                    }
-
-                                    const updatedSettings = {
-                                        ...userSettings,
-                                        phone_recovery: newPhone,
-                                    };
-                                
-                                    // Update local state
-                                    setUserSettings(updatedSettings);
-
-                                    // Update backend
-                                    await handleUpdate(updatedSettings);
-
-                                    // Reset
-                                    setShowPhoneInput(false);
-                                    setNewPhone(""); // clear input
-                                }}
-                                className="ml-4 border-2 p-1 cursor-pointer rounded-md hover:focus hover:bg-white bg-orange-400"
-                            >
-                            Save
-                            </button>
+                    {/* Recovery Phone */}
+                    <div style={{ padding: "14px 20px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em" }}>Recovery Phone</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                {!showPhoneInput && <span style={{ fontSize: 13, color: T.text1, fontWeight: 300 }}>{userSettings?.phone_recovery || "Not set"}</span>}
+                                {!showPhoneInput && (
+                                    <button onClick={() => { setShowPhoneInput(true); setNewPhone(userSettings?.phone_recovery || ''); }}
+                                        style={{ background: "transparent", border: "none", cursor: "pointer", color: T.text3, display: "flex", alignItems: "center" }}>
+                                        <Pencil size={14} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
+                        {showPhoneInput && (
+                            <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+                                <input type="tel" placeholder="Enter new recovery phone" value={newPhone} onChange={e => setNewPhone(e.target.value)} style={{ ...inputStyle, flex: 1 }} />
+                                <button onClick={async () => {
+                                    if (!isValidUSPhone(newPhone)) { alert("Please enter a valid U.S. phone number (e.g. 123-456-7890)."); return; }
+                                    const updated = { ...userSettings, phone_recovery: newPhone };
+                                    setUserSettings(updated);
+                                    await handleUpdate(updated);
+                                    setShowPhoneInput(false); setNewPhone("");
+                                }} style={saveBtn}>Save</button>
+                                <button onClick={() => setShowPhoneInput(false)}
+                                    style={{ ...saveBtn, background: "transparent", color: T.text2, border: `1px solid ${T.border2}` }}>Cancel</button>
+                            </div>
                         )}
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
