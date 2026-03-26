@@ -771,7 +771,18 @@ export default function Dashboard() {
                                             <span style={{ fontSize: 13, color: T.text2 }}>{item}</span>
                                             <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, display: "inline-block" }} />
                                         </div>
-                                    ))}
+                                    )}
+                                </div>
+                                <div className="w-full mb-4" style={{ aspectRatio: "1" }}>
+                                    <TowerModelViewer
+                                        angleDeg={towerRotationDeg}
+                                        className="rounded-lg overflow-hidden bg-[#F2F2F2] dark:bg-gray-700 w-full h-full"
+                                        fillContainer
+                                    />
+                                </div>
+                                <div className="flex items-center justify-center gap-2 text-[#2F3E4D] dark:text-gray-100 font-bold text-lg mb-4">
+                                    <RotateCcw className="w-5 h-5 text-[#6A7B8F]" />
+                                    {orientationAngleNum}°
                                 </div>
                             </div>
 

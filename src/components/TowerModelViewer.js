@@ -6,26 +6,40 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const MODEL_PATH = "/Model/5.6k_10x4_panels/";
 const MODEL_FILE = "5.6k_10x4_panels.gltf";
-const SUN_PATH   = "/Model/";
-const SUN_FILE   = "sun.glb";
+const SUN_FILE = "sun.glb";
 
-export default function TowerModelViewer({
-    angleDeg  = 0,
-    className = "",
-    width     = 280,
-    height    = 280,
-    bgColor   = "#0c0c0d",
-    isDark    = true,
-    onError,
-}) {
+export default function TowerModelViewer({ angleDeg = 0, className = "", width = 280, height = 280, fillContainer = false }) {
+    const rootRef = useRef(null);
     const containerRef = useRef(null);
-    const angleRef     = useRef(angleDeg);
-    const mountedRef   = useRef(true);
-    angleRef.current   = angleDeg;
+    const angleRef = useRef(angleDeg);
+    const mountedRef = useRef(true);
+    const rendererRef = useRef(null);
+    const cameraRef = useRef(null);
+    angleRef.current = angleDeg;
 
     const [loading, setLoading] = useState(true);
+    const [containerSize, setContainerSize] = useState(fillContainer ? null : { width, height });
 
     useEffect(() => {
+        if (!fillContainer || !rootRef.current) return;
+        const el = rootRef.current;
+        const ro = new ResizeObserver((entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            const { width: w, height: h } = entry.contentRect;
+            if (w > 0 && h > 0) setContainerSize({ width: w, height: h });
+        });
+        ro.observe(el);
+        const { width: w, height: h } = el.getBoundingClientRect();
+        if (w > 0 && h > 0) setContainerSize({ width: w, height: h });
+        return () => ro.disconnect();
+    }, [fillContainer]);
+
+    const w = containerSize?.width ?? width;
+    const h = containerSize?.height ?? height;
+
+    useEffect(() => {
+        if (fillContainer && !containerSize) return;
         mountedRef.current = true;
         const container = containerRef.current;
         if (!container) return;
@@ -37,18 +51,19 @@ export default function TowerModelViewer({
                 scene = new THREE.Scene();
                 scene.background = null;
 
-                camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
+                camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
                 camera.position.set(0, 14, 44);
-                camera.lookAt(0, 6, 0);
+                camera.lookAt(0, 4, 0);
+                cameraRef.current = camera;
 
-                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                renderer.setSize(width, height);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                renderer.setClearColor(0x000000, 0);
-                renderer.shadowMap.enabled       = true;
-                renderer.shadowMap.type          = THREE.PCFSoftShadowMap;
-                renderer.toneMapping             = THREE.ACESFilmicToneMapping;
-                renderer.toneMappingExposure     = 1.1;
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+                renderer.setSize(w, h);
+                rendererRef.current = renderer;
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                renderer.toneMappingExposure = 1.2;
                 if (renderer.outputColorSpace !== undefined) {
                     renderer.outputColorSpace = THREE.SRGBColorSpace;
                 }
@@ -168,7 +183,12 @@ export default function TowerModelViewer({
                     if (!mountedRef.current) return;
                     animationId = requestAnimationFrame(animate);
                     if (towerModel) {
-                        towerModel.rotation.y = (-angleRef.current * Math.PI) / 180;
+                        const effectiveAngle = Math.max(90, Math.min(270, 90)); // TODO: testing 270° — restore angleRef.current angleRef.current
+                        const modelAngle = 360 - effectiveAngle;
+                        towerModel.rotation.y = (modelAngle * Math.PI) / 180;
+                    }
+                    if (renderer && scene && camera) {
+                        renderer.render(scene, camera);
                     }
                     renderer.render(scene, camera);
                 }
@@ -190,17 +210,33 @@ export default function TowerModelViewer({
                 container.removeChild(renderer.domElement);
             }
             renderer?.dispose();
+            rendererRef.current = null;
+            cameraRef.current = null;
         };
-    }, [width, height]);
+    }, [fillContainer, !fillContainer || (containerSize?.width != null && containerSize?.height != null)]);
+
+    const ready = !fillContainer || (containerSize?.width != null && containerSize?.height != null);
+    useEffect(() => {
+        if (!ready || !rendererRef.current || !cameraRef.current) return;
+        rendererRef.current.setSize(w, h);
+        cameraRef.current.aspect = w / h;
+        cameraRef.current.updateProjectionMatrix();
+    }, [ready, w, h]);
 
     return (
-        <div className={className} style={{
-            width, height, minWidth: width, minHeight: height,
-            position: "relative", background: "transparent",
-            borderRadius: 10, overflow: "hidden",
-        }}>
-            <div ref={containerRef}
-                style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }} />
+        <div
+            ref={rootRef}
+            className={className}
+            style={{
+                ...(fillContainer ? { width: "100%", height: "100%", minWidth: 0, minHeight: 0 } : { width, height, minWidth: width, minHeight: height }),
+                position: "relative",
+                background: "#e8e8e8",
+            }}
+        >
+            <div
+                ref={containerRef}
+                style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}
+            />
             {loading && (
                 <div style={{
                     position: "absolute", inset: 0,
