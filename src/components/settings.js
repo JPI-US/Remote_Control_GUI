@@ -369,6 +369,16 @@ export default function Settings() {
                                 onClick={() => setMenuOpen(false)}>
                                 Dashboard
                             </Link>
+                            {session?.role === "ADMIN" && (
+                                <Link href="/systemselect"
+                                    className="block px-4 py-2 text-sm transition-colors"
+                                    style={{ color: T.amber }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                                    onClick={() => setMenuOpen(false)}>
+                                    System Select
+                                </Link>
+                            )}
                             <Link href="/contact"
                                 className="block px-4 py-2 text-sm transition-colors"
                                 style={{ color: T.text2 }}
