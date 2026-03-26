@@ -756,7 +756,7 @@ export default function Dashboard() {
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
                                     <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <span style={{ fontSize: 13, fontWeight: 500, color: T.text1 }}>System Health</span>
+                                        <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>System Health</span>
                                         <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: T.green, fontWeight: 600, letterSpacing: "0.08em" }}>
                                             <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, display: "inline-block" }} />
                                             All nominal
@@ -908,7 +908,7 @@ export default function Dashboard() {
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, minHeight: 200 }}
                                 >
                                     <div className="flex items-center justify-between mb-1">
-                                        <p style={{ fontSize: 13, fontWeight: 500, color: T.text1 }}>Today&apos;s Data</p>
+                                        <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>Today&apos;s Data</p>
                                         <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.08em" }}>Hourly production</p>
                                     </div>
                                     {hourlyProduction?.values?.length && fullDayDates?.length ? (
@@ -1040,7 +1040,7 @@ export default function Dashboard() {
                                 >
                                     <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
                                         <div>
-                                            <p style={{ fontSize: 13, fontWeight: 500, color: T.text1 }}>Historical Power Data</p>
+                                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>Historical Power Data</p>
                                             <p style={{ fontSize: 13, color: T.text3, marginTop: 2 }}>Energy produced over time</p>
                                         </div>
                                         <div className="flex items-center gap-1">
