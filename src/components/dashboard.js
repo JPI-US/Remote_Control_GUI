@@ -771,315 +771,196 @@ export default function Dashboard() {
                             </div>
 
                             {/* TODAY AT A GLANCE label */}
-                            {isDark ? (
-                                <p style={{ ...sectionLabel, marginBottom: 16 }}>Today at a Glance</p>
-                            ) : (
-                                <h2 className="text-xs font-medium uppercase tracking-widest mb-4" style={{ color: WM.label, marginBottom: "20px" }}>Today at a Glance</h2>
-                            )}
+                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 }}>Today at a Glance</p>
 
                             {/* ── Environmental + Performance row ── */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
 
                                 {/* Environmental */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-1 rounded-xl overflow-hidden"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                    >
-                                        {/* Header */}
-                                        <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3 }}>Environmental</p>
-                                            <button
-                                                type="button"
-                                                onClick={toggleTempUnit}
-                                                className="flex items-center rounded-full overflow-hidden"
-                                                style={{ border: `0.5px solid ${DK.border2}`, fontSize: 11, fontWeight: 600 }}
-                                                aria-label="Toggle temperature unit"
-                                            >
-                                                <span style={{ padding: "2px 7px", background: tempUnit === "F" ? DK.amber : "transparent", color: tempUnit === "F" ? "#000" : DK.text3, transition: "all 0.2s" }}>°F</span>
-                                                <span style={{ padding: "2px 7px", background: tempUnit === "C" ? DK.amber : "transparent", color: tempUnit === "C" ? "#000" : DK.text3, transition: "all 0.2s" }}>°C</span>
-                                            </button>
+                                <div className="rounded-xl overflow-hidden"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>Environmental</p>
+                                        <button
+                                            type="button"
+                                            onClick={toggleTempUnit}
+                                            className="flex items-center rounded-full overflow-hidden"
+                                            style={{ border: `0.5px solid ${T.border2}`, fontSize: 11, fontWeight: 600 }}
+                                            aria-label="Toggle temperature unit"
+                                        >
+                                            <span style={{ padding: "2px 7px", background: tempUnit === "F" ? T.amber : "transparent", color: tempUnit === "F" ? (isDark ? "#000" : "#fff") : T.text3, transition: "all 0.2s" }}>°F</span>
+                                            <span style={{ padding: "2px 7px", background: tempUnit === "C" ? T.amber : "transparent", color: tempUnit === "C" ? (isDark ? "#000" : "#fff") : T.text3, transition: "all 0.2s" }}>°C</span>
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
+                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Humidity</p>
+                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>
+                                                {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>%</span>
+                                            </p>
                                         </div>
-                                        {/* Two stats — mirrors Daily Peak | Power Output */}
-                                        <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                            <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${DK.border}` }}>
-                                                <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Humidity</p>
-                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>
-                                                    {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>%</span>
-                                                </p>
-                                            </div>
-                                            <div className="px-5 py-4">
-                                                <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Temperature</p>
-                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>
-                                                    {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>{tempSymbol}</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        {/* Trend sparklines using real hourly data */}
                                         <div className="px-5 py-4">
-                                            <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Today&apos;s Conditions</p>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <Sparkline
-                                                        values={weather?.hourly?.slice(0, 24).map(h => h.humidity ?? 0) ?? [weather?.current?.humidity ?? 0]}
-                                                        color="#7BAFD4"
-                                                        unit="%"
-                                                        startHour={new Date().getHours()}
-                                                    />
-                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 4 }}>Updated {currentTime}</p>
-                                                </div>
-                                                <div>
-                                                    <Sparkline
-                                                        values={weather?.hourly?.slice(0, 24).map(h => toDisplayTemp(h.temp) ?? 0) ?? [toDisplayTemp(weather?.current?.temp) ?? 0]}
-                                                        color="#f97316"
-                                                        unit={tempSymbol}
-                                                        startHour={new Date().getHours()}
-                                                    />
-                                                    <p style={{ fontSize: 11, color: DK.text3, marginTop: 4 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
-                                                </div>
+                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Temperature</p>
+                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>
+                                                {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>{tempSymbol}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="px-5 py-4">
+                                        <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Today&apos;s Conditions</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <Sparkline
+                                                    values={weather?.hourly?.slice(0, 24).map(h => h.humidity ?? 0) ?? [weather?.current?.humidity ?? 0]}
+                                                    color="#7BAFD4" unit="%" startHour={new Date().getHours()}
+                                                />
+                                                <p style={{ fontSize: 11, color: T.text3, marginTop: 4 }}>Updated {currentTime}</p>
+                                            </div>
+                                            <div>
+                                                <Sparkline
+                                                    values={weather?.hourly?.slice(0, 24).map(h => toDisplayTemp(h.temp) ?? 0) ?? [toDisplayTemp(weather?.current?.temp) ?? 0]}
+                                                    color="#f97316" unit={tempSymbol} startHour={new Date().getHours()}
+                                                />
+                                                <p style={{ fontSize: 11, color: T.text3, marginTop: 4 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
                                             </div>
                                         </div>
                                     </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
-                                        <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
-                                        <div className="flex items-center justify-between mb-4 shrink-0">
-                                            <h3 className="text-xs font-medium uppercase tracking-widest" style={{ color: WM.label }}>Environmental</h3>
-                                            <button
-                                                type="button"
-                                                onClick={toggleTempUnit}
-                                                className="flex items-center rounded-full overflow-hidden text-xs font-semibold"
-                                                style={{ border: `1px solid ${WM.label}40` }}
-                                                aria-label="Toggle temperature unit"
-                                            >
-                                                <span style={{ padding: "2px 7px", background: tempUnit === "F" ? WM.amber : "transparent", color: tempUnit === "F" ? "#fff" : WM.muted, transition: "all 0.2s" }}>°F</span>
-                                                <span style={{ padding: "2px 7px", background: tempUnit === "C" ? WM.amber : "transparent", color: tempUnit === "C" ? "#fff" : WM.muted, transition: "all 0.2s" }}>°C</span>
-                                            </button>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
-                                            <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
-                                                <Droplets className="w-12 h-12 text-[#7BAFD4] mb-2" />
-                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{weather?.current?.humidity ?? "—"}<span className="text-lg font-medium">%</span></p>
-                                                <p className="text-sm text-[#A8978A]">Humidity</p>
-                                            </div>
-                                            <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
-                                                <Thermometer className="w-12 h-12 text-orange-500 mb-2" />
-                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{toDisplayTemp(weather?.current?.temp)}<span className="text-lg font-medium">{tempSymbol}</span></p>
-                                                <p className="text-sm text-[#A8978A]">Temperature</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                </div>
 
                                 {/* Performance */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-2 rounded-xl overflow-hidden"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}` }}
-                                    >
-                                        <p className="px-5 pt-4 pb-3" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: DK.text3, borderBottom: `0.5px solid ${DK.border}` }}>
-                                            Performance
-                                        </p>
-                                        {/* Two stats inline */}
-                                        <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${DK.border}` }}>
-                                            <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${DK.border}` }}>
-                                                <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Daily Peak</p>
-                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>{maxHourlyPower} <span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>kW</span></p>
-                                            </div>
-                                            <div className="px-5 py-4">
-                                                <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Power Output</p>
-                                                <p style={{ fontSize: 28, fontWeight: 200, color: DK.text1, lineHeight: 1 }}>{powerPercentDisplay.toFixed(1)}<span style={{ fontSize: 14, fontWeight: 300, color: DK.text2 }}>%</span></p>
-                                            </div>
+                                <div className="rounded-xl overflow-hidden"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <p className="px-5 pt-4 pb-3" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, borderBottom: `0.5px solid ${T.border}` }}>
+                                        Performance
+                                    </p>
+                                    <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
+                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Daily Peak</p>
+                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>{maxHourlyPower} <span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>kW</span></p>
                                         </div>
-                                        {/* Mini hourly bar chart */}
                                         <div className="px-5 py-4">
-                                            <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Hourly Output</p>
-                                            <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 48 }}>
-                                                {Array.from({ length: 24 }, (_, i) => {
-                                                    const hourVal = hourlyProduction?.values?.[Math.floor(i * (hourlyProduction.values.length / 24))] ?? 0;
-                                                    const maxVal = Math.max(...(hourlyProduction?.values ?? [1]), 1);
-                                                    const h = Math.max(3, (hourVal / maxVal) * 48);
-                                                    const currentHour = new Date().getHours();
-                                                    const isNow = i === currentHour;
-                                                    return (
-                                                        <div
-                                                            key={i}
-                                                            style={{
-                                                                flex: 1, height: h, borderRadius: 2,
-                                                                background: isNow ? DK.amber : (hourVal > 0 ? "rgba(212,168,83,0.4)" : DK.amberDim),
-                                                                transition: "height 0.5s ease-out",
-                                                            }}
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="flex justify-between mt-1" style={{ fontSize: 12, color: DK.text3 }}>
-                                                <span>0</span><span>6</span><span>12</span><span>18</span><span>now</span>
-                                            </div>
+                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Power Output</p>
+                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>{powerPercentDisplay.toFixed(1)}<span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>%</span></p>
                                         </div>
                                     </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-4 flex flex-col min-h-[140px] relative overflow-hidden" style={LT_CARD}>
-                                        <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 bg-[#d1d5db] z-10" style={{ width: "4px" }} aria-hidden />
-                                        <h3 className="text-xs font-medium uppercase tracking-widest mb-4 shrink-0" style={{ color: WM.label }}>Performance</h3>
-                                        <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
-                                            <div className="flex flex-col items-center justify-center text-center pr-4 min-h-0">
-                                                <img src="/images/Battery%20charging.png" alt="Battery charging" className="w-12 h-12 object-contain mb-2" />
-                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{maxHourlyPower} <span className="text-lg font-medium">kW</span></p>
-                                                <p className="text-sm text-[#A8978A]">Daily Peak</p>
-                                            </div>
-                                            <div className="flex flex-col items-center justify-center text-center pl-4 min-h-0">
-                                                <Zap className="w-12 h-12 text-[#A8978A] mb-2" />
-                                                <p className="text-3xl font-bold text-[#5C4A38] tracking-tight">{powerPercentDisplay.toFixed(1)}<span className="text-lg font-medium">%</span></p>
-                                                <p className="text-sm text-[#A8978A]">Power Output</p>
-                                            </div>
+                                    <div className="px-5 py-4">
+                                        <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Hourly Output</p>
+                                        <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 48 }}>
+                                            {Array.from({ length: 24 }, (_, i) => {
+                                                const hourVal = hourlyProduction?.values?.[Math.floor(i * (hourlyProduction.values.length / 24))] ?? 0;
+                                                const maxVal = Math.max(...(hourlyProduction?.values ?? [1]), 1);
+                                                const h = Math.max(3, (hourVal / maxVal) * 48);
+                                                const isNow = i === new Date().getHours();
+                                                return (
+                                                    <div key={i} style={{
+                                                        flex: 1, height: h, borderRadius: 2,
+                                                        background: isNow ? T.amber : (hourVal > 0 ? T.amberDim : T.amberDim),
+                                                        opacity: isNow ? 1 : hourVal > 0 ? 0.5 : 0.2,
+                                                        transition: "height 0.5s ease-out",
+                                                    }} />
+                                                );
+                                            })}
+                                        </div>
+                                        <div className="flex justify-between mt-1" style={{ fontSize: 12, color: T.text3 }}>
+                                            <span>0</span><span>6</span><span>12</span><span>18</span><span>now</span>
                                         </div>
                                     </div>
-                                )}
+                                </div>
                             </div>
 
                             {/* ── CO2 + Today's Data row ── */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
 
                                 {/* CO2 / Environmental Impact */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-3 rounded-xl p-6 flex flex-col justify-between"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}`, minHeight: 200 }}
-                                    >
-                                        <div>
-                                            <p style={{ fontSize: 13, color: DK.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
-                                                Environmental Impact
-                                            </p>
-                                            <p style={{ fontSize: 44, fontWeight: 200, color: DK.amber, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                                {carbonSaved} <span style={{ fontSize: 20, fontWeight: 300 }}>kg CO₂</span>
-                                            </p>
-                                            <p style={{ fontSize: 14, color: DK.text3, marginTop: 8 }}>Carbon saved since installation</p>
-                                        </div>
-                                        {/* Equivalencies */}
-                                        <p style={{ fontSize: 14, color: DK.text2, marginTop: 16, marginBottom: 12 }}>
-                                            ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
+                                <div className="rounded-xl p-6 flex flex-col justify-between"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, minHeight: 200 }}
+                                >
+                                    <div>
+                                        <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
+                                            Environmental Impact
                                         </p>
-                                        {/* Progress bar */}
-                                        <div>
-                                            <div className="flex justify-between mb-2" style={{ fontSize: 13, color: DK.text3 }}>
-                                                <span>Monthly goal</span>
-                                                <span>{Math.min(carbonSaved, 50)} / 50 kg</span>
-                                            </div>
-                                            <DkProgressBar value={Math.min(parseFloat(carbonSaved), 50)} max={50} />
-                                        </div>
+                                        <p style={{ fontSize: 44, fontWeight: 200, color: T.amber, lineHeight: 1, letterSpacing: "-0.02em" }}>
+                                            {carbonSaved} <span style={{ fontSize: 20, fontWeight: 300 }}>kg CO₂</span>
+                                        </p>
+                                        <p style={{ fontSize: 14, color: T.text3, marginTop: 8 }}>Carbon saved since installation</p>
                                     </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-6 flex flex-row items-center justify-center gap-6 min-h-[240px]" style={LT_CARD}>
-                                        <Globe className="w-24 h-24 text-[#4A9E78] flex-shrink-0" />
-                                        <div className="flex flex-col text-left min-w-0">
-                                            <p className="text-base text-[#A8978A]">Environmental impact reduction</p>
-                                            <p className="text-3xl font-bold text-[#4A9E78] mt-1 tracking-tight">{carbonSaved} <span className="text-lg font-medium">kg CO₂</span></p>
-                                            <p className="text-lg text-[#4A9E78]">Carbon Saved</p>
+                                    <p style={{ fontSize: 14, color: T.text2, marginTop: 16, marginBottom: 12 }}>
+                                        ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
+                                    </p>
+                                    <div>
+                                        <div className="flex justify-between mb-2" style={{ fontSize: 13, color: T.text3 }}>
+                                            <span>Monthly goal</span>
+                                            <span>{Math.min(carbonSaved, 50)} / 50 kg</span>
                                         </div>
+                                        <DkProgressBar value={Math.min(parseFloat(carbonSaved), 50)} max={50} color={T.amber} />
                                     </div>
-                                )}
+                                </div>
 
                                 {/* Today's Data chart */}
-                                {isDark ? (
-                                    <div
-                                        className="dk-fade-in dk-fade-in-4 rounded-xl p-5"
-                                        style={{ background: DK.surface, border: `0.5px solid ${DK.border}`, minHeight: 200 }}
-                                    >
-                                        <div className="flex items-center justify-between mb-1">
-                                            <p style={{ fontSize: 13, fontWeight: 500, color: DK.text1 }}>Today&apos;s Data</p>
-                                            <p style={{ fontSize: 13, color: DK.text3, letterSpacing: "0.08em" }}>Hourly production</p>
-                                        </div>
-                                        {hourlyProduction?.values?.length && fullDayDates?.length ? (
-                                            <div style={{ height: 180 }}>
-                                                <Line
-                                                    data={{
-                                                        datasets: [{
-                                                            label: "Power (KW)",
-                                                            data: datasetPoints.map((p) => ({ x: p.x, y: (p.y || 0) / 1000 })),
-                                                            borderColor: DK.amber,
-                                                            backgroundColor: "transparent",
-                                                            fill: false,
-                                                            borderWidth: 1.5,
-                                                            pointRadius: 0,
-                                                            tension: 0.3,
-                                                        }],
-                                                    }}
-                                                    options={{
-                                                        responsive: true,
-                                                        maintainAspectRatio: false,
-                                                        scales: {
-                                                            x: {
-                                                                type: "time",
-                                                                adapters: { date: { zone: system_tz } },
-                                                                min: fullDayDates[0],
-                                                                max: fullDayDates[fullDayDates.length - 1],
-                                                                grid: { display: false },
-                                                                border: { display: false },
-                                                                ticks: { color: DK.text3, font: { size: 12 } },
-                                                            },
-                                                            y: {
-                                                                beginAtZero: true,
-                                                                grid: { color: "rgba(255,255,255,0.04)", drawBorder: false },
-                                                                border: { display: false },
-                                                                ticks: { color: DK.text3, font: { size: 12 } },
-                                                            },
+                                <div className="rounded-xl p-5"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, minHeight: 200 }}
+                                >
+                                    <div className="flex items-center justify-between mb-1">
+                                        <p style={{ fontSize: 13, fontWeight: 500, color: T.text1 }}>Today&apos;s Data</p>
+                                        <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.08em" }}>Hourly production</p>
+                                    </div>
+                                    {hourlyProduction?.values?.length && fullDayDates?.length ? (
+                                        <div style={{ height: 180 }}>
+                                            <Line
+                                                data={{
+                                                    datasets: [{
+                                                        label: "Power (KW)",
+                                                        data: datasetPoints.map((p) => ({ x: p.x, y: (p.y || 0) / 1000 })),
+                                                        borderColor: T.amber,
+                                                        backgroundColor: isDark ? "transparent" : T.amberDim,
+                                                        fill: isDark ? false : "start",
+                                                        borderWidth: 1.5,
+                                                        pointRadius: 0,
+                                                        tension: 0.3,
+                                                    }],
+                                                }}
+                                                options={{
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    scales: {
+                                                        x: {
+                                                            type: "time",
+                                                            adapters: { date: { zone: system_tz } },
+                                                            min: fullDayDates[0],
+                                                            max: fullDayDates[fullDayDates.length - 1],
+                                                            grid: { display: false },
+                                                            border: { display: false },
+                                                            ticks: { color: T.text3, font: { size: 12 } },
                                                         },
-                                                        plugins: { legend: { display: false } },
-                                                    }}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div style={{ height: 180, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                <p style={{ fontSize: 14, color: DK.text3 }}>Loading chart data...</p>
-                                            </div>
-                                        )}
-                                        {/* Footer peak/avg row */}
-                                        <div className="flex justify-between mt-3 pt-3" style={{ borderTop: `0.5px solid ${DK.border}` }}>
-                                            <div>
-                                                <span style={{ fontSize: 13, color: DK.text3 }}>Peak  </span>
-                                                <span style={{ fontSize: 14, fontWeight: 300, color: DK.text1 }}>{maxHourlyPower} kW</span>
-                                            </div>
-                                            <div>
-                                                <span style={{ fontSize: 13, color: DK.text3 }}>Today  </span>
-                                                <span style={{ fontSize: 14, fontWeight: 300, color: DK.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</span>
-                                            </div>
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            grid: { color: T.chartGrid, drawBorder: false },
+                                                            border: { display: false },
+                                                            ticks: { color: T.text3, font: { size: 12 } },
+                                                        },
+                                                    },
+                                                    plugins: { legend: { display: false } },
+                                                }}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div style={{ height: 180, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <p style={{ fontSize: 14, color: T.text3 }}>Loading chart data...</p>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between mt-3 pt-3" style={{ borderTop: `0.5px solid ${T.border}` }}>
+                                        <div>
+                                            <span style={{ fontSize: 13, color: T.text3 }}>Peak  </span>
+                                            <span style={{ fontSize: 14, fontWeight: 300, color: T.text1 }}>{maxHourlyPower} kW</span>
+                                        </div>
+                                        <div>
+                                            <span style={{ fontSize: 13, color: T.text3 }}>Today  </span>
+                                            <span style={{ fontSize: 14, fontWeight: 300, color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</span>
                                         </div>
                                     </div>
-                                ) : (
-                                    <div className="bg-white rounded-2xl p-4 md:col-span-1" style={LT_CARD}>
-                                        <h3 className="text-sm font-medium text-[#5C4A38] mb-3">Today's Data</h3>
-                                        {hourlyProduction?.values?.length && fullDayDates?.length ? (
-                                            <div style={{ height: "200px" }}>
-                                                <Line
-                                                    data={{
-                                                        datasets: [{
-                                                            label: "Power (KW)",
-                                                            data: datasetPoints.map((p) => ({ x: p.x, y: (p.y || 0) / 1000 })),
-                                                            borderColor: ORANGE,
-                                                            backgroundColor: "rgba(243, 182, 100, 0.3)",
-                                                            fill: "start",
-                                                            borderWidth: 2,
-                                                            pointRadius: 0,
-                                                            tension: 0.2,
-                                                        }],
-                                                    }}
-                                                    options={{
-                                                        responsive: true,
-                                                        maintainAspectRatio: false,
-                                                        scales: {
-                                                            x: { type: "time", adapters: { date: { zone: system_tz } }, min: fullDayDates[0], max: fullDayDates[fullDayDates.length - 1], grid: { display: false } },
-                                                            y: { beginAtZero: true, title: { display: true, text: "Power (KW)" }, grid: { color: "#E0E0E0" } },
-                                                        },
-                                                        plugins: { legend: { display: false } },
-                                                    }}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <p className="text-sm text-[#A8978A] py-8 text-center">Loading chart data...</p>
-                                        )}
-                                    </div>
-                                )}
+                                </div>
                             </div>
                         </section>
 
