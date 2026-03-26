@@ -687,6 +687,13 @@ export default function Dashboard() {
                                             />
                                         </svg>
                                     </div>
+                                    {/* Weather condition — mirrors Direction label in tower card */}
+                                    <div className="mt-4 text-center">
+                                        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 8 }}>Conditions</p>
+                                        <p style={{ fontSize: 20, fontWeight: 300, color: T.text1, lineHeight: 1.3 }}>
+                                            {weatherDisplay.icon} {weatherDisplay.title}
+                                        </p>
+                                    </div>
                                     <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${T.border}` }}>
                                         <div className="text-center">
                                             <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Daily Total</p>
