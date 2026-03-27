@@ -57,7 +57,8 @@ export default function TowerModelViewer({ angleDeg = 0, className = "", width =
                 camera.lookAt(0, 4, 0);
                 cameraRef.current = camera;
 
-                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setClearColor(0x000000, 0);
                 renderer.setSize(w, h);
                 rendererRef.current = renderer;
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
