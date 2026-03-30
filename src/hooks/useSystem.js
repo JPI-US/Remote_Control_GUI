@@ -20,7 +20,6 @@ export function useSystem() {
                 }
 
                 const data = await res.json();
-                console.log("Fetched system from API:", data);
                 setSystemData(data); // { system, froniusSystemId 
             } catch (err) {
                 console.error("Failed to fetch system", err);

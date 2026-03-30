@@ -100,8 +100,6 @@ export async function GET(request) {
         return NextResponse.json({ error: "systemId is required" }, { status: 400 });
         }
 
-        console.log("Backend using systemId:", systemId);
-
         const endpoints = {
             live: `${BASE_URL}/${systemId}/LiveData`,
             flowData: `${BASE_URL}/${systemId}/FlowData`,
