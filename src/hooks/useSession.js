@@ -16,8 +16,13 @@ export function useSession() {
                     return;
                 }
 
-                const session = await sessionRes.json();
-                setSession(session); // Fetched session
+                const sessionData = await sessionRes.json();
+                if (!sessionData?.authenticated) {
+                    setSession(null);
+                    setUser(null);
+                    return;
+                }
+                setSession(sessionData); // Fetched session
 
                 //Fetch user info from your existing API
                 const userRes = await fetch(`/api/user`, { credentials: "include" });
