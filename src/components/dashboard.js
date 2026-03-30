@@ -166,11 +166,15 @@ function dkCard(isDark, extraLight = "", extraDark = "") {
 function Sparkline({ values = [], color = DK.amber, unit = "", startHour = 0 }) {
     const [hovered, setHovered] = React.useState(null);
     if (!values.length) return null;
+    const cleanValues = values.map((v) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+    });
     const w = 180, h = 48;
-    const max = Math.max(...values, 0.001);
-    const min = Math.min(...values, 0);
+    const max = Math.max(...cleanValues, 0.001);
+    const min = Math.min(...cleanValues, 0);
     const range = max - min || 0.001;
-    const pts = values.map((v, i) => {
+    const pts = cleanValues.map((v, i) => {
         const x = (i / Math.max(values.length - 1, 1)) * w;
         const y = h - ((v - min) / range) * (h - 4) - 2;
         return { x, y, v, i };

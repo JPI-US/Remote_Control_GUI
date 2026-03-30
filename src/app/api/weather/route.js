@@ -2,6 +2,53 @@ import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
+const NOAA_HEADERS = {
+    "User-Agent": "Remote GUI Dashboard (msalla@jantaus.com)",
+    Accept: "application/geo+json",
+};
+
+async function fetchNoaaJson(url, { attempts = 3, timeoutMs = 8000 } = {}) {
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            const response = await fetch(url, {
+                headers: NOAA_HEADERS,
+                signal: AbortSignal.timeout(timeoutMs),
+            });
+
+            // Retry on transient upstream errors/rate-limits.
+            if ([429, 502, 503, 504].includes(response.status)) {
+                if (attempt < attempts) {
+                    await new Promise((resolve) => setTimeout(resolve, attempt * 300));
+                    continue;
+                }
+                return { ok: false, status: response.status, data: null };
+            }
+
+            if (!response.ok) {
+                return { ok: false, status: response.status, data: null };
+            }
+
+            const data = await response.json();
+            return { ok: true, status: response.status, data };
+        } catch (error) {
+            lastError = error;
+            if (attempt < attempts) {
+                await new Promise((resolve) => setTimeout(resolve, attempt * 300));
+                continue;
+            }
+        }
+    }
+
+    return {
+        ok: false,
+        status: 503,
+        data: null,
+        error: lastError,
+    };
+}
+
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -19,44 +66,35 @@ export async function GET(request) {
         }
 
         // Get NOAA grid point
-        const pointRes = await fetch(
-            `https://api.weather.gov/points/${lat},${lon}`,
-            {
-                headers: {
-                "User-Agent": "Remote GUI Dashboard (msalla@jantaus.com)",
-                Accept: "application/geo+json",
-                },
-            }
-        );
-
+        const pointRes = await fetchNoaaJson(`https://api.weather.gov/points/${lat},${lon}`);
         if (!pointRes.ok) {
             return NextResponse.json(
-                { error: "Failed to fetch NOAA point data" },
-                { status: pointRes.status }
+                { error: "NOAA weather service is temporarily unavailable" },
+                { status: pointRes.status >= 500 ? 503 : pointRes.status }
             );
         }
 
-        const pointData = await pointRes.json();
+        const pointData = pointRes.data;
         const hourlyUrl = pointData.properties.forecastHourly;
 
 
         // Fetch hourly forecast
-        const forecastRes = await fetch(hourlyUrl, {
-            headers: {
-                "User-Agent": "Remote GUI Dashboard (msalla@jantaus.com)",
-                Accept: "application/geo+json",
-            },
-        });
-
+        const forecastRes = await fetchNoaaJson(hourlyUrl);
         if (!forecastRes.ok) {
             return NextResponse.json(
-                { error: "Failed to fetch NOAA hourly forecast" },
-                { status: forecastRes.status }
+                { error: "NOAA hourly forecast is temporarily unavailable" },
+                { status: forecastRes.status >= 500 ? 503 : forecastRes.status }
             );
         }
 
-        const forecastData = await forecastRes.json();
-        const periods = forecastData.properties.periods;
+        const forecastData = forecastRes.data;
+        const periods = forecastData?.properties?.periods ?? [];
+        if (!periods.length) {
+            return NextResponse.json(
+                { error: "NOAA hourly forecast returned no periods" },
+                { status: 503 }
+            );
+        }
         const currentPeriod = periods[0];
 
         // Map hourly data
