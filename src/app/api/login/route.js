@@ -23,8 +23,13 @@ export async function POST(request) {
     const { email, password } = loginSchema.parse(body);
 
     // Fetch user by email
-    const user = await prisma.customer.findUnique({
-      where: { email },
+    const user = await prisma.customer.findFirst({
+      where: { 
+        email: {
+          equals: email,
+          mode: 'insensitive',
+        }
+       },
       include: {setting: true}
     });
 
