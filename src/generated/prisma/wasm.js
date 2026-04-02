@@ -127,7 +127,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   customer_type: 'customer_type',
   password_hash: 'password_hash',
   plan_tier: 'plan_tier',
-  role: 'role'
+  role: 'role',
+  force_password_reset: 'force_password_reset'
 };
 
 exports.Prisma.SettingsScalarFieldEnum = {

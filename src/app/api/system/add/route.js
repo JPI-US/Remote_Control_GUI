@@ -1,11 +1,29 @@
 import { encryptSystemId } from "@/lib/froniusCrypto";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 export const dynamic = 'force-dynamic';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
 export async function POST(req) {
   try {
+    // Verify session
+    const token = req.cookies.get("session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userRole = String(decoded.role).toUpperCase();
+
+    // Only admins can provision new systems
+    if (userRole !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const body = await req.json();
     const { customerId, systemId, systemName } = body;
 

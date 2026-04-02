@@ -44,17 +44,20 @@ export async function GET(request) {
         
         const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
+        const userRole = String(decoded.role).toUpperCase();
         const activeSystemId = Number(decoded.activeSystemId) || null;
 
         if (!headers.AccessKeyId || !headers.AccessKeyValue) {
             throw new Error("Missing SolarWeb API credentials");
         }
 
-        // Verify the user has access to this Fronius system
+        // Admins can access any system; users must be linked via customer_system
         const systemRecord = await prisma.systems.findFirst({
             where: {
-                id: activeSystemId, 
-                customer_system: { some: { customer_id: customerId } } 
+                id: activeSystemId,
+                ...(userRole !== "ADMIN" && {
+                    customer_system: { some: { customer_id: customerId } },
+                }),
             },
             select: { timezone: true },
         });

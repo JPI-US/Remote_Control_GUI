@@ -18,17 +18,15 @@ export async function GET(request) {
         //Verify JWT
         const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
-        const userRole = String(decoded.role);
+        const userRole = String(decoded.role).toUpperCase(); // ← normalize casing
         console.log(`My systems customer ID: ${customerId}`);
         console.log(`My systems user role: ${userRole}`);
 
-        // Admin sees all systems
+        
         let systems;
-        if (userRole === "ADMIN"){
+        if (userRole === "ADMIN"){// Admin sees all systems
             systems = await prisma.systems.findMany();
-        }
-        // Regular users see only systems linked via customer_system
-        else if ((userRole === "USER")){
+        }else if ((userRole === "USER")){ // Regular users see only systems linked via customer_system
             systems = await prisma.systems.findMany({
                 where: {
                     customer_system: {
@@ -36,9 +34,7 @@ export async function GET(request) {
                     },
                 },
             });
-        }
-        // Validation check
-        else{
+        }else{// Validation check
             console.error("Error fetching user role: unexpected role", userRole);
             return NextResponse.json(
                 { error: "Incorrect USER Role value" },

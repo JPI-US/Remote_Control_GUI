@@ -11,7 +11,6 @@ if (!process.env.JWT_SECRET) {
 }
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 export async function POST(request) {
   try {
     const loginSchema = z.object({

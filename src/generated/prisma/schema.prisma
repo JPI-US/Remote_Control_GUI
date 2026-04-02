@@ -10,23 +10,24 @@ datasource db {
 }
 
 model Customer {
-  id               Int                @id @default(autoincrement())
-  name             String             @db.VarChar(255)
-  email            String             @unique(map: "customers_unique") @db.VarChar(255)
-  address_id       Int?
-  country_code     String?            @db.VarChar(255)
-  phone_number     String?            @db.VarChar(255)
-  customer_type    String             @db.VarChar(255)
-  password_hash    String             @db.VarChar(255)
-  plan_tier        plan_tier?
-  role             user_role?         @default(USER)
-  customer_system  customer_system[]
-  notification     Notifications?
-  orders           orders[]
-  setting          Settings?
-  software_tickets software_tickets[]
-  tower_logs       tower_logs[]
-  tower            Towers[]
+  id                   Int                @id @default(autoincrement())
+  name                 String             @db.VarChar(255)
+  email                String             @unique(map: "customers_unique") @db.VarChar(255)
+  address_id           Int?
+  country_code         String?            @db.VarChar(255)
+  phone_number         String?            @db.VarChar(255)
+  customer_type        String             @db.VarChar(255)
+  password_hash        String             @db.VarChar(255)
+  plan_tier            plan_tier?
+  role                 user_role?         @default(USER)
+  force_password_reset Boolean?           @default(false)
+  customer_system      customer_system[]
+  notification         Notifications?
+  orders               orders[]
+  setting              Settings?
+  software_tickets     software_tickets[]
+  tower_logs           tower_logs[]
+  tower                Towers[]
 
   @@map("customers")
 }

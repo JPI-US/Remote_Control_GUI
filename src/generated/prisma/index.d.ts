@@ -2100,6 +2100,7 @@ export namespace Prisma {
     password_hash: string | null
     plan_tier: $Enums.plan_tier | null
     role: $Enums.user_role | null
+    force_password_reset: boolean | null
   }
 
   export type CustomerMaxAggregateOutputType = {
@@ -2113,6 +2114,7 @@ export namespace Prisma {
     password_hash: string | null
     plan_tier: $Enums.plan_tier | null
     role: $Enums.user_role | null
+    force_password_reset: boolean | null
   }
 
   export type CustomerCountAggregateOutputType = {
@@ -2126,6 +2128,7 @@ export namespace Prisma {
     password_hash: number
     plan_tier: number
     role: number
+    force_password_reset: number
     _all: number
   }
 
@@ -2151,6 +2154,7 @@ export namespace Prisma {
     password_hash?: true
     plan_tier?: true
     role?: true
+    force_password_reset?: true
   }
 
   export type CustomerMaxAggregateInputType = {
@@ -2164,6 +2168,7 @@ export namespace Prisma {
     password_hash?: true
     plan_tier?: true
     role?: true
+    force_password_reset?: true
   }
 
   export type CustomerCountAggregateInputType = {
@@ -2177,6 +2182,7 @@ export namespace Prisma {
     password_hash?: true
     plan_tier?: true
     role?: true
+    force_password_reset?: true
     _all?: true
   }
 
@@ -2277,6 +2283,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier: $Enums.plan_tier | null
     role: $Enums.user_role | null
+    force_password_reset: boolean | null
     _count: CustomerCountAggregateOutputType | null
     _avg: CustomerAvgAggregateOutputType | null
     _sum: CustomerSumAggregateOutputType | null
@@ -2309,6 +2316,7 @@ export namespace Prisma {
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
+    force_password_reset?: boolean
     customer_system?: boolean | Customer$customer_systemArgs<ExtArgs>
     notification?: boolean | Customer$notificationArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
@@ -2330,6 +2338,7 @@ export namespace Prisma {
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
+    force_password_reset?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2343,6 +2352,7 @@ export namespace Prisma {
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
+    force_password_reset?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectScalar = {
@@ -2356,9 +2366,10 @@ export namespace Prisma {
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
+    force_password_reset?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "country_code" | "phone_number" | "customer_type" | "password_hash" | "plan_tier" | "role", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "country_code" | "phone_number" | "customer_type" | "password_hash" | "plan_tier" | "role" | "force_password_reset", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | Customer$customer_systemArgs<ExtArgs>
     notification?: boolean | Customer$notificationArgs<ExtArgs>
@@ -2394,6 +2405,7 @@ export namespace Prisma {
       password_hash: string
       plan_tier: $Enums.plan_tier | null
       role: $Enums.user_role | null
+      force_password_reset: boolean | null
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -2834,6 +2846,7 @@ export namespace Prisma {
     readonly password_hash: FieldRef<"Customer", 'String'>
     readonly plan_tier: FieldRef<"Customer", 'plan_tier'>
     readonly role: FieldRef<"Customer", 'user_role'>
+    readonly force_password_reset: FieldRef<"Customer", 'Boolean'>
   }
     
 
@@ -16194,7 +16207,8 @@ export namespace Prisma {
     customer_type: 'customer_type',
     password_hash: 'password_hash',
     plan_tier: 'plan_tier',
-    role: 'role'
+    role: 'role',
+    force_password_reset: 'force_password_reset'
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -16517,6 +16531,7 @@ export namespace Prisma {
     password_hash?: StringFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
     role?: Enumuser_roleNullableFilter<"Customer"> | $Enums.user_role | null
+    force_password_reset?: BoolNullableFilter<"Customer"> | boolean | null
     customer_system?: Customer_systemListRelationFilter
     notification?: XOR<NotificationsNullableScalarRelationFilter, NotificationsWhereInput> | null
     orders?: OrdersListRelationFilter
@@ -16537,6 +16552,7 @@ export namespace Prisma {
     password_hash?: SortOrder
     plan_tier?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
+    force_password_reset?: SortOrderInput | SortOrder
     customer_system?: customer_systemOrderByRelationAggregateInput
     notification?: NotificationsOrderByWithRelationInput
     orders?: ordersOrderByRelationAggregateInput
@@ -16560,6 +16576,7 @@ export namespace Prisma {
     password_hash?: StringFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
     role?: Enumuser_roleNullableFilter<"Customer"> | $Enums.user_role | null
+    force_password_reset?: BoolNullableFilter<"Customer"> | boolean | null
     customer_system?: Customer_systemListRelationFilter
     notification?: XOR<NotificationsNullableScalarRelationFilter, NotificationsWhereInput> | null
     orders?: OrdersListRelationFilter
@@ -16580,6 +16597,7 @@ export namespace Prisma {
     password_hash?: SortOrder
     plan_tier?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
+    force_password_reset?: SortOrderInput | SortOrder
     _count?: CustomerCountOrderByAggregateInput
     _avg?: CustomerAvgOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
@@ -16601,6 +16619,7 @@ export namespace Prisma {
     password_hash?: StringWithAggregatesFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableWithAggregatesFilter<"Customer"> | $Enums.plan_tier | null
     role?: Enumuser_roleNullableWithAggregatesFilter<"Customer"> | $Enums.user_role | null
+    force_password_reset?: BoolNullableWithAggregatesFilter<"Customer"> | boolean | null
   }
 
   export type SettingsWhereInput = {
@@ -17479,6 +17498,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -17499,6 +17519,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -17518,6 +17539,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -17538,6 +17560,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -17558,6 +17581,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
   }
 
   export type CustomerUpdateManyMutationInput = {
@@ -17570,6 +17594,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type CustomerUncheckedUpdateManyInput = {
@@ -17583,6 +17608,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type SettingsCreateInput = {
@@ -18560,6 +18586,11 @@ export namespace Prisma {
     not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type Customer_systemListRelationFilter = {
     every?: customer_systemWhereInput
     some?: customer_systemWhereInput
@@ -18636,6 +18667,7 @@ export namespace Prisma {
     password_hash?: SortOrder
     plan_tier?: SortOrder
     role?: SortOrder
+    force_password_reset?: SortOrder
   }
 
   export type CustomerAvgOrderByAggregateInput = {
@@ -18654,6 +18686,7 @@ export namespace Prisma {
     password_hash?: SortOrder
     plan_tier?: SortOrder
     role?: SortOrder
+    force_password_reset?: SortOrder
   }
 
   export type CustomerMinOrderByAggregateInput = {
@@ -18667,6 +18700,7 @@ export namespace Prisma {
     password_hash?: SortOrder
     plan_tier?: SortOrder
     role?: SortOrder
+    force_password_reset?: SortOrder
   }
 
   export type CustomerSumOrderByAggregateInput = {
@@ -18762,9 +18796,12 @@ export namespace Prisma {
     _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
-  export type BoolNullableFilter<$PrismaModel = never> = {
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -18842,14 +18879,6 @@ export namespace Prisma {
   export type SettingsSumOrderByAggregateInput = {
     settings_id?: SortOrder
     customer_id?: SortOrder
-  }
-
-  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -19669,6 +19698,10 @@ export namespace Prisma {
     set?: $Enums.user_role | null
   }
 
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type customer_systemUpdateManyWithoutCustomersNestedInput = {
     create?: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput> | customer_systemCreateWithoutCustomersInput[] | customer_systemUncheckedCreateWithoutCustomersInput[]
     connectOrCreate?: customer_systemCreateOrConnectWithoutCustomersInput | customer_systemCreateOrConnectWithoutCustomersInput[]
@@ -19861,10 +19894,6 @@ export namespace Prisma {
     create?: XOR<CustomerCreateWithoutSettingInput, CustomerUncheckedCreateWithoutSettingInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutSettingInput
     connect?: CustomerWhereUniqueInput
-  }
-
-  export type NullableBoolFieldUpdateOperationsInput = {
-    set?: boolean | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -20299,6 +20328,11 @@ export namespace Prisma {
     not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -20407,9 +20441,12 @@ export namespace Prisma {
     _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -20421,14 +20458,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -21023,6 +21052,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -21042,6 +21072,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -21076,6 +21107,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -21095,6 +21127,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -21210,6 +21243,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
@@ -21229,6 +21263,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
@@ -21263,6 +21298,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
@@ -21282,6 +21318,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
@@ -21328,6 +21365,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -21347,6 +21385,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -21467,6 +21506,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -21486,6 +21526,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -21586,6 +21627,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
@@ -21605,6 +21647,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
@@ -21684,6 +21727,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
@@ -21703,6 +21747,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
@@ -21737,6 +21782,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -21756,6 +21802,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -21790,6 +21837,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -21809,6 +21857,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -21827,6 +21876,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -21846,6 +21896,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -21920,6 +21971,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -21939,6 +21991,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -22003,6 +22056,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
@@ -22022,6 +22076,7 @@ export namespace Prisma {
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
+    force_password_reset?: boolean | null
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
@@ -22098,6 +22153,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
@@ -22117,6 +22173,7 @@ export namespace Prisma {
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput

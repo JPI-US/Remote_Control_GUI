@@ -18,6 +18,7 @@ export async function GET(request) {
 
         const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
+        const userRole = String(decoded.role).toUpperCase();
         const activeSystemId = decoded.activeSystemId || null;
 
         if (!activeSystemId) {
@@ -27,8 +28,10 @@ export async function GET(request) {
         const system = await prisma.systems.findFirst({
             where: {
                 id: activeSystemId,
-                customer_system: { some: { customer_id: customerId } }, // make sure user owns it
                 status: "ACTIVE",
+                ...(userRole !== "ADMIN" && {
+                    customer_system: { some: { customer_id: customerId } },
+                }),
             },
             select: {
                 id: true,
@@ -101,6 +104,7 @@ export async function PUT(request) {
         // Verify JWT
         const decoded = jwt.verify(token, JWT_SECRET);
         const customerId = Number(decoded.sub);
+        const userRole = String(decoded.role).toUpperCase();
         const activeSystemId = decoded.activeSystemId;
 
         if (!activeSystemId) {
@@ -120,8 +124,10 @@ export async function PUT(request) {
         const system = await prisma.systems.findFirst({
             where: {
                 id: activeSystemId,
-                customer_system: { some: { customer_id: customerId } },
                 status: "ACTIVE",
+                ...(userRole !== "ADMIN" && {
+                    customer_system: { some: { customer_id: customerId } },
+                }),
             },
         });
 
@@ -132,9 +138,7 @@ export async function PUT(request) {
         // Update the system
         const updatedSystem = await prisma.systems.update({
             where: { id: activeSystemId },
-            data: {
-                system_name,
-            },
+            data: { system_name },
         });
 
         return NextResponse.json({
