@@ -22,6 +22,7 @@ export async function GET(request) {
       role: decoded.role,
       planTier: decoded.planTier,
       activeSystemId: decoded.activeSystemId || null,
+      forcePasswordReset: Boolean(decoded.forcePasswordReset),
     });
   } catch (err) {
     return NextResponse.json({ authenticated: false });

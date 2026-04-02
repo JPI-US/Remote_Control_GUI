@@ -1,6 +1,7 @@
 //import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { SessionProvider } from "@/hooks/useSession";
 import InactivityLogout from "@/components/InactivityLogout";
 
 /* const geistSans = Geist({
@@ -35,8 +36,10 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          <InactivityLogout />
-          {children}
+          <SessionProvider>
+            <InactivityLogout />
+            {children}
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

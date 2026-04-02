@@ -51,6 +51,7 @@ export async function POST(request) {
                 role: userRole,
                 planTier: decoded.planTier,
                 activeSystemId: systemId,
+                forcePasswordReset: Boolean(decoded.forcePasswordReset),
             },
             JWT_SECRET,
             { expiresIn: "7d" }

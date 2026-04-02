@@ -45,13 +45,33 @@ export async function PUT(req) {
         // Hash new password
         const newHash = await bcrypt.hash(newPassword, 10);
       
-        // Update password in DB
+        // Update password in DB and clear forced reset flag
         await prisma.customer.update({
             where: { id: authUserId },
-            data: { password_hash: newHash },
+            data: { password_hash: newHash, force_password_reset: false },
         });
-      
-        return NextResponse.json({ message: 'Password changed successfully' });
+
+        const newToken = jwt.sign(
+            {
+                sub: authUserId,
+                role: decoded.role,
+                planTier: decoded.planTier,
+                activeSystemId: decoded.activeSystemId ?? null,
+                forcePasswordReset: false,
+            },
+            JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        const res = NextResponse.json({ message: 'Password changed successfully' });
+        res.cookies.set("session", newToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            path: "/",
+            maxAge: 60 * 60 * 24 * 7,
+        });
+        return res;
     } catch (error) {
         console.error('Error changing password:', error);
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
