@@ -390,10 +390,12 @@ export default function Dashboard() {
         'Slight Chance Rain Showers': { icon: '☁️', title: 'Cloudy', message: 'Reduced solar efficiency' },
         Rain: { icon: '🌧️', title: 'Rainy', message: 'Low solar generation expected' },
         Thunderstorms: { icon: '⛈️', title: 'Stormy', message: 'Solar generation disrupted' },
+        'Slight Chance Showers And Thunderstorms': { icon: '⛈️', title: 'Slight Chance Storms', message: 'Possible showers or storms; solar output may vary' },
         default: { icon: '🌡️', title: 'Weather Update', message: 'Conditions are changing' },
     };
 
     const condition = weather?.current?.condition;
+    console.log(condition); // TESTER
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
     const [menuOpen, setMenuOpen] = useState(false);
