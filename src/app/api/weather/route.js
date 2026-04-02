@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 export const dynamic = 'force-dynamic';
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
 
 const NOAA_HEADERS = {
     "User-Agent": "Remote GUI Dashboard (msalla@jantaus.com)",
@@ -51,6 +55,14 @@ async function fetchNoaaJson(url, { attempts = 3, timeoutMs = 8000 } = {}) {
 
 export async function GET(request) {
     try {
+        // Require a valid session — no role check needed, any authenticated user can access weather
+        const token = request.cookies.get("session")?.value;
+        if (!token) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        jwt.verify(token, JWT_SECRET);
+        
         const { searchParams } = new URL(request.url);
         // Parse latitude and longitude as floats
         const lat = parseFloat(searchParams.get("lat"));
