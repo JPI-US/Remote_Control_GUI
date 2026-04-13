@@ -74,13 +74,14 @@ jobs:
           envs: IMAGE_TAG
           script: |
             # Swap containers only after migrations succeeded
-            docker stop nextjs-app || true
-            docker rm nextjs-app || true
+            docker stop web-app || true
+            docker rm web-app || true
             docker run -d \
-              --name nextjs-app \
+              --name web-app \
               --restart unless-stopped \
+              --network web-network \
               --env-file /home/${{ secrets.EC2_USER }}/.env.production \
-              -p 80:3000 \
+              -p 3000:3000 \
               ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
             # Clean up old images (keep last 3 for easy rollback)
             docker image prune -f
