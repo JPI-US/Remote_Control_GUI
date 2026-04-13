@@ -63,7 +63,7 @@ jobs:
             docker run --rm \
               --env-file /home/${{ secrets.EC2_USER }}/.env.production \
               ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG \
-              npx prisma migrate deploy
+              ./node_modules/.bin/prisma migrate deploy --schema=./prisma/schema.prisma
 
       - name: Deploy on EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
