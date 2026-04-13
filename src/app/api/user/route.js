@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-
 export async function GET(request){
   try{
+    const JWT_SECRET = process.env.JWT_SECRET;
+      if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+      
       // Read from cookie
       const token = request.cookies.get("session")?.value;
       if (!token) {
@@ -47,6 +47,9 @@ export async function GET(request){
 }
 export async function PUT(request) {
   try {
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+    
     const token = request.cookies.get("session")?.value;
     if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

@@ -5,11 +5,11 @@ import prisma from '@/lib/prisma'; // adjust path as needed
 
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-
 export async function PUT(req) {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET;
+        if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+        
         // Get token from cookie
         const token = req.cookies.get("session")?.value;
         if (!token) {

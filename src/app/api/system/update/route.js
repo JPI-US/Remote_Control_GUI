@@ -5,11 +5,11 @@ import jwt from "jsonwebtoken";
 
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-
 export async function PATCH(req) {
   try {
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+    
     // Verify session
     const token = req.cookies.get("session")?.value;
     if (!token) {

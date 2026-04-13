@@ -4,11 +4,11 @@ import jwt from 'jsonwebtoken';
 
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-
 export async function GET(request, context){
     try{
+        const JWT_SECRET = process.env.JWT_SECRET;
+        if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+
         if (!context || !context.params) {
             console.error('Missing context or params');
             return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
@@ -60,6 +60,9 @@ export async function GET(request, context){
 
 export async function PUT(req, context) {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET;
+        if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+        
         // Authenticate request
         const token = req.cookies.get('session')?.value;
         if (!token) {

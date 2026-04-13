@@ -6,13 +6,14 @@ import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-if (!process.env.JWT_SECRET) {
-  throw new Error('JWT_SECRET is not set');
-}
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export async function POST(request) {
   try {
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not set');
+    }
+    
     const loginSchema = z.object({
       email: z.string().email().max(254).transform(e => e.toLowerCase()),
       password: z.string().max(128) // PRODUCTION ADDITION .min(8)

@@ -28,18 +28,42 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, tag & push image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          # Only pass build args that are truly needed at build time
+          # (e.g. NEXT_PUBLIC_* vars inlined into the client bundle)
+          # Remove any server-side secrets — they are injected at runtime via .env.production
           docker build \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            --build-arg SOLAR_KEY_ID="${{ secrets.SOLAR_KEY_ID }}" \
-            --build-arg SOLAR_KEY_VALUE="${{ secrets.SOLAR_KEY_VALUE }}" \
-            --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            --build-arg FRONIUS_SYSTEM_KEY="${{ secrets.FRONIUS_SYSTEM_KEY }}" \
             -t ${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
             -t ${{ secrets.ECR_REPOSITORY }}:latest \
             .
           docker push ${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           docker push ${{ secrets.ECR_REPOSITORY }}:latest
+
+      - name: Run Prisma migrations
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: IMAGE_TAG
+          script: |
+            # Verify env file exists before doing anything
+            if [ ! -f /home/${{ secrets.EC2_USER }}/.env.production ]; then
+              echo "ERROR: .env.production not found. Aborting."
+              exit 1
+            fi
+            # Authenticate with ECR (requires EC2 IAM role with ECR read access)
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+              docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY }}
+            # Pull the new image
+            docker pull ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+            # Run migrations before swapping the container
+            docker run --rm \
+              --env-file /home/${{ secrets.EC2_USER }}/.env.production \
+              ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG \
+              npx prisma migrate deploy
 
       - name: Deploy on EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -49,24 +73,14 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: IMAGE_TAG
           script: |
-            # Authenticate Docker with ECR
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
-              docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY }}
-
-            # Pull the new image
-            docker pull ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
-
-            # Stop and remove old container
+            # Swap containers only after migrations succeeded
             docker stop nextjs-app || true
             docker rm nextjs-app || true
-
-            # Run new container
             docker run -d \
               --name nextjs-app \
               --restart unless-stopped \
-              --env-file /home/ec2-user/.env.production \
+              --env-file /home/${{ secrets.EC2_USER }}/.env.production \
               -p 80:3000 \
               ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
-
-            # Clean up old images
+            # Clean up old images (keep last 3 for easy rollback)
             docker image prune -f

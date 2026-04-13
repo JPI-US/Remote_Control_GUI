@@ -8,19 +8,15 @@ export const dynamic = 'force-dynamic';
 
 const BASE_URL = "https://api.solarweb.com/swqapi/pvsystems";
 
-const headers = {
-    accept: "application/json",
-    AccessKeyId: process.env.SOLAR_KEY_ID,
-    AccessKeyValue: process.env.SOLAR_KEY_VALUE,
-};
-
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-
 /**
  * Generic SolarWeb fetch helper
  */
 async function fetchSolar(url, label) {
+    const headers = {
+        accept: "application/json",
+        AccessKeyId: process.env.SOLAR_KEY_ID,
+        AccessKeyValue: process.env.SOLAR_KEY_VALUE,
+    };
     const res = await fetch(url, {
         method: "GET",
         headers,
@@ -36,6 +32,14 @@ async function fetchSolar(url, label) {
 
 export async function GET(request) {
     try {
+        const headers = {
+            accept: "application/json",
+            AccessKeyId: process.env.SOLAR_KEY_ID,
+            AccessKeyValue: process.env.SOLAR_KEY_VALUE,
+        };
+        const JWT_SECRET = process.env.JWT_SECRET;
+        if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
+        
         const token = request.cookies.get("session")?.value;
         
         if (!token) {

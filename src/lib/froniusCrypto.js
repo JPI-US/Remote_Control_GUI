@@ -1,14 +1,14 @@
 import crypto from "crypto";
 
-// Load the AES master key from environment variables
-const MASTER_KEY = Buffer.from(process.env.FRONIUS_SYSTEM_KEY, "hex");
-
 /**
  * Encrypt a Fronius System ID using AES-256-GCM
  *  @param {string} systemId - The plaintext system ID
  *  @returns {object} - { cipher, iv, tag }
  */
 export function encryptSystemId(systemId) {
+  // Load the AES master key from environment variables
+  const MASTER_KEY = Buffer.from(process.env.FRONIUS_SYSTEM_KEY, "hex");
+  
   const iv = crypto.randomBytes(12); // 12 bytes is standard for GCM
 
   const cipher = crypto.createCipheriv("aes-256-gcm", MASTER_KEY, iv);
@@ -31,6 +31,9 @@ export function encryptSystemId(systemId) {
  * @returns {string} - Decrypted system ID
  */
 export function decryptSystemId(record) {
+  // Load the AES master key from environment variables
+  const MASTER_KEY = Buffer.from(process.env.FRONIUS_SYSTEM_KEY, "hex");
+  
   const decipher = crypto.createDecipheriv(
     "aes-256-gcm",
     MASTER_KEY,
