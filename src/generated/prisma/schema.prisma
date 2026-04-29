@@ -26,7 +26,6 @@ model Customer {
   orders               orders[]
   setting              Settings?
   software_tickets     software_tickets[]
-  tower_logs           tower_logs[]
   tower                Towers[]
 
   @@map("customers")
@@ -53,23 +52,24 @@ model Settings {
 }
 
 model Systems {
-  id                 Int               @id @default(autoincrement())
-  system_name        String            @db.VarChar(100)
-  inverter_type      String?           @db.VarChar(100)
-  timezone           String?           @db.VarChar(50)
-  installation_date  DateTime?         @db.Date
-  status             String?           @default("ACTIVE") @db.VarChar(50)
-  total_towers       Int?              @default(0)
-  max_pv_kw          Decimal?          @default(0) @db.Decimal(10, 2)
-  software_version   String?           @db.VarChar(50)
-  latitude           Decimal           @default(0) @db.Decimal(9, 7)
-  longitude          Decimal           @default(0) @db.Decimal(10, 7)
-  system_cipher      String?           @db.VarChar(512)
-  system_iv          String?           @db.VarChar(32)
-  system_tag         String?           @db.VarChar(32)
-  has_fronius_system Boolean           @default(false)
-  customer_system    customer_system[]
-  towers             Towers[]
+  id                     Int                      @id @default(autoincrement())
+  system_name            String                   @db.VarChar(100)
+  inverter_type          String?                  @db.VarChar(100)
+  timezone               String?                  @db.VarChar(50)
+  installation_date      DateTime?                @db.Date
+  status                 String?                  @default("ACTIVE") @db.VarChar(50)
+  total_towers           Int?                     @default(0)
+  max_pv_kw              Decimal?                 @default(0) @db.Decimal(10, 2)
+  software_version       String?                  @db.VarChar(50)
+  latitude               Decimal                  @default(0) @db.Decimal(9, 7)
+  longitude              Decimal                  @default(0) @db.Decimal(10, 7)
+  system_cipher          String?                  @db.VarChar(512)
+  system_iv              String?                  @db.VarChar(32)
+  system_tag             String?                  @db.VarChar(32)
+  has_fronius_system     Boolean                  @default(false)
+  customer_system        customer_system[]
+  solar_power_generation solar_power_generation[]
+  towers                 Towers[]
 
   @@unique([latitude, longitude], map: "unique_physical_system_geo")
   @@map("systems")
@@ -92,10 +92,10 @@ model Notifications {
 }
 
 model Towers {
-  id               Int          @id @default(autoincrement())
-  model            String       @db.VarChar(255)
-  latitude         Decimal      @db.Decimal(8, 6)
-  longitude        Decimal      @db.Decimal(9, 6)
+  id               Int      @id @default(autoincrement())
+  model            String   @db.VarChar(255)
+  latitude         Decimal  @db.Decimal(8, 6)
+  longitude        Decimal  @db.Decimal(9, 6)
   customer_id      Int
   order_id         Int
   state            Int?
@@ -105,12 +105,11 @@ model Towers {
   height           Int
   width            Int
   software_version String?
-  current_angle    Decimal?     @db.Decimal(5, 2)
+  current_angle    Decimal? @db.Decimal(5, 2)
   system_id        Int?
-  tower_logs       tower_logs[]
-  customer         Customer     @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_customer")
-  orders           orders       @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_order")
-  system           Systems?     @relation(fields: [system_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_systems")
+  customer         Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_customer")
+  orders           orders   @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_order")
+  system           Systems? @relation(fields: [system_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_systems")
 
   @@map("towers")
 }
@@ -199,15 +198,16 @@ model software_tickets {
 }
 
 model tower_logs {
-  id          Int      @id
-  customer_id Int
-  type        String   @db.VarChar(255)
-  message     String   @db.VarChar(3000)
-  date_time   DateTime @default(now()) @db.Timestamptz(6)
-  tower_id    Int?
-  closed      Boolean
-  customers   Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tlogs_customer")
-  towers      Towers?  @relation(fields: [tower_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tlogs_tower")
+  id         BigInt   @id @default(autoincrement())
+  tower_id   BigInt
+  type       String   @db.VarChar(50)
+  message    String
+  component  String?  @db.VarChar(50)
+  code       String?  @db.VarChar(50)
+  severity   String?  @db.VarChar(20)
+  metadata   Json?
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  closed     Boolean? @default(false)
 }
 
 model users {
@@ -224,6 +224,61 @@ model customer_system {
   systems     Systems  @relation(fields: [system_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([customer_id, system_id])
+}
+
+model inverter_types {
+  id                    Int      @id @default(autoincrement())
+  manufacturer          String   @db.VarChar(100)
+  model                 String?  @db.VarChar(100)
+  default_interval_mins Int?     @db.SmallInt
+  api_source            String?  @db.VarChar(100)
+  notes                 String?
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model solar_power_generation {
+  solar_system_id     Int
+  recorded_at         DateTime @db.Timestamptz(6)
+  power_generated_kwh Decimal  @db.Decimal(10, 3)
+  weather_condition   String?  @db.VarChar(50)
+  temperature_c       Decimal? @db.Decimal(5, 2)
+  cloud_cover_pct     Int?     @db.SmallInt
+  notes               String?
+  systems             Systems  @relation(fields: [solar_system_id], references: [id], onUpdate: NoAction)
+
+  @@id([solar_system_id, recorded_at])
+}
+
+model tower_component_status {
+  id           BigInt   @id @default(autoincrement())
+  tower_id     BigInt
+  component    String   @db.VarChar(50)
+  status       String   @db.VarChar(20)
+  message      String?
+  last_updated DateTime @default(now()) @db.Timestamp(6)
+  metadata     Json?
+
+  @@unique([tower_id, component])
+}
+
+model tower_data {
+  id          BigInt    @id @default(autoincrement())
+  tower_id    BigInt    @unique(map: "tower_data_tower_id_unique")
+  recorded_at DateTime? @db.Timestamp(6)
+  tower_angle Float?
+  error_ticks Int?
+  metadata    Json?
+  created_at  DateTime  @default(now()) @db.Timestamp(6)
+}
+
+model tower_status {
+  id               BigInt   @id @default(autoincrement())
+  tower_id         BigInt   @unique
+  firmware_version String   @db.VarChar(50)
+  last_seen        DateTime @default(now()) @db.Timestamp(6)
+  metadata         Json?
+  created_at       DateTime @default(now()) @db.Timestamp(6)
 }
 
 enum plan_tier {

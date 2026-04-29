@@ -48,7 +48,6 @@ export async function GET(request) {
                     select: {
                         id: true,
                         model: true,
-                        current_angle: true,
                         order_id: true,
                         state: true,
                         software_version: true,
@@ -60,6 +59,19 @@ export async function GET(request) {
         if (!system) {
             return NextResponse.json({ error: "System not found" }, { status: 404 });
         }
+
+        const towerIds = system.towers.map((t) => BigInt(t.id));
+        const towerDataRows = await prisma.tower_data.findMany({
+            where: { tower_id: { in: towerIds } },
+            select: { tower_id: true, tower_angle: true },
+        });
+        const angleByTowerId = Object.fromEntries(
+            towerDataRows.map((r) => [r.tower_id.toString(), r.tower_angle])
+        );
+        const towers = system.towers.map((t) => ({
+            ...t,
+            tower_angle: angleByTowerId[t.id.toString()] ?? null,
+        }));
 
         // Decrypt Fronius ID
         let froniusSystemId = null;
@@ -78,7 +90,7 @@ export async function GET(request) {
         return NextResponse.json({
             system: {
                 system_name: system.system_name,
-                towers: system.towers,
+                towers,
                 timezone: system.timezone,
                 max_pv_kw: system.max_pv_kw,
                 latitude: system.latitude,

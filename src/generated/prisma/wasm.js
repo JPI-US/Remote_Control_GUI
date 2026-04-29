@@ -244,11 +244,14 @@ exports.Prisma.Software_ticketsScalarFieldEnum = {
 
 exports.Prisma.Tower_logsScalarFieldEnum = {
   id: 'id',
-  customer_id: 'customer_id',
+  tower_id: 'tower_id',
   type: 'type',
   message: 'message',
-  date_time: 'date_time',
-  tower_id: 'tower_id',
+  component: 'component',
+  code: 'code',
+  severity: 'severity',
+  metadata: 'metadata',
+  created_at: 'created_at',
   closed: 'closed'
 };
 
@@ -264,9 +267,63 @@ exports.Prisma.Customer_systemScalarFieldEnum = {
   role: 'role'
 };
 
+exports.Prisma.Inverter_typesScalarFieldEnum = {
+  id: 'id',
+  manufacturer: 'manufacturer',
+  model: 'model',
+  default_interval_mins: 'default_interval_mins',
+  api_source: 'api_source',
+  notes: 'notes',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Solar_power_generationScalarFieldEnum = {
+  solar_system_id: 'solar_system_id',
+  recorded_at: 'recorded_at',
+  power_generated_kwh: 'power_generated_kwh',
+  weather_condition: 'weather_condition',
+  temperature_c: 'temperature_c',
+  cloud_cover_pct: 'cloud_cover_pct',
+  notes: 'notes'
+};
+
+exports.Prisma.Tower_component_statusScalarFieldEnum = {
+  id: 'id',
+  tower_id: 'tower_id',
+  component: 'component',
+  status: 'status',
+  message: 'message',
+  last_updated: 'last_updated',
+  metadata: 'metadata'
+};
+
+exports.Prisma.Tower_dataScalarFieldEnum = {
+  id: 'id',
+  tower_id: 'tower_id',
+  recorded_at: 'recorded_at',
+  tower_angle: 'tower_angle',
+  error_ticks: 'error_ticks',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Tower_statusScalarFieldEnum = {
+  id: 'id',
+  tower_id: 'tower_id',
+  firmware_version: 'firmware_version',
+  last_seen: 'last_seen',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -277,6 +334,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.plan_tier = exports.$Enums.plan_tier = {
   RESIDENTIAL: 'RESIDENTIAL',
@@ -300,7 +363,12 @@ exports.Prisma.ModelName = {
   software_tickets: 'software_tickets',
   tower_logs: 'tower_logs',
   users: 'users',
-  customer_system: 'customer_system'
+  customer_system: 'customer_system',
+  inverter_types: 'inverter_types',
+  solar_power_generation: 'solar_power_generation',
+  tower_component_status: 'tower_component_status',
+  tower_data: 'tower_data',
+  tower_status: 'tower_status'
 };
 
 /**

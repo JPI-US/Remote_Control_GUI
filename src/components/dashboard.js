@@ -391,11 +391,12 @@ export default function Dashboard() {
         Rain: { icon: '🌧️', title: 'Rainy', message: 'Low solar generation expected' },
         Thunderstorms: { icon: '⛈️', title: 'Stormy', message: 'Solar generation disrupted' },
         'Slight Chance Showers And Thunderstorms': { icon: '⛈️', title: 'Slight Chance Storms', message: 'Possible showers or storms; solar output may vary' },
+        'Chance Showers And Thunderstorms': { icon: '⛈️', title: 'Chance Storms', message: 'Showers and thunderstorms likely; reduced solar output' },
         default: { icon: '🌡️', title: 'Weather Update', message: 'Conditions are changing' },
     };
 
     const condition = weather?.current?.condition;
-    //console.log(condition); WEATHER ICON TESTER
+    console.log(condition); //WEATHER ICON TESTER
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -540,11 +541,11 @@ export default function Dashboard() {
         return <p>User not found or not logged in</p>;
     }
 
-    const angle = system?.towers?.[0]?.current_angle ?? "N/A";
+    const angle = system?.towers?.[0]?.tower_angle ?? "N/A";
     const angleNum = !isNaN(parseFloat(angle)) ? parseFloat(angle).toFixed(2) : "—";
     const towerCount = system?.towers?.length ?? 0;
     const selectedTower = system?.towers?.[selectedTowerIndex];
-    const orientationAngle = selectedTower?.current_angle ?? null;
+    const orientationAngle = selectedTower?.tower_angle ?? null;
     const orientationAngleNum = !isNaN(parseFloat(orientationAngle)) ? parseFloat(orientationAngle).toFixed(2) : "—";
     const towerRotationDeg = !isNaN(parseFloat(orientationAngle)) ? parseFloat(orientationAngle) : 0;
     const getDirection = (deg) => {

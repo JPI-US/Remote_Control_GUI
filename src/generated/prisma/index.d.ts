@@ -73,6 +73,31 @@ export type users = $Result.DefaultSelection<Prisma.$usersPayload>
  * 
  */
 export type customer_system = $Result.DefaultSelection<Prisma.$customer_systemPayload>
+/**
+ * Model inverter_types
+ * 
+ */
+export type inverter_types = $Result.DefaultSelection<Prisma.$inverter_typesPayload>
+/**
+ * Model solar_power_generation
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ */
+export type solar_power_generation = $Result.DefaultSelection<Prisma.$solar_power_generationPayload>
+/**
+ * Model tower_component_status
+ * 
+ */
+export type tower_component_status = $Result.DefaultSelection<Prisma.$tower_component_statusPayload>
+/**
+ * Model tower_data
+ * 
+ */
+export type tower_data = $Result.DefaultSelection<Prisma.$tower_dataPayload>
+/**
+ * Model tower_status
+ * 
+ */
+export type tower_status = $Result.DefaultSelection<Prisma.$tower_statusPayload>
 
 /**
  * Enums
@@ -347,6 +372,56 @@ export class PrismaClient<
     * ```
     */
   get customer_system(): Prisma.customer_systemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inverter_types`: Exposes CRUD operations for the **inverter_types** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Inverter_types
+    * const inverter_types = await prisma.inverter_types.findMany()
+    * ```
+    */
+  get inverter_types(): Prisma.inverter_typesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.solar_power_generation`: Exposes CRUD operations for the **solar_power_generation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Solar_power_generations
+    * const solar_power_generations = await prisma.solar_power_generation.findMany()
+    * ```
+    */
+  get solar_power_generation(): Prisma.solar_power_generationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tower_component_status`: Exposes CRUD operations for the **tower_component_status** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tower_component_statuses
+    * const tower_component_statuses = await prisma.tower_component_status.findMany()
+    * ```
+    */
+  get tower_component_status(): Prisma.tower_component_statusDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tower_data`: Exposes CRUD operations for the **tower_data** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tower_data
+    * const tower_data = await prisma.tower_data.findMany()
+    * ```
+    */
+  get tower_data(): Prisma.tower_dataDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tower_status`: Exposes CRUD operations for the **tower_status** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tower_statuses
+    * const tower_statuses = await prisma.tower_status.findMany()
+    * ```
+    */
+  get tower_status(): Prisma.tower_statusDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -798,7 +873,12 @@ export namespace Prisma {
     software_tickets: 'software_tickets',
     tower_logs: 'tower_logs',
     users: 'users',
-    customer_system: 'customer_system'
+    customer_system: 'customer_system',
+    inverter_types: 'inverter_types',
+    solar_power_generation: 'solar_power_generation',
+    tower_component_status: 'tower_component_status',
+    tower_data: 'tower_data',
+    tower_status: 'tower_status'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -817,7 +897,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "customer" | "settings" | "systems" | "notifications" | "towers" | "telemetry" | "energy" | "orders" | "software_tickets" | "tower_logs" | "users" | "customer_system"
+      modelProps: "customer" | "settings" | "systems" | "notifications" | "towers" | "telemetry" | "energy" | "orders" | "software_tickets" | "tower_logs" | "users" | "customer_system" | "inverter_types" | "solar_power_generation" | "tower_component_status" | "tower_data" | "tower_status"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1709,6 +1789,376 @@ export namespace Prisma {
           }
         }
       }
+      inverter_types: {
+        payload: Prisma.$inverter_typesPayload<ExtArgs>
+        fields: Prisma.inverter_typesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.inverter_typesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.inverter_typesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>
+          }
+          findFirst: {
+            args: Prisma.inverter_typesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.inverter_typesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>
+          }
+          findMany: {
+            args: Prisma.inverter_typesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>[]
+          }
+          create: {
+            args: Prisma.inverter_typesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>
+          }
+          createMany: {
+            args: Prisma.inverter_typesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.inverter_typesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>[]
+          }
+          delete: {
+            args: Prisma.inverter_typesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>
+          }
+          update: {
+            args: Prisma.inverter_typesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>
+          }
+          deleteMany: {
+            args: Prisma.inverter_typesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.inverter_typesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.inverter_typesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>[]
+          }
+          upsert: {
+            args: Prisma.inverter_typesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inverter_typesPayload>
+          }
+          aggregate: {
+            args: Prisma.Inverter_typesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInverter_types>
+          }
+          groupBy: {
+            args: Prisma.inverter_typesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Inverter_typesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.inverter_typesCountArgs<ExtArgs>
+            result: $Utils.Optional<Inverter_typesCountAggregateOutputType> | number
+          }
+        }
+      }
+      solar_power_generation: {
+        payload: Prisma.$solar_power_generationPayload<ExtArgs>
+        fields: Prisma.solar_power_generationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.solar_power_generationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.solar_power_generationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>
+          }
+          findFirst: {
+            args: Prisma.solar_power_generationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.solar_power_generationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>
+          }
+          findMany: {
+            args: Prisma.solar_power_generationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>[]
+          }
+          create: {
+            args: Prisma.solar_power_generationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>
+          }
+          createMany: {
+            args: Prisma.solar_power_generationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.solar_power_generationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>[]
+          }
+          delete: {
+            args: Prisma.solar_power_generationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>
+          }
+          update: {
+            args: Prisma.solar_power_generationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>
+          }
+          deleteMany: {
+            args: Prisma.solar_power_generationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.solar_power_generationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.solar_power_generationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>[]
+          }
+          upsert: {
+            args: Prisma.solar_power_generationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$solar_power_generationPayload>
+          }
+          aggregate: {
+            args: Prisma.Solar_power_generationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSolar_power_generation>
+          }
+          groupBy: {
+            args: Prisma.solar_power_generationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Solar_power_generationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.solar_power_generationCountArgs<ExtArgs>
+            result: $Utils.Optional<Solar_power_generationCountAggregateOutputType> | number
+          }
+        }
+      }
+      tower_component_status: {
+        payload: Prisma.$tower_component_statusPayload<ExtArgs>
+        fields: Prisma.tower_component_statusFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.tower_component_statusFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.tower_component_statusFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>
+          }
+          findFirst: {
+            args: Prisma.tower_component_statusFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.tower_component_statusFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>
+          }
+          findMany: {
+            args: Prisma.tower_component_statusFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>[]
+          }
+          create: {
+            args: Prisma.tower_component_statusCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>
+          }
+          createMany: {
+            args: Prisma.tower_component_statusCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.tower_component_statusCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>[]
+          }
+          delete: {
+            args: Prisma.tower_component_statusDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>
+          }
+          update: {
+            args: Prisma.tower_component_statusUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>
+          }
+          deleteMany: {
+            args: Prisma.tower_component_statusDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.tower_component_statusUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.tower_component_statusUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>[]
+          }
+          upsert: {
+            args: Prisma.tower_component_statusUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_component_statusPayload>
+          }
+          aggregate: {
+            args: Prisma.Tower_component_statusAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTower_component_status>
+          }
+          groupBy: {
+            args: Prisma.tower_component_statusGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Tower_component_statusGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.tower_component_statusCountArgs<ExtArgs>
+            result: $Utils.Optional<Tower_component_statusCountAggregateOutputType> | number
+          }
+        }
+      }
+      tower_data: {
+        payload: Prisma.$tower_dataPayload<ExtArgs>
+        fields: Prisma.tower_dataFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.tower_dataFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.tower_dataFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>
+          }
+          findFirst: {
+            args: Prisma.tower_dataFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.tower_dataFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>
+          }
+          findMany: {
+            args: Prisma.tower_dataFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>[]
+          }
+          create: {
+            args: Prisma.tower_dataCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>
+          }
+          createMany: {
+            args: Prisma.tower_dataCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.tower_dataCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>[]
+          }
+          delete: {
+            args: Prisma.tower_dataDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>
+          }
+          update: {
+            args: Prisma.tower_dataUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>
+          }
+          deleteMany: {
+            args: Prisma.tower_dataDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.tower_dataUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.tower_dataUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>[]
+          }
+          upsert: {
+            args: Prisma.tower_dataUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_dataPayload>
+          }
+          aggregate: {
+            args: Prisma.Tower_dataAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTower_data>
+          }
+          groupBy: {
+            args: Prisma.tower_dataGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Tower_dataGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.tower_dataCountArgs<ExtArgs>
+            result: $Utils.Optional<Tower_dataCountAggregateOutputType> | number
+          }
+        }
+      }
+      tower_status: {
+        payload: Prisma.$tower_statusPayload<ExtArgs>
+        fields: Prisma.tower_statusFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.tower_statusFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.tower_statusFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>
+          }
+          findFirst: {
+            args: Prisma.tower_statusFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.tower_statusFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>
+          }
+          findMany: {
+            args: Prisma.tower_statusFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>[]
+          }
+          create: {
+            args: Prisma.tower_statusCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>
+          }
+          createMany: {
+            args: Prisma.tower_statusCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.tower_statusCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>[]
+          }
+          delete: {
+            args: Prisma.tower_statusDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>
+          }
+          update: {
+            args: Prisma.tower_statusUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>
+          }
+          deleteMany: {
+            args: Prisma.tower_statusDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.tower_statusUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.tower_statusUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>[]
+          }
+          upsert: {
+            args: Prisma.tower_statusUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tower_statusPayload>
+          }
+          aggregate: {
+            args: Prisma.Tower_statusAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTower_status>
+          }
+          groupBy: {
+            args: Prisma.tower_statusGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Tower_statusGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.tower_statusCountArgs<ExtArgs>
+            result: $Utils.Optional<Tower_statusCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1805,6 +2255,11 @@ export namespace Prisma {
     tower_logs?: tower_logsOmit
     users?: usersOmit
     customer_system?: customer_systemOmit
+    inverter_types?: inverter_typesOmit
+    solar_power_generation?: solar_power_generationOmit
+    tower_component_status?: tower_component_statusOmit
+    tower_data?: tower_dataOmit
+    tower_status?: tower_statusOmit
   }
 
   /* Types for Logging */
@@ -1902,7 +2357,6 @@ export namespace Prisma {
     customer_system: number
     orders: number
     software_tickets: number
-    tower_logs: number
     tower: number
   }
 
@@ -1910,7 +2364,6 @@ export namespace Prisma {
     customer_system?: boolean | CustomerCountOutputTypeCountCustomer_systemArgs
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
     software_tickets?: boolean | CustomerCountOutputTypeCountSoftware_ticketsArgs
-    tower_logs?: boolean | CustomerCountOutputTypeCountTower_logsArgs
     tower?: boolean | CustomerCountOutputTypeCountTowerArgs
   }
 
@@ -1949,13 +2402,6 @@ export namespace Prisma {
   /**
    * CustomerCountOutputType without action
    */
-  export type CustomerCountOutputTypeCountTower_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: tower_logsWhereInput
-  }
-
-  /**
-   * CustomerCountOutputType without action
-   */
   export type CustomerCountOutputTypeCountTowerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TowersWhereInput
   }
@@ -1967,11 +2413,13 @@ export namespace Prisma {
 
   export type SystemsCountOutputType = {
     customer_system: number
+    solar_power_generation: number
     towers: number
   }
 
   export type SystemsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | SystemsCountOutputTypeCountCustomer_systemArgs
+    solar_power_generation?: boolean | SystemsCountOutputTypeCountSolar_power_generationArgs
     towers?: boolean | SystemsCountOutputTypeCountTowersArgs
   }
 
@@ -1996,39 +2444,15 @@ export namespace Prisma {
   /**
    * SystemsCountOutputType without action
    */
+  export type SystemsCountOutputTypeCountSolar_power_generationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: solar_power_generationWhereInput
+  }
+
+  /**
+   * SystemsCountOutputType without action
+   */
   export type SystemsCountOutputTypeCountTowersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TowersWhereInput
-  }
-
-
-  /**
-   * Count Type TowersCountOutputType
-   */
-
-  export type TowersCountOutputType = {
-    tower_logs: number
-  }
-
-  export type TowersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tower_logs?: boolean | TowersCountOutputTypeCountTower_logsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * TowersCountOutputType without action
-   */
-  export type TowersCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TowersCountOutputType
-     */
-    select?: TowersCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TowersCountOutputType without action
-   */
-  export type TowersCountOutputTypeCountTower_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: tower_logsWhereInput
   }
 
 
@@ -2322,7 +2746,6 @@ export namespace Prisma {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     setting?: boolean | Customer$settingArgs<ExtArgs>
     software_tickets?: boolean | Customer$software_ticketsArgs<ExtArgs>
-    tower_logs?: boolean | Customer$tower_logsArgs<ExtArgs>
     tower?: boolean | Customer$towerArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
@@ -2376,7 +2799,6 @@ export namespace Prisma {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     setting?: boolean | Customer$settingArgs<ExtArgs>
     software_tickets?: boolean | Customer$software_ticketsArgs<ExtArgs>
-    tower_logs?: boolean | Customer$tower_logsArgs<ExtArgs>
     tower?: boolean | Customer$towerArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2391,7 +2813,6 @@ export namespace Prisma {
       orders: Prisma.$ordersPayload<ExtArgs>[]
       setting: Prisma.$SettingsPayload<ExtArgs> | null
       software_tickets: Prisma.$software_ticketsPayload<ExtArgs>[]
-      tower_logs: Prisma.$tower_logsPayload<ExtArgs>[]
       tower: Prisma.$TowersPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2805,7 +3226,6 @@ export namespace Prisma {
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     setting<T extends Customer$settingArgs<ExtArgs> = {}>(args?: Subset<T, Customer$settingArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     software_tickets<T extends Customer$software_ticketsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$software_ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$software_ticketsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tower_logs<T extends Customer$tower_logsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$tower_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tower<T extends Customer$towerArgs<ExtArgs> = {}>(args?: Subset<T, Customer$towerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TowersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3342,30 +3762,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Software_ticketsScalarFieldEnum | Software_ticketsScalarFieldEnum[]
-  }
-
-  /**
-   * Customer.tower_logs
-   */
-  export type Customer$tower_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tower_logs
-     */
-    select?: tower_logsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tower_logs
-     */
-    omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    where?: tower_logsWhereInput
-    orderBy?: tower_logsOrderByWithRelationInput | tower_logsOrderByWithRelationInput[]
-    cursor?: tower_logsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Tower_logsScalarFieldEnum | Tower_logsScalarFieldEnum[]
   }
 
   /**
@@ -4938,6 +5334,7 @@ export namespace Prisma {
     system_tag?: boolean
     has_fronius_system?: boolean
     customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
+    solar_power_generation?: boolean | Systems$solar_power_generationArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
     _count?: boolean | SystemsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["systems"]>
@@ -4999,6 +5396,7 @@ export namespace Prisma {
   export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "software_version" | "latitude" | "longitude" | "system_cipher" | "system_iv" | "system_tag" | "has_fronius_system", ExtArgs["result"]["systems"]>
   export type SystemsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
+    solar_power_generation?: boolean | Systems$solar_power_generationArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
     _count?: boolean | SystemsCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -5009,6 +5407,7 @@ export namespace Prisma {
     name: "Systems"
     objects: {
       customer_system: Prisma.$customer_systemPayload<ExtArgs>[]
+      solar_power_generation: Prisma.$solar_power_generationPayload<ExtArgs>[]
       towers: Prisma.$TowersPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -5422,6 +5821,7 @@ export namespace Prisma {
   export interface Prisma__SystemsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer_system<T extends Systems$customer_systemArgs<ExtArgs> = {}>(args?: Subset<T, Systems$customer_systemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$customer_systemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    solar_power_generation<T extends Systems$solar_power_generationArgs<ExtArgs> = {}>(args?: Subset<T, Systems$solar_power_generationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     towers<T extends Systems$towersArgs<ExtArgs> = {}>(args?: Subset<T, Systems$towersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TowersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5876,6 +6276,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Customer_systemScalarFieldEnum | Customer_systemScalarFieldEnum[]
+  }
+
+  /**
+   * Systems.solar_power_generation
+   */
+  export type Systems$solar_power_generationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    where?: solar_power_generationWhereInput
+    orderBy?: solar_power_generationOrderByWithRelationInput | solar_power_generationOrderByWithRelationInput[]
+    cursor?: solar_power_generationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Solar_power_generationScalarFieldEnum | Solar_power_generationScalarFieldEnum[]
   }
 
   /**
@@ -7427,11 +7851,9 @@ export namespace Prisma {
     software_version?: boolean
     current_angle?: boolean
     system_id?: boolean
-    tower_logs?: boolean | Towers$tower_logsArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     orders?: boolean | ordersDefaultArgs<ExtArgs>
     system?: boolean | Towers$systemArgs<ExtArgs>
-    _count?: boolean | TowersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["towers"]>
 
   export type TowersSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7496,11 +7918,9 @@ export namespace Prisma {
 
   export type TowersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "model" | "latitude" | "longitude" | "customer_id" | "order_id" | "state" | "c_group" | "error_state" | "length" | "height" | "width" | "software_version" | "current_angle" | "system_id", ExtArgs["result"]["towers"]>
   export type TowersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tower_logs?: boolean | Towers$tower_logsArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     orders?: boolean | ordersDefaultArgs<ExtArgs>
     system?: boolean | Towers$systemArgs<ExtArgs>
-    _count?: boolean | TowersCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TowersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -7516,7 +7936,6 @@ export namespace Prisma {
   export type $TowersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Towers"
     objects: {
-      tower_logs: Prisma.$tower_logsPayload<ExtArgs>[]
       customer: Prisma.$CustomerPayload<ExtArgs>
       orders: Prisma.$ordersPayload<ExtArgs>
       system: Prisma.$SystemsPayload<ExtArgs> | null
@@ -7931,7 +8350,6 @@ export namespace Prisma {
    */
   export interface Prisma__TowersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    tower_logs<T extends Towers$tower_logsArgs<ExtArgs> = {}>(args?: Subset<T, Towers$tower_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     orders<T extends ordersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ordersDefaultArgs<ExtArgs>>): Prisma__ordersClient<$Result.GetResult<Prisma.$ordersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     system<T extends Towers$systemArgs<ExtArgs> = {}>(args?: Subset<T, Towers$systemArgs<ExtArgs>>): Prisma__SystemsClient<$Result.GetResult<Prisma.$SystemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -8372,30 +8790,6 @@ export namespace Prisma {
      * Limit how many Towers to delete.
      */
     limit?: number
-  }
-
-  /**
-   * Towers.tower_logs
-   */
-  export type Towers$tower_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tower_logs
-     */
-    select?: tower_logsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tower_logs
-     */
-    omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    where?: tower_logsWhereInput
-    orderBy?: tower_logsOrderByWithRelationInput | tower_logsOrderByWithRelationInput[]
-    cursor?: tower_logsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Tower_logsScalarFieldEnum | Tower_logsScalarFieldEnum[]
   }
 
   /**
@@ -12963,43 +13357,48 @@ export namespace Prisma {
 
   export type Tower_logsAvgAggregateOutputType = {
     id: number | null
-    customer_id: number | null
     tower_id: number | null
   }
 
   export type Tower_logsSumAggregateOutputType = {
-    id: number | null
-    customer_id: number | null
-    tower_id: number | null
+    id: bigint | null
+    tower_id: bigint | null
   }
 
   export type Tower_logsMinAggregateOutputType = {
-    id: number | null
-    customer_id: number | null
+    id: bigint | null
+    tower_id: bigint | null
     type: string | null
     message: string | null
-    date_time: Date | null
-    tower_id: number | null
+    component: string | null
+    code: string | null
+    severity: string | null
+    created_at: Date | null
     closed: boolean | null
   }
 
   export type Tower_logsMaxAggregateOutputType = {
-    id: number | null
-    customer_id: number | null
+    id: bigint | null
+    tower_id: bigint | null
     type: string | null
     message: string | null
-    date_time: Date | null
-    tower_id: number | null
+    component: string | null
+    code: string | null
+    severity: string | null
+    created_at: Date | null
     closed: boolean | null
   }
 
   export type Tower_logsCountAggregateOutputType = {
     id: number
-    customer_id: number
+    tower_id: number
     type: number
     message: number
-    date_time: number
-    tower_id: number
+    component: number
+    code: number
+    severity: number
+    metadata: number
+    created_at: number
     closed: number
     _all: number
   }
@@ -13007,43 +13406,48 @@ export namespace Prisma {
 
   export type Tower_logsAvgAggregateInputType = {
     id?: true
-    customer_id?: true
     tower_id?: true
   }
 
   export type Tower_logsSumAggregateInputType = {
     id?: true
-    customer_id?: true
     tower_id?: true
   }
 
   export type Tower_logsMinAggregateInputType = {
     id?: true
-    customer_id?: true
+    tower_id?: true
     type?: true
     message?: true
-    date_time?: true
-    tower_id?: true
+    component?: true
+    code?: true
+    severity?: true
+    created_at?: true
     closed?: true
   }
 
   export type Tower_logsMaxAggregateInputType = {
     id?: true
-    customer_id?: true
+    tower_id?: true
     type?: true
     message?: true
-    date_time?: true
-    tower_id?: true
+    component?: true
+    code?: true
+    severity?: true
+    created_at?: true
     closed?: true
   }
 
   export type Tower_logsCountAggregateInputType = {
     id?: true
-    customer_id?: true
+    tower_id?: true
     type?: true
     message?: true
-    date_time?: true
-    tower_id?: true
+    component?: true
+    code?: true
+    severity?: true
+    metadata?: true
+    created_at?: true
     closed?: true
     _all?: true
   }
@@ -13135,13 +13539,16 @@ export namespace Prisma {
   }
 
   export type Tower_logsGroupByOutputType = {
-    id: number
-    customer_id: number
+    id: bigint
+    tower_id: bigint
     type: string
     message: string
-    date_time: Date
-    tower_id: number | null
-    closed: boolean
+    component: string | null
+    code: string | null
+    severity: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    closed: boolean | null
     _count: Tower_logsCountAggregateOutputType | null
     _avg: Tower_logsAvgAggregateOutputType | null
     _sum: Tower_logsSumAggregateOutputType | null
@@ -13165,78 +13572,72 @@ export namespace Prisma {
 
   export type tower_logsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    customer_id?: boolean
+    tower_id?: boolean
     type?: boolean
     message?: boolean
-    date_time?: boolean
-    tower_id?: boolean
+    component?: boolean
+    code?: boolean
+    severity?: boolean
+    metadata?: boolean
+    created_at?: boolean
     closed?: boolean
-    customers?: boolean | CustomerDefaultArgs<ExtArgs>
-    towers?: boolean | tower_logs$towersArgs<ExtArgs>
   }, ExtArgs["result"]["tower_logs"]>
 
   export type tower_logsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    customer_id?: boolean
+    tower_id?: boolean
     type?: boolean
     message?: boolean
-    date_time?: boolean
-    tower_id?: boolean
+    component?: boolean
+    code?: boolean
+    severity?: boolean
+    metadata?: boolean
+    created_at?: boolean
     closed?: boolean
-    customers?: boolean | CustomerDefaultArgs<ExtArgs>
-    towers?: boolean | tower_logs$towersArgs<ExtArgs>
   }, ExtArgs["result"]["tower_logs"]>
 
   export type tower_logsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    customer_id?: boolean
+    tower_id?: boolean
     type?: boolean
     message?: boolean
-    date_time?: boolean
-    tower_id?: boolean
+    component?: boolean
+    code?: boolean
+    severity?: boolean
+    metadata?: boolean
+    created_at?: boolean
     closed?: boolean
-    customers?: boolean | CustomerDefaultArgs<ExtArgs>
-    towers?: boolean | tower_logs$towersArgs<ExtArgs>
   }, ExtArgs["result"]["tower_logs"]>
 
   export type tower_logsSelectScalar = {
     id?: boolean
-    customer_id?: boolean
+    tower_id?: boolean
     type?: boolean
     message?: boolean
-    date_time?: boolean
-    tower_id?: boolean
+    component?: boolean
+    code?: boolean
+    severity?: boolean
+    metadata?: boolean
+    created_at?: boolean
     closed?: boolean
   }
 
-  export type tower_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customer_id" | "type" | "message" | "date_time" | "tower_id" | "closed", ExtArgs["result"]["tower_logs"]>
-  export type tower_logsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customers?: boolean | CustomerDefaultArgs<ExtArgs>
-    towers?: boolean | tower_logs$towersArgs<ExtArgs>
-  }
-  export type tower_logsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customers?: boolean | CustomerDefaultArgs<ExtArgs>
-    towers?: boolean | tower_logs$towersArgs<ExtArgs>
-  }
-  export type tower_logsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customers?: boolean | CustomerDefaultArgs<ExtArgs>
-    towers?: boolean | tower_logs$towersArgs<ExtArgs>
-  }
+  export type tower_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tower_id" | "type" | "message" | "component" | "code" | "severity" | "metadata" | "created_at" | "closed", ExtArgs["result"]["tower_logs"]>
 
   export type $tower_logsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "tower_logs"
-    objects: {
-      customers: Prisma.$CustomerPayload<ExtArgs>
-      towers: Prisma.$TowersPayload<ExtArgs> | null
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      id: number
-      customer_id: number
+      id: bigint
+      tower_id: bigint
       type: string
       message: string
-      date_time: Date
-      tower_id: number | null
-      closed: boolean
+      component: string | null
+      code: string | null
+      severity: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      closed: boolean | null
     }, ExtArgs["result"]["tower_logs"]>
     composites: {}
   }
@@ -13631,8 +14032,6 @@ export namespace Prisma {
    */
   export interface Prisma__tower_logsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    customers<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    towers<T extends tower_logs$towersArgs<ExtArgs> = {}>(args?: Subset<T, tower_logs$towersArgs<ExtArgs>>): Prisma__TowersClient<$Result.GetResult<Prisma.$TowersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13662,12 +14061,15 @@ export namespace Prisma {
    * Fields of the tower_logs model
    */
   interface tower_logsFieldRefs {
-    readonly id: FieldRef<"tower_logs", 'Int'>
-    readonly customer_id: FieldRef<"tower_logs", 'Int'>
+    readonly id: FieldRef<"tower_logs", 'BigInt'>
+    readonly tower_id: FieldRef<"tower_logs", 'BigInt'>
     readonly type: FieldRef<"tower_logs", 'String'>
     readonly message: FieldRef<"tower_logs", 'String'>
-    readonly date_time: FieldRef<"tower_logs", 'DateTime'>
-    readonly tower_id: FieldRef<"tower_logs", 'Int'>
+    readonly component: FieldRef<"tower_logs", 'String'>
+    readonly code: FieldRef<"tower_logs", 'String'>
+    readonly severity: FieldRef<"tower_logs", 'String'>
+    readonly metadata: FieldRef<"tower_logs", 'Json'>
+    readonly created_at: FieldRef<"tower_logs", 'DateTime'>
     readonly closed: FieldRef<"tower_logs", 'Boolean'>
   }
     
@@ -13685,10 +14087,6 @@ export namespace Prisma {
      * Omit specific fields from the tower_logs
      */
     omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
     /**
      * Filter, which tower_logs to fetch.
      */
@@ -13708,10 +14106,6 @@ export namespace Prisma {
      */
     omit?: tower_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    /**
      * Filter, which tower_logs to fetch.
      */
     where: tower_logsWhereUniqueInput
@@ -13729,10 +14123,6 @@ export namespace Prisma {
      * Omit specific fields from the tower_logs
      */
     omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
     /**
      * Filter, which tower_logs to fetch.
      */
@@ -13782,10 +14172,6 @@ export namespace Prisma {
      */
     omit?: tower_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    /**
      * Filter, which tower_logs to fetch.
      */
     where?: tower_logsWhereInput
@@ -13834,10 +14220,6 @@ export namespace Prisma {
      */
     omit?: tower_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    /**
      * Filter, which tower_logs to fetch.
      */
     where?: tower_logsWhereInput
@@ -13881,10 +14263,6 @@ export namespace Prisma {
      */
     omit?: tower_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    /**
      * The data needed to create a tower_logs.
      */
     data: XOR<tower_logsCreateInput, tower_logsUncheckedCreateInput>
@@ -13918,10 +14296,6 @@ export namespace Prisma {
      */
     data: tower_logsCreateManyInput | tower_logsCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13936,10 +14310,6 @@ export namespace Prisma {
      * Omit specific fields from the tower_logs
      */
     omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
     /**
      * The data needed to update a tower_logs.
      */
@@ -13992,10 +14362,6 @@ export namespace Prisma {
      * Limit how many tower_logs to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -14010,10 +14376,6 @@ export namespace Prisma {
      * Omit specific fields from the tower_logs
      */
     omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
     /**
      * The filter to search for the tower_logs to update in case it exists.
      */
@@ -14041,10 +14403,6 @@ export namespace Prisma {
      */
     omit?: tower_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
-    /**
      * Filter which tower_logs to delete.
      */
     where: tower_logsWhereUniqueInput
@@ -14065,25 +14423,6 @@ export namespace Prisma {
   }
 
   /**
-   * tower_logs.towers
-   */
-  export type tower_logs$towersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Towers
-     */
-    select?: TowersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Towers
-     */
-    omit?: TowersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TowersInclude<ExtArgs> | null
-    where?: TowersWhereInput
-  }
-
-  /**
    * tower_logs without action
    */
   export type tower_logsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14095,10 +14434,6 @@ export namespace Prisma {
      * Omit specific fields from the tower_logs
      */
     omit?: tower_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tower_logsInclude<ExtArgs> | null
   }
 
 
@@ -16184,6 +16519,5355 @@ export namespace Prisma {
 
 
   /**
+   * Model inverter_types
+   */
+
+  export type AggregateInverter_types = {
+    _count: Inverter_typesCountAggregateOutputType | null
+    _avg: Inverter_typesAvgAggregateOutputType | null
+    _sum: Inverter_typesSumAggregateOutputType | null
+    _min: Inverter_typesMinAggregateOutputType | null
+    _max: Inverter_typesMaxAggregateOutputType | null
+  }
+
+  export type Inverter_typesAvgAggregateOutputType = {
+    id: number | null
+    default_interval_mins: number | null
+  }
+
+  export type Inverter_typesSumAggregateOutputType = {
+    id: number | null
+    default_interval_mins: number | null
+  }
+
+  export type Inverter_typesMinAggregateOutputType = {
+    id: number | null
+    manufacturer: string | null
+    model: string | null
+    default_interval_mins: number | null
+    api_source: string | null
+    notes: string | null
+    created_at: Date | null
+  }
+
+  export type Inverter_typesMaxAggregateOutputType = {
+    id: number | null
+    manufacturer: string | null
+    model: string | null
+    default_interval_mins: number | null
+    api_source: string | null
+    notes: string | null
+    created_at: Date | null
+  }
+
+  export type Inverter_typesCountAggregateOutputType = {
+    id: number
+    manufacturer: number
+    model: number
+    default_interval_mins: number
+    api_source: number
+    notes: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Inverter_typesAvgAggregateInputType = {
+    id?: true
+    default_interval_mins?: true
+  }
+
+  export type Inverter_typesSumAggregateInputType = {
+    id?: true
+    default_interval_mins?: true
+  }
+
+  export type Inverter_typesMinAggregateInputType = {
+    id?: true
+    manufacturer?: true
+    model?: true
+    default_interval_mins?: true
+    api_source?: true
+    notes?: true
+    created_at?: true
+  }
+
+  export type Inverter_typesMaxAggregateInputType = {
+    id?: true
+    manufacturer?: true
+    model?: true
+    default_interval_mins?: true
+    api_source?: true
+    notes?: true
+    created_at?: true
+  }
+
+  export type Inverter_typesCountAggregateInputType = {
+    id?: true
+    manufacturer?: true
+    model?: true
+    default_interval_mins?: true
+    api_source?: true
+    notes?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Inverter_typesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which inverter_types to aggregate.
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inverter_types to fetch.
+     */
+    orderBy?: inverter_typesOrderByWithRelationInput | inverter_typesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: inverter_typesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inverter_types from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inverter_types.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned inverter_types
+    **/
+    _count?: true | Inverter_typesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Inverter_typesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Inverter_typesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Inverter_typesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Inverter_typesMaxAggregateInputType
+  }
+
+  export type GetInverter_typesAggregateType<T extends Inverter_typesAggregateArgs> = {
+        [P in keyof T & keyof AggregateInverter_types]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInverter_types[P]>
+      : GetScalarType<T[P], AggregateInverter_types[P]>
+  }
+
+
+
+
+  export type inverter_typesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: inverter_typesWhereInput
+    orderBy?: inverter_typesOrderByWithAggregationInput | inverter_typesOrderByWithAggregationInput[]
+    by: Inverter_typesScalarFieldEnum[] | Inverter_typesScalarFieldEnum
+    having?: inverter_typesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Inverter_typesCountAggregateInputType | true
+    _avg?: Inverter_typesAvgAggregateInputType
+    _sum?: Inverter_typesSumAggregateInputType
+    _min?: Inverter_typesMinAggregateInputType
+    _max?: Inverter_typesMaxAggregateInputType
+  }
+
+  export type Inverter_typesGroupByOutputType = {
+    id: number
+    manufacturer: string
+    model: string | null
+    default_interval_mins: number | null
+    api_source: string | null
+    notes: string | null
+    created_at: Date
+    _count: Inverter_typesCountAggregateOutputType | null
+    _avg: Inverter_typesAvgAggregateOutputType | null
+    _sum: Inverter_typesSumAggregateOutputType | null
+    _min: Inverter_typesMinAggregateOutputType | null
+    _max: Inverter_typesMaxAggregateOutputType | null
+  }
+
+  type GetInverter_typesGroupByPayload<T extends inverter_typesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Inverter_typesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Inverter_typesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Inverter_typesGroupByOutputType[P]>
+            : GetScalarType<T[P], Inverter_typesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type inverter_typesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    manufacturer?: boolean
+    model?: boolean
+    default_interval_mins?: boolean
+    api_source?: boolean
+    notes?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["inverter_types"]>
+
+  export type inverter_typesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    manufacturer?: boolean
+    model?: boolean
+    default_interval_mins?: boolean
+    api_source?: boolean
+    notes?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["inverter_types"]>
+
+  export type inverter_typesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    manufacturer?: boolean
+    model?: boolean
+    default_interval_mins?: boolean
+    api_source?: boolean
+    notes?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["inverter_types"]>
+
+  export type inverter_typesSelectScalar = {
+    id?: boolean
+    manufacturer?: boolean
+    model?: boolean
+    default_interval_mins?: boolean
+    api_source?: boolean
+    notes?: boolean
+    created_at?: boolean
+  }
+
+  export type inverter_typesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "manufacturer" | "model" | "default_interval_mins" | "api_source" | "notes" | "created_at", ExtArgs["result"]["inverter_types"]>
+
+  export type $inverter_typesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "inverter_types"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      manufacturer: string
+      model: string | null
+      default_interval_mins: number | null
+      api_source: string | null
+      notes: string | null
+      created_at: Date
+    }, ExtArgs["result"]["inverter_types"]>
+    composites: {}
+  }
+
+  type inverter_typesGetPayload<S extends boolean | null | undefined | inverter_typesDefaultArgs> = $Result.GetResult<Prisma.$inverter_typesPayload, S>
+
+  type inverter_typesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<inverter_typesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Inverter_typesCountAggregateInputType | true
+    }
+
+  export interface inverter_typesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['inverter_types'], meta: { name: 'inverter_types' } }
+    /**
+     * Find zero or one Inverter_types that matches the filter.
+     * @param {inverter_typesFindUniqueArgs} args - Arguments to find a Inverter_types
+     * @example
+     * // Get one Inverter_types
+     * const inverter_types = await prisma.inverter_types.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends inverter_typesFindUniqueArgs>(args: SelectSubset<T, inverter_typesFindUniqueArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Inverter_types that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {inverter_typesFindUniqueOrThrowArgs} args - Arguments to find a Inverter_types
+     * @example
+     * // Get one Inverter_types
+     * const inverter_types = await prisma.inverter_types.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends inverter_typesFindUniqueOrThrowArgs>(args: SelectSubset<T, inverter_typesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inverter_types that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inverter_typesFindFirstArgs} args - Arguments to find a Inverter_types
+     * @example
+     * // Get one Inverter_types
+     * const inverter_types = await prisma.inverter_types.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends inverter_typesFindFirstArgs>(args?: SelectSubset<T, inverter_typesFindFirstArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inverter_types that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inverter_typesFindFirstOrThrowArgs} args - Arguments to find a Inverter_types
+     * @example
+     * // Get one Inverter_types
+     * const inverter_types = await prisma.inverter_types.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends inverter_typesFindFirstOrThrowArgs>(args?: SelectSubset<T, inverter_typesFindFirstOrThrowArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Inverter_types that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inverter_typesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Inverter_types
+     * const inverter_types = await prisma.inverter_types.findMany()
+     * 
+     * // Get first 10 Inverter_types
+     * const inverter_types = await prisma.inverter_types.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inverter_typesWithIdOnly = await prisma.inverter_types.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends inverter_typesFindManyArgs>(args?: SelectSubset<T, inverter_typesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Inverter_types.
+     * @param {inverter_typesCreateArgs} args - Arguments to create a Inverter_types.
+     * @example
+     * // Create one Inverter_types
+     * const Inverter_types = await prisma.inverter_types.create({
+     *   data: {
+     *     // ... data to create a Inverter_types
+     *   }
+     * })
+     * 
+     */
+    create<T extends inverter_typesCreateArgs>(args: SelectSubset<T, inverter_typesCreateArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Inverter_types.
+     * @param {inverter_typesCreateManyArgs} args - Arguments to create many Inverter_types.
+     * @example
+     * // Create many Inverter_types
+     * const inverter_types = await prisma.inverter_types.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends inverter_typesCreateManyArgs>(args?: SelectSubset<T, inverter_typesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Inverter_types and returns the data saved in the database.
+     * @param {inverter_typesCreateManyAndReturnArgs} args - Arguments to create many Inverter_types.
+     * @example
+     * // Create many Inverter_types
+     * const inverter_types = await prisma.inverter_types.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Inverter_types and only return the `id`
+     * const inverter_typesWithIdOnly = await prisma.inverter_types.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends inverter_typesCreateManyAndReturnArgs>(args?: SelectSubset<T, inverter_typesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Inverter_types.
+     * @param {inverter_typesDeleteArgs} args - Arguments to delete one Inverter_types.
+     * @example
+     * // Delete one Inverter_types
+     * const Inverter_types = await prisma.inverter_types.delete({
+     *   where: {
+     *     // ... filter to delete one Inverter_types
+     *   }
+     * })
+     * 
+     */
+    delete<T extends inverter_typesDeleteArgs>(args: SelectSubset<T, inverter_typesDeleteArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Inverter_types.
+     * @param {inverter_typesUpdateArgs} args - Arguments to update one Inverter_types.
+     * @example
+     * // Update one Inverter_types
+     * const inverter_types = await prisma.inverter_types.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends inverter_typesUpdateArgs>(args: SelectSubset<T, inverter_typesUpdateArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Inverter_types.
+     * @param {inverter_typesDeleteManyArgs} args - Arguments to filter Inverter_types to delete.
+     * @example
+     * // Delete a few Inverter_types
+     * const { count } = await prisma.inverter_types.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends inverter_typesDeleteManyArgs>(args?: SelectSubset<T, inverter_typesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inverter_types.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inverter_typesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Inverter_types
+     * const inverter_types = await prisma.inverter_types.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends inverter_typesUpdateManyArgs>(args: SelectSubset<T, inverter_typesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inverter_types and returns the data updated in the database.
+     * @param {inverter_typesUpdateManyAndReturnArgs} args - Arguments to update many Inverter_types.
+     * @example
+     * // Update many Inverter_types
+     * const inverter_types = await prisma.inverter_types.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Inverter_types and only return the `id`
+     * const inverter_typesWithIdOnly = await prisma.inverter_types.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends inverter_typesUpdateManyAndReturnArgs>(args: SelectSubset<T, inverter_typesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Inverter_types.
+     * @param {inverter_typesUpsertArgs} args - Arguments to update or create a Inverter_types.
+     * @example
+     * // Update or create a Inverter_types
+     * const inverter_types = await prisma.inverter_types.upsert({
+     *   create: {
+     *     // ... data to create a Inverter_types
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Inverter_types we want to update
+     *   }
+     * })
+     */
+    upsert<T extends inverter_typesUpsertArgs>(args: SelectSubset<T, inverter_typesUpsertArgs<ExtArgs>>): Prisma__inverter_typesClient<$Result.GetResult<Prisma.$inverter_typesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Inverter_types.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inverter_typesCountArgs} args - Arguments to filter Inverter_types to count.
+     * @example
+     * // Count the number of Inverter_types
+     * const count = await prisma.inverter_types.count({
+     *   where: {
+     *     // ... the filter for the Inverter_types we want to count
+     *   }
+     * })
+    **/
+    count<T extends inverter_typesCountArgs>(
+      args?: Subset<T, inverter_typesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Inverter_typesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Inverter_types.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Inverter_typesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Inverter_typesAggregateArgs>(args: Subset<T, Inverter_typesAggregateArgs>): Prisma.PrismaPromise<GetInverter_typesAggregateType<T>>
+
+    /**
+     * Group by Inverter_types.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inverter_typesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends inverter_typesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: inverter_typesGroupByArgs['orderBy'] }
+        : { orderBy?: inverter_typesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, inverter_typesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInverter_typesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the inverter_types model
+   */
+  readonly fields: inverter_typesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for inverter_types.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__inverter_typesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the inverter_types model
+   */
+  interface inverter_typesFieldRefs {
+    readonly id: FieldRef<"inverter_types", 'Int'>
+    readonly manufacturer: FieldRef<"inverter_types", 'String'>
+    readonly model: FieldRef<"inverter_types", 'String'>
+    readonly default_interval_mins: FieldRef<"inverter_types", 'Int'>
+    readonly api_source: FieldRef<"inverter_types", 'String'>
+    readonly notes: FieldRef<"inverter_types", 'String'>
+    readonly created_at: FieldRef<"inverter_types", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * inverter_types findUnique
+   */
+  export type inverter_typesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * Filter, which inverter_types to fetch.
+     */
+    where: inverter_typesWhereUniqueInput
+  }
+
+  /**
+   * inverter_types findUniqueOrThrow
+   */
+  export type inverter_typesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * Filter, which inverter_types to fetch.
+     */
+    where: inverter_typesWhereUniqueInput
+  }
+
+  /**
+   * inverter_types findFirst
+   */
+  export type inverter_typesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * Filter, which inverter_types to fetch.
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inverter_types to fetch.
+     */
+    orderBy?: inverter_typesOrderByWithRelationInput | inverter_typesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for inverter_types.
+     */
+    cursor?: inverter_typesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inverter_types from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inverter_types.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of inverter_types.
+     */
+    distinct?: Inverter_typesScalarFieldEnum | Inverter_typesScalarFieldEnum[]
+  }
+
+  /**
+   * inverter_types findFirstOrThrow
+   */
+  export type inverter_typesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * Filter, which inverter_types to fetch.
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inverter_types to fetch.
+     */
+    orderBy?: inverter_typesOrderByWithRelationInput | inverter_typesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for inverter_types.
+     */
+    cursor?: inverter_typesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inverter_types from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inverter_types.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of inverter_types.
+     */
+    distinct?: Inverter_typesScalarFieldEnum | Inverter_typesScalarFieldEnum[]
+  }
+
+  /**
+   * inverter_types findMany
+   */
+  export type inverter_typesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * Filter, which inverter_types to fetch.
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inverter_types to fetch.
+     */
+    orderBy?: inverter_typesOrderByWithRelationInput | inverter_typesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing inverter_types.
+     */
+    cursor?: inverter_typesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inverter_types from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inverter_types.
+     */
+    skip?: number
+    distinct?: Inverter_typesScalarFieldEnum | Inverter_typesScalarFieldEnum[]
+  }
+
+  /**
+   * inverter_types create
+   */
+  export type inverter_typesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a inverter_types.
+     */
+    data: XOR<inverter_typesCreateInput, inverter_typesUncheckedCreateInput>
+  }
+
+  /**
+   * inverter_types createMany
+   */
+  export type inverter_typesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many inverter_types.
+     */
+    data: inverter_typesCreateManyInput | inverter_typesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * inverter_types createManyAndReturn
+   */
+  export type inverter_typesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * The data used to create many inverter_types.
+     */
+    data: inverter_typesCreateManyInput | inverter_typesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * inverter_types update
+   */
+  export type inverter_typesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a inverter_types.
+     */
+    data: XOR<inverter_typesUpdateInput, inverter_typesUncheckedUpdateInput>
+    /**
+     * Choose, which inverter_types to update.
+     */
+    where: inverter_typesWhereUniqueInput
+  }
+
+  /**
+   * inverter_types updateMany
+   */
+  export type inverter_typesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update inverter_types.
+     */
+    data: XOR<inverter_typesUpdateManyMutationInput, inverter_typesUncheckedUpdateManyInput>
+    /**
+     * Filter which inverter_types to update
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * Limit how many inverter_types to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * inverter_types updateManyAndReturn
+   */
+  export type inverter_typesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * The data used to update inverter_types.
+     */
+    data: XOR<inverter_typesUpdateManyMutationInput, inverter_typesUncheckedUpdateManyInput>
+    /**
+     * Filter which inverter_types to update
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * Limit how many inverter_types to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * inverter_types upsert
+   */
+  export type inverter_typesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the inverter_types to update in case it exists.
+     */
+    where: inverter_typesWhereUniqueInput
+    /**
+     * In case the inverter_types found by the `where` argument doesn't exist, create a new inverter_types with this data.
+     */
+    create: XOR<inverter_typesCreateInput, inverter_typesUncheckedCreateInput>
+    /**
+     * In case the inverter_types was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<inverter_typesUpdateInput, inverter_typesUncheckedUpdateInput>
+  }
+
+  /**
+   * inverter_types delete
+   */
+  export type inverter_typesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+    /**
+     * Filter which inverter_types to delete.
+     */
+    where: inverter_typesWhereUniqueInput
+  }
+
+  /**
+   * inverter_types deleteMany
+   */
+  export type inverter_typesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which inverter_types to delete
+     */
+    where?: inverter_typesWhereInput
+    /**
+     * Limit how many inverter_types to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * inverter_types without action
+   */
+  export type inverter_typesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inverter_types
+     */
+    select?: inverter_typesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inverter_types
+     */
+    omit?: inverter_typesOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model solar_power_generation
+   */
+
+  export type AggregateSolar_power_generation = {
+    _count: Solar_power_generationCountAggregateOutputType | null
+    _avg: Solar_power_generationAvgAggregateOutputType | null
+    _sum: Solar_power_generationSumAggregateOutputType | null
+    _min: Solar_power_generationMinAggregateOutputType | null
+    _max: Solar_power_generationMaxAggregateOutputType | null
+  }
+
+  export type Solar_power_generationAvgAggregateOutputType = {
+    solar_system_id: number | null
+    power_generated_kwh: Decimal | null
+    temperature_c: Decimal | null
+    cloud_cover_pct: number | null
+  }
+
+  export type Solar_power_generationSumAggregateOutputType = {
+    solar_system_id: number | null
+    power_generated_kwh: Decimal | null
+    temperature_c: Decimal | null
+    cloud_cover_pct: number | null
+  }
+
+  export type Solar_power_generationMinAggregateOutputType = {
+    solar_system_id: number | null
+    recorded_at: Date | null
+    power_generated_kwh: Decimal | null
+    weather_condition: string | null
+    temperature_c: Decimal | null
+    cloud_cover_pct: number | null
+    notes: string | null
+  }
+
+  export type Solar_power_generationMaxAggregateOutputType = {
+    solar_system_id: number | null
+    recorded_at: Date | null
+    power_generated_kwh: Decimal | null
+    weather_condition: string | null
+    temperature_c: Decimal | null
+    cloud_cover_pct: number | null
+    notes: string | null
+  }
+
+  export type Solar_power_generationCountAggregateOutputType = {
+    solar_system_id: number
+    recorded_at: number
+    power_generated_kwh: number
+    weather_condition: number
+    temperature_c: number
+    cloud_cover_pct: number
+    notes: number
+    _all: number
+  }
+
+
+  export type Solar_power_generationAvgAggregateInputType = {
+    solar_system_id?: true
+    power_generated_kwh?: true
+    temperature_c?: true
+    cloud_cover_pct?: true
+  }
+
+  export type Solar_power_generationSumAggregateInputType = {
+    solar_system_id?: true
+    power_generated_kwh?: true
+    temperature_c?: true
+    cloud_cover_pct?: true
+  }
+
+  export type Solar_power_generationMinAggregateInputType = {
+    solar_system_id?: true
+    recorded_at?: true
+    power_generated_kwh?: true
+    weather_condition?: true
+    temperature_c?: true
+    cloud_cover_pct?: true
+    notes?: true
+  }
+
+  export type Solar_power_generationMaxAggregateInputType = {
+    solar_system_id?: true
+    recorded_at?: true
+    power_generated_kwh?: true
+    weather_condition?: true
+    temperature_c?: true
+    cloud_cover_pct?: true
+    notes?: true
+  }
+
+  export type Solar_power_generationCountAggregateInputType = {
+    solar_system_id?: true
+    recorded_at?: true
+    power_generated_kwh?: true
+    weather_condition?: true
+    temperature_c?: true
+    cloud_cover_pct?: true
+    notes?: true
+    _all?: true
+  }
+
+  export type Solar_power_generationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which solar_power_generation to aggregate.
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of solar_power_generations to fetch.
+     */
+    orderBy?: solar_power_generationOrderByWithRelationInput | solar_power_generationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: solar_power_generationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` solar_power_generations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` solar_power_generations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned solar_power_generations
+    **/
+    _count?: true | Solar_power_generationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Solar_power_generationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Solar_power_generationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Solar_power_generationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Solar_power_generationMaxAggregateInputType
+  }
+
+  export type GetSolar_power_generationAggregateType<T extends Solar_power_generationAggregateArgs> = {
+        [P in keyof T & keyof AggregateSolar_power_generation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSolar_power_generation[P]>
+      : GetScalarType<T[P], AggregateSolar_power_generation[P]>
+  }
+
+
+
+
+  export type solar_power_generationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: solar_power_generationWhereInput
+    orderBy?: solar_power_generationOrderByWithAggregationInput | solar_power_generationOrderByWithAggregationInput[]
+    by: Solar_power_generationScalarFieldEnum[] | Solar_power_generationScalarFieldEnum
+    having?: solar_power_generationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Solar_power_generationCountAggregateInputType | true
+    _avg?: Solar_power_generationAvgAggregateInputType
+    _sum?: Solar_power_generationSumAggregateInputType
+    _min?: Solar_power_generationMinAggregateInputType
+    _max?: Solar_power_generationMaxAggregateInputType
+  }
+
+  export type Solar_power_generationGroupByOutputType = {
+    solar_system_id: number
+    recorded_at: Date
+    power_generated_kwh: Decimal
+    weather_condition: string | null
+    temperature_c: Decimal | null
+    cloud_cover_pct: number | null
+    notes: string | null
+    _count: Solar_power_generationCountAggregateOutputType | null
+    _avg: Solar_power_generationAvgAggregateOutputType | null
+    _sum: Solar_power_generationSumAggregateOutputType | null
+    _min: Solar_power_generationMinAggregateOutputType | null
+    _max: Solar_power_generationMaxAggregateOutputType | null
+  }
+
+  type GetSolar_power_generationGroupByPayload<T extends solar_power_generationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Solar_power_generationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Solar_power_generationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Solar_power_generationGroupByOutputType[P]>
+            : GetScalarType<T[P], Solar_power_generationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type solar_power_generationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    solar_system_id?: boolean
+    recorded_at?: boolean
+    power_generated_kwh?: boolean
+    weather_condition?: boolean
+    temperature_c?: boolean
+    cloud_cover_pct?: boolean
+    notes?: boolean
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["solar_power_generation"]>
+
+  export type solar_power_generationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    solar_system_id?: boolean
+    recorded_at?: boolean
+    power_generated_kwh?: boolean
+    weather_condition?: boolean
+    temperature_c?: boolean
+    cloud_cover_pct?: boolean
+    notes?: boolean
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["solar_power_generation"]>
+
+  export type solar_power_generationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    solar_system_id?: boolean
+    recorded_at?: boolean
+    power_generated_kwh?: boolean
+    weather_condition?: boolean
+    temperature_c?: boolean
+    cloud_cover_pct?: boolean
+    notes?: boolean
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["solar_power_generation"]>
+
+  export type solar_power_generationSelectScalar = {
+    solar_system_id?: boolean
+    recorded_at?: boolean
+    power_generated_kwh?: boolean
+    weather_condition?: boolean
+    temperature_c?: boolean
+    cloud_cover_pct?: boolean
+    notes?: boolean
+  }
+
+  export type solar_power_generationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"solar_system_id" | "recorded_at" | "power_generated_kwh" | "weather_condition" | "temperature_c" | "cloud_cover_pct" | "notes", ExtArgs["result"]["solar_power_generation"]>
+  export type solar_power_generationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }
+  export type solar_power_generationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }
+  export type solar_power_generationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    systems?: boolean | SystemsDefaultArgs<ExtArgs>
+  }
+
+  export type $solar_power_generationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "solar_power_generation"
+    objects: {
+      systems: Prisma.$SystemsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      solar_system_id: number
+      recorded_at: Date
+      power_generated_kwh: Prisma.Decimal
+      weather_condition: string | null
+      temperature_c: Prisma.Decimal | null
+      cloud_cover_pct: number | null
+      notes: string | null
+    }, ExtArgs["result"]["solar_power_generation"]>
+    composites: {}
+  }
+
+  type solar_power_generationGetPayload<S extends boolean | null | undefined | solar_power_generationDefaultArgs> = $Result.GetResult<Prisma.$solar_power_generationPayload, S>
+
+  type solar_power_generationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<solar_power_generationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Solar_power_generationCountAggregateInputType | true
+    }
+
+  export interface solar_power_generationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['solar_power_generation'], meta: { name: 'solar_power_generation' } }
+    /**
+     * Find zero or one Solar_power_generation that matches the filter.
+     * @param {solar_power_generationFindUniqueArgs} args - Arguments to find a Solar_power_generation
+     * @example
+     * // Get one Solar_power_generation
+     * const solar_power_generation = await prisma.solar_power_generation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends solar_power_generationFindUniqueArgs>(args: SelectSubset<T, solar_power_generationFindUniqueArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Solar_power_generation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {solar_power_generationFindUniqueOrThrowArgs} args - Arguments to find a Solar_power_generation
+     * @example
+     * // Get one Solar_power_generation
+     * const solar_power_generation = await prisma.solar_power_generation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends solar_power_generationFindUniqueOrThrowArgs>(args: SelectSubset<T, solar_power_generationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Solar_power_generation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {solar_power_generationFindFirstArgs} args - Arguments to find a Solar_power_generation
+     * @example
+     * // Get one Solar_power_generation
+     * const solar_power_generation = await prisma.solar_power_generation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends solar_power_generationFindFirstArgs>(args?: SelectSubset<T, solar_power_generationFindFirstArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Solar_power_generation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {solar_power_generationFindFirstOrThrowArgs} args - Arguments to find a Solar_power_generation
+     * @example
+     * // Get one Solar_power_generation
+     * const solar_power_generation = await prisma.solar_power_generation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends solar_power_generationFindFirstOrThrowArgs>(args?: SelectSubset<T, solar_power_generationFindFirstOrThrowArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Solar_power_generations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {solar_power_generationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Solar_power_generations
+     * const solar_power_generations = await prisma.solar_power_generation.findMany()
+     * 
+     * // Get first 10 Solar_power_generations
+     * const solar_power_generations = await prisma.solar_power_generation.findMany({ take: 10 })
+     * 
+     * // Only select the `solar_system_id`
+     * const solar_power_generationWithSolar_system_idOnly = await prisma.solar_power_generation.findMany({ select: { solar_system_id: true } })
+     * 
+     */
+    findMany<T extends solar_power_generationFindManyArgs>(args?: SelectSubset<T, solar_power_generationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Solar_power_generation.
+     * @param {solar_power_generationCreateArgs} args - Arguments to create a Solar_power_generation.
+     * @example
+     * // Create one Solar_power_generation
+     * const Solar_power_generation = await prisma.solar_power_generation.create({
+     *   data: {
+     *     // ... data to create a Solar_power_generation
+     *   }
+     * })
+     * 
+     */
+    create<T extends solar_power_generationCreateArgs>(args: SelectSubset<T, solar_power_generationCreateArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Solar_power_generations.
+     * @param {solar_power_generationCreateManyArgs} args - Arguments to create many Solar_power_generations.
+     * @example
+     * // Create many Solar_power_generations
+     * const solar_power_generation = await prisma.solar_power_generation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends solar_power_generationCreateManyArgs>(args?: SelectSubset<T, solar_power_generationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Solar_power_generations and returns the data saved in the database.
+     * @param {solar_power_generationCreateManyAndReturnArgs} args - Arguments to create many Solar_power_generations.
+     * @example
+     * // Create many Solar_power_generations
+     * const solar_power_generation = await prisma.solar_power_generation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Solar_power_generations and only return the `solar_system_id`
+     * const solar_power_generationWithSolar_system_idOnly = await prisma.solar_power_generation.createManyAndReturn({
+     *   select: { solar_system_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends solar_power_generationCreateManyAndReturnArgs>(args?: SelectSubset<T, solar_power_generationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Solar_power_generation.
+     * @param {solar_power_generationDeleteArgs} args - Arguments to delete one Solar_power_generation.
+     * @example
+     * // Delete one Solar_power_generation
+     * const Solar_power_generation = await prisma.solar_power_generation.delete({
+     *   where: {
+     *     // ... filter to delete one Solar_power_generation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends solar_power_generationDeleteArgs>(args: SelectSubset<T, solar_power_generationDeleteArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Solar_power_generation.
+     * @param {solar_power_generationUpdateArgs} args - Arguments to update one Solar_power_generation.
+     * @example
+     * // Update one Solar_power_generation
+     * const solar_power_generation = await prisma.solar_power_generation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends solar_power_generationUpdateArgs>(args: SelectSubset<T, solar_power_generationUpdateArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Solar_power_generations.
+     * @param {solar_power_generationDeleteManyArgs} args - Arguments to filter Solar_power_generations to delete.
+     * @example
+     * // Delete a few Solar_power_generations
+     * const { count } = await prisma.solar_power_generation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends solar_power_generationDeleteManyArgs>(args?: SelectSubset<T, solar_power_generationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Solar_power_generations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {solar_power_generationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Solar_power_generations
+     * const solar_power_generation = await prisma.solar_power_generation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends solar_power_generationUpdateManyArgs>(args: SelectSubset<T, solar_power_generationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Solar_power_generations and returns the data updated in the database.
+     * @param {solar_power_generationUpdateManyAndReturnArgs} args - Arguments to update many Solar_power_generations.
+     * @example
+     * // Update many Solar_power_generations
+     * const solar_power_generation = await prisma.solar_power_generation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Solar_power_generations and only return the `solar_system_id`
+     * const solar_power_generationWithSolar_system_idOnly = await prisma.solar_power_generation.updateManyAndReturn({
+     *   select: { solar_system_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends solar_power_generationUpdateManyAndReturnArgs>(args: SelectSubset<T, solar_power_generationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Solar_power_generation.
+     * @param {solar_power_generationUpsertArgs} args - Arguments to update or create a Solar_power_generation.
+     * @example
+     * // Update or create a Solar_power_generation
+     * const solar_power_generation = await prisma.solar_power_generation.upsert({
+     *   create: {
+     *     // ... data to create a Solar_power_generation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Solar_power_generation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends solar_power_generationUpsertArgs>(args: SelectSubset<T, solar_power_generationUpsertArgs<ExtArgs>>): Prisma__solar_power_generationClient<$Result.GetResult<Prisma.$solar_power_generationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Solar_power_generations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {solar_power_generationCountArgs} args - Arguments to filter Solar_power_generations to count.
+     * @example
+     * // Count the number of Solar_power_generations
+     * const count = await prisma.solar_power_generation.count({
+     *   where: {
+     *     // ... the filter for the Solar_power_generations we want to count
+     *   }
+     * })
+    **/
+    count<T extends solar_power_generationCountArgs>(
+      args?: Subset<T, solar_power_generationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Solar_power_generationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Solar_power_generation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Solar_power_generationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Solar_power_generationAggregateArgs>(args: Subset<T, Solar_power_generationAggregateArgs>): Prisma.PrismaPromise<GetSolar_power_generationAggregateType<T>>
+
+    /**
+     * Group by Solar_power_generation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {solar_power_generationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends solar_power_generationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: solar_power_generationGroupByArgs['orderBy'] }
+        : { orderBy?: solar_power_generationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, solar_power_generationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSolar_power_generationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the solar_power_generation model
+   */
+  readonly fields: solar_power_generationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for solar_power_generation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__solar_power_generationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    systems<T extends SystemsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SystemsDefaultArgs<ExtArgs>>): Prisma__SystemsClient<$Result.GetResult<Prisma.$SystemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the solar_power_generation model
+   */
+  interface solar_power_generationFieldRefs {
+    readonly solar_system_id: FieldRef<"solar_power_generation", 'Int'>
+    readonly recorded_at: FieldRef<"solar_power_generation", 'DateTime'>
+    readonly power_generated_kwh: FieldRef<"solar_power_generation", 'Decimal'>
+    readonly weather_condition: FieldRef<"solar_power_generation", 'String'>
+    readonly temperature_c: FieldRef<"solar_power_generation", 'Decimal'>
+    readonly cloud_cover_pct: FieldRef<"solar_power_generation", 'Int'>
+    readonly notes: FieldRef<"solar_power_generation", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * solar_power_generation findUnique
+   */
+  export type solar_power_generationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * Filter, which solar_power_generation to fetch.
+     */
+    where: solar_power_generationWhereUniqueInput
+  }
+
+  /**
+   * solar_power_generation findUniqueOrThrow
+   */
+  export type solar_power_generationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * Filter, which solar_power_generation to fetch.
+     */
+    where: solar_power_generationWhereUniqueInput
+  }
+
+  /**
+   * solar_power_generation findFirst
+   */
+  export type solar_power_generationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * Filter, which solar_power_generation to fetch.
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of solar_power_generations to fetch.
+     */
+    orderBy?: solar_power_generationOrderByWithRelationInput | solar_power_generationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for solar_power_generations.
+     */
+    cursor?: solar_power_generationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` solar_power_generations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` solar_power_generations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of solar_power_generations.
+     */
+    distinct?: Solar_power_generationScalarFieldEnum | Solar_power_generationScalarFieldEnum[]
+  }
+
+  /**
+   * solar_power_generation findFirstOrThrow
+   */
+  export type solar_power_generationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * Filter, which solar_power_generation to fetch.
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of solar_power_generations to fetch.
+     */
+    orderBy?: solar_power_generationOrderByWithRelationInput | solar_power_generationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for solar_power_generations.
+     */
+    cursor?: solar_power_generationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` solar_power_generations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` solar_power_generations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of solar_power_generations.
+     */
+    distinct?: Solar_power_generationScalarFieldEnum | Solar_power_generationScalarFieldEnum[]
+  }
+
+  /**
+   * solar_power_generation findMany
+   */
+  export type solar_power_generationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * Filter, which solar_power_generations to fetch.
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of solar_power_generations to fetch.
+     */
+    orderBy?: solar_power_generationOrderByWithRelationInput | solar_power_generationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing solar_power_generations.
+     */
+    cursor?: solar_power_generationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` solar_power_generations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` solar_power_generations.
+     */
+    skip?: number
+    distinct?: Solar_power_generationScalarFieldEnum | Solar_power_generationScalarFieldEnum[]
+  }
+
+  /**
+   * solar_power_generation create
+   */
+  export type solar_power_generationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a solar_power_generation.
+     */
+    data: XOR<solar_power_generationCreateInput, solar_power_generationUncheckedCreateInput>
+  }
+
+  /**
+   * solar_power_generation createMany
+   */
+  export type solar_power_generationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many solar_power_generations.
+     */
+    data: solar_power_generationCreateManyInput | solar_power_generationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * solar_power_generation createManyAndReturn
+   */
+  export type solar_power_generationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * The data used to create many solar_power_generations.
+     */
+    data: solar_power_generationCreateManyInput | solar_power_generationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * solar_power_generation update
+   */
+  export type solar_power_generationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a solar_power_generation.
+     */
+    data: XOR<solar_power_generationUpdateInput, solar_power_generationUncheckedUpdateInput>
+    /**
+     * Choose, which solar_power_generation to update.
+     */
+    where: solar_power_generationWhereUniqueInput
+  }
+
+  /**
+   * solar_power_generation updateMany
+   */
+  export type solar_power_generationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update solar_power_generations.
+     */
+    data: XOR<solar_power_generationUpdateManyMutationInput, solar_power_generationUncheckedUpdateManyInput>
+    /**
+     * Filter which solar_power_generations to update
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * Limit how many solar_power_generations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * solar_power_generation updateManyAndReturn
+   */
+  export type solar_power_generationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * The data used to update solar_power_generations.
+     */
+    data: XOR<solar_power_generationUpdateManyMutationInput, solar_power_generationUncheckedUpdateManyInput>
+    /**
+     * Filter which solar_power_generations to update
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * Limit how many solar_power_generations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * solar_power_generation upsert
+   */
+  export type solar_power_generationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the solar_power_generation to update in case it exists.
+     */
+    where: solar_power_generationWhereUniqueInput
+    /**
+     * In case the solar_power_generation found by the `where` argument doesn't exist, create a new solar_power_generation with this data.
+     */
+    create: XOR<solar_power_generationCreateInput, solar_power_generationUncheckedCreateInput>
+    /**
+     * In case the solar_power_generation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<solar_power_generationUpdateInput, solar_power_generationUncheckedUpdateInput>
+  }
+
+  /**
+   * solar_power_generation delete
+   */
+  export type solar_power_generationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+    /**
+     * Filter which solar_power_generation to delete.
+     */
+    where: solar_power_generationWhereUniqueInput
+  }
+
+  /**
+   * solar_power_generation deleteMany
+   */
+  export type solar_power_generationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which solar_power_generations to delete
+     */
+    where?: solar_power_generationWhereInput
+    /**
+     * Limit how many solar_power_generations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * solar_power_generation without action
+   */
+  export type solar_power_generationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the solar_power_generation
+     */
+    select?: solar_power_generationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the solar_power_generation
+     */
+    omit?: solar_power_generationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: solar_power_generationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model tower_component_status
+   */
+
+  export type AggregateTower_component_status = {
+    _count: Tower_component_statusCountAggregateOutputType | null
+    _avg: Tower_component_statusAvgAggregateOutputType | null
+    _sum: Tower_component_statusSumAggregateOutputType | null
+    _min: Tower_component_statusMinAggregateOutputType | null
+    _max: Tower_component_statusMaxAggregateOutputType | null
+  }
+
+  export type Tower_component_statusAvgAggregateOutputType = {
+    id: number | null
+    tower_id: number | null
+  }
+
+  export type Tower_component_statusSumAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+  }
+
+  export type Tower_component_statusMinAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    component: string | null
+    status: string | null
+    message: string | null
+    last_updated: Date | null
+  }
+
+  export type Tower_component_statusMaxAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    component: string | null
+    status: string | null
+    message: string | null
+    last_updated: Date | null
+  }
+
+  export type Tower_component_statusCountAggregateOutputType = {
+    id: number
+    tower_id: number
+    component: number
+    status: number
+    message: number
+    last_updated: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type Tower_component_statusAvgAggregateInputType = {
+    id?: true
+    tower_id?: true
+  }
+
+  export type Tower_component_statusSumAggregateInputType = {
+    id?: true
+    tower_id?: true
+  }
+
+  export type Tower_component_statusMinAggregateInputType = {
+    id?: true
+    tower_id?: true
+    component?: true
+    status?: true
+    message?: true
+    last_updated?: true
+  }
+
+  export type Tower_component_statusMaxAggregateInputType = {
+    id?: true
+    tower_id?: true
+    component?: true
+    status?: true
+    message?: true
+    last_updated?: true
+  }
+
+  export type Tower_component_statusCountAggregateInputType = {
+    id?: true
+    tower_id?: true
+    component?: true
+    status?: true
+    message?: true
+    last_updated?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type Tower_component_statusAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tower_component_status to aggregate.
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_component_statuses to fetch.
+     */
+    orderBy?: tower_component_statusOrderByWithRelationInput | tower_component_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: tower_component_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_component_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_component_statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned tower_component_statuses
+    **/
+    _count?: true | Tower_component_statusCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Tower_component_statusAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Tower_component_statusSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Tower_component_statusMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Tower_component_statusMaxAggregateInputType
+  }
+
+  export type GetTower_component_statusAggregateType<T extends Tower_component_statusAggregateArgs> = {
+        [P in keyof T & keyof AggregateTower_component_status]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTower_component_status[P]>
+      : GetScalarType<T[P], AggregateTower_component_status[P]>
+  }
+
+
+
+
+  export type tower_component_statusGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: tower_component_statusWhereInput
+    orderBy?: tower_component_statusOrderByWithAggregationInput | tower_component_statusOrderByWithAggregationInput[]
+    by: Tower_component_statusScalarFieldEnum[] | Tower_component_statusScalarFieldEnum
+    having?: tower_component_statusScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Tower_component_statusCountAggregateInputType | true
+    _avg?: Tower_component_statusAvgAggregateInputType
+    _sum?: Tower_component_statusSumAggregateInputType
+    _min?: Tower_component_statusMinAggregateInputType
+    _max?: Tower_component_statusMaxAggregateInputType
+  }
+
+  export type Tower_component_statusGroupByOutputType = {
+    id: bigint
+    tower_id: bigint
+    component: string
+    status: string
+    message: string | null
+    last_updated: Date
+    metadata: JsonValue | null
+    _count: Tower_component_statusCountAggregateOutputType | null
+    _avg: Tower_component_statusAvgAggregateOutputType | null
+    _sum: Tower_component_statusSumAggregateOutputType | null
+    _min: Tower_component_statusMinAggregateOutputType | null
+    _max: Tower_component_statusMaxAggregateOutputType | null
+  }
+
+  type GetTower_component_statusGroupByPayload<T extends tower_component_statusGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Tower_component_statusGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Tower_component_statusGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Tower_component_statusGroupByOutputType[P]>
+            : GetScalarType<T[P], Tower_component_statusGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type tower_component_statusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    component?: boolean
+    status?: boolean
+    message?: boolean
+    last_updated?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["tower_component_status"]>
+
+  export type tower_component_statusSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    component?: boolean
+    status?: boolean
+    message?: boolean
+    last_updated?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["tower_component_status"]>
+
+  export type tower_component_statusSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    component?: boolean
+    status?: boolean
+    message?: boolean
+    last_updated?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["tower_component_status"]>
+
+  export type tower_component_statusSelectScalar = {
+    id?: boolean
+    tower_id?: boolean
+    component?: boolean
+    status?: boolean
+    message?: boolean
+    last_updated?: boolean
+    metadata?: boolean
+  }
+
+  export type tower_component_statusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tower_id" | "component" | "status" | "message" | "last_updated" | "metadata", ExtArgs["result"]["tower_component_status"]>
+
+  export type $tower_component_statusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "tower_component_status"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      tower_id: bigint
+      component: string
+      status: string
+      message: string | null
+      last_updated: Date
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["tower_component_status"]>
+    composites: {}
+  }
+
+  type tower_component_statusGetPayload<S extends boolean | null | undefined | tower_component_statusDefaultArgs> = $Result.GetResult<Prisma.$tower_component_statusPayload, S>
+
+  type tower_component_statusCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<tower_component_statusFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Tower_component_statusCountAggregateInputType | true
+    }
+
+  export interface tower_component_statusDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['tower_component_status'], meta: { name: 'tower_component_status' } }
+    /**
+     * Find zero or one Tower_component_status that matches the filter.
+     * @param {tower_component_statusFindUniqueArgs} args - Arguments to find a Tower_component_status
+     * @example
+     * // Get one Tower_component_status
+     * const tower_component_status = await prisma.tower_component_status.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends tower_component_statusFindUniqueArgs>(args: SelectSubset<T, tower_component_statusFindUniqueArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tower_component_status that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {tower_component_statusFindUniqueOrThrowArgs} args - Arguments to find a Tower_component_status
+     * @example
+     * // Get one Tower_component_status
+     * const tower_component_status = await prisma.tower_component_status.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends tower_component_statusFindUniqueOrThrowArgs>(args: SelectSubset<T, tower_component_statusFindUniqueOrThrowArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tower_component_status that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_component_statusFindFirstArgs} args - Arguments to find a Tower_component_status
+     * @example
+     * // Get one Tower_component_status
+     * const tower_component_status = await prisma.tower_component_status.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends tower_component_statusFindFirstArgs>(args?: SelectSubset<T, tower_component_statusFindFirstArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tower_component_status that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_component_statusFindFirstOrThrowArgs} args - Arguments to find a Tower_component_status
+     * @example
+     * // Get one Tower_component_status
+     * const tower_component_status = await prisma.tower_component_status.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends tower_component_statusFindFirstOrThrowArgs>(args?: SelectSubset<T, tower_component_statusFindFirstOrThrowArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tower_component_statuses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_component_statusFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tower_component_statuses
+     * const tower_component_statuses = await prisma.tower_component_status.findMany()
+     * 
+     * // Get first 10 Tower_component_statuses
+     * const tower_component_statuses = await prisma.tower_component_status.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tower_component_statusWithIdOnly = await prisma.tower_component_status.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends tower_component_statusFindManyArgs>(args?: SelectSubset<T, tower_component_statusFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tower_component_status.
+     * @param {tower_component_statusCreateArgs} args - Arguments to create a Tower_component_status.
+     * @example
+     * // Create one Tower_component_status
+     * const Tower_component_status = await prisma.tower_component_status.create({
+     *   data: {
+     *     // ... data to create a Tower_component_status
+     *   }
+     * })
+     * 
+     */
+    create<T extends tower_component_statusCreateArgs>(args: SelectSubset<T, tower_component_statusCreateArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tower_component_statuses.
+     * @param {tower_component_statusCreateManyArgs} args - Arguments to create many Tower_component_statuses.
+     * @example
+     * // Create many Tower_component_statuses
+     * const tower_component_status = await prisma.tower_component_status.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends tower_component_statusCreateManyArgs>(args?: SelectSubset<T, tower_component_statusCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tower_component_statuses and returns the data saved in the database.
+     * @param {tower_component_statusCreateManyAndReturnArgs} args - Arguments to create many Tower_component_statuses.
+     * @example
+     * // Create many Tower_component_statuses
+     * const tower_component_status = await prisma.tower_component_status.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tower_component_statuses and only return the `id`
+     * const tower_component_statusWithIdOnly = await prisma.tower_component_status.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends tower_component_statusCreateManyAndReturnArgs>(args?: SelectSubset<T, tower_component_statusCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tower_component_status.
+     * @param {tower_component_statusDeleteArgs} args - Arguments to delete one Tower_component_status.
+     * @example
+     * // Delete one Tower_component_status
+     * const Tower_component_status = await prisma.tower_component_status.delete({
+     *   where: {
+     *     // ... filter to delete one Tower_component_status
+     *   }
+     * })
+     * 
+     */
+    delete<T extends tower_component_statusDeleteArgs>(args: SelectSubset<T, tower_component_statusDeleteArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tower_component_status.
+     * @param {tower_component_statusUpdateArgs} args - Arguments to update one Tower_component_status.
+     * @example
+     * // Update one Tower_component_status
+     * const tower_component_status = await prisma.tower_component_status.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends tower_component_statusUpdateArgs>(args: SelectSubset<T, tower_component_statusUpdateArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tower_component_statuses.
+     * @param {tower_component_statusDeleteManyArgs} args - Arguments to filter Tower_component_statuses to delete.
+     * @example
+     * // Delete a few Tower_component_statuses
+     * const { count } = await prisma.tower_component_status.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends tower_component_statusDeleteManyArgs>(args?: SelectSubset<T, tower_component_statusDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tower_component_statuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_component_statusUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tower_component_statuses
+     * const tower_component_status = await prisma.tower_component_status.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends tower_component_statusUpdateManyArgs>(args: SelectSubset<T, tower_component_statusUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tower_component_statuses and returns the data updated in the database.
+     * @param {tower_component_statusUpdateManyAndReturnArgs} args - Arguments to update many Tower_component_statuses.
+     * @example
+     * // Update many Tower_component_statuses
+     * const tower_component_status = await prisma.tower_component_status.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tower_component_statuses and only return the `id`
+     * const tower_component_statusWithIdOnly = await prisma.tower_component_status.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends tower_component_statusUpdateManyAndReturnArgs>(args: SelectSubset<T, tower_component_statusUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tower_component_status.
+     * @param {tower_component_statusUpsertArgs} args - Arguments to update or create a Tower_component_status.
+     * @example
+     * // Update or create a Tower_component_status
+     * const tower_component_status = await prisma.tower_component_status.upsert({
+     *   create: {
+     *     // ... data to create a Tower_component_status
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tower_component_status we want to update
+     *   }
+     * })
+     */
+    upsert<T extends tower_component_statusUpsertArgs>(args: SelectSubset<T, tower_component_statusUpsertArgs<ExtArgs>>): Prisma__tower_component_statusClient<$Result.GetResult<Prisma.$tower_component_statusPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tower_component_statuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_component_statusCountArgs} args - Arguments to filter Tower_component_statuses to count.
+     * @example
+     * // Count the number of Tower_component_statuses
+     * const count = await prisma.tower_component_status.count({
+     *   where: {
+     *     // ... the filter for the Tower_component_statuses we want to count
+     *   }
+     * })
+    **/
+    count<T extends tower_component_statusCountArgs>(
+      args?: Subset<T, tower_component_statusCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Tower_component_statusCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tower_component_status.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Tower_component_statusAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Tower_component_statusAggregateArgs>(args: Subset<T, Tower_component_statusAggregateArgs>): Prisma.PrismaPromise<GetTower_component_statusAggregateType<T>>
+
+    /**
+     * Group by Tower_component_status.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_component_statusGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends tower_component_statusGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: tower_component_statusGroupByArgs['orderBy'] }
+        : { orderBy?: tower_component_statusGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, tower_component_statusGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTower_component_statusGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the tower_component_status model
+   */
+  readonly fields: tower_component_statusFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for tower_component_status.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__tower_component_statusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the tower_component_status model
+   */
+  interface tower_component_statusFieldRefs {
+    readonly id: FieldRef<"tower_component_status", 'BigInt'>
+    readonly tower_id: FieldRef<"tower_component_status", 'BigInt'>
+    readonly component: FieldRef<"tower_component_status", 'String'>
+    readonly status: FieldRef<"tower_component_status", 'String'>
+    readonly message: FieldRef<"tower_component_status", 'String'>
+    readonly last_updated: FieldRef<"tower_component_status", 'DateTime'>
+    readonly metadata: FieldRef<"tower_component_status", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * tower_component_status findUnique
+   */
+  export type tower_component_statusFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_component_status to fetch.
+     */
+    where: tower_component_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_component_status findUniqueOrThrow
+   */
+  export type tower_component_statusFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_component_status to fetch.
+     */
+    where: tower_component_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_component_status findFirst
+   */
+  export type tower_component_statusFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_component_status to fetch.
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_component_statuses to fetch.
+     */
+    orderBy?: tower_component_statusOrderByWithRelationInput | tower_component_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tower_component_statuses.
+     */
+    cursor?: tower_component_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_component_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_component_statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tower_component_statuses.
+     */
+    distinct?: Tower_component_statusScalarFieldEnum | Tower_component_statusScalarFieldEnum[]
+  }
+
+  /**
+   * tower_component_status findFirstOrThrow
+   */
+  export type tower_component_statusFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_component_status to fetch.
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_component_statuses to fetch.
+     */
+    orderBy?: tower_component_statusOrderByWithRelationInput | tower_component_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tower_component_statuses.
+     */
+    cursor?: tower_component_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_component_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_component_statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tower_component_statuses.
+     */
+    distinct?: Tower_component_statusScalarFieldEnum | Tower_component_statusScalarFieldEnum[]
+  }
+
+  /**
+   * tower_component_status findMany
+   */
+  export type tower_component_statusFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_component_statuses to fetch.
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_component_statuses to fetch.
+     */
+    orderBy?: tower_component_statusOrderByWithRelationInput | tower_component_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing tower_component_statuses.
+     */
+    cursor?: tower_component_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_component_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_component_statuses.
+     */
+    skip?: number
+    distinct?: Tower_component_statusScalarFieldEnum | Tower_component_statusScalarFieldEnum[]
+  }
+
+  /**
+   * tower_component_status create
+   */
+  export type tower_component_statusCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * The data needed to create a tower_component_status.
+     */
+    data: XOR<tower_component_statusCreateInput, tower_component_statusUncheckedCreateInput>
+  }
+
+  /**
+   * tower_component_status createMany
+   */
+  export type tower_component_statusCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many tower_component_statuses.
+     */
+    data: tower_component_statusCreateManyInput | tower_component_statusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tower_component_status createManyAndReturn
+   */
+  export type tower_component_statusCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * The data used to create many tower_component_statuses.
+     */
+    data: tower_component_statusCreateManyInput | tower_component_statusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tower_component_status update
+   */
+  export type tower_component_statusUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * The data needed to update a tower_component_status.
+     */
+    data: XOR<tower_component_statusUpdateInput, tower_component_statusUncheckedUpdateInput>
+    /**
+     * Choose, which tower_component_status to update.
+     */
+    where: tower_component_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_component_status updateMany
+   */
+  export type tower_component_statusUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update tower_component_statuses.
+     */
+    data: XOR<tower_component_statusUpdateManyMutationInput, tower_component_statusUncheckedUpdateManyInput>
+    /**
+     * Filter which tower_component_statuses to update
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * Limit how many tower_component_statuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_component_status updateManyAndReturn
+   */
+  export type tower_component_statusUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * The data used to update tower_component_statuses.
+     */
+    data: XOR<tower_component_statusUpdateManyMutationInput, tower_component_statusUncheckedUpdateManyInput>
+    /**
+     * Filter which tower_component_statuses to update
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * Limit how many tower_component_statuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_component_status upsert
+   */
+  export type tower_component_statusUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * The filter to search for the tower_component_status to update in case it exists.
+     */
+    where: tower_component_statusWhereUniqueInput
+    /**
+     * In case the tower_component_status found by the `where` argument doesn't exist, create a new tower_component_status with this data.
+     */
+    create: XOR<tower_component_statusCreateInput, tower_component_statusUncheckedCreateInput>
+    /**
+     * In case the tower_component_status was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<tower_component_statusUpdateInput, tower_component_statusUncheckedUpdateInput>
+  }
+
+  /**
+   * tower_component_status delete
+   */
+  export type tower_component_statusDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+    /**
+     * Filter which tower_component_status to delete.
+     */
+    where: tower_component_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_component_status deleteMany
+   */
+  export type tower_component_statusDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tower_component_statuses to delete
+     */
+    where?: tower_component_statusWhereInput
+    /**
+     * Limit how many tower_component_statuses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_component_status without action
+   */
+  export type tower_component_statusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_component_status
+     */
+    select?: tower_component_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_component_status
+     */
+    omit?: tower_component_statusOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model tower_data
+   */
+
+  export type AggregateTower_data = {
+    _count: Tower_dataCountAggregateOutputType | null
+    _avg: Tower_dataAvgAggregateOutputType | null
+    _sum: Tower_dataSumAggregateOutputType | null
+    _min: Tower_dataMinAggregateOutputType | null
+    _max: Tower_dataMaxAggregateOutputType | null
+  }
+
+  export type Tower_dataAvgAggregateOutputType = {
+    id: number | null
+    tower_id: number | null
+    tower_angle: number | null
+    error_ticks: number | null
+  }
+
+  export type Tower_dataSumAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    tower_angle: number | null
+    error_ticks: number | null
+  }
+
+  export type Tower_dataMinAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    recorded_at: Date | null
+    tower_angle: number | null
+    error_ticks: number | null
+    created_at: Date | null
+  }
+
+  export type Tower_dataMaxAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    recorded_at: Date | null
+    tower_angle: number | null
+    error_ticks: number | null
+    created_at: Date | null
+  }
+
+  export type Tower_dataCountAggregateOutputType = {
+    id: number
+    tower_id: number
+    recorded_at: number
+    tower_angle: number
+    error_ticks: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Tower_dataAvgAggregateInputType = {
+    id?: true
+    tower_id?: true
+    tower_angle?: true
+    error_ticks?: true
+  }
+
+  export type Tower_dataSumAggregateInputType = {
+    id?: true
+    tower_id?: true
+    tower_angle?: true
+    error_ticks?: true
+  }
+
+  export type Tower_dataMinAggregateInputType = {
+    id?: true
+    tower_id?: true
+    recorded_at?: true
+    tower_angle?: true
+    error_ticks?: true
+    created_at?: true
+  }
+
+  export type Tower_dataMaxAggregateInputType = {
+    id?: true
+    tower_id?: true
+    recorded_at?: true
+    tower_angle?: true
+    error_ticks?: true
+    created_at?: true
+  }
+
+  export type Tower_dataCountAggregateInputType = {
+    id?: true
+    tower_id?: true
+    recorded_at?: true
+    tower_angle?: true
+    error_ticks?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Tower_dataAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tower_data to aggregate.
+     */
+    where?: tower_dataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_data to fetch.
+     */
+    orderBy?: tower_dataOrderByWithRelationInput | tower_dataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: tower_dataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_data from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_data.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned tower_data
+    **/
+    _count?: true | Tower_dataCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Tower_dataAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Tower_dataSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Tower_dataMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Tower_dataMaxAggregateInputType
+  }
+
+  export type GetTower_dataAggregateType<T extends Tower_dataAggregateArgs> = {
+        [P in keyof T & keyof AggregateTower_data]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTower_data[P]>
+      : GetScalarType<T[P], AggregateTower_data[P]>
+  }
+
+
+
+
+  export type tower_dataGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: tower_dataWhereInput
+    orderBy?: tower_dataOrderByWithAggregationInput | tower_dataOrderByWithAggregationInput[]
+    by: Tower_dataScalarFieldEnum[] | Tower_dataScalarFieldEnum
+    having?: tower_dataScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Tower_dataCountAggregateInputType | true
+    _avg?: Tower_dataAvgAggregateInputType
+    _sum?: Tower_dataSumAggregateInputType
+    _min?: Tower_dataMinAggregateInputType
+    _max?: Tower_dataMaxAggregateInputType
+  }
+
+  export type Tower_dataGroupByOutputType = {
+    id: bigint
+    tower_id: bigint
+    recorded_at: Date | null
+    tower_angle: number | null
+    error_ticks: number | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: Tower_dataCountAggregateOutputType | null
+    _avg: Tower_dataAvgAggregateOutputType | null
+    _sum: Tower_dataSumAggregateOutputType | null
+    _min: Tower_dataMinAggregateOutputType | null
+    _max: Tower_dataMaxAggregateOutputType | null
+  }
+
+  type GetTower_dataGroupByPayload<T extends tower_dataGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Tower_dataGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Tower_dataGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Tower_dataGroupByOutputType[P]>
+            : GetScalarType<T[P], Tower_dataGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type tower_dataSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    recorded_at?: boolean
+    tower_angle?: boolean
+    error_ticks?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["tower_data"]>
+
+  export type tower_dataSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    recorded_at?: boolean
+    tower_angle?: boolean
+    error_ticks?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["tower_data"]>
+
+  export type tower_dataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    recorded_at?: boolean
+    tower_angle?: boolean
+    error_ticks?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["tower_data"]>
+
+  export type tower_dataSelectScalar = {
+    id?: boolean
+    tower_id?: boolean
+    recorded_at?: boolean
+    tower_angle?: boolean
+    error_ticks?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type tower_dataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tower_id" | "recorded_at" | "tower_angle" | "error_ticks" | "metadata" | "created_at", ExtArgs["result"]["tower_data"]>
+
+  export type $tower_dataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "tower_data"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      tower_id: bigint
+      recorded_at: Date | null
+      tower_angle: number | null
+      error_ticks: number | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["tower_data"]>
+    composites: {}
+  }
+
+  type tower_dataGetPayload<S extends boolean | null | undefined | tower_dataDefaultArgs> = $Result.GetResult<Prisma.$tower_dataPayload, S>
+
+  type tower_dataCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<tower_dataFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Tower_dataCountAggregateInputType | true
+    }
+
+  export interface tower_dataDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['tower_data'], meta: { name: 'tower_data' } }
+    /**
+     * Find zero or one Tower_data that matches the filter.
+     * @param {tower_dataFindUniqueArgs} args - Arguments to find a Tower_data
+     * @example
+     * // Get one Tower_data
+     * const tower_data = await prisma.tower_data.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends tower_dataFindUniqueArgs>(args: SelectSubset<T, tower_dataFindUniqueArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tower_data that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {tower_dataFindUniqueOrThrowArgs} args - Arguments to find a Tower_data
+     * @example
+     * // Get one Tower_data
+     * const tower_data = await prisma.tower_data.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends tower_dataFindUniqueOrThrowArgs>(args: SelectSubset<T, tower_dataFindUniqueOrThrowArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tower_data that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_dataFindFirstArgs} args - Arguments to find a Tower_data
+     * @example
+     * // Get one Tower_data
+     * const tower_data = await prisma.tower_data.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends tower_dataFindFirstArgs>(args?: SelectSubset<T, tower_dataFindFirstArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tower_data that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_dataFindFirstOrThrowArgs} args - Arguments to find a Tower_data
+     * @example
+     * // Get one Tower_data
+     * const tower_data = await prisma.tower_data.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends tower_dataFindFirstOrThrowArgs>(args?: SelectSubset<T, tower_dataFindFirstOrThrowArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tower_data that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_dataFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tower_data
+     * const tower_data = await prisma.tower_data.findMany()
+     * 
+     * // Get first 10 Tower_data
+     * const tower_data = await prisma.tower_data.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tower_dataWithIdOnly = await prisma.tower_data.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends tower_dataFindManyArgs>(args?: SelectSubset<T, tower_dataFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tower_data.
+     * @param {tower_dataCreateArgs} args - Arguments to create a Tower_data.
+     * @example
+     * // Create one Tower_data
+     * const Tower_data = await prisma.tower_data.create({
+     *   data: {
+     *     // ... data to create a Tower_data
+     *   }
+     * })
+     * 
+     */
+    create<T extends tower_dataCreateArgs>(args: SelectSubset<T, tower_dataCreateArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tower_data.
+     * @param {tower_dataCreateManyArgs} args - Arguments to create many Tower_data.
+     * @example
+     * // Create many Tower_data
+     * const tower_data = await prisma.tower_data.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends tower_dataCreateManyArgs>(args?: SelectSubset<T, tower_dataCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tower_data and returns the data saved in the database.
+     * @param {tower_dataCreateManyAndReturnArgs} args - Arguments to create many Tower_data.
+     * @example
+     * // Create many Tower_data
+     * const tower_data = await prisma.tower_data.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tower_data and only return the `id`
+     * const tower_dataWithIdOnly = await prisma.tower_data.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends tower_dataCreateManyAndReturnArgs>(args?: SelectSubset<T, tower_dataCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tower_data.
+     * @param {tower_dataDeleteArgs} args - Arguments to delete one Tower_data.
+     * @example
+     * // Delete one Tower_data
+     * const Tower_data = await prisma.tower_data.delete({
+     *   where: {
+     *     // ... filter to delete one Tower_data
+     *   }
+     * })
+     * 
+     */
+    delete<T extends tower_dataDeleteArgs>(args: SelectSubset<T, tower_dataDeleteArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tower_data.
+     * @param {tower_dataUpdateArgs} args - Arguments to update one Tower_data.
+     * @example
+     * // Update one Tower_data
+     * const tower_data = await prisma.tower_data.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends tower_dataUpdateArgs>(args: SelectSubset<T, tower_dataUpdateArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tower_data.
+     * @param {tower_dataDeleteManyArgs} args - Arguments to filter Tower_data to delete.
+     * @example
+     * // Delete a few Tower_data
+     * const { count } = await prisma.tower_data.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends tower_dataDeleteManyArgs>(args?: SelectSubset<T, tower_dataDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tower_data.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_dataUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tower_data
+     * const tower_data = await prisma.tower_data.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends tower_dataUpdateManyArgs>(args: SelectSubset<T, tower_dataUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tower_data and returns the data updated in the database.
+     * @param {tower_dataUpdateManyAndReturnArgs} args - Arguments to update many Tower_data.
+     * @example
+     * // Update many Tower_data
+     * const tower_data = await prisma.tower_data.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tower_data and only return the `id`
+     * const tower_dataWithIdOnly = await prisma.tower_data.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends tower_dataUpdateManyAndReturnArgs>(args: SelectSubset<T, tower_dataUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tower_data.
+     * @param {tower_dataUpsertArgs} args - Arguments to update or create a Tower_data.
+     * @example
+     * // Update or create a Tower_data
+     * const tower_data = await prisma.tower_data.upsert({
+     *   create: {
+     *     // ... data to create a Tower_data
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tower_data we want to update
+     *   }
+     * })
+     */
+    upsert<T extends tower_dataUpsertArgs>(args: SelectSubset<T, tower_dataUpsertArgs<ExtArgs>>): Prisma__tower_dataClient<$Result.GetResult<Prisma.$tower_dataPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tower_data.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_dataCountArgs} args - Arguments to filter Tower_data to count.
+     * @example
+     * // Count the number of Tower_data
+     * const count = await prisma.tower_data.count({
+     *   where: {
+     *     // ... the filter for the Tower_data we want to count
+     *   }
+     * })
+    **/
+    count<T extends tower_dataCountArgs>(
+      args?: Subset<T, tower_dataCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Tower_dataCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tower_data.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Tower_dataAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Tower_dataAggregateArgs>(args: Subset<T, Tower_dataAggregateArgs>): Prisma.PrismaPromise<GetTower_dataAggregateType<T>>
+
+    /**
+     * Group by Tower_data.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_dataGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends tower_dataGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: tower_dataGroupByArgs['orderBy'] }
+        : { orderBy?: tower_dataGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, tower_dataGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTower_dataGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the tower_data model
+   */
+  readonly fields: tower_dataFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for tower_data.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__tower_dataClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the tower_data model
+   */
+  interface tower_dataFieldRefs {
+    readonly id: FieldRef<"tower_data", 'BigInt'>
+    readonly tower_id: FieldRef<"tower_data", 'BigInt'>
+    readonly recorded_at: FieldRef<"tower_data", 'DateTime'>
+    readonly tower_angle: FieldRef<"tower_data", 'Float'>
+    readonly error_ticks: FieldRef<"tower_data", 'Int'>
+    readonly metadata: FieldRef<"tower_data", 'Json'>
+    readonly created_at: FieldRef<"tower_data", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * tower_data findUnique
+   */
+  export type tower_dataFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_data to fetch.
+     */
+    where: tower_dataWhereUniqueInput
+  }
+
+  /**
+   * tower_data findUniqueOrThrow
+   */
+  export type tower_dataFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_data to fetch.
+     */
+    where: tower_dataWhereUniqueInput
+  }
+
+  /**
+   * tower_data findFirst
+   */
+  export type tower_dataFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_data to fetch.
+     */
+    where?: tower_dataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_data to fetch.
+     */
+    orderBy?: tower_dataOrderByWithRelationInput | tower_dataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tower_data.
+     */
+    cursor?: tower_dataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_data from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_data.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tower_data.
+     */
+    distinct?: Tower_dataScalarFieldEnum | Tower_dataScalarFieldEnum[]
+  }
+
+  /**
+   * tower_data findFirstOrThrow
+   */
+  export type tower_dataFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_data to fetch.
+     */
+    where?: tower_dataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_data to fetch.
+     */
+    orderBy?: tower_dataOrderByWithRelationInput | tower_dataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tower_data.
+     */
+    cursor?: tower_dataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_data from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_data.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tower_data.
+     */
+    distinct?: Tower_dataScalarFieldEnum | Tower_dataScalarFieldEnum[]
+  }
+
+  /**
+   * tower_data findMany
+   */
+  export type tower_dataFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_data to fetch.
+     */
+    where?: tower_dataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_data to fetch.
+     */
+    orderBy?: tower_dataOrderByWithRelationInput | tower_dataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing tower_data.
+     */
+    cursor?: tower_dataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_data from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_data.
+     */
+    skip?: number
+    distinct?: Tower_dataScalarFieldEnum | Tower_dataScalarFieldEnum[]
+  }
+
+  /**
+   * tower_data create
+   */
+  export type tower_dataCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * The data needed to create a tower_data.
+     */
+    data: XOR<tower_dataCreateInput, tower_dataUncheckedCreateInput>
+  }
+
+  /**
+   * tower_data createMany
+   */
+  export type tower_dataCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many tower_data.
+     */
+    data: tower_dataCreateManyInput | tower_dataCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tower_data createManyAndReturn
+   */
+  export type tower_dataCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * The data used to create many tower_data.
+     */
+    data: tower_dataCreateManyInput | tower_dataCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tower_data update
+   */
+  export type tower_dataUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * The data needed to update a tower_data.
+     */
+    data: XOR<tower_dataUpdateInput, tower_dataUncheckedUpdateInput>
+    /**
+     * Choose, which tower_data to update.
+     */
+    where: tower_dataWhereUniqueInput
+  }
+
+  /**
+   * tower_data updateMany
+   */
+  export type tower_dataUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update tower_data.
+     */
+    data: XOR<tower_dataUpdateManyMutationInput, tower_dataUncheckedUpdateManyInput>
+    /**
+     * Filter which tower_data to update
+     */
+    where?: tower_dataWhereInput
+    /**
+     * Limit how many tower_data to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_data updateManyAndReturn
+   */
+  export type tower_dataUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * The data used to update tower_data.
+     */
+    data: XOR<tower_dataUpdateManyMutationInput, tower_dataUncheckedUpdateManyInput>
+    /**
+     * Filter which tower_data to update
+     */
+    where?: tower_dataWhereInput
+    /**
+     * Limit how many tower_data to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_data upsert
+   */
+  export type tower_dataUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * The filter to search for the tower_data to update in case it exists.
+     */
+    where: tower_dataWhereUniqueInput
+    /**
+     * In case the tower_data found by the `where` argument doesn't exist, create a new tower_data with this data.
+     */
+    create: XOR<tower_dataCreateInput, tower_dataUncheckedCreateInput>
+    /**
+     * In case the tower_data was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<tower_dataUpdateInput, tower_dataUncheckedUpdateInput>
+  }
+
+  /**
+   * tower_data delete
+   */
+  export type tower_dataDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+    /**
+     * Filter which tower_data to delete.
+     */
+    where: tower_dataWhereUniqueInput
+  }
+
+  /**
+   * tower_data deleteMany
+   */
+  export type tower_dataDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tower_data to delete
+     */
+    where?: tower_dataWhereInput
+    /**
+     * Limit how many tower_data to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_data without action
+   */
+  export type tower_dataDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_data
+     */
+    select?: tower_dataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_data
+     */
+    omit?: tower_dataOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model tower_status
+   */
+
+  export type AggregateTower_status = {
+    _count: Tower_statusCountAggregateOutputType | null
+    _avg: Tower_statusAvgAggregateOutputType | null
+    _sum: Tower_statusSumAggregateOutputType | null
+    _min: Tower_statusMinAggregateOutputType | null
+    _max: Tower_statusMaxAggregateOutputType | null
+  }
+
+  export type Tower_statusAvgAggregateOutputType = {
+    id: number | null
+    tower_id: number | null
+  }
+
+  export type Tower_statusSumAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+  }
+
+  export type Tower_statusMinAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    firmware_version: string | null
+    last_seen: Date | null
+    created_at: Date | null
+  }
+
+  export type Tower_statusMaxAggregateOutputType = {
+    id: bigint | null
+    tower_id: bigint | null
+    firmware_version: string | null
+    last_seen: Date | null
+    created_at: Date | null
+  }
+
+  export type Tower_statusCountAggregateOutputType = {
+    id: number
+    tower_id: number
+    firmware_version: number
+    last_seen: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Tower_statusAvgAggregateInputType = {
+    id?: true
+    tower_id?: true
+  }
+
+  export type Tower_statusSumAggregateInputType = {
+    id?: true
+    tower_id?: true
+  }
+
+  export type Tower_statusMinAggregateInputType = {
+    id?: true
+    tower_id?: true
+    firmware_version?: true
+    last_seen?: true
+    created_at?: true
+  }
+
+  export type Tower_statusMaxAggregateInputType = {
+    id?: true
+    tower_id?: true
+    firmware_version?: true
+    last_seen?: true
+    created_at?: true
+  }
+
+  export type Tower_statusCountAggregateInputType = {
+    id?: true
+    tower_id?: true
+    firmware_version?: true
+    last_seen?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Tower_statusAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tower_status to aggregate.
+     */
+    where?: tower_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_statuses to fetch.
+     */
+    orderBy?: tower_statusOrderByWithRelationInput | tower_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: tower_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned tower_statuses
+    **/
+    _count?: true | Tower_statusCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Tower_statusAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Tower_statusSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Tower_statusMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Tower_statusMaxAggregateInputType
+  }
+
+  export type GetTower_statusAggregateType<T extends Tower_statusAggregateArgs> = {
+        [P in keyof T & keyof AggregateTower_status]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTower_status[P]>
+      : GetScalarType<T[P], AggregateTower_status[P]>
+  }
+
+
+
+
+  export type tower_statusGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: tower_statusWhereInput
+    orderBy?: tower_statusOrderByWithAggregationInput | tower_statusOrderByWithAggregationInput[]
+    by: Tower_statusScalarFieldEnum[] | Tower_statusScalarFieldEnum
+    having?: tower_statusScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Tower_statusCountAggregateInputType | true
+    _avg?: Tower_statusAvgAggregateInputType
+    _sum?: Tower_statusSumAggregateInputType
+    _min?: Tower_statusMinAggregateInputType
+    _max?: Tower_statusMaxAggregateInputType
+  }
+
+  export type Tower_statusGroupByOutputType = {
+    id: bigint
+    tower_id: bigint
+    firmware_version: string
+    last_seen: Date
+    metadata: JsonValue | null
+    created_at: Date
+    _count: Tower_statusCountAggregateOutputType | null
+    _avg: Tower_statusAvgAggregateOutputType | null
+    _sum: Tower_statusSumAggregateOutputType | null
+    _min: Tower_statusMinAggregateOutputType | null
+    _max: Tower_statusMaxAggregateOutputType | null
+  }
+
+  type GetTower_statusGroupByPayload<T extends tower_statusGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Tower_statusGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Tower_statusGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Tower_statusGroupByOutputType[P]>
+            : GetScalarType<T[P], Tower_statusGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type tower_statusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    firmware_version?: boolean
+    last_seen?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["tower_status"]>
+
+  export type tower_statusSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    firmware_version?: boolean
+    last_seen?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["tower_status"]>
+
+  export type tower_statusSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tower_id?: boolean
+    firmware_version?: boolean
+    last_seen?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["tower_status"]>
+
+  export type tower_statusSelectScalar = {
+    id?: boolean
+    tower_id?: boolean
+    firmware_version?: boolean
+    last_seen?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type tower_statusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tower_id" | "firmware_version" | "last_seen" | "metadata" | "created_at", ExtArgs["result"]["tower_status"]>
+
+  export type $tower_statusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "tower_status"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      tower_id: bigint
+      firmware_version: string
+      last_seen: Date
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["tower_status"]>
+    composites: {}
+  }
+
+  type tower_statusGetPayload<S extends boolean | null | undefined | tower_statusDefaultArgs> = $Result.GetResult<Prisma.$tower_statusPayload, S>
+
+  type tower_statusCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<tower_statusFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Tower_statusCountAggregateInputType | true
+    }
+
+  export interface tower_statusDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['tower_status'], meta: { name: 'tower_status' } }
+    /**
+     * Find zero or one Tower_status that matches the filter.
+     * @param {tower_statusFindUniqueArgs} args - Arguments to find a Tower_status
+     * @example
+     * // Get one Tower_status
+     * const tower_status = await prisma.tower_status.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends tower_statusFindUniqueArgs>(args: SelectSubset<T, tower_statusFindUniqueArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tower_status that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {tower_statusFindUniqueOrThrowArgs} args - Arguments to find a Tower_status
+     * @example
+     * // Get one Tower_status
+     * const tower_status = await prisma.tower_status.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends tower_statusFindUniqueOrThrowArgs>(args: SelectSubset<T, tower_statusFindUniqueOrThrowArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tower_status that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_statusFindFirstArgs} args - Arguments to find a Tower_status
+     * @example
+     * // Get one Tower_status
+     * const tower_status = await prisma.tower_status.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends tower_statusFindFirstArgs>(args?: SelectSubset<T, tower_statusFindFirstArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tower_status that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_statusFindFirstOrThrowArgs} args - Arguments to find a Tower_status
+     * @example
+     * // Get one Tower_status
+     * const tower_status = await prisma.tower_status.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends tower_statusFindFirstOrThrowArgs>(args?: SelectSubset<T, tower_statusFindFirstOrThrowArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tower_statuses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_statusFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tower_statuses
+     * const tower_statuses = await prisma.tower_status.findMany()
+     * 
+     * // Get first 10 Tower_statuses
+     * const tower_statuses = await prisma.tower_status.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tower_statusWithIdOnly = await prisma.tower_status.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends tower_statusFindManyArgs>(args?: SelectSubset<T, tower_statusFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tower_status.
+     * @param {tower_statusCreateArgs} args - Arguments to create a Tower_status.
+     * @example
+     * // Create one Tower_status
+     * const Tower_status = await prisma.tower_status.create({
+     *   data: {
+     *     // ... data to create a Tower_status
+     *   }
+     * })
+     * 
+     */
+    create<T extends tower_statusCreateArgs>(args: SelectSubset<T, tower_statusCreateArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tower_statuses.
+     * @param {tower_statusCreateManyArgs} args - Arguments to create many Tower_statuses.
+     * @example
+     * // Create many Tower_statuses
+     * const tower_status = await prisma.tower_status.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends tower_statusCreateManyArgs>(args?: SelectSubset<T, tower_statusCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tower_statuses and returns the data saved in the database.
+     * @param {tower_statusCreateManyAndReturnArgs} args - Arguments to create many Tower_statuses.
+     * @example
+     * // Create many Tower_statuses
+     * const tower_status = await prisma.tower_status.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tower_statuses and only return the `id`
+     * const tower_statusWithIdOnly = await prisma.tower_status.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends tower_statusCreateManyAndReturnArgs>(args?: SelectSubset<T, tower_statusCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tower_status.
+     * @param {tower_statusDeleteArgs} args - Arguments to delete one Tower_status.
+     * @example
+     * // Delete one Tower_status
+     * const Tower_status = await prisma.tower_status.delete({
+     *   where: {
+     *     // ... filter to delete one Tower_status
+     *   }
+     * })
+     * 
+     */
+    delete<T extends tower_statusDeleteArgs>(args: SelectSubset<T, tower_statusDeleteArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tower_status.
+     * @param {tower_statusUpdateArgs} args - Arguments to update one Tower_status.
+     * @example
+     * // Update one Tower_status
+     * const tower_status = await prisma.tower_status.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends tower_statusUpdateArgs>(args: SelectSubset<T, tower_statusUpdateArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tower_statuses.
+     * @param {tower_statusDeleteManyArgs} args - Arguments to filter Tower_statuses to delete.
+     * @example
+     * // Delete a few Tower_statuses
+     * const { count } = await prisma.tower_status.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends tower_statusDeleteManyArgs>(args?: SelectSubset<T, tower_statusDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tower_statuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_statusUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tower_statuses
+     * const tower_status = await prisma.tower_status.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends tower_statusUpdateManyArgs>(args: SelectSubset<T, tower_statusUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tower_statuses and returns the data updated in the database.
+     * @param {tower_statusUpdateManyAndReturnArgs} args - Arguments to update many Tower_statuses.
+     * @example
+     * // Update many Tower_statuses
+     * const tower_status = await prisma.tower_status.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tower_statuses and only return the `id`
+     * const tower_statusWithIdOnly = await prisma.tower_status.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends tower_statusUpdateManyAndReturnArgs>(args: SelectSubset<T, tower_statusUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tower_status.
+     * @param {tower_statusUpsertArgs} args - Arguments to update or create a Tower_status.
+     * @example
+     * // Update or create a Tower_status
+     * const tower_status = await prisma.tower_status.upsert({
+     *   create: {
+     *     // ... data to create a Tower_status
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tower_status we want to update
+     *   }
+     * })
+     */
+    upsert<T extends tower_statusUpsertArgs>(args: SelectSubset<T, tower_statusUpsertArgs<ExtArgs>>): Prisma__tower_statusClient<$Result.GetResult<Prisma.$tower_statusPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tower_statuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_statusCountArgs} args - Arguments to filter Tower_statuses to count.
+     * @example
+     * // Count the number of Tower_statuses
+     * const count = await prisma.tower_status.count({
+     *   where: {
+     *     // ... the filter for the Tower_statuses we want to count
+     *   }
+     * })
+    **/
+    count<T extends tower_statusCountArgs>(
+      args?: Subset<T, tower_statusCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Tower_statusCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tower_status.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Tower_statusAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Tower_statusAggregateArgs>(args: Subset<T, Tower_statusAggregateArgs>): Prisma.PrismaPromise<GetTower_statusAggregateType<T>>
+
+    /**
+     * Group by Tower_status.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tower_statusGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends tower_statusGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: tower_statusGroupByArgs['orderBy'] }
+        : { orderBy?: tower_statusGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, tower_statusGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTower_statusGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the tower_status model
+   */
+  readonly fields: tower_statusFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for tower_status.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__tower_statusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the tower_status model
+   */
+  interface tower_statusFieldRefs {
+    readonly id: FieldRef<"tower_status", 'BigInt'>
+    readonly tower_id: FieldRef<"tower_status", 'BigInt'>
+    readonly firmware_version: FieldRef<"tower_status", 'String'>
+    readonly last_seen: FieldRef<"tower_status", 'DateTime'>
+    readonly metadata: FieldRef<"tower_status", 'Json'>
+    readonly created_at: FieldRef<"tower_status", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * tower_status findUnique
+   */
+  export type tower_statusFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_status to fetch.
+     */
+    where: tower_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_status findUniqueOrThrow
+   */
+  export type tower_statusFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_status to fetch.
+     */
+    where: tower_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_status findFirst
+   */
+  export type tower_statusFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_status to fetch.
+     */
+    where?: tower_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_statuses to fetch.
+     */
+    orderBy?: tower_statusOrderByWithRelationInput | tower_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tower_statuses.
+     */
+    cursor?: tower_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tower_statuses.
+     */
+    distinct?: Tower_statusScalarFieldEnum | Tower_statusScalarFieldEnum[]
+  }
+
+  /**
+   * tower_status findFirstOrThrow
+   */
+  export type tower_statusFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_status to fetch.
+     */
+    where?: tower_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_statuses to fetch.
+     */
+    orderBy?: tower_statusOrderByWithRelationInput | tower_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tower_statuses.
+     */
+    cursor?: tower_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_statuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tower_statuses.
+     */
+    distinct?: Tower_statusScalarFieldEnum | Tower_statusScalarFieldEnum[]
+  }
+
+  /**
+   * tower_status findMany
+   */
+  export type tower_statusFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * Filter, which tower_statuses to fetch.
+     */
+    where?: tower_statusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tower_statuses to fetch.
+     */
+    orderBy?: tower_statusOrderByWithRelationInput | tower_statusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing tower_statuses.
+     */
+    cursor?: tower_statusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tower_statuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tower_statuses.
+     */
+    skip?: number
+    distinct?: Tower_statusScalarFieldEnum | Tower_statusScalarFieldEnum[]
+  }
+
+  /**
+   * tower_status create
+   */
+  export type tower_statusCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * The data needed to create a tower_status.
+     */
+    data: XOR<tower_statusCreateInput, tower_statusUncheckedCreateInput>
+  }
+
+  /**
+   * tower_status createMany
+   */
+  export type tower_statusCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many tower_statuses.
+     */
+    data: tower_statusCreateManyInput | tower_statusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tower_status createManyAndReturn
+   */
+  export type tower_statusCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * The data used to create many tower_statuses.
+     */
+    data: tower_statusCreateManyInput | tower_statusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tower_status update
+   */
+  export type tower_statusUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * The data needed to update a tower_status.
+     */
+    data: XOR<tower_statusUpdateInput, tower_statusUncheckedUpdateInput>
+    /**
+     * Choose, which tower_status to update.
+     */
+    where: tower_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_status updateMany
+   */
+  export type tower_statusUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update tower_statuses.
+     */
+    data: XOR<tower_statusUpdateManyMutationInput, tower_statusUncheckedUpdateManyInput>
+    /**
+     * Filter which tower_statuses to update
+     */
+    where?: tower_statusWhereInput
+    /**
+     * Limit how many tower_statuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_status updateManyAndReturn
+   */
+  export type tower_statusUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * The data used to update tower_statuses.
+     */
+    data: XOR<tower_statusUpdateManyMutationInput, tower_statusUncheckedUpdateManyInput>
+    /**
+     * Filter which tower_statuses to update
+     */
+    where?: tower_statusWhereInput
+    /**
+     * Limit how many tower_statuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_status upsert
+   */
+  export type tower_statusUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * The filter to search for the tower_status to update in case it exists.
+     */
+    where: tower_statusWhereUniqueInput
+    /**
+     * In case the tower_status found by the `where` argument doesn't exist, create a new tower_status with this data.
+     */
+    create: XOR<tower_statusCreateInput, tower_statusUncheckedCreateInput>
+    /**
+     * In case the tower_status was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<tower_statusUpdateInput, tower_statusUncheckedUpdateInput>
+  }
+
+  /**
+   * tower_status delete
+   */
+  export type tower_statusDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+    /**
+     * Filter which tower_status to delete.
+     */
+    where: tower_statusWhereUniqueInput
+  }
+
+  /**
+   * tower_status deleteMany
+   */
+  export type tower_statusDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tower_statuses to delete
+     */
+    where?: tower_statusWhereInput
+    /**
+     * Limit how many tower_statuses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * tower_status without action
+   */
+  export type tower_statusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tower_status
+     */
+    select?: tower_statusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tower_status
+     */
+    omit?: tower_statusOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16351,11 +22035,14 @@ export namespace Prisma {
 
   export const Tower_logsScalarFieldEnum: {
     id: 'id',
-    customer_id: 'customer_id',
+    tower_id: 'tower_id',
     type: 'type',
     message: 'message',
-    date_time: 'date_time',
-    tower_id: 'tower_id',
+    component: 'component',
+    code: 'code',
+    severity: 'severity',
+    metadata: 'metadata',
+    created_at: 'created_at',
     closed: 'closed'
   };
 
@@ -16380,12 +22067,84 @@ export namespace Prisma {
   export type Customer_systemScalarFieldEnum = (typeof Customer_systemScalarFieldEnum)[keyof typeof Customer_systemScalarFieldEnum]
 
 
+  export const Inverter_typesScalarFieldEnum: {
+    id: 'id',
+    manufacturer: 'manufacturer',
+    model: 'model',
+    default_interval_mins: 'default_interval_mins',
+    api_source: 'api_source',
+    notes: 'notes',
+    created_at: 'created_at'
+  };
+
+  export type Inverter_typesScalarFieldEnum = (typeof Inverter_typesScalarFieldEnum)[keyof typeof Inverter_typesScalarFieldEnum]
+
+
+  export const Solar_power_generationScalarFieldEnum: {
+    solar_system_id: 'solar_system_id',
+    recorded_at: 'recorded_at',
+    power_generated_kwh: 'power_generated_kwh',
+    weather_condition: 'weather_condition',
+    temperature_c: 'temperature_c',
+    cloud_cover_pct: 'cloud_cover_pct',
+    notes: 'notes'
+  };
+
+  export type Solar_power_generationScalarFieldEnum = (typeof Solar_power_generationScalarFieldEnum)[keyof typeof Solar_power_generationScalarFieldEnum]
+
+
+  export const Tower_component_statusScalarFieldEnum: {
+    id: 'id',
+    tower_id: 'tower_id',
+    component: 'component',
+    status: 'status',
+    message: 'message',
+    last_updated: 'last_updated',
+    metadata: 'metadata'
+  };
+
+  export type Tower_component_statusScalarFieldEnum = (typeof Tower_component_statusScalarFieldEnum)[keyof typeof Tower_component_statusScalarFieldEnum]
+
+
+  export const Tower_dataScalarFieldEnum: {
+    id: 'id',
+    tower_id: 'tower_id',
+    recorded_at: 'recorded_at',
+    tower_angle: 'tower_angle',
+    error_ticks: 'error_ticks',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type Tower_dataScalarFieldEnum = (typeof Tower_dataScalarFieldEnum)[keyof typeof Tower_dataScalarFieldEnum]
+
+
+  export const Tower_statusScalarFieldEnum: {
+    id: 'id',
+    tower_id: 'tower_id',
+    firmware_version: 'firmware_version',
+    last_seen: 'last_seen',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type Tower_statusScalarFieldEnum = (typeof Tower_statusScalarFieldEnum)[keyof typeof Tower_statusScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -16402,6 +22161,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -16512,6 +22280,34 @@ export namespace Prisma {
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
+
+
+  /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
   /**
    * Deep Input Types
    */
@@ -16537,7 +22333,6 @@ export namespace Prisma {
     orders?: OrdersListRelationFilter
     setting?: XOR<SettingsNullableScalarRelationFilter, SettingsWhereInput> | null
     software_tickets?: Software_ticketsListRelationFilter
-    tower_logs?: Tower_logsListRelationFilter
     tower?: TowersListRelationFilter
   }
 
@@ -16558,7 +22353,6 @@ export namespace Prisma {
     orders?: ordersOrderByRelationAggregateInput
     setting?: SettingsOrderByWithRelationInput
     software_tickets?: software_ticketsOrderByRelationAggregateInput
-    tower_logs?: tower_logsOrderByRelationAggregateInput
     tower?: TowersOrderByRelationAggregateInput
   }
 
@@ -16582,7 +22376,6 @@ export namespace Prisma {
     orders?: OrdersListRelationFilter
     setting?: XOR<SettingsNullableScalarRelationFilter, SettingsWhereInput> | null
     software_tickets?: Software_ticketsListRelationFilter
-    tower_logs?: Tower_logsListRelationFilter
     tower?: TowersListRelationFilter
   }, "id" | "email">
 
@@ -16744,6 +22537,7 @@ export namespace Prisma {
     system_tag?: StringNullableFilter<"Systems"> | string | null
     has_fronius_system?: BoolFilter<"Systems"> | boolean
     customer_system?: Customer_systemListRelationFilter
+    solar_power_generation?: Solar_power_generationListRelationFilter
     towers?: TowersListRelationFilter
   }
 
@@ -16764,6 +22558,7 @@ export namespace Prisma {
     system_tag?: SortOrderInput | SortOrder
     has_fronius_system?: SortOrder
     customer_system?: customer_systemOrderByRelationAggregateInput
+    solar_power_generation?: solar_power_generationOrderByRelationAggregateInput
     towers?: TowersOrderByRelationAggregateInput
   }
 
@@ -16788,6 +22583,7 @@ export namespace Prisma {
     system_tag?: StringNullableFilter<"Systems"> | string | null
     has_fronius_system?: BoolFilter<"Systems"> | boolean
     customer_system?: Customer_systemListRelationFilter
+    solar_power_generation?: Solar_power_generationListRelationFilter
     towers?: TowersListRelationFilter
   }, "id" | "latitude_longitude">
 
@@ -16936,7 +22732,6 @@ export namespace Prisma {
     software_version?: StringNullableFilter<"Towers"> | string | null
     current_angle?: DecimalNullableFilter<"Towers"> | Decimal | DecimalJsLike | number | string | null
     system_id?: IntNullableFilter<"Towers"> | number | null
-    tower_logs?: Tower_logsListRelationFilter
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     orders?: XOR<OrdersScalarRelationFilter, ordersWhereInput>
     system?: XOR<SystemsNullableScalarRelationFilter, SystemsWhereInput> | null
@@ -16958,7 +22753,6 @@ export namespace Prisma {
     software_version?: SortOrderInput | SortOrder
     current_angle?: SortOrderInput | SortOrder
     system_id?: SortOrderInput | SortOrder
-    tower_logs?: tower_logsOrderByRelationAggregateInput
     customer?: CustomerOrderByWithRelationInput
     orders?: ordersOrderByWithRelationInput
     system?: SystemsOrderByWithRelationInput
@@ -16983,7 +22777,6 @@ export namespace Prisma {
     software_version?: StringNullableFilter<"Towers"> | string | null
     current_angle?: DecimalNullableFilter<"Towers"> | Decimal | DecimalJsLike | number | string | null
     system_id?: IntNullableFilter<"Towers"> | number | null
-    tower_logs?: Tower_logsListRelationFilter
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     orders?: XOR<OrdersScalarRelationFilter, ordersWhereInput>
     system?: XOR<SystemsNullableScalarRelationFilter, SystemsWhereInput> | null
@@ -17327,52 +23120,58 @@ export namespace Prisma {
     AND?: tower_logsWhereInput | tower_logsWhereInput[]
     OR?: tower_logsWhereInput[]
     NOT?: tower_logsWhereInput | tower_logsWhereInput[]
-    id?: IntFilter<"tower_logs"> | number
-    customer_id?: IntFilter<"tower_logs"> | number
+    id?: BigIntFilter<"tower_logs"> | bigint | number
+    tower_id?: BigIntFilter<"tower_logs"> | bigint | number
     type?: StringFilter<"tower_logs"> | string
     message?: StringFilter<"tower_logs"> | string
-    date_time?: DateTimeFilter<"tower_logs"> | Date | string
-    tower_id?: IntNullableFilter<"tower_logs"> | number | null
-    closed?: BoolFilter<"tower_logs"> | boolean
-    customers?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
-    towers?: XOR<TowersNullableScalarRelationFilter, TowersWhereInput> | null
+    component?: StringNullableFilter<"tower_logs"> | string | null
+    code?: StringNullableFilter<"tower_logs"> | string | null
+    severity?: StringNullableFilter<"tower_logs"> | string | null
+    metadata?: JsonNullableFilter<"tower_logs">
+    created_at?: DateTimeFilter<"tower_logs"> | Date | string
+    closed?: BoolNullableFilter<"tower_logs"> | boolean | null
   }
 
   export type tower_logsOrderByWithRelationInput = {
     id?: SortOrder
-    customer_id?: SortOrder
+    tower_id?: SortOrder
     type?: SortOrder
     message?: SortOrder
-    date_time?: SortOrder
-    tower_id?: SortOrderInput | SortOrder
-    closed?: SortOrder
-    customers?: CustomerOrderByWithRelationInput
-    towers?: TowersOrderByWithRelationInput
+    component?: SortOrderInput | SortOrder
+    code?: SortOrderInput | SortOrder
+    severity?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    closed?: SortOrderInput | SortOrder
   }
 
   export type tower_logsWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: bigint | number
     AND?: tower_logsWhereInput | tower_logsWhereInput[]
     OR?: tower_logsWhereInput[]
     NOT?: tower_logsWhereInput | tower_logsWhereInput[]
-    customer_id?: IntFilter<"tower_logs"> | number
+    tower_id?: BigIntFilter<"tower_logs"> | bigint | number
     type?: StringFilter<"tower_logs"> | string
     message?: StringFilter<"tower_logs"> | string
-    date_time?: DateTimeFilter<"tower_logs"> | Date | string
-    tower_id?: IntNullableFilter<"tower_logs"> | number | null
-    closed?: BoolFilter<"tower_logs"> | boolean
-    customers?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
-    towers?: XOR<TowersNullableScalarRelationFilter, TowersWhereInput> | null
+    component?: StringNullableFilter<"tower_logs"> | string | null
+    code?: StringNullableFilter<"tower_logs"> | string | null
+    severity?: StringNullableFilter<"tower_logs"> | string | null
+    metadata?: JsonNullableFilter<"tower_logs">
+    created_at?: DateTimeFilter<"tower_logs"> | Date | string
+    closed?: BoolNullableFilter<"tower_logs"> | boolean | null
   }, "id">
 
   export type tower_logsOrderByWithAggregationInput = {
     id?: SortOrder
-    customer_id?: SortOrder
+    tower_id?: SortOrder
     type?: SortOrder
     message?: SortOrder
-    date_time?: SortOrder
-    tower_id?: SortOrderInput | SortOrder
-    closed?: SortOrder
+    component?: SortOrderInput | SortOrder
+    code?: SortOrderInput | SortOrder
+    severity?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    closed?: SortOrderInput | SortOrder
     _count?: tower_logsCountOrderByAggregateInput
     _avg?: tower_logsAvgOrderByAggregateInput
     _max?: tower_logsMaxOrderByAggregateInput
@@ -17384,13 +23183,16 @@ export namespace Prisma {
     AND?: tower_logsScalarWhereWithAggregatesInput | tower_logsScalarWhereWithAggregatesInput[]
     OR?: tower_logsScalarWhereWithAggregatesInput[]
     NOT?: tower_logsScalarWhereWithAggregatesInput | tower_logsScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"tower_logs"> | number
-    customer_id?: IntWithAggregatesFilter<"tower_logs"> | number
+    id?: BigIntWithAggregatesFilter<"tower_logs"> | bigint | number
+    tower_id?: BigIntWithAggregatesFilter<"tower_logs"> | bigint | number
     type?: StringWithAggregatesFilter<"tower_logs"> | string
     message?: StringWithAggregatesFilter<"tower_logs"> | string
-    date_time?: DateTimeWithAggregatesFilter<"tower_logs"> | Date | string
-    tower_id?: IntNullableWithAggregatesFilter<"tower_logs"> | number | null
-    closed?: BoolWithAggregatesFilter<"tower_logs"> | boolean
+    component?: StringNullableWithAggregatesFilter<"tower_logs"> | string | null
+    code?: StringNullableWithAggregatesFilter<"tower_logs"> | string | null
+    severity?: StringNullableWithAggregatesFilter<"tower_logs"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"tower_logs">
+    created_at?: DateTimeWithAggregatesFilter<"tower_logs"> | Date | string
+    closed?: BoolNullableWithAggregatesFilter<"tower_logs"> | boolean | null
   }
 
   export type usersWhereInput = {
@@ -17488,6 +23290,326 @@ export namespace Prisma {
     role?: StringNullableWithAggregatesFilter<"customer_system"> | string | null
   }
 
+  export type inverter_typesWhereInput = {
+    AND?: inverter_typesWhereInput | inverter_typesWhereInput[]
+    OR?: inverter_typesWhereInput[]
+    NOT?: inverter_typesWhereInput | inverter_typesWhereInput[]
+    id?: IntFilter<"inverter_types"> | number
+    manufacturer?: StringFilter<"inverter_types"> | string
+    model?: StringNullableFilter<"inverter_types"> | string | null
+    default_interval_mins?: IntNullableFilter<"inverter_types"> | number | null
+    api_source?: StringNullableFilter<"inverter_types"> | string | null
+    notes?: StringNullableFilter<"inverter_types"> | string | null
+    created_at?: DateTimeFilter<"inverter_types"> | Date | string
+  }
+
+  export type inverter_typesOrderByWithRelationInput = {
+    id?: SortOrder
+    manufacturer?: SortOrder
+    model?: SortOrderInput | SortOrder
+    default_interval_mins?: SortOrderInput | SortOrder
+    api_source?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type inverter_typesWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: inverter_typesWhereInput | inverter_typesWhereInput[]
+    OR?: inverter_typesWhereInput[]
+    NOT?: inverter_typesWhereInput | inverter_typesWhereInput[]
+    manufacturer?: StringFilter<"inverter_types"> | string
+    model?: StringNullableFilter<"inverter_types"> | string | null
+    default_interval_mins?: IntNullableFilter<"inverter_types"> | number | null
+    api_source?: StringNullableFilter<"inverter_types"> | string | null
+    notes?: StringNullableFilter<"inverter_types"> | string | null
+    created_at?: DateTimeFilter<"inverter_types"> | Date | string
+  }, "id">
+
+  export type inverter_typesOrderByWithAggregationInput = {
+    id?: SortOrder
+    manufacturer?: SortOrder
+    model?: SortOrderInput | SortOrder
+    default_interval_mins?: SortOrderInput | SortOrder
+    api_source?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: inverter_typesCountOrderByAggregateInput
+    _avg?: inverter_typesAvgOrderByAggregateInput
+    _max?: inverter_typesMaxOrderByAggregateInput
+    _min?: inverter_typesMinOrderByAggregateInput
+    _sum?: inverter_typesSumOrderByAggregateInput
+  }
+
+  export type inverter_typesScalarWhereWithAggregatesInput = {
+    AND?: inverter_typesScalarWhereWithAggregatesInput | inverter_typesScalarWhereWithAggregatesInput[]
+    OR?: inverter_typesScalarWhereWithAggregatesInput[]
+    NOT?: inverter_typesScalarWhereWithAggregatesInput | inverter_typesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"inverter_types"> | number
+    manufacturer?: StringWithAggregatesFilter<"inverter_types"> | string
+    model?: StringNullableWithAggregatesFilter<"inverter_types"> | string | null
+    default_interval_mins?: IntNullableWithAggregatesFilter<"inverter_types"> | number | null
+    api_source?: StringNullableWithAggregatesFilter<"inverter_types"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"inverter_types"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"inverter_types"> | Date | string
+  }
+
+  export type solar_power_generationWhereInput = {
+    AND?: solar_power_generationWhereInput | solar_power_generationWhereInput[]
+    OR?: solar_power_generationWhereInput[]
+    NOT?: solar_power_generationWhereInput | solar_power_generationWhereInput[]
+    solar_system_id?: IntFilter<"solar_power_generation"> | number
+    recorded_at?: DateTimeFilter<"solar_power_generation"> | Date | string
+    power_generated_kwh?: DecimalFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string
+    weather_condition?: StringNullableFilter<"solar_power_generation"> | string | null
+    temperature_c?: DecimalNullableFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: IntNullableFilter<"solar_power_generation"> | number | null
+    notes?: StringNullableFilter<"solar_power_generation"> | string | null
+    systems?: XOR<SystemsScalarRelationFilter, SystemsWhereInput>
+  }
+
+  export type solar_power_generationOrderByWithRelationInput = {
+    solar_system_id?: SortOrder
+    recorded_at?: SortOrder
+    power_generated_kwh?: SortOrder
+    weather_condition?: SortOrderInput | SortOrder
+    temperature_c?: SortOrderInput | SortOrder
+    cloud_cover_pct?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    systems?: SystemsOrderByWithRelationInput
+  }
+
+  export type solar_power_generationWhereUniqueInput = Prisma.AtLeast<{
+    solar_system_id_recorded_at?: solar_power_generationSolar_system_idRecorded_atCompoundUniqueInput
+    AND?: solar_power_generationWhereInput | solar_power_generationWhereInput[]
+    OR?: solar_power_generationWhereInput[]
+    NOT?: solar_power_generationWhereInput | solar_power_generationWhereInput[]
+    solar_system_id?: IntFilter<"solar_power_generation"> | number
+    recorded_at?: DateTimeFilter<"solar_power_generation"> | Date | string
+    power_generated_kwh?: DecimalFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string
+    weather_condition?: StringNullableFilter<"solar_power_generation"> | string | null
+    temperature_c?: DecimalNullableFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: IntNullableFilter<"solar_power_generation"> | number | null
+    notes?: StringNullableFilter<"solar_power_generation"> | string | null
+    systems?: XOR<SystemsScalarRelationFilter, SystemsWhereInput>
+  }, "solar_system_id_recorded_at">
+
+  export type solar_power_generationOrderByWithAggregationInput = {
+    solar_system_id?: SortOrder
+    recorded_at?: SortOrder
+    power_generated_kwh?: SortOrder
+    weather_condition?: SortOrderInput | SortOrder
+    temperature_c?: SortOrderInput | SortOrder
+    cloud_cover_pct?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    _count?: solar_power_generationCountOrderByAggregateInput
+    _avg?: solar_power_generationAvgOrderByAggregateInput
+    _max?: solar_power_generationMaxOrderByAggregateInput
+    _min?: solar_power_generationMinOrderByAggregateInput
+    _sum?: solar_power_generationSumOrderByAggregateInput
+  }
+
+  export type solar_power_generationScalarWhereWithAggregatesInput = {
+    AND?: solar_power_generationScalarWhereWithAggregatesInput | solar_power_generationScalarWhereWithAggregatesInput[]
+    OR?: solar_power_generationScalarWhereWithAggregatesInput[]
+    NOT?: solar_power_generationScalarWhereWithAggregatesInput | solar_power_generationScalarWhereWithAggregatesInput[]
+    solar_system_id?: IntWithAggregatesFilter<"solar_power_generation"> | number
+    recorded_at?: DateTimeWithAggregatesFilter<"solar_power_generation"> | Date | string
+    power_generated_kwh?: DecimalWithAggregatesFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string
+    weather_condition?: StringNullableWithAggregatesFilter<"solar_power_generation"> | string | null
+    temperature_c?: DecimalNullableWithAggregatesFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: IntNullableWithAggregatesFilter<"solar_power_generation"> | number | null
+    notes?: StringNullableWithAggregatesFilter<"solar_power_generation"> | string | null
+  }
+
+  export type tower_component_statusWhereInput = {
+    AND?: tower_component_statusWhereInput | tower_component_statusWhereInput[]
+    OR?: tower_component_statusWhereInput[]
+    NOT?: tower_component_statusWhereInput | tower_component_statusWhereInput[]
+    id?: BigIntFilter<"tower_component_status"> | bigint | number
+    tower_id?: BigIntFilter<"tower_component_status"> | bigint | number
+    component?: StringFilter<"tower_component_status"> | string
+    status?: StringFilter<"tower_component_status"> | string
+    message?: StringNullableFilter<"tower_component_status"> | string | null
+    last_updated?: DateTimeFilter<"tower_component_status"> | Date | string
+    metadata?: JsonNullableFilter<"tower_component_status">
+  }
+
+  export type tower_component_statusOrderByWithRelationInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    component?: SortOrder
+    status?: SortOrder
+    message?: SortOrderInput | SortOrder
+    last_updated?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+  }
+
+  export type tower_component_statusWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    tower_id_component?: tower_component_statusTower_idComponentCompoundUniqueInput
+    AND?: tower_component_statusWhereInput | tower_component_statusWhereInput[]
+    OR?: tower_component_statusWhereInput[]
+    NOT?: tower_component_statusWhereInput | tower_component_statusWhereInput[]
+    tower_id?: BigIntFilter<"tower_component_status"> | bigint | number
+    component?: StringFilter<"tower_component_status"> | string
+    status?: StringFilter<"tower_component_status"> | string
+    message?: StringNullableFilter<"tower_component_status"> | string | null
+    last_updated?: DateTimeFilter<"tower_component_status"> | Date | string
+    metadata?: JsonNullableFilter<"tower_component_status">
+  }, "id" | "tower_id_component">
+
+  export type tower_component_statusOrderByWithAggregationInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    component?: SortOrder
+    status?: SortOrder
+    message?: SortOrderInput | SortOrder
+    last_updated?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: tower_component_statusCountOrderByAggregateInput
+    _avg?: tower_component_statusAvgOrderByAggregateInput
+    _max?: tower_component_statusMaxOrderByAggregateInput
+    _min?: tower_component_statusMinOrderByAggregateInput
+    _sum?: tower_component_statusSumOrderByAggregateInput
+  }
+
+  export type tower_component_statusScalarWhereWithAggregatesInput = {
+    AND?: tower_component_statusScalarWhereWithAggregatesInput | tower_component_statusScalarWhereWithAggregatesInput[]
+    OR?: tower_component_statusScalarWhereWithAggregatesInput[]
+    NOT?: tower_component_statusScalarWhereWithAggregatesInput | tower_component_statusScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"tower_component_status"> | bigint | number
+    tower_id?: BigIntWithAggregatesFilter<"tower_component_status"> | bigint | number
+    component?: StringWithAggregatesFilter<"tower_component_status"> | string
+    status?: StringWithAggregatesFilter<"tower_component_status"> | string
+    message?: StringNullableWithAggregatesFilter<"tower_component_status"> | string | null
+    last_updated?: DateTimeWithAggregatesFilter<"tower_component_status"> | Date | string
+    metadata?: JsonNullableWithAggregatesFilter<"tower_component_status">
+  }
+
+  export type tower_dataWhereInput = {
+    AND?: tower_dataWhereInput | tower_dataWhereInput[]
+    OR?: tower_dataWhereInput[]
+    NOT?: tower_dataWhereInput | tower_dataWhereInput[]
+    id?: BigIntFilter<"tower_data"> | bigint | number
+    tower_id?: BigIntFilter<"tower_data"> | bigint | number
+    recorded_at?: DateTimeNullableFilter<"tower_data"> | Date | string | null
+    tower_angle?: FloatNullableFilter<"tower_data"> | number | null
+    error_ticks?: IntNullableFilter<"tower_data"> | number | null
+    metadata?: JsonNullableFilter<"tower_data">
+    created_at?: DateTimeFilter<"tower_data"> | Date | string
+  }
+
+  export type tower_dataOrderByWithRelationInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    recorded_at?: SortOrderInput | SortOrder
+    tower_angle?: SortOrderInput | SortOrder
+    error_ticks?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_dataWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    tower_id?: bigint | number
+    AND?: tower_dataWhereInput | tower_dataWhereInput[]
+    OR?: tower_dataWhereInput[]
+    NOT?: tower_dataWhereInput | tower_dataWhereInput[]
+    recorded_at?: DateTimeNullableFilter<"tower_data"> | Date | string | null
+    tower_angle?: FloatNullableFilter<"tower_data"> | number | null
+    error_ticks?: IntNullableFilter<"tower_data"> | number | null
+    metadata?: JsonNullableFilter<"tower_data">
+    created_at?: DateTimeFilter<"tower_data"> | Date | string
+  }, "id" | "tower_id">
+
+  export type tower_dataOrderByWithAggregationInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    recorded_at?: SortOrderInput | SortOrder
+    tower_angle?: SortOrderInput | SortOrder
+    error_ticks?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: tower_dataCountOrderByAggregateInput
+    _avg?: tower_dataAvgOrderByAggregateInput
+    _max?: tower_dataMaxOrderByAggregateInput
+    _min?: tower_dataMinOrderByAggregateInput
+    _sum?: tower_dataSumOrderByAggregateInput
+  }
+
+  export type tower_dataScalarWhereWithAggregatesInput = {
+    AND?: tower_dataScalarWhereWithAggregatesInput | tower_dataScalarWhereWithAggregatesInput[]
+    OR?: tower_dataScalarWhereWithAggregatesInput[]
+    NOT?: tower_dataScalarWhereWithAggregatesInput | tower_dataScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"tower_data"> | bigint | number
+    tower_id?: BigIntWithAggregatesFilter<"tower_data"> | bigint | number
+    recorded_at?: DateTimeNullableWithAggregatesFilter<"tower_data"> | Date | string | null
+    tower_angle?: FloatNullableWithAggregatesFilter<"tower_data"> | number | null
+    error_ticks?: IntNullableWithAggregatesFilter<"tower_data"> | number | null
+    metadata?: JsonNullableWithAggregatesFilter<"tower_data">
+    created_at?: DateTimeWithAggregatesFilter<"tower_data"> | Date | string
+  }
+
+  export type tower_statusWhereInput = {
+    AND?: tower_statusWhereInput | tower_statusWhereInput[]
+    OR?: tower_statusWhereInput[]
+    NOT?: tower_statusWhereInput | tower_statusWhereInput[]
+    id?: BigIntFilter<"tower_status"> | bigint | number
+    tower_id?: BigIntFilter<"tower_status"> | bigint | number
+    firmware_version?: StringFilter<"tower_status"> | string
+    last_seen?: DateTimeFilter<"tower_status"> | Date | string
+    metadata?: JsonNullableFilter<"tower_status">
+    created_at?: DateTimeFilter<"tower_status"> | Date | string
+  }
+
+  export type tower_statusOrderByWithRelationInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    firmware_version?: SortOrder
+    last_seen?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_statusWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    tower_id?: bigint | number
+    AND?: tower_statusWhereInput | tower_statusWhereInput[]
+    OR?: tower_statusWhereInput[]
+    NOT?: tower_statusWhereInput | tower_statusWhereInput[]
+    firmware_version?: StringFilter<"tower_status"> | string
+    last_seen?: DateTimeFilter<"tower_status"> | Date | string
+    metadata?: JsonNullableFilter<"tower_status">
+    created_at?: DateTimeFilter<"tower_status"> | Date | string
+  }, "id" | "tower_id">
+
+  export type tower_statusOrderByWithAggregationInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    firmware_version?: SortOrder
+    last_seen?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: tower_statusCountOrderByAggregateInput
+    _avg?: tower_statusAvgOrderByAggregateInput
+    _max?: tower_statusMaxOrderByAggregateInput
+    _min?: tower_statusMinOrderByAggregateInput
+    _sum?: tower_statusSumOrderByAggregateInput
+  }
+
+  export type tower_statusScalarWhereWithAggregatesInput = {
+    AND?: tower_statusScalarWhereWithAggregatesInput | tower_statusScalarWhereWithAggregatesInput[]
+    OR?: tower_statusScalarWhereWithAggregatesInput[]
+    NOT?: tower_statusScalarWhereWithAggregatesInput | tower_statusScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"tower_status"> | bigint | number
+    tower_id?: BigIntWithAggregatesFilter<"tower_status"> | bigint | number
+    firmware_version?: StringWithAggregatesFilter<"tower_status"> | string
+    last_seen?: DateTimeWithAggregatesFilter<"tower_status"> | Date | string
+    metadata?: JsonNullableWithAggregatesFilter<"tower_status">
+    created_at?: DateTimeWithAggregatesFilter<"tower_status"> | Date | string
+  }
+
   export type CustomerCreateInput = {
     name: string
     email: string
@@ -17504,7 +23626,6 @@ export namespace Prisma {
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -17525,7 +23646,6 @@ export namespace Prisma {
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -17545,7 +23665,6 @@ export namespace Prisma {
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -17566,7 +23685,6 @@ export namespace Prisma {
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -17742,6 +23860,7 @@ export namespace Prisma {
     system_tag?: string | null
     has_fronius_system?: boolean
     customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
+    solar_power_generation?: solar_power_generationCreateNestedManyWithoutSystemsInput
     towers?: TowersCreateNestedManyWithoutSystemInput
   }
 
@@ -17762,6 +23881,7 @@ export namespace Prisma {
     system_tag?: string | null
     has_fronius_system?: boolean
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
+    solar_power_generation?: solar_power_generationUncheckedCreateNestedManyWithoutSystemsInput
     towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
   }
 
@@ -17781,6 +23901,7 @@ export namespace Prisma {
     system_tag?: NullableStringFieldUpdateOperationsInput | string | null
     has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
+    solar_power_generation?: solar_power_generationUpdateManyWithoutSystemsNestedInput
     towers?: TowersUpdateManyWithoutSystemNestedInput
   }
 
@@ -17801,6 +23922,7 @@ export namespace Prisma {
     system_tag?: NullableStringFieldUpdateOperationsInput | string | null
     has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
+    solar_power_generation?: solar_power_generationUncheckedUpdateManyWithoutSystemsNestedInput
     towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
   }
 
@@ -17956,7 +24078,6 @@ export namespace Prisma {
     width: number
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsCreateNestedManyWithoutTowersInput
     customer: CustomerCreateNestedOneWithoutTowerInput
     orders: ordersCreateNestedOneWithoutTowersInput
     system?: SystemsCreateNestedOneWithoutTowersInput
@@ -17978,7 +24099,6 @@ export namespace Prisma {
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutTowersInput
   }
 
   export type TowersUpdateInput = {
@@ -17993,7 +24113,6 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsUpdateManyWithoutTowersNestedInput
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
     orders?: ordersUpdateOneRequiredWithoutTowersNestedInput
     system?: SystemsUpdateOneWithoutTowersNestedInput
@@ -18015,7 +24134,6 @@ export namespace Prisma {
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutTowersNestedInput
   }
 
   export type TowersCreateManyInput = {
@@ -18374,71 +24492,94 @@ export namespace Prisma {
   }
 
   export type tower_logsCreateInput = {
-    id: number
+    id?: bigint | number
+    tower_id: bigint | number
     type: string
     message: string
-    date_time?: Date | string
-    closed: boolean
-    customers: CustomerCreateNestedOneWithoutTower_logsInput
-    towers?: TowersCreateNestedOneWithoutTower_logsInput
+    component?: string | null
+    code?: string | null
+    severity?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    closed?: boolean | null
   }
 
   export type tower_logsUncheckedCreateInput = {
-    id: number
-    customer_id: number
+    id?: bigint | number
+    tower_id: bigint | number
     type: string
     message: string
-    date_time?: Date | string
-    tower_id?: number | null
-    closed: boolean
+    component?: string | null
+    code?: string | null
+    severity?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    closed?: boolean | null
   }
 
   export type tower_logsUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    closed?: BoolFieldUpdateOperationsInput | boolean
-    customers?: CustomerUpdateOneRequiredWithoutTower_logsNestedInput
-    towers?: TowersUpdateOneWithoutTower_logsNestedInput
+    component?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type tower_logsUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    customer_id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    tower_id?: NullableIntFieldUpdateOperationsInput | number | null
-    closed?: BoolFieldUpdateOperationsInput | boolean
+    component?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type tower_logsCreateManyInput = {
-    id: number
-    customer_id: number
+    id?: bigint | number
+    tower_id: bigint | number
     type: string
     message: string
-    date_time?: Date | string
-    tower_id?: number | null
-    closed: boolean
+    component?: string | null
+    code?: string | null
+    severity?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    closed?: boolean | null
   }
 
   export type tower_logsUpdateManyMutationInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    closed?: BoolFieldUpdateOperationsInput | boolean
+    component?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type tower_logsUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    customer_id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    tower_id?: NullableIntFieldUpdateOperationsInput | number | null
-    closed?: BoolFieldUpdateOperationsInput | boolean
+    component?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type usersCreateInput = {
@@ -18518,6 +24659,345 @@ export namespace Prisma {
     customer_id?: IntFieldUpdateOperationsInput | number
     system_id?: IntFieldUpdateOperationsInput | number
     role?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type inverter_typesCreateInput = {
+    manufacturer: string
+    model?: string | null
+    default_interval_mins?: number | null
+    api_source?: string | null
+    notes?: string | null
+    created_at?: Date | string
+  }
+
+  export type inverter_typesUncheckedCreateInput = {
+    id?: number
+    manufacturer: string
+    model?: string | null
+    default_interval_mins?: number | null
+    api_source?: string | null
+    notes?: string | null
+    created_at?: Date | string
+  }
+
+  export type inverter_typesUpdateInput = {
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    default_interval_mins?: NullableIntFieldUpdateOperationsInput | number | null
+    api_source?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inverter_typesUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    default_interval_mins?: NullableIntFieldUpdateOperationsInput | number | null
+    api_source?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inverter_typesCreateManyInput = {
+    id?: number
+    manufacturer: string
+    model?: string | null
+    default_interval_mins?: number | null
+    api_source?: string | null
+    notes?: string | null
+    created_at?: Date | string
+  }
+
+  export type inverter_typesUpdateManyMutationInput = {
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    default_interval_mins?: NullableIntFieldUpdateOperationsInput | number | null
+    api_source?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inverter_typesUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    default_interval_mins?: NullableIntFieldUpdateOperationsInput | number | null
+    api_source?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type solar_power_generationCreateInput = {
+    recorded_at: Date | string
+    power_generated_kwh: Decimal | DecimalJsLike | number | string
+    weather_condition?: string | null
+    temperature_c?: Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: number | null
+    notes?: string | null
+    systems: SystemsCreateNestedOneWithoutSolar_power_generationInput
+  }
+
+  export type solar_power_generationUncheckedCreateInput = {
+    solar_system_id: number
+    recorded_at: Date | string
+    power_generated_kwh: Decimal | DecimalJsLike | number | string
+    weather_condition?: string | null
+    temperature_c?: Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: number | null
+    notes?: string | null
+  }
+
+  export type solar_power_generationUpdateInput = {
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    systems?: SystemsUpdateOneRequiredWithoutSolar_power_generationNestedInput
+  }
+
+  export type solar_power_generationUncheckedUpdateInput = {
+    solar_system_id?: IntFieldUpdateOperationsInput | number
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type solar_power_generationCreateManyInput = {
+    solar_system_id: number
+    recorded_at: Date | string
+    power_generated_kwh: Decimal | DecimalJsLike | number | string
+    weather_condition?: string | null
+    temperature_c?: Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: number | null
+    notes?: string | null
+  }
+
+  export type solar_power_generationUpdateManyMutationInput = {
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type solar_power_generationUncheckedUpdateManyInput = {
+    solar_system_id?: IntFieldUpdateOperationsInput | number
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type tower_component_statusCreateInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    component: string
+    status: string
+    message?: string | null
+    last_updated?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_component_statusUncheckedCreateInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    component: string
+    status: string
+    message?: string | null
+    last_updated?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_component_statusUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    component?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    last_updated?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_component_statusUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    component?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    last_updated?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_component_statusCreateManyInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    component: string
+    status: string
+    message?: string | null
+    last_updated?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_component_statusUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    component?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    last_updated?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_component_statusUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    component?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    last_updated?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type tower_dataCreateInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    recorded_at?: Date | string | null
+    tower_angle?: number | null
+    error_ticks?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type tower_dataUncheckedCreateInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    recorded_at?: Date | string | null
+    tower_angle?: number | null
+    error_ticks?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type tower_dataUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    recorded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tower_angle?: NullableFloatFieldUpdateOperationsInput | number | null
+    error_ticks?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_dataUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    recorded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tower_angle?: NullableFloatFieldUpdateOperationsInput | number | null
+    error_ticks?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_dataCreateManyInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    recorded_at?: Date | string | null
+    tower_angle?: number | null
+    error_ticks?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type tower_dataUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    recorded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tower_angle?: NullableFloatFieldUpdateOperationsInput | number | null
+    error_ticks?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_dataUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    recorded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tower_angle?: NullableFloatFieldUpdateOperationsInput | number | null
+    error_ticks?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_statusCreateInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    firmware_version: string
+    last_seen?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type tower_statusUncheckedCreateInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    firmware_version: string
+    last_seen?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type tower_statusUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    firmware_version?: StringFieldUpdateOperationsInput | string
+    last_seen?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_statusUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    firmware_version?: StringFieldUpdateOperationsInput | string
+    last_seen?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_statusCreateManyInput = {
+    id?: bigint | number
+    tower_id: bigint | number
+    firmware_version: string
+    last_seen?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type tower_statusUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    firmware_version?: StringFieldUpdateOperationsInput | string
+    last_seen?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tower_statusUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tower_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    firmware_version?: StringFieldUpdateOperationsInput | string
+    last_seen?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -18619,12 +25099,6 @@ export namespace Prisma {
     none?: software_ticketsWhereInput
   }
 
-  export type Tower_logsListRelationFilter = {
-    every?: tower_logsWhereInput
-    some?: tower_logsWhereInput
-    none?: tower_logsWhereInput
-  }
-
   export type TowersListRelationFilter = {
     every?: TowersWhereInput
     some?: TowersWhereInput
@@ -18645,10 +25119,6 @@ export namespace Prisma {
   }
 
   export type software_ticketsOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type tower_logsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18931,6 +25401,16 @@ export namespace Prisma {
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type Solar_power_generationListRelationFilter = {
+    every?: solar_power_generationWhereInput
+    some?: solar_power_generationWhereInput
+    none?: solar_power_generationWhereInput
+  }
+
+  export type solar_power_generationOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type SystemsLatitudeLongitudeCompoundUniqueInput = {
@@ -19469,51 +25949,127 @@ export namespace Prisma {
     customer_id?: SortOrder
   }
 
-  export type TowersNullableScalarRelationFilter = {
-    is?: TowersWhereInput | null
-    isNot?: TowersWhereInput | null
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type tower_logsCountOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
+    tower_id?: SortOrder
     type?: SortOrder
     message?: SortOrder
-    date_time?: SortOrder
-    tower_id?: SortOrder
+    component?: SortOrder
+    code?: SortOrder
+    severity?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
     closed?: SortOrder
   }
 
   export type tower_logsAvgOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
     tower_id?: SortOrder
   }
 
   export type tower_logsMaxOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
+    tower_id?: SortOrder
     type?: SortOrder
     message?: SortOrder
-    date_time?: SortOrder
-    tower_id?: SortOrder
+    component?: SortOrder
+    code?: SortOrder
+    severity?: SortOrder
+    created_at?: SortOrder
     closed?: SortOrder
   }
 
   export type tower_logsMinOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
+    tower_id?: SortOrder
     type?: SortOrder
     message?: SortOrder
-    date_time?: SortOrder
-    tower_id?: SortOrder
+    component?: SortOrder
+    code?: SortOrder
+    severity?: SortOrder
+    created_at?: SortOrder
     closed?: SortOrder
   }
 
   export type tower_logsSumOrderByAggregateInput = {
     id?: SortOrder
-    customer_id?: SortOrder
     tower_id?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type usersCountOrderByAggregateInput = {
@@ -19580,6 +26136,215 @@ export namespace Prisma {
     system_id?: SortOrder
   }
 
+  export type inverter_typesCountOrderByAggregateInput = {
+    id?: SortOrder
+    manufacturer?: SortOrder
+    model?: SortOrder
+    default_interval_mins?: SortOrder
+    api_source?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type inverter_typesAvgOrderByAggregateInput = {
+    id?: SortOrder
+    default_interval_mins?: SortOrder
+  }
+
+  export type inverter_typesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    manufacturer?: SortOrder
+    model?: SortOrder
+    default_interval_mins?: SortOrder
+    api_source?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type inverter_typesMinOrderByAggregateInput = {
+    id?: SortOrder
+    manufacturer?: SortOrder
+    model?: SortOrder
+    default_interval_mins?: SortOrder
+    api_source?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type inverter_typesSumOrderByAggregateInput = {
+    id?: SortOrder
+    default_interval_mins?: SortOrder
+  }
+
+  export type solar_power_generationSolar_system_idRecorded_atCompoundUniqueInput = {
+    solar_system_id: number
+    recorded_at: Date | string
+  }
+
+  export type solar_power_generationCountOrderByAggregateInput = {
+    solar_system_id?: SortOrder
+    recorded_at?: SortOrder
+    power_generated_kwh?: SortOrder
+    weather_condition?: SortOrder
+    temperature_c?: SortOrder
+    cloud_cover_pct?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type solar_power_generationAvgOrderByAggregateInput = {
+    solar_system_id?: SortOrder
+    power_generated_kwh?: SortOrder
+    temperature_c?: SortOrder
+    cloud_cover_pct?: SortOrder
+  }
+
+  export type solar_power_generationMaxOrderByAggregateInput = {
+    solar_system_id?: SortOrder
+    recorded_at?: SortOrder
+    power_generated_kwh?: SortOrder
+    weather_condition?: SortOrder
+    temperature_c?: SortOrder
+    cloud_cover_pct?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type solar_power_generationMinOrderByAggregateInput = {
+    solar_system_id?: SortOrder
+    recorded_at?: SortOrder
+    power_generated_kwh?: SortOrder
+    weather_condition?: SortOrder
+    temperature_c?: SortOrder
+    cloud_cover_pct?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type solar_power_generationSumOrderByAggregateInput = {
+    solar_system_id?: SortOrder
+    power_generated_kwh?: SortOrder
+    temperature_c?: SortOrder
+    cloud_cover_pct?: SortOrder
+  }
+
+  export type tower_component_statusTower_idComponentCompoundUniqueInput = {
+    tower_id: bigint | number
+    component: string
+  }
+
+  export type tower_component_statusCountOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    component?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    last_updated?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type tower_component_statusAvgOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+  }
+
+  export type tower_component_statusMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    component?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    last_updated?: SortOrder
+  }
+
+  export type tower_component_statusMinOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    component?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    last_updated?: SortOrder
+  }
+
+  export type tower_component_statusSumOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+  }
+
+  export type tower_dataCountOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    recorded_at?: SortOrder
+    tower_angle?: SortOrder
+    error_ticks?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_dataAvgOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    tower_angle?: SortOrder
+    error_ticks?: SortOrder
+  }
+
+  export type tower_dataMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    recorded_at?: SortOrder
+    tower_angle?: SortOrder
+    error_ticks?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_dataMinOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    recorded_at?: SortOrder
+    tower_angle?: SortOrder
+    error_ticks?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_dataSumOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    tower_angle?: SortOrder
+    error_ticks?: SortOrder
+  }
+
+  export type tower_statusCountOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    firmware_version?: SortOrder
+    last_seen?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_statusAvgOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+  }
+
+  export type tower_statusMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    firmware_version?: SortOrder
+    last_seen?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_statusMinOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+    firmware_version?: SortOrder
+    last_seen?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type tower_statusSumOrderByAggregateInput = {
+    id?: SortOrder
+    tower_id?: SortOrder
+  }
+
   export type customer_systemCreateNestedManyWithoutCustomersInput = {
     create?: XOR<customer_systemCreateWithoutCustomersInput, customer_systemUncheckedCreateWithoutCustomersInput> | customer_systemCreateWithoutCustomersInput[] | customer_systemUncheckedCreateWithoutCustomersInput[]
     connectOrCreate?: customer_systemCreateOrConnectWithoutCustomersInput | customer_systemCreateOrConnectWithoutCustomersInput[]
@@ -19611,13 +26376,6 @@ export namespace Prisma {
     connectOrCreate?: software_ticketsCreateOrConnectWithoutCustomersInput | software_ticketsCreateOrConnectWithoutCustomersInput[]
     createMany?: software_ticketsCreateManyCustomersInputEnvelope
     connect?: software_ticketsWhereUniqueInput | software_ticketsWhereUniqueInput[]
-  }
-
-  export type tower_logsCreateNestedManyWithoutCustomersInput = {
-    create?: XOR<tower_logsCreateWithoutCustomersInput, tower_logsUncheckedCreateWithoutCustomersInput> | tower_logsCreateWithoutCustomersInput[] | tower_logsUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutCustomersInput | tower_logsCreateOrConnectWithoutCustomersInput[]
-    createMany?: tower_logsCreateManyCustomersInputEnvelope
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
   }
 
   export type TowersCreateNestedManyWithoutCustomerInput = {
@@ -19658,13 +26416,6 @@ export namespace Prisma {
     connectOrCreate?: software_ticketsCreateOrConnectWithoutCustomersInput | software_ticketsCreateOrConnectWithoutCustomersInput[]
     createMany?: software_ticketsCreateManyCustomersInputEnvelope
     connect?: software_ticketsWhereUniqueInput | software_ticketsWhereUniqueInput[]
-  }
-
-  export type tower_logsUncheckedCreateNestedManyWithoutCustomersInput = {
-    create?: XOR<tower_logsCreateWithoutCustomersInput, tower_logsUncheckedCreateWithoutCustomersInput> | tower_logsCreateWithoutCustomersInput[] | tower_logsUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutCustomersInput | tower_logsCreateOrConnectWithoutCustomersInput[]
-    createMany?: tower_logsCreateManyCustomersInputEnvelope
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
   }
 
   export type TowersUncheckedCreateNestedManyWithoutCustomerInput = {
@@ -19764,20 +26515,6 @@ export namespace Prisma {
     deleteMany?: software_ticketsScalarWhereInput | software_ticketsScalarWhereInput[]
   }
 
-  export type tower_logsUpdateManyWithoutCustomersNestedInput = {
-    create?: XOR<tower_logsCreateWithoutCustomersInput, tower_logsUncheckedCreateWithoutCustomersInput> | tower_logsCreateWithoutCustomersInput[] | tower_logsUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutCustomersInput | tower_logsCreateOrConnectWithoutCustomersInput[]
-    upsert?: tower_logsUpsertWithWhereUniqueWithoutCustomersInput | tower_logsUpsertWithWhereUniqueWithoutCustomersInput[]
-    createMany?: tower_logsCreateManyCustomersInputEnvelope
-    set?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    disconnect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    delete?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    update?: tower_logsUpdateWithWhereUniqueWithoutCustomersInput | tower_logsUpdateWithWhereUniqueWithoutCustomersInput[]
-    updateMany?: tower_logsUpdateManyWithWhereWithoutCustomersInput | tower_logsUpdateManyWithWhereWithoutCustomersInput[]
-    deleteMany?: tower_logsScalarWhereInput | tower_logsScalarWhereInput[]
-  }
-
   export type TowersUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<TowersCreateWithoutCustomerInput, TowersUncheckedCreateWithoutCustomerInput> | TowersCreateWithoutCustomerInput[] | TowersUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: TowersCreateOrConnectWithoutCustomerInput | TowersCreateOrConnectWithoutCustomerInput[]
@@ -19862,20 +26599,6 @@ export namespace Prisma {
     deleteMany?: software_ticketsScalarWhereInput | software_ticketsScalarWhereInput[]
   }
 
-  export type tower_logsUncheckedUpdateManyWithoutCustomersNestedInput = {
-    create?: XOR<tower_logsCreateWithoutCustomersInput, tower_logsUncheckedCreateWithoutCustomersInput> | tower_logsCreateWithoutCustomersInput[] | tower_logsUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutCustomersInput | tower_logsCreateOrConnectWithoutCustomersInput[]
-    upsert?: tower_logsUpsertWithWhereUniqueWithoutCustomersInput | tower_logsUpsertWithWhereUniqueWithoutCustomersInput[]
-    createMany?: tower_logsCreateManyCustomersInputEnvelope
-    set?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    disconnect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    delete?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    update?: tower_logsUpdateWithWhereUniqueWithoutCustomersInput | tower_logsUpdateWithWhereUniqueWithoutCustomersInput[]
-    updateMany?: tower_logsUpdateManyWithWhereWithoutCustomersInput | tower_logsUpdateManyWithWhereWithoutCustomersInput[]
-    deleteMany?: tower_logsScalarWhereInput | tower_logsScalarWhereInput[]
-  }
-
   export type TowersUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<TowersCreateWithoutCustomerInput, TowersUncheckedCreateWithoutCustomerInput> | TowersCreateWithoutCustomerInput[] | TowersUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: TowersCreateOrConnectWithoutCustomerInput | TowersCreateOrConnectWithoutCustomerInput[]
@@ -19917,6 +26640,13 @@ export namespace Prisma {
     connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
   }
 
+  export type solar_power_generationCreateNestedManyWithoutSystemsInput = {
+    create?: XOR<solar_power_generationCreateWithoutSystemsInput, solar_power_generationUncheckedCreateWithoutSystemsInput> | solar_power_generationCreateWithoutSystemsInput[] | solar_power_generationUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: solar_power_generationCreateOrConnectWithoutSystemsInput | solar_power_generationCreateOrConnectWithoutSystemsInput[]
+    createMany?: solar_power_generationCreateManySystemsInputEnvelope
+    connect?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+  }
+
   export type TowersCreateNestedManyWithoutSystemInput = {
     create?: XOR<TowersCreateWithoutSystemInput, TowersUncheckedCreateWithoutSystemInput> | TowersCreateWithoutSystemInput[] | TowersUncheckedCreateWithoutSystemInput[]
     connectOrCreate?: TowersCreateOrConnectWithoutSystemInput | TowersCreateOrConnectWithoutSystemInput[]
@@ -19929,6 +26659,13 @@ export namespace Prisma {
     connectOrCreate?: customer_systemCreateOrConnectWithoutSystemsInput | customer_systemCreateOrConnectWithoutSystemsInput[]
     createMany?: customer_systemCreateManySystemsInputEnvelope
     connect?: customer_systemWhereUniqueInput | customer_systemWhereUniqueInput[]
+  }
+
+  export type solar_power_generationUncheckedCreateNestedManyWithoutSystemsInput = {
+    create?: XOR<solar_power_generationCreateWithoutSystemsInput, solar_power_generationUncheckedCreateWithoutSystemsInput> | solar_power_generationCreateWithoutSystemsInput[] | solar_power_generationUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: solar_power_generationCreateOrConnectWithoutSystemsInput | solar_power_generationCreateOrConnectWithoutSystemsInput[]
+    createMany?: solar_power_generationCreateManySystemsInputEnvelope
+    connect?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
   }
 
   export type TowersUncheckedCreateNestedManyWithoutSystemInput = {
@@ -19976,6 +26713,20 @@ export namespace Prisma {
     deleteMany?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
   }
 
+  export type solar_power_generationUpdateManyWithoutSystemsNestedInput = {
+    create?: XOR<solar_power_generationCreateWithoutSystemsInput, solar_power_generationUncheckedCreateWithoutSystemsInput> | solar_power_generationCreateWithoutSystemsInput[] | solar_power_generationUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: solar_power_generationCreateOrConnectWithoutSystemsInput | solar_power_generationCreateOrConnectWithoutSystemsInput[]
+    upsert?: solar_power_generationUpsertWithWhereUniqueWithoutSystemsInput | solar_power_generationUpsertWithWhereUniqueWithoutSystemsInput[]
+    createMany?: solar_power_generationCreateManySystemsInputEnvelope
+    set?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    disconnect?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    delete?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    connect?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    update?: solar_power_generationUpdateWithWhereUniqueWithoutSystemsInput | solar_power_generationUpdateWithWhereUniqueWithoutSystemsInput[]
+    updateMany?: solar_power_generationUpdateManyWithWhereWithoutSystemsInput | solar_power_generationUpdateManyWithWhereWithoutSystemsInput[]
+    deleteMany?: solar_power_generationScalarWhereInput | solar_power_generationScalarWhereInput[]
+  }
+
   export type TowersUpdateManyWithoutSystemNestedInput = {
     create?: XOR<TowersCreateWithoutSystemInput, TowersUncheckedCreateWithoutSystemInput> | TowersCreateWithoutSystemInput[] | TowersUncheckedCreateWithoutSystemInput[]
     connectOrCreate?: TowersCreateOrConnectWithoutSystemInput | TowersCreateOrConnectWithoutSystemInput[]
@@ -20002,6 +26753,20 @@ export namespace Prisma {
     update?: customer_systemUpdateWithWhereUniqueWithoutSystemsInput | customer_systemUpdateWithWhereUniqueWithoutSystemsInput[]
     updateMany?: customer_systemUpdateManyWithWhereWithoutSystemsInput | customer_systemUpdateManyWithWhereWithoutSystemsInput[]
     deleteMany?: customer_systemScalarWhereInput | customer_systemScalarWhereInput[]
+  }
+
+  export type solar_power_generationUncheckedUpdateManyWithoutSystemsNestedInput = {
+    create?: XOR<solar_power_generationCreateWithoutSystemsInput, solar_power_generationUncheckedCreateWithoutSystemsInput> | solar_power_generationCreateWithoutSystemsInput[] | solar_power_generationUncheckedCreateWithoutSystemsInput[]
+    connectOrCreate?: solar_power_generationCreateOrConnectWithoutSystemsInput | solar_power_generationCreateOrConnectWithoutSystemsInput[]
+    upsert?: solar_power_generationUpsertWithWhereUniqueWithoutSystemsInput | solar_power_generationUpsertWithWhereUniqueWithoutSystemsInput[]
+    createMany?: solar_power_generationCreateManySystemsInputEnvelope
+    set?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    disconnect?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    delete?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    connect?: solar_power_generationWhereUniqueInput | solar_power_generationWhereUniqueInput[]
+    update?: solar_power_generationUpdateWithWhereUniqueWithoutSystemsInput | solar_power_generationUpdateWithWhereUniqueWithoutSystemsInput[]
+    updateMany?: solar_power_generationUpdateManyWithWhereWithoutSystemsInput | solar_power_generationUpdateManyWithWhereWithoutSystemsInput[]
+    deleteMany?: solar_power_generationScalarWhereInput | solar_power_generationScalarWhereInput[]
   }
 
   export type TowersUncheckedUpdateManyWithoutSystemNestedInput = {
@@ -20034,13 +26799,6 @@ export namespace Prisma {
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutNotificationInput, CustomerUpdateWithoutNotificationInput>, CustomerUncheckedUpdateWithoutNotificationInput>
   }
 
-  export type tower_logsCreateNestedManyWithoutTowersInput = {
-    create?: XOR<tower_logsCreateWithoutTowersInput, tower_logsUncheckedCreateWithoutTowersInput> | tower_logsCreateWithoutTowersInput[] | tower_logsUncheckedCreateWithoutTowersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutTowersInput | tower_logsCreateOrConnectWithoutTowersInput[]
-    createMany?: tower_logsCreateManyTowersInputEnvelope
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-  }
-
   export type CustomerCreateNestedOneWithoutTowerInput = {
     create?: XOR<CustomerCreateWithoutTowerInput, CustomerUncheckedCreateWithoutTowerInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutTowerInput
@@ -20057,27 +26815,6 @@ export namespace Prisma {
     create?: XOR<SystemsCreateWithoutTowersInput, SystemsUncheckedCreateWithoutTowersInput>
     connectOrCreate?: SystemsCreateOrConnectWithoutTowersInput
     connect?: SystemsWhereUniqueInput
-  }
-
-  export type tower_logsUncheckedCreateNestedManyWithoutTowersInput = {
-    create?: XOR<tower_logsCreateWithoutTowersInput, tower_logsUncheckedCreateWithoutTowersInput> | tower_logsCreateWithoutTowersInput[] | tower_logsUncheckedCreateWithoutTowersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutTowersInput | tower_logsCreateOrConnectWithoutTowersInput[]
-    createMany?: tower_logsCreateManyTowersInputEnvelope
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-  }
-
-  export type tower_logsUpdateManyWithoutTowersNestedInput = {
-    create?: XOR<tower_logsCreateWithoutTowersInput, tower_logsUncheckedCreateWithoutTowersInput> | tower_logsCreateWithoutTowersInput[] | tower_logsUncheckedCreateWithoutTowersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutTowersInput | tower_logsCreateOrConnectWithoutTowersInput[]
-    upsert?: tower_logsUpsertWithWhereUniqueWithoutTowersInput | tower_logsUpsertWithWhereUniqueWithoutTowersInput[]
-    createMany?: tower_logsCreateManyTowersInputEnvelope
-    set?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    disconnect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    delete?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    update?: tower_logsUpdateWithWhereUniqueWithoutTowersInput | tower_logsUpdateWithWhereUniqueWithoutTowersInput[]
-    updateMany?: tower_logsUpdateManyWithWhereWithoutTowersInput | tower_logsUpdateManyWithWhereWithoutTowersInput[]
-    deleteMany?: tower_logsScalarWhereInput | tower_logsScalarWhereInput[]
   }
 
   export type CustomerUpdateOneRequiredWithoutTowerNestedInput = {
@@ -20104,20 +26841,6 @@ export namespace Prisma {
     delete?: SystemsWhereInput | boolean
     connect?: SystemsWhereUniqueInput
     update?: XOR<XOR<SystemsUpdateToOneWithWhereWithoutTowersInput, SystemsUpdateWithoutTowersInput>, SystemsUncheckedUpdateWithoutTowersInput>
-  }
-
-  export type tower_logsUncheckedUpdateManyWithoutTowersNestedInput = {
-    create?: XOR<tower_logsCreateWithoutTowersInput, tower_logsUncheckedCreateWithoutTowersInput> | tower_logsCreateWithoutTowersInput[] | tower_logsUncheckedCreateWithoutTowersInput[]
-    connectOrCreate?: tower_logsCreateOrConnectWithoutTowersInput | tower_logsCreateOrConnectWithoutTowersInput[]
-    upsert?: tower_logsUpsertWithWhereUniqueWithoutTowersInput | tower_logsUpsertWithWhereUniqueWithoutTowersInput[]
-    createMany?: tower_logsCreateManyTowersInputEnvelope
-    set?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    disconnect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    delete?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    connect?: tower_logsWhereUniqueInput | tower_logsWhereUniqueInput[]
-    update?: tower_logsUpdateWithWhereUniqueWithoutTowersInput | tower_logsUpdateWithWhereUniqueWithoutTowersInput[]
-    updateMany?: tower_logsUpdateManyWithWhereWithoutTowersInput | tower_logsUpdateManyWithWhereWithoutTowersInput[]
-    deleteMany?: tower_logsScalarWhereInput | tower_logsScalarWhereInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -20206,34 +26929,12 @@ export namespace Prisma {
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutSoftware_ticketsInput, CustomerUpdateWithoutSoftware_ticketsInput>, CustomerUncheckedUpdateWithoutSoftware_ticketsInput>
   }
 
-  export type CustomerCreateNestedOneWithoutTower_logsInput = {
-    create?: XOR<CustomerCreateWithoutTower_logsInput, CustomerUncheckedCreateWithoutTower_logsInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutTower_logsInput
-    connect?: CustomerWhereUniqueInput
-  }
-
-  export type TowersCreateNestedOneWithoutTower_logsInput = {
-    create?: XOR<TowersCreateWithoutTower_logsInput, TowersUncheckedCreateWithoutTower_logsInput>
-    connectOrCreate?: TowersCreateOrConnectWithoutTower_logsInput
-    connect?: TowersWhereUniqueInput
-  }
-
-  export type CustomerUpdateOneRequiredWithoutTower_logsNestedInput = {
-    create?: XOR<CustomerCreateWithoutTower_logsInput, CustomerUncheckedCreateWithoutTower_logsInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutTower_logsInput
-    upsert?: CustomerUpsertWithoutTower_logsInput
-    connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutTower_logsInput, CustomerUpdateWithoutTower_logsInput>, CustomerUncheckedUpdateWithoutTower_logsInput>
-  }
-
-  export type TowersUpdateOneWithoutTower_logsNestedInput = {
-    create?: XOR<TowersCreateWithoutTower_logsInput, TowersUncheckedCreateWithoutTower_logsInput>
-    connectOrCreate?: TowersCreateOrConnectWithoutTower_logsInput
-    upsert?: TowersUpsertWithoutTower_logsInput
-    disconnect?: TowersWhereInput | boolean
-    delete?: TowersWhereInput | boolean
-    connect?: TowersWhereUniqueInput
-    update?: XOR<XOR<TowersUpdateToOneWithWhereWithoutTower_logsInput, TowersUpdateWithoutTower_logsInput>, TowersUncheckedUpdateWithoutTower_logsInput>
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type CustomerCreateNestedOneWithoutCustomer_systemInput = {
@@ -20262,6 +26963,20 @@ export namespace Prisma {
     upsert?: SystemsUpsertWithoutCustomer_systemInput
     connect?: SystemsWhereUniqueInput
     update?: XOR<XOR<SystemsUpdateToOneWithWhereWithoutCustomer_systemInput, SystemsUpdateWithoutCustomer_systemInput>, SystemsUncheckedUpdateWithoutCustomer_systemInput>
+  }
+
+  export type SystemsCreateNestedOneWithoutSolar_power_generationInput = {
+    create?: XOR<SystemsCreateWithoutSolar_power_generationInput, SystemsUncheckedCreateWithoutSolar_power_generationInput>
+    connectOrCreate?: SystemsCreateOrConnectWithoutSolar_power_generationInput
+    connect?: SystemsWhereUniqueInput
+  }
+
+  export type SystemsUpdateOneRequiredWithoutSolar_power_generationNestedInput = {
+    create?: XOR<SystemsCreateWithoutSolar_power_generationInput, SystemsUncheckedCreateWithoutSolar_power_generationInput>
+    connectOrCreate?: SystemsCreateOrConnectWithoutSolar_power_generationInput
+    upsert?: SystemsUpsertWithoutSolar_power_generationInput
+    connect?: SystemsWhereUniqueInput
+    update?: XOR<XOR<SystemsUpdateToOneWithWhereWithoutSolar_power_generationInput, SystemsUpdateWithoutSolar_power_generationInput>, SystemsUncheckedUpdateWithoutSolar_power_generationInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -20598,6 +27313,56 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type customer_systemCreateWithoutCustomersInput = {
     role?: string | null
     systems: SystemsCreateNestedOneWithoutCustomer_systemInput
@@ -20742,34 +27507,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type tower_logsCreateWithoutCustomersInput = {
-    id: number
-    type: string
-    message: string
-    date_time?: Date | string
-    closed: boolean
-    towers?: TowersCreateNestedOneWithoutTower_logsInput
-  }
-
-  export type tower_logsUncheckedCreateWithoutCustomersInput = {
-    id: number
-    type: string
-    message: string
-    date_time?: Date | string
-    tower_id?: number | null
-    closed: boolean
-  }
-
-  export type tower_logsCreateOrConnectWithoutCustomersInput = {
-    where: tower_logsWhereUniqueInput
-    create: XOR<tower_logsCreateWithoutCustomersInput, tower_logsUncheckedCreateWithoutCustomersInput>
-  }
-
-  export type tower_logsCreateManyCustomersInputEnvelope = {
-    data: tower_logsCreateManyCustomersInput | tower_logsCreateManyCustomersInput[]
-    skipDuplicates?: boolean
-  }
-
   export type TowersCreateWithoutCustomerInput = {
     model: string
     latitude: Decimal | DecimalJsLike | number | string
@@ -20782,7 +27519,6 @@ export namespace Prisma {
     width: number
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsCreateNestedManyWithoutTowersInput
     orders: ordersCreateNestedOneWithoutTowersInput
     system?: SystemsCreateNestedOneWithoutTowersInput
   }
@@ -20802,7 +27538,6 @@ export namespace Prisma {
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutTowersInput
   }
 
   export type TowersCreateOrConnectWithoutCustomerInput = {
@@ -20976,35 +27711,6 @@ export namespace Prisma {
     handled?: BoolFilter<"software_tickets"> | boolean
   }
 
-  export type tower_logsUpsertWithWhereUniqueWithoutCustomersInput = {
-    where: tower_logsWhereUniqueInput
-    update: XOR<tower_logsUpdateWithoutCustomersInput, tower_logsUncheckedUpdateWithoutCustomersInput>
-    create: XOR<tower_logsCreateWithoutCustomersInput, tower_logsUncheckedCreateWithoutCustomersInput>
-  }
-
-  export type tower_logsUpdateWithWhereUniqueWithoutCustomersInput = {
-    where: tower_logsWhereUniqueInput
-    data: XOR<tower_logsUpdateWithoutCustomersInput, tower_logsUncheckedUpdateWithoutCustomersInput>
-  }
-
-  export type tower_logsUpdateManyWithWhereWithoutCustomersInput = {
-    where: tower_logsScalarWhereInput
-    data: XOR<tower_logsUpdateManyMutationInput, tower_logsUncheckedUpdateManyWithoutCustomersInput>
-  }
-
-  export type tower_logsScalarWhereInput = {
-    AND?: tower_logsScalarWhereInput | tower_logsScalarWhereInput[]
-    OR?: tower_logsScalarWhereInput[]
-    NOT?: tower_logsScalarWhereInput | tower_logsScalarWhereInput[]
-    id?: IntFilter<"tower_logs"> | number
-    customer_id?: IntFilter<"tower_logs"> | number
-    type?: StringFilter<"tower_logs"> | string
-    message?: StringFilter<"tower_logs"> | string
-    date_time?: DateTimeFilter<"tower_logs"> | Date | string
-    tower_id?: IntNullableFilter<"tower_logs"> | number | null
-    closed?: BoolFilter<"tower_logs"> | boolean
-  }
-
   export type TowersUpsertWithWhereUniqueWithoutCustomerInput = {
     where: TowersWhereUniqueInput
     update: XOR<TowersUpdateWithoutCustomerInput, TowersUncheckedUpdateWithoutCustomerInput>
@@ -21057,7 +27763,6 @@ export namespace Prisma {
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -21077,7 +27782,6 @@ export namespace Prisma {
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -21112,7 +27816,6 @@ export namespace Prisma {
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -21132,7 +27835,6 @@ export namespace Prisma {
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -21156,6 +27858,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type solar_power_generationCreateWithoutSystemsInput = {
+    recorded_at: Date | string
+    power_generated_kwh: Decimal | DecimalJsLike | number | string
+    weather_condition?: string | null
+    temperature_c?: Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: number | null
+    notes?: string | null
+  }
+
+  export type solar_power_generationUncheckedCreateWithoutSystemsInput = {
+    recorded_at: Date | string
+    power_generated_kwh: Decimal | DecimalJsLike | number | string
+    weather_condition?: string | null
+    temperature_c?: Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: number | null
+    notes?: string | null
+  }
+
+  export type solar_power_generationCreateOrConnectWithoutSystemsInput = {
+    where: solar_power_generationWhereUniqueInput
+    create: XOR<solar_power_generationCreateWithoutSystemsInput, solar_power_generationUncheckedCreateWithoutSystemsInput>
+  }
+
+  export type solar_power_generationCreateManySystemsInputEnvelope = {
+    data: solar_power_generationCreateManySystemsInput | solar_power_generationCreateManySystemsInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TowersCreateWithoutSystemInput = {
     model: string
     latitude: Decimal | DecimalJsLike | number | string
@@ -21168,7 +27898,6 @@ export namespace Prisma {
     width: number
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsCreateNestedManyWithoutTowersInput
     customer: CustomerCreateNestedOneWithoutTowerInput
     orders: ordersCreateNestedOneWithoutTowersInput
   }
@@ -21188,7 +27917,6 @@ export namespace Prisma {
     width: number
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutTowersInput
   }
 
   export type TowersCreateOrConnectWithoutSystemInput = {
@@ -21215,6 +27943,35 @@ export namespace Prisma {
   export type customer_systemUpdateManyWithWhereWithoutSystemsInput = {
     where: customer_systemScalarWhereInput
     data: XOR<customer_systemUpdateManyMutationInput, customer_systemUncheckedUpdateManyWithoutSystemsInput>
+  }
+
+  export type solar_power_generationUpsertWithWhereUniqueWithoutSystemsInput = {
+    where: solar_power_generationWhereUniqueInput
+    update: XOR<solar_power_generationUpdateWithoutSystemsInput, solar_power_generationUncheckedUpdateWithoutSystemsInput>
+    create: XOR<solar_power_generationCreateWithoutSystemsInput, solar_power_generationUncheckedCreateWithoutSystemsInput>
+  }
+
+  export type solar_power_generationUpdateWithWhereUniqueWithoutSystemsInput = {
+    where: solar_power_generationWhereUniqueInput
+    data: XOR<solar_power_generationUpdateWithoutSystemsInput, solar_power_generationUncheckedUpdateWithoutSystemsInput>
+  }
+
+  export type solar_power_generationUpdateManyWithWhereWithoutSystemsInput = {
+    where: solar_power_generationScalarWhereInput
+    data: XOR<solar_power_generationUpdateManyMutationInput, solar_power_generationUncheckedUpdateManyWithoutSystemsInput>
+  }
+
+  export type solar_power_generationScalarWhereInput = {
+    AND?: solar_power_generationScalarWhereInput | solar_power_generationScalarWhereInput[]
+    OR?: solar_power_generationScalarWhereInput[]
+    NOT?: solar_power_generationScalarWhereInput | solar_power_generationScalarWhereInput[]
+    solar_system_id?: IntFilter<"solar_power_generation"> | number
+    recorded_at?: DateTimeFilter<"solar_power_generation"> | Date | string
+    power_generated_kwh?: DecimalFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string
+    weather_condition?: StringNullableFilter<"solar_power_generation"> | string | null
+    temperature_c?: DecimalNullableFilter<"solar_power_generation"> | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: IntNullableFilter<"solar_power_generation"> | number | null
+    notes?: StringNullableFilter<"solar_power_generation"> | string | null
   }
 
   export type TowersUpsertWithWhereUniqueWithoutSystemInput = {
@@ -21248,7 +28005,6 @@ export namespace Prisma {
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -21268,7 +28024,6 @@ export namespace Prisma {
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -21303,7 +28058,6 @@ export namespace Prisma {
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -21323,36 +28077,7 @@ export namespace Prisma {
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type tower_logsCreateWithoutTowersInput = {
-    id: number
-    type: string
-    message: string
-    date_time?: Date | string
-    closed: boolean
-    customers: CustomerCreateNestedOneWithoutTower_logsInput
-  }
-
-  export type tower_logsUncheckedCreateWithoutTowersInput = {
-    id: number
-    customer_id: number
-    type: string
-    message: string
-    date_time?: Date | string
-    closed: boolean
-  }
-
-  export type tower_logsCreateOrConnectWithoutTowersInput = {
-    where: tower_logsWhereUniqueInput
-    create: XOR<tower_logsCreateWithoutTowersInput, tower_logsUncheckedCreateWithoutTowersInput>
-  }
-
-  export type tower_logsCreateManyTowersInputEnvelope = {
-    data: tower_logsCreateManyTowersInput | tower_logsCreateManyTowersInput[]
-    skipDuplicates?: boolean
   }
 
   export type CustomerCreateWithoutTowerInput = {
@@ -21371,7 +28096,6 @@ export namespace Prisma {
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
   }
 
   export type CustomerUncheckedCreateWithoutTowerInput = {
@@ -21391,7 +28115,6 @@ export namespace Prisma {
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
   }
 
   export type CustomerCreateOrConnectWithoutTowerInput = {
@@ -21443,6 +28166,7 @@ export namespace Prisma {
     system_tag?: string | null
     has_fronius_system?: boolean
     customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
+    solar_power_generation?: solar_power_generationCreateNestedManyWithoutSystemsInput
   }
 
   export type SystemsUncheckedCreateWithoutTowersInput = {
@@ -21462,27 +28186,12 @@ export namespace Prisma {
     system_tag?: string | null
     has_fronius_system?: boolean
     customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
+    solar_power_generation?: solar_power_generationUncheckedCreateNestedManyWithoutSystemsInput
   }
 
   export type SystemsCreateOrConnectWithoutTowersInput = {
     where: SystemsWhereUniqueInput
     create: XOR<SystemsCreateWithoutTowersInput, SystemsUncheckedCreateWithoutTowersInput>
-  }
-
-  export type tower_logsUpsertWithWhereUniqueWithoutTowersInput = {
-    where: tower_logsWhereUniqueInput
-    update: XOR<tower_logsUpdateWithoutTowersInput, tower_logsUncheckedUpdateWithoutTowersInput>
-    create: XOR<tower_logsCreateWithoutTowersInput, tower_logsUncheckedCreateWithoutTowersInput>
-  }
-
-  export type tower_logsUpdateWithWhereUniqueWithoutTowersInput = {
-    where: tower_logsWhereUniqueInput
-    data: XOR<tower_logsUpdateWithoutTowersInput, tower_logsUncheckedUpdateWithoutTowersInput>
-  }
-
-  export type tower_logsUpdateManyWithWhereWithoutTowersInput = {
-    where: tower_logsScalarWhereInput
-    data: XOR<tower_logsUpdateManyMutationInput, tower_logsUncheckedUpdateManyWithoutTowersInput>
   }
 
   export type CustomerUpsertWithoutTowerInput = {
@@ -21512,7 +28221,6 @@ export namespace Prisma {
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutTowerInput = {
@@ -21532,7 +28240,6 @@ export namespace Prisma {
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
   }
 
   export type ordersUpsertWithoutTowersInput = {
@@ -21596,6 +28303,7 @@ export namespace Prisma {
     system_tag?: NullableStringFieldUpdateOperationsInput | string | null
     has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
+    solar_power_generation?: solar_power_generationUpdateManyWithoutSystemsNestedInput
   }
 
   export type SystemsUncheckedUpdateWithoutTowersInput = {
@@ -21615,6 +28323,7 @@ export namespace Prisma {
     system_tag?: NullableStringFieldUpdateOperationsInput | string | null
     has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
     customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
+    solar_power_generation?: solar_power_generationUncheckedUpdateManyWithoutSystemsNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -21632,7 +28341,6 @@ export namespace Prisma {
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -21652,7 +28360,6 @@ export namespace Prisma {
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -21673,7 +28380,6 @@ export namespace Prisma {
     width: number
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsCreateNestedManyWithoutTowersInput
     customer: CustomerCreateNestedOneWithoutTowerInput
     system?: SystemsCreateNestedOneWithoutTowersInput
   }
@@ -21693,7 +28399,6 @@ export namespace Prisma {
     software_version?: string | null
     current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutTowersInput
   }
 
   export type TowersCreateOrConnectWithoutOrdersInput = {
@@ -21732,7 +28437,6 @@ export namespace Prisma {
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -21752,7 +28456,6 @@ export namespace Prisma {
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -21787,7 +28490,6 @@ export namespace Prisma {
     notification?: NotificationsCreateNestedOneWithoutCustomerInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -21807,7 +28509,6 @@ export namespace Prisma {
     notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -21842,7 +28543,6 @@ export namespace Prisma {
     notification?: NotificationsUpdateOneWithoutCustomerNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -21862,188 +28562,7 @@ export namespace Prisma {
     notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type CustomerCreateWithoutTower_logsInput = {
-    name: string
-    email: string
-    address_id?: number | null
-    country_code?: string | null
-    phone_number?: string | null
-    customer_type: string
-    password_hash: string
-    plan_tier?: $Enums.plan_tier | null
-    role?: $Enums.user_role | null
-    force_password_reset?: boolean | null
-    customer_system?: customer_systemCreateNestedManyWithoutCustomersInput
-    notification?: NotificationsCreateNestedOneWithoutCustomerInput
-    orders?: ordersCreateNestedManyWithoutCustomersInput
-    setting?: SettingsCreateNestedOneWithoutCustomerInput
-    software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower?: TowersCreateNestedManyWithoutCustomerInput
-  }
-
-  export type CustomerUncheckedCreateWithoutTower_logsInput = {
-    id?: number
-    name: string
-    email: string
-    address_id?: number | null
-    country_code?: string | null
-    phone_number?: string | null
-    customer_type: string
-    password_hash: string
-    plan_tier?: $Enums.plan_tier | null
-    role?: $Enums.user_role | null
-    force_password_reset?: boolean | null
-    customer_system?: customer_systemUncheckedCreateNestedManyWithoutCustomersInput
-    notification?: NotificationsUncheckedCreateNestedOneWithoutCustomerInput
-    orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
-    setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
-    software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
-  }
-
-  export type CustomerCreateOrConnectWithoutTower_logsInput = {
-    where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutTower_logsInput, CustomerUncheckedCreateWithoutTower_logsInput>
-  }
-
-  export type TowersCreateWithoutTower_logsInput = {
-    model: string
-    latitude: Decimal | DecimalJsLike | number | string
-    longitude: Decimal | DecimalJsLike | number | string
-    state?: number | null
-    c_group: number
-    error_state: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
-    customer: CustomerCreateNestedOneWithoutTowerInput
-    orders: ordersCreateNestedOneWithoutTowersInput
-    system?: SystemsCreateNestedOneWithoutTowersInput
-  }
-
-  export type TowersUncheckedCreateWithoutTower_logsInput = {
-    id?: number
-    model: string
-    latitude: Decimal | DecimalJsLike | number | string
-    longitude: Decimal | DecimalJsLike | number | string
-    customer_id: number
-    order_id: number
-    state?: number | null
-    c_group: number
-    error_state: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
-    system_id?: number | null
-  }
-
-  export type TowersCreateOrConnectWithoutTower_logsInput = {
-    where: TowersWhereUniqueInput
-    create: XOR<TowersCreateWithoutTower_logsInput, TowersUncheckedCreateWithoutTower_logsInput>
-  }
-
-  export type CustomerUpsertWithoutTower_logsInput = {
-    update: XOR<CustomerUpdateWithoutTower_logsInput, CustomerUncheckedUpdateWithoutTower_logsInput>
-    create: XOR<CustomerCreateWithoutTower_logsInput, CustomerUncheckedCreateWithoutTower_logsInput>
-    where?: CustomerWhereInput
-  }
-
-  export type CustomerUpdateToOneWithWhereWithoutTower_logsInput = {
-    where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutTower_logsInput, CustomerUncheckedUpdateWithoutTower_logsInput>
-  }
-
-  export type CustomerUpdateWithoutTower_logsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
-    password_hash?: StringFieldUpdateOperationsInput | string
-    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    customer_system?: customer_systemUpdateManyWithoutCustomersNestedInput
-    notification?: NotificationsUpdateOneWithoutCustomerNestedInput
-    orders?: ordersUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUpdateOneWithoutCustomerNestedInput
-    software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower?: TowersUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type CustomerUncheckedUpdateWithoutTower_logsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
-    password_hash?: StringFieldUpdateOperationsInput | string
-    plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    force_password_reset?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    customer_system?: customer_systemUncheckedUpdateManyWithoutCustomersNestedInput
-    notification?: NotificationsUncheckedUpdateOneWithoutCustomerNestedInput
-    orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
-    setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
-    software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type TowersUpsertWithoutTower_logsInput = {
-    update: XOR<TowersUpdateWithoutTower_logsInput, TowersUncheckedUpdateWithoutTower_logsInput>
-    create: XOR<TowersCreateWithoutTower_logsInput, TowersUncheckedCreateWithoutTower_logsInput>
-    where?: TowersWhereInput
-  }
-
-  export type TowersUpdateToOneWithWhereWithoutTower_logsInput = {
-    where?: TowersWhereInput
-    data: XOR<TowersUpdateWithoutTower_logsInput, TowersUncheckedUpdateWithoutTower_logsInput>
-  }
-
-  export type TowersUpdateWithoutTower_logsInput = {
-    model?: StringFieldUpdateOperationsInput | string
-    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
-    orders?: ordersUpdateOneRequiredWithoutTowersNestedInput
-    system?: SystemsUpdateOneWithoutTowersNestedInput
-  }
-
-  export type TowersUncheckedUpdateWithoutTower_logsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    model?: StringFieldUpdateOperationsInput | string
-    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customer_id?: IntFieldUpdateOperationsInput | number
-    order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    system_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CustomerCreateWithoutCustomer_systemInput = {
@@ -22061,7 +28580,6 @@ export namespace Prisma {
     orders?: ordersCreateNestedManyWithoutCustomersInput
     setting?: SettingsCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsCreateNestedManyWithoutCustomersInput
     tower?: TowersCreateNestedManyWithoutCustomerInput
   }
 
@@ -22081,7 +28599,6 @@ export namespace Prisma {
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
     setting?: SettingsUncheckedCreateNestedOneWithoutCustomerInput
     software_tickets?: software_ticketsUncheckedCreateNestedManyWithoutCustomersInput
-    tower_logs?: tower_logsUncheckedCreateNestedManyWithoutCustomersInput
     tower?: TowersUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -22105,6 +28622,7 @@ export namespace Prisma {
     system_iv?: string | null
     system_tag?: string | null
     has_fronius_system?: boolean
+    solar_power_generation?: solar_power_generationCreateNestedManyWithoutSystemsInput
     towers?: TowersCreateNestedManyWithoutSystemInput
   }
 
@@ -22124,6 +28642,7 @@ export namespace Prisma {
     system_iv?: string | null
     system_tag?: string | null
     has_fronius_system?: boolean
+    solar_power_generation?: solar_power_generationUncheckedCreateNestedManyWithoutSystemsInput
     towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
   }
 
@@ -22158,7 +28677,6 @@ export namespace Prisma {
     orders?: ordersUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUpdateManyWithoutCustomersNestedInput
     tower?: TowersUpdateManyWithoutCustomerNestedInput
   }
 
@@ -22178,7 +28696,6 @@ export namespace Prisma {
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
     setting?: SettingsUncheckedUpdateOneWithoutCustomerNestedInput
     software_tickets?: software_ticketsUncheckedUpdateManyWithoutCustomersNestedInput
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutCustomersNestedInput
     tower?: TowersUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -22208,6 +28725,7 @@ export namespace Prisma {
     system_iv?: NullableStringFieldUpdateOperationsInput | string | null
     system_tag?: NullableStringFieldUpdateOperationsInput | string | null
     has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
+    solar_power_generation?: solar_power_generationUpdateManyWithoutSystemsNestedInput
     towers?: TowersUpdateManyWithoutSystemNestedInput
   }
 
@@ -22227,6 +28745,101 @@ export namespace Prisma {
     system_iv?: NullableStringFieldUpdateOperationsInput | string | null
     system_tag?: NullableStringFieldUpdateOperationsInput | string | null
     has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
+    solar_power_generation?: solar_power_generationUncheckedUpdateManyWithoutSystemsNestedInput
+    towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
+  }
+
+  export type SystemsCreateWithoutSolar_power_generationInput = {
+    system_name: string
+    inverter_type?: string | null
+    timezone?: string | null
+    installation_date?: Date | string | null
+    status?: string | null
+    total_towers?: number | null
+    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
+    software_version?: string | null
+    latitude?: Decimal | DecimalJsLike | number | string
+    longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
+    customer_system?: customer_systemCreateNestedManyWithoutSystemsInput
+    towers?: TowersCreateNestedManyWithoutSystemInput
+  }
+
+  export type SystemsUncheckedCreateWithoutSolar_power_generationInput = {
+    id?: number
+    system_name: string
+    inverter_type?: string | null
+    timezone?: string | null
+    installation_date?: Date | string | null
+    status?: string | null
+    total_towers?: number | null
+    max_pv_kw?: Decimal | DecimalJsLike | number | string | null
+    software_version?: string | null
+    latitude?: Decimal | DecimalJsLike | number | string
+    longitude?: Decimal | DecimalJsLike | number | string
+    system_cipher?: string | null
+    system_iv?: string | null
+    system_tag?: string | null
+    has_fronius_system?: boolean
+    customer_system?: customer_systemUncheckedCreateNestedManyWithoutSystemsInput
+    towers?: TowersUncheckedCreateNestedManyWithoutSystemInput
+  }
+
+  export type SystemsCreateOrConnectWithoutSolar_power_generationInput = {
+    where: SystemsWhereUniqueInput
+    create: XOR<SystemsCreateWithoutSolar_power_generationInput, SystemsUncheckedCreateWithoutSolar_power_generationInput>
+  }
+
+  export type SystemsUpsertWithoutSolar_power_generationInput = {
+    update: XOR<SystemsUpdateWithoutSolar_power_generationInput, SystemsUncheckedUpdateWithoutSolar_power_generationInput>
+    create: XOR<SystemsCreateWithoutSolar_power_generationInput, SystemsUncheckedCreateWithoutSolar_power_generationInput>
+    where?: SystemsWhereInput
+  }
+
+  export type SystemsUpdateToOneWithWhereWithoutSolar_power_generationInput = {
+    where?: SystemsWhereInput
+    data: XOR<SystemsUpdateWithoutSolar_power_generationInput, SystemsUncheckedUpdateWithoutSolar_power_generationInput>
+  }
+
+  export type SystemsUpdateWithoutSolar_power_generationInput = {
+    system_name?: StringFieldUpdateOperationsInput | string
+    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
+    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    software_version?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
+    customer_system?: customer_systemUpdateManyWithoutSystemsNestedInput
+    towers?: TowersUpdateManyWithoutSystemNestedInput
+  }
+
+  export type SystemsUncheckedUpdateWithoutSolar_power_generationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    system_name?: StringFieldUpdateOperationsInput | string
+    inverter_type?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    installation_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    total_towers?: NullableIntFieldUpdateOperationsInput | number | null
+    max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    software_version?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
+    system_iv?: NullableStringFieldUpdateOperationsInput | string | null
+    system_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    has_fronius_system?: BoolFieldUpdateOperationsInput | boolean
+    customer_system?: customer_systemUncheckedUpdateManyWithoutSystemsNestedInput
     towers?: TowersUncheckedUpdateManyWithoutSystemNestedInput
   }
 
@@ -22253,15 +28866,6 @@ export namespace Prisma {
     message: string
     date_time?: Date | string
     handled: boolean
-  }
-
-  export type tower_logsCreateManyCustomersInput = {
-    id: number
-    type: string
-    message: string
-    date_time?: Date | string
-    tower_id?: number | null
-    closed: boolean
   }
 
   export type TowersCreateManyCustomerInput = {
@@ -22356,33 +28960,6 @@ export namespace Prisma {
     handled?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type tower_logsUpdateWithoutCustomersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    closed?: BoolFieldUpdateOperationsInput | boolean
-    towers?: TowersUpdateOneWithoutTower_logsNestedInput
-  }
-
-  export type tower_logsUncheckedUpdateWithoutCustomersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    tower_id?: NullableIntFieldUpdateOperationsInput | number | null
-    closed?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type tower_logsUncheckedUpdateManyWithoutCustomersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    tower_id?: NullableIntFieldUpdateOperationsInput | number | null
-    closed?: BoolFieldUpdateOperationsInput | boolean
-  }
-
   export type TowersUpdateWithoutCustomerInput = {
     model?: StringFieldUpdateOperationsInput | string
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -22395,7 +28972,6 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsUpdateManyWithoutTowersNestedInput
     orders?: ordersUpdateOneRequiredWithoutTowersNestedInput
     system?: SystemsUpdateOneWithoutTowersNestedInput
   }
@@ -22415,7 +28991,6 @@ export namespace Prisma {
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutTowersNestedInput
   }
 
   export type TowersUncheckedUpdateManyWithoutCustomerInput = {
@@ -22438,6 +29013,15 @@ export namespace Prisma {
   export type customer_systemCreateManySystemsInput = {
     customer_id: number
     role?: string | null
+  }
+
+  export type solar_power_generationCreateManySystemsInput = {
+    recorded_at: Date | string
+    power_generated_kwh: Decimal | DecimalJsLike | number | string
+    weather_condition?: string | null
+    temperature_c?: Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: number | null
+    notes?: string | null
   }
 
   export type TowersCreateManySystemInput = {
@@ -22472,6 +29056,33 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type solar_power_generationUpdateWithoutSystemsInput = {
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type solar_power_generationUncheckedUpdateWithoutSystemsInput = {
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type solar_power_generationUncheckedUpdateManyWithoutSystemsInput = {
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    power_generated_kwh?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    weather_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature_c?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cloud_cover_pct?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type TowersUpdateWithoutSystemInput = {
     model?: StringFieldUpdateOperationsInput | string
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -22484,7 +29095,6 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsUpdateManyWithoutTowersNestedInput
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
     orders?: ordersUpdateOneRequiredWithoutTowersNestedInput
   }
@@ -22504,7 +29114,6 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutTowersNestedInput
   }
 
   export type TowersUncheckedUpdateManyWithoutSystemInput = {
@@ -22522,42 +29131,6 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type tower_logsCreateManyTowersInput = {
-    id: number
-    customer_id: number
-    type: string
-    message: string
-    date_time?: Date | string
-    closed: boolean
-  }
-
-  export type tower_logsUpdateWithoutTowersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    closed?: BoolFieldUpdateOperationsInput | boolean
-    customers?: CustomerUpdateOneRequiredWithoutTower_logsNestedInput
-  }
-
-  export type tower_logsUncheckedUpdateWithoutTowersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    customer_id?: IntFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    closed?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type tower_logsUncheckedUpdateManyWithoutTowersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    customer_id?: IntFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    date_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    closed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type TowersCreateManyOrdersInput = {
@@ -22589,7 +29162,6 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tower_logs?: tower_logsUpdateManyWithoutTowersNestedInput
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
     system?: SystemsUpdateOneWithoutTowersNestedInput
   }
@@ -22609,7 +29181,6 @@ export namespace Prisma {
     software_version?: NullableStringFieldUpdateOperationsInput | string | null
     current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    tower_logs?: tower_logsUncheckedUpdateManyWithoutTowersNestedInput
   }
 
   export type TowersUncheckedUpdateManyWithoutOrdersInput = {
