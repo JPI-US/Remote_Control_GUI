@@ -396,7 +396,7 @@ export default function Dashboard() {
     };
 
     const condition = weather?.current?.condition;
-    console.log(condition); //WEATHER ICON TESTER
+    //console.log(condition); //WEATHER ICON TESTER
     const weatherDisplay = weatherUI[condition] || weatherUI.default;
 
     const [menuOpen, setMenuOpen] = useState(false);
