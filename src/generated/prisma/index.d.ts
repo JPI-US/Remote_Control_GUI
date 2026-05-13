@@ -1559,9 +1559,7 @@ export namespace Prisma {
     name: string | null
     email: string | null
     address_id: number | null
-    country_code: string | null
     phone_number: string | null
-    customer_type: string | null
     password_hash: string | null
     plan_tier: $Enums.plan_tier | null
     role: $Enums.user_role | null
@@ -1573,9 +1571,7 @@ export namespace Prisma {
     name: string | null
     email: string | null
     address_id: number | null
-    country_code: string | null
     phone_number: string | null
-    customer_type: string | null
     password_hash: string | null
     plan_tier: $Enums.plan_tier | null
     role: $Enums.user_role | null
@@ -1587,9 +1583,7 @@ export namespace Prisma {
     name: number
     email: number
     address_id: number
-    country_code: number
     phone_number: number
-    customer_type: number
     password_hash: number
     plan_tier: number
     role: number
@@ -1613,9 +1607,7 @@ export namespace Prisma {
     name?: true
     email?: true
     address_id?: true
-    country_code?: true
     phone_number?: true
-    customer_type?: true
     password_hash?: true
     plan_tier?: true
     role?: true
@@ -1627,9 +1619,7 @@ export namespace Prisma {
     name?: true
     email?: true
     address_id?: true
-    country_code?: true
     phone_number?: true
-    customer_type?: true
     password_hash?: true
     plan_tier?: true
     role?: true
@@ -1641,9 +1631,7 @@ export namespace Prisma {
     name?: true
     email?: true
     address_id?: true
-    country_code?: true
     phone_number?: true
-    customer_type?: true
     password_hash?: true
     plan_tier?: true
     role?: true
@@ -1742,9 +1730,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id: number | null
-    country_code: string | null
     phone_number: string | null
-    customer_type: string
     password_hash: string
     plan_tier: $Enums.plan_tier | null
     role: $Enums.user_role | null
@@ -1775,9 +1761,7 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     address_id?: boolean
-    country_code?: boolean
     phone_number?: boolean
-    customer_type?: boolean
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
@@ -1794,9 +1778,7 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     address_id?: boolean
-    country_code?: boolean
     phone_number?: boolean
-    customer_type?: boolean
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
@@ -1808,9 +1790,7 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     address_id?: boolean
-    country_code?: boolean
     phone_number?: boolean
-    customer_type?: boolean
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
@@ -1822,16 +1802,14 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     address_id?: boolean
-    country_code?: boolean
     phone_number?: boolean
-    customer_type?: boolean
     password_hash?: boolean
     plan_tier?: boolean
     role?: boolean
     force_password_reset?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "country_code" | "phone_number" | "customer_type" | "password_hash" | "plan_tier" | "role" | "force_password_reset", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "phone_number" | "password_hash" | "plan_tier" | "role" | "force_password_reset", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | Customer$customer_systemArgs<ExtArgs>
     setting?: boolean | Customer$settingArgs<ExtArgs>
@@ -1855,9 +1833,7 @@ export namespace Prisma {
       name: string
       email: string
       address_id: number | null
-      country_code: string | null
       phone_number: string | null
-      customer_type: string
       password_hash: string
       plan_tier: $Enums.plan_tier | null
       role: $Enums.user_role | null
@@ -2293,9 +2269,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Customer", 'String'>
     readonly email: FieldRef<"Customer", 'String'>
     readonly address_id: FieldRef<"Customer", 'Int'>
-    readonly country_code: FieldRef<"Customer", 'String'>
     readonly phone_number: FieldRef<"Customer", 'String'>
-    readonly customer_type: FieldRef<"Customer", 'String'>
     readonly password_hash: FieldRef<"Customer", 'String'>
     readonly plan_tier: FieldRef<"Customer", 'plan_tier'>
     readonly role: FieldRef<"Customer", 'user_role'>
@@ -9886,9 +9860,7 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     address_id: 'address_id',
-    country_code: 'country_code',
     phone_number: 'phone_number',
-    customer_type: 'customer_type',
     password_hash: 'password_hash',
     plan_tier: 'plan_tier',
     role: 'role',
@@ -10185,9 +10157,7 @@ export namespace Prisma {
     name?: StringFilter<"Customer"> | string
     email?: StringFilter<"Customer"> | string
     address_id?: IntNullableFilter<"Customer"> | number | null
-    country_code?: StringNullableFilter<"Customer"> | string | null
     phone_number?: StringNullableFilter<"Customer"> | string | null
-    customer_type?: StringFilter<"Customer"> | string
     password_hash?: StringFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
     role?: Enumuser_roleNullableFilter<"Customer"> | $Enums.user_role | null
@@ -10203,9 +10173,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     address_id?: SortOrderInput | SortOrder
-    country_code?: SortOrderInput | SortOrder
     phone_number?: SortOrderInput | SortOrder
-    customer_type?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
@@ -10224,9 +10192,7 @@ export namespace Prisma {
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     name?: StringFilter<"Customer"> | string
     address_id?: IntNullableFilter<"Customer"> | number | null
-    country_code?: StringNullableFilter<"Customer"> | string | null
     phone_number?: StringNullableFilter<"Customer"> | string | null
-    customer_type?: StringFilter<"Customer"> | string
     password_hash?: StringFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
     role?: Enumuser_roleNullableFilter<"Customer"> | $Enums.user_role | null
@@ -10242,9 +10208,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     address_id?: SortOrderInput | SortOrder
-    country_code?: SortOrderInput | SortOrder
     phone_number?: SortOrderInput | SortOrder
-    customer_type?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
@@ -10264,9 +10228,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Customer"> | string
     email?: StringWithAggregatesFilter<"Customer"> | string
     address_id?: IntNullableWithAggregatesFilter<"Customer"> | number | null
-    country_code?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     phone_number?: StringNullableWithAggregatesFilter<"Customer"> | string | null
-    customer_type?: StringWithAggregatesFilter<"Customer"> | string
     password_hash?: StringWithAggregatesFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableWithAggregatesFilter<"Customer"> | $Enums.plan_tier | null
     role?: Enumuser_roleNullableWithAggregatesFilter<"Customer"> | $Enums.user_role | null
@@ -10782,9 +10744,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -10800,9 +10760,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -10817,9 +10775,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -10835,9 +10791,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -10853,9 +10807,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -10866,9 +10818,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -10880,9 +10830,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -11548,9 +11496,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     address_id?: SortOrder
-    country_code?: SortOrder
     phone_number?: SortOrder
-    customer_type?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrder
     role?: SortOrder
@@ -11567,9 +11513,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     address_id?: SortOrder
-    country_code?: SortOrder
     phone_number?: SortOrder
-    customer_type?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrder
     role?: SortOrder
@@ -11581,9 +11525,7 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     address_id?: SortOrder
-    country_code?: SortOrder
     phone_number?: SortOrder
-    customer_type?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrder
     role?: SortOrder
@@ -13309,9 +13251,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13326,9 +13266,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13358,9 +13296,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13375,9 +13311,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13486,9 +13420,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13503,9 +13435,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13577,9 +13507,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13594,9 +13522,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13658,9 +13584,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13675,9 +13599,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13707,9 +13629,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13724,9 +13644,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13740,9 +13658,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13757,9 +13673,7 @@ export namespace Prisma {
     name: string
     email: string
     address_id?: number | null
-    country_code?: string | null
     phone_number?: string | null
-    customer_type?: string
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
     role?: $Enums.user_role | null
@@ -13831,9 +13745,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
@@ -13848,9 +13760,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     address_id?: NullableIntFieldUpdateOperationsInput | number | null
-    country_code?: NullableStringFieldUpdateOperationsInput | string | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_type?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null

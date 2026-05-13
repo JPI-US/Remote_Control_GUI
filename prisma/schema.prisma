@@ -14,9 +14,7 @@ model Customer {
   name                 String             @db.VarChar(255)
   email                String             @unique(map: "customers_unique") @db.VarChar(255)
   address_id           Int?
-  country_code         String?            @db.VarChar(255)
   phone_number         String?            @db.VarChar(255)
-  customer_type        String             @default("STANDARD") @db.VarChar(255)
   password_hash        String             @db.VarChar(255)
   plan_tier            plan_tier?
   role                 user_role?         @default(USER)
