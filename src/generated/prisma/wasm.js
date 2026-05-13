@@ -166,19 +166,6 @@ exports.Prisma.SystemsScalarFieldEnum = {
   has_fronius_system: 'has_fronius_system'
 };
 
-exports.Prisma.NotificationsScalarFieldEnum = {
-  notifications_id: 'notifications_id',
-  customer_id: 'customer_id',
-  push_notifications_enabled: 'push_notifications_enabled',
-  push_notify_login: 'push_notify_login',
-  notification_tone: 'notification_tone',
-  email_marketing: 'email_marketing',
-  email_account_activity: 'email_account_activity',
-  email_newsletter: 'email_newsletter',
-  sms_password_changes: 'sms_password_changes',
-  sms_login_attempts: 'sms_login_attempts'
-};
-
 exports.Prisma.TowersScalarFieldEnum = {
   id: 'id',
   model: 'model',
@@ -197,41 +184,6 @@ exports.Prisma.TowersScalarFieldEnum = {
   system_id: 'system_id'
 };
 
-exports.Prisma.TelemetryScalarFieldEnum = {
-  id: 'id',
-  date_time: 'date_time',
-  tower_id: 'tower_id',
-  humidity: 'humidity',
-  temperature: 'temperature',
-  pressure: 'pressure',
-  status: 'status',
-  power_output: 'power_output',
-  clouds: 'clouds',
-  solar_flux: 'solar_flux',
-  angle: 'angle'
-};
-
-exports.Prisma.EnergyScalarFieldEnum = {
-  day: 'day',
-  month: 'month',
-  year: 'year',
-  tower: 'tower',
-  energy: 'energy',
-  id: 'id'
-};
-
-exports.Prisma.OrdersScalarFieldEnum = {
-  id: 'id',
-  customer_id: 'customer_id',
-  tower_count: 'tower_count',
-  address_id: 'address_id',
-  price: 'price',
-  currency: 'currency',
-  state: 'state',
-  date_time: 'date_time',
-  payment_received: 'payment_received'
-};
-
 exports.Prisma.Software_ticketsScalarFieldEnum = {
   id: 'id',
   customer_id: 'customer_id',
@@ -242,59 +194,10 @@ exports.Prisma.Software_ticketsScalarFieldEnum = {
   handled: 'handled'
 };
 
-exports.Prisma.Tower_logsScalarFieldEnum = {
-  id: 'id',
-  tower_id: 'tower_id',
-  type: 'type',
-  message: 'message',
-  component: 'component',
-  code: 'code',
-  severity: 'severity',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  closed: 'closed'
-};
-
-exports.Prisma.UsersScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email'
-};
-
 exports.Prisma.Customer_systemScalarFieldEnum = {
   customer_id: 'customer_id',
   system_id: 'system_id',
   role: 'role'
-};
-
-exports.Prisma.Inverter_typesScalarFieldEnum = {
-  id: 'id',
-  manufacturer: 'manufacturer',
-  model: 'model',
-  default_interval_mins: 'default_interval_mins',
-  api_source: 'api_source',
-  notes: 'notes',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Solar_power_generationScalarFieldEnum = {
-  solar_system_id: 'solar_system_id',
-  recorded_at: 'recorded_at',
-  power_generated_kwh: 'power_generated_kwh',
-  weather_condition: 'weather_condition',
-  temperature_c: 'temperature_c',
-  cloud_cover_pct: 'cloud_cover_pct',
-  notes: 'notes'
-};
-
-exports.Prisma.Tower_component_statusScalarFieldEnum = {
-  id: 'id',
-  tower_id: 'tower_id',
-  component: 'component',
-  status: 'status',
-  message: 'message',
-  last_updated: 'last_updated',
-  metadata: 'metadata'
 };
 
 exports.Prisma.Tower_dataScalarFieldEnum = {
@@ -303,15 +206,6 @@ exports.Prisma.Tower_dataScalarFieldEnum = {
   recorded_at: 'recorded_at',
   tower_angle: 'tower_angle',
   error_ticks: 'error_ticks',
-  metadata: 'metadata',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Tower_statusScalarFieldEnum = {
-  id: 'id',
-  tower_id: 'tower_id',
-  firmware_version: 'firmware_version',
-  last_seen: 'last_seen',
   metadata: 'metadata',
   created_at: 'created_at'
 };
@@ -355,20 +249,10 @@ exports.Prisma.ModelName = {
   Customer: 'Customer',
   Settings: 'Settings',
   Systems: 'Systems',
-  Notifications: 'Notifications',
   Towers: 'Towers',
-  Telemetry: 'Telemetry',
-  energy: 'energy',
-  orders: 'orders',
   software_tickets: 'software_tickets',
-  tower_logs: 'tower_logs',
-  users: 'users',
   customer_system: 'customer_system',
-  inverter_types: 'inverter_types',
-  solar_power_generation: 'solar_power_generation',
-  tower_component_status: 'tower_component_status',
-  tower_data: 'tower_data',
-  tower_status: 'tower_status'
+  tower_data: 'tower_data'
 };
 
 /**
