@@ -87,11 +87,6 @@ export async function GET(request) {
         // Start of today in system timezone
         const fromSystem = nowSystem.startOf("day");
 
-        // Convert both to UTC which fronius uses
-        const dalayedHour = delayedSystemTime.hour;     // 0-23
-        const dalayedMinute = delayedSystemTime.minute; // 0-59
-
-        // Convert both to UTC
         const fromUTC = fromSystem.toUTC();
         const toUTC   = delayedSystemTime.toUTC();
 
@@ -99,13 +94,29 @@ export async function GET(request) {
         const fromISO = fromUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         const toISO   = toUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-        // Assuming systemId comes from searchParams
-        const { searchParams } = new URL(request.url);
-        const systemId = searchParams.get("systemId");
+        const encryptedSystem = await prisma.systems.findFirst({
+            where: {
+                id: activeSystemId,
+                has_fronius_system: true,
+                system_cipher: { not: null },
+                system_iv:     { not: null },
+                system_tag:    { not: null },
+                ...(userRole !== "ADMIN" && {
+                    customer_system: { some: { customer_id: customerId } },
+                }),
+            },
+            select: { system_cipher: true, system_iv: true, system_tag: true },
+        });
 
-        if (!systemId) {
-        return NextResponse.json({ error: "systemId is required" }, { status: 400 });
+        if (!encryptedSystem) {
+            return NextResponse.json({ error: "No Fronius system found" }, { status: 404 });
         }
+
+        const systemId = decryptSystemId({
+            system_cipher: encryptedSystem.system_cipher,
+            system_iv:     encryptedSystem.system_iv,
+            system_tag:    encryptedSystem.system_tag,
+        });
 
         const endpoints = {
             live: `${BASE_URL}/${systemId}/LiveData`,

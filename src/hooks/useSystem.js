@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export function useSystem() {
-    const [systemData, setSystemData] = useState({ system: null, froniusSystemId: null });
+    const [systemData, setSystemData] = useState({ system: null });
     const [loading, setLoading] = useState(true);
     const intervalRef = useRef(null); //Interval time for refreshes
 
@@ -15,15 +15,15 @@ export function useSystem() {
 
                 if (!res.ok) {
                     console.error("Failed to fetch system, status:", res.status);
-                    setSystemData({ system: null, froniusSystemId: null });
+                    setSystemData({ system: null });
                     return;
                 }
 
                 const data = await res.json();
-                setSystemData(data); // { system, froniusSystemId 
+                setSystemData(data);
             } catch (err) {
                 console.error("Failed to fetch system", err);
-                setSystemData({ system: null, froniusSystemId: null });
+                setSystemData({ system: null });
             } finally {
                 setLoading(false);
             }

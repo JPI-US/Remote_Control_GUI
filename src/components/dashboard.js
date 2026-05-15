@@ -233,13 +233,12 @@ function DkProgressBar({ value, max, color = DK.amber }) {
 export default function Dashboard() {
     const { session, user, loading } = useSession();
     const { isDark, toggleDark } = useTheme();
-    const { system, froniusSystemId, loading: systemloading } = useSystem();
+    const { system, loading: systemloading } = useSystem();
     const router = useRouter();
 
     const MAX_PV_POWER = system?.max_pv_kw;
     const system_tz = system?.timezone;
     const chartDay = DateTime.now().setZone(system_tz).startOf("day");
-    const SYSTEM_ID = froniusSystemId;
 
     const lat = system?.latitude;
     const lon = system?.longitude;
@@ -263,10 +262,10 @@ export default function Dashboard() {
 
     // ── Live poll (every 10 s): live power + flow ──────────────────────────
     useEffect(() => {
-        if (!SYSTEM_ID) return;
+        if (!system) return;
         async function fetchLive() {
             try {
-                const response = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
+                const response = await fetch(`/api/fronius`, { cache: "no-store" });
                 if (!response.ok) return;
                 const json = await response.json();
 
@@ -290,7 +289,7 @@ export default function Dashboard() {
         fetchLive();
         intervalRef.current = setInterval(fetchLive, 10000);
         return () => clearInterval(intervalRef.current);
-    }, [SYSTEM_ID]);
+    }, [system]);
 
     const powerPercent = MAX_PV_POWER > 0
         ? Math.min(Math.max(pvPower / MAX_PV_POWER, 0), 1)
@@ -301,10 +300,10 @@ export default function Dashboard() {
 
     // ── Production poll (every 5 min): all chart / historical data in one call ──
     useEffect(() => {
-        if (!SYSTEM_ID) return;
+        if (!system) return;
         async function fetchProduction() {
             try {
-                const res = await fetch(`/api/fronius?systemId=${SYSTEM_ID}`, { cache: "no-store" });
+                const res = await fetch(`/api/fronius`, { cache: "no-store" });
                 if (!res.ok) return;
                 const json = await res.json();
 
@@ -325,7 +324,7 @@ export default function Dashboard() {
         fetchProduction();
         intervalRef1.current = setInterval(fetchProduction, 300000);
         return () => clearInterval(intervalRef1.current);
-    }, [SYSTEM_ID]);
+    }, [system]);
 
     const todaysProduction = useMemo(() => {
         if (!dailyProduction || !system_tz) return null;

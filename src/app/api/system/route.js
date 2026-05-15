@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
-import { decryptSystemId } from "@/lib/froniusCrypto"; // make sure this path matches your project
 
 export const dynamic = 'force-dynamic';
 
@@ -36,9 +35,6 @@ export async function GET(request) {
             select: {
                 id: true,
                 system_name: true,
-                system_cipher: true,
-                system_iv: true,
-                system_tag: true,
                 inverter_type: true,
                 timezone: true,
                 max_pv_kw: true,
@@ -73,20 +69,6 @@ export async function GET(request) {
             tower_angle: angleByTowerId[t.id.toString()] ?? null,
         }));
 
-        // Decrypt Fronius ID
-        let froniusSystemId = null;
-        try {
-            if (system.system_cipher && system.system_iv && system.system_tag) {
-                froniusSystemId = decryptSystemId({
-                    system_cipher: system.system_cipher,
-                    system_iv: system.system_iv,
-                    system_tag: system.system_tag,
-                });
-            }
-        } catch (err) {
-            console.error("Failed to decrypt Fronius system ID:", err);
-        }
-
         return NextResponse.json({
             system: {
                 system_name: system.system_name,
@@ -96,7 +78,6 @@ export async function GET(request) {
                 latitude: system.latitude,
                 longitude: system.longitude,
             },
-            froniusSystemId, // separate field for API calls
         });
 
     }catch (err) {
