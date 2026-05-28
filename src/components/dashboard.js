@@ -109,7 +109,7 @@ function getTheme(isDark) {
         // Charts
         chartBg:     "rgba(255,255,255,0.03)",
         chartGrid:   "rgba(255,255,255,0.04)",
-        // Typography scale
+        // Typography scale — identical in both modes, kept here for T.* access
         heroSize:    52,
         heroWeight:  200,
         statSize:    28,
@@ -146,7 +146,7 @@ function getTheme(isDark) {
         // Charts
         chartBg:     "#EEF1F5",
         chartGrid:   "rgba(26,37,53,0.08)",
-        // Typography scale
+        // Typography scale — identical in both modes, kept here for T.* access
         heroSize:    52,
         heroWeight:  200,
         statSize:    28,
@@ -195,9 +195,9 @@ function Sparkline({ values = [], color = DK.amber, unit = "", startHour = 0 }) 
     const label = hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`;
 
     return (
-        <div style={{ position: "relative" }}>
+        <div className="relative">
             <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none"
-                style={{ overflow: "visible", display: "block", cursor: "crosshair" }}
+                className="overflow-visible block cursor-crosshair"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={() => setHovered(null)}
             >
@@ -224,8 +224,8 @@ function Sparkline({ values = [], color = DK.amber, unit = "", startHour = 0 }) 
 function DkProgressBar({ value, max, color = DK.amber }) {
     const pct = Math.min(100, (value / Math.max(max, 0.001)) * 100);
     return (
-        <div style={{ height: 3, background: DK.amberDim, borderRadius: 99, overflow: "hidden", width: "100%" }}>
-            <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 99, transition: "width 0.8s ease-out" }} />
+        <div className="h-[3px] rounded-full overflow-hidden w-full" style={{ background: DK.amberDim }}>
+            <div className="h-full rounded-full [transition:width_0.8s_ease-out]" style={{ width: `${pct}%`, background: color }} />
         </div>
     );
 }
@@ -593,8 +593,8 @@ export default function Dashboard() {
 
     return (
         <div
-            className="flex flex-col h-screen overflow-hidden w-full"
-            style={{ background: T.pageBg, color: T.text1, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", textRendering: "optimizeLegibility" }}
+            className="flex flex-col h-screen overflow-hidden w-full antialiased [text-rendering:optimizeLegibility]"
+            style={{ background: T.pageBg, color: T.text1 }}
         >
             <div className="flex flex-1 min-h-0">
                 <Sidebar activeSection={activeSection} onSectionChange={(id) => {
@@ -603,7 +603,10 @@ export default function Dashboard() {
                     scrollToSection(refMap[id], `/dashboard${id !== "dashboard" ? "#" + id : ""}`);
                 }} systemName={system?.system_name} isNarrow={isNarrow} />
 
-                <div className="flex-1 flex flex-col min-w-0 min-h-0" style={{ marginLeft: isNarrow ? 0 : 256, background: T.pageBg }}>
+                <div
+                    className={`flex-1 flex flex-col min-w-0 min-h-0 ${isNarrow ? "" : "ml-64"}`}
+                    style={{ background: T.pageBg }}
+                >
                     <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory pb-0 md:pb-0 [.mobile_&]:pb-16">
         {/* ── Header ── */}
                         <header
@@ -620,18 +623,14 @@ export default function Dashboard() {
                             }
                         >
 
-                            <p
-                                className="text-sm font-medium"
-                                style={{ color: "rgba(245,235,220,0.9)" }}
-                            >
+                            <p className="text-sm font-medium text-[rgba(245,235,220,0.9)]">
                                 {system?.system_name || "System"} • {currentTime}
                             </p>
                             <div className="flex items-center gap-2">
                                 <button
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
-                                    className="p-2 rounded-lg transition-colors cursor-pointer"
-                                    style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
+                                    className={`p-2 rounded-lg transition-colors cursor-pointer ${isDark ? "text-[rgba(245,240,234,0.6)]" : "text-[#2F3E4D]"}`}
                                     onClick={toggleDark}
                                 >
                                     {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -639,8 +638,7 @@ export default function Dashboard() {
                                 <button
                                     type="button"
                                     aria-label="Menu"
-                                    className="p-2 rounded-lg transition-colors cursor-pointer"
-                                    style={{ color: isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
+                                    className={`p-2 rounded-lg transition-colors cursor-pointer ${isDark ? "text-[rgba(245,240,234,0.6)]" : "text-[#2F3E4D]"}`}
                                     onClick={() => setMenuOpen(!menuOpen)}
                                 >
                                     {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -659,7 +657,7 @@ export default function Dashboard() {
                             style={{ background: T.sectionBg }}
                         >
                             {/* TOWER STATUS label */}
-                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 }}>Tower Status</p>
+                            <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-5" style={{ color: T.text3 }}>Tower Status</p>
 
                             {/* ── Tower Status Cards ── */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
@@ -669,12 +667,12 @@ export default function Dashboard() {
                                     className="rounded-xl flex flex-col items-center p-6 justify-between"
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
-                                    <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
+                                    <div className="relative flex items-center justify-center w-[200px] h-[200px]">
                                         <div className="flex flex-col items-center z-10 gap-1">
-                                            <span style={{ fontSize: T.heroSize, fontWeight: T.heroWeight, color: T.text1, lineHeight: 1, letterSpacing: "-0.02em" }}>
+                                            <span className="text-[52px] font-[200] leading-none tracking-[-0.02em]" style={{ color: T.text1 }}>
                                                 {pvPowerKw.toFixed(2)}
                                             </span>
-                                            <span style={{ fontSize: 14, fontWeight: 400, color: T.text3, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                                            <span className="text-sm font-normal tracking-[0.15em] uppercase" style={{ color: T.text3 }}>
                                                 kilowatts
                                             </span>
                                         </div>
@@ -689,26 +687,26 @@ export default function Dashboard() {
                                                 strokeDashoffset={gaugeDashOffset}
                                                 strokeLinecap="round"
                                                 transform="rotate(-90 60 60)"
-                                                style={{ transition: "stroke-dashoffset 1s ease-out" }}
+                                                className="[transition:stroke-dashoffset_1s_ease-out]"
                                             />
                                         </svg>
                                     </div>
                                     {/* Weather condition — mirrors Direction label in tower card */}
                                     <div className="mt-4 text-center">
-                                        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 8 }}>Conditions</p>
-                                        <p style={{ fontSize: 20, fontWeight: 300, color: T.text1, lineHeight: 1.3 }}>
+                                        <p className="text-[11px] font-semibold tracking-[0.15em] uppercase mb-2" style={{ color: T.text3 }}>Conditions</p>
+                                        <p className="text-xl font-light leading-[1.3]" style={{ color: T.text1 }}>
                                             {weatherDisplay.icon} {weatherDisplay.title}
                                         </p>
                                     </div>
                                     <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${T.border}` }}>
                                         <div className="text-center">
-                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Daily Total</p>
-                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
+                                            <p className="text-[13px] uppercase tracking-[0.10em] mb-1" style={{ color: T.text3 }}>Daily Total</p>
+                                            <p className="text-[15px] font-light" style={{ color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
                                         </div>
-                                        <div style={{ width: "0.5px", background: T.border, alignSelf: "stretch" }} />
+                                        <div className="w-px self-stretch" style={{ background: T.border }} />
                                         <div className="text-center">
-                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Peak Today</p>
-                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>{maxHourlyPower} kW</p>
+                                            <p className="text-[13px] uppercase tracking-[0.10em] mb-1" style={{ color: T.text3 }}>Peak Today</p>
+                                            <p className="text-[15px] font-light" style={{ color: T.text1 }}>{maxHourlyPower} kW</p>
                                         </div>
                                     </div>
                                 </div>
@@ -718,40 +716,33 @@ export default function Dashboard() {
                                     className="rounded-xl flex flex-col items-center p-6 justify-between"
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
-                                    <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
+                                    <div className="relative flex items-center justify-center w-[220px] h-[220px]">
                                         <svg className="absolute" width={220} height={220} viewBox="0 0 220 220">
                                             <circle cx="110" cy="110" r="100" fill="none"
                                                 stroke={T.border2} strokeWidth="1"
                                                 strokeDasharray="3 6" strokeLinecap="round" />
                                         </svg>
                                         {isDark ? (
-                                            <div style={{
-                                                width: "220px", height: "220px",
-                                                backgroundImage: "url('/images/White_with_Yellow_Sun_Fix.png')",
-                                                backgroundSize: "420px",
-                                                backgroundPosition: "52% -60%",
-                                                backgroundRepeat: "no-repeat",
-                                                position: "relative", zIndex: 10,
-                                            }} />
+                                            <div className="w-[220px] h-[220px] bg-[url('/images/White_with_Yellow_Sun_Fix.png')] bg-[length:420px] [background-position:52%_-60%] bg-no-repeat relative z-10" />
                                         ) : (
                                             <img src="/images/tower_Design.svg" alt="Tower"
-                                                className="object-contain relative z-10"
-                                                style={{ width: 160, height: 160 }} />
+                                                className="object-contain relative z-10 w-[160px] h-[160px]"
+                                            />
                                         )}
                                     </div>
                                     <div className="mt-4 text-center">
-                                        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 8 }}>Direction</p>
-                                        <p style={{ fontSize: 20, fontWeight: 300, color: T.text1, lineHeight: 1, letterSpacing: "0.02em" }}>{towerDirection}</p>
+                                        <p className="text-[11px] font-semibold tracking-[0.15em] uppercase mb-2" style={{ color: T.text3 }}>Direction</p>
+                                        <p className="text-xl font-light leading-none tracking-[0.02em]" style={{ color: T.text1 }}>{towerDirection}</p>
                                     </div>
                                     <div className="w-full mt-4 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${T.border}` }}>
                                         <div className="text-center">
-                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Tower Angle</p>
-                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>{angleNum}°</p>
+                                            <p className="text-[13px] uppercase tracking-[0.10em] mb-1" style={{ color: T.text3 }}>Tower Angle</p>
+                                            <p className="text-[15px] font-light" style={{ color: T.text1 }}>{angleNum}°</p>
                                         </div>
-                                        <div style={{ width: "0.5px", background: T.border, alignSelf: "stretch" }} />
+                                        <div className="w-px self-stretch" style={{ background: T.border }} />
                                         <div className="text-center">
-                                            <p style={{ fontSize: 13, color: T.text3, textTransform: "uppercase", letterSpacing: "0.10em", marginBottom: 4 }}>Elevation</p>
-                                            <p style={{ fontSize: 15, fontWeight: 300, color: T.text1 }}>32°</p>
+                                            <p className="text-[13px] uppercase tracking-[0.10em] mb-1" style={{ color: T.text3 }}>Elevation</p>
+                                            <p className="text-[15px] font-light" style={{ color: T.text1 }}>32°</p>
                                         </div>
                                     </div>
                                 </div>
@@ -762,9 +753,9 @@ export default function Dashboard() {
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
                                     <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>System Health</span>
-                                        <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: T.green, fontWeight: 600, letterSpacing: "0.08em" }}>
-                                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, display: "inline-block" }} />
+                                        <span className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>System Health</span>
+                                        <span className="flex items-center gap-1.5 text-[13px] font-semibold tracking-[0.08em]" style={{ color: T.green }}>
+                                            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: T.green }} />
                                             All nominal
                                         </span>
                                     </div>
@@ -774,15 +765,15 @@ export default function Dashboard() {
                                             className="flex items-center justify-between px-5 py-3"
                                             style={i < arr.length - 1 ? { borderBottom: `0.5px solid ${T.border}` } : {}}
                                         >
-                                            <span style={{ fontSize: 13, color: T.text2 }}>{item}</span>
-                                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, display: "inline-block" }} />
+                                            <span className="text-[13px]" style={{ color: T.text2 }}>{item}</span>
+                                            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: T.green }} />
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
                             {/* TODAY AT A GLANCE label */}
-                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 }}>Today at a Glance</p>
+                            <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-5" style={{ color: T.text3 }}>Today at a Glance</p>
 
                             {/* ── Environmental + Performance row ── */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
@@ -792,48 +783,48 @@ export default function Dashboard() {
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
                                     <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>Environmental</p>
+                                        <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Environmental</p>
                                         <button
                                             type="button"
                                             onClick={toggleTempUnit}
-                                            className="flex items-center rounded-full overflow-hidden"
-                                            style={{ border: `0.5px solid ${T.border2}`, fontSize: 11, fontWeight: 600 }}
+                                            className="flex items-center rounded-full overflow-hidden text-[11px] font-semibold"
+                                            style={{ border: `0.5px solid ${T.border2}` }}
                                             aria-label="Toggle temperature unit"
                                         >
-                                            <span style={{ padding: "2px 7px", background: tempUnit === "F" ? T.amber : "transparent", color: tempUnit === "F" ? (isDark ? "#000" : "#fff") : T.text3, transition: "all 0.2s" }}>°F</span>
-                                            <span style={{ padding: "2px 7px", background: tempUnit === "C" ? T.amber : "transparent", color: tempUnit === "C" ? (isDark ? "#000" : "#fff") : T.text3, transition: "all 0.2s" }}>°C</span>
+                                            <span className="py-[2px] px-[7px] transition-all duration-200" style={{ background: tempUnit === "F" ? T.amber : "transparent", color: tempUnit === "F" ? (isDark ? "#000" : "#fff") : T.text3 }}>°F</span>
+                                            <span className="py-[2px] px-[7px] transition-all duration-200" style={{ background: tempUnit === "C" ? T.amber : "transparent", color: tempUnit === "C" ? (isDark ? "#000" : "#fff") : T.text3 }}>°C</span>
                                         </button>
                                     </div>
                                     <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
                                         <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
-                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Humidity</p>
-                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>
-                                                {weather?.current?.humidity ?? "—"}<span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>%</span>
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Humidity</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>
+                                                {weather?.current?.humidity ?? "—"}<span className="text-sm font-light" style={{ color: T.text2 }}>%</span>
                                             </p>
                                         </div>
                                         <div className="px-5 py-4">
-                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Temperature</p>
-                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>
-                                                {toDisplayTemp(weather?.current?.temp)}<span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>{tempSymbol}</span>
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Temperature</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>
+                                                {toDisplayTemp(weather?.current?.temp)}<span className="text-sm font-light" style={{ color: T.text2 }}>{tempSymbol}</span>
                                             </p>
                                         </div>
                                     </div>
                                     <div className="px-5 py-4">
-                                        <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Today&apos;s Conditions</p>
+                                        <p className="text-[13px] tracking-[0.10em] mb-2.5" style={{ color: T.text3 }}>Today&apos;s Conditions</p>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <Sparkline
                                                     values={weather?.hourly?.slice(0, 24).map(h => h.humidity ?? 0) ?? [weather?.current?.humidity ?? 0]}
                                                     color="#7BAFD4" unit="%" startHour={new Date().getHours()}
                                                 />
-                                                <p style={{ fontSize: 11, color: T.text3, marginTop: 4 }}>Updated {currentTime}</p>
+                                                <p className="text-[11px] mt-1" style={{ color: T.text3 }}>Updated {currentTime}</p>
                                             </div>
                                             <div>
                                                 <Sparkline
                                                     values={weather?.hourly?.slice(0, 24).map(h => toDisplayTemp(h.temp) ?? 0) ?? [toDisplayTemp(weather?.current?.temp) ?? 0]}
                                                     color="#f97316" unit={tempSymbol} startHour={new Date().getHours()}
                                                 />
-                                                <p style={{ fontSize: 11, color: T.text3, marginTop: 4 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
+                                                <p className="text-[11px] mt-1" style={{ color: T.text3 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -843,38 +834,37 @@ export default function Dashboard() {
                                 <div className="rounded-xl overflow-hidden"
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
-                                    <p className="px-5 pt-4 pb-3" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, borderBottom: `0.5px solid ${T.border}` }}>
+                                    <p className="px-5 pt-4 pb-3 text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3, borderBottom: `0.5px solid ${T.border}` }}>
                                         Performance
                                     </p>
                                     <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
                                         <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
-                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Daily Peak</p>
-                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>{maxHourlyPower} <span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>kW</span></p>
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Daily Peak</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{maxHourlyPower} <span className="text-sm font-light" style={{ color: T.text2 }}>kW</span></p>
                                         </div>
                                         <div className="px-5 py-4">
-                                            <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 6 }}>Power Output</p>
-                                            <p style={{ fontSize: T.statSize, fontWeight: T.statWeight, color: T.text1, lineHeight: 1 }}>{powerPercentDisplay.toFixed(1)}<span style={{ fontSize: 14, fontWeight: 300, color: T.text2 }}>%</span></p>
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Power Output</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{powerPercentDisplay.toFixed(1)}<span className="text-sm font-light" style={{ color: T.text2 }}>%</span></p>
                                         </div>
                                     </div>
                                     <div className="px-5 py-4">
-                                        <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.10em", marginBottom: 10 }}>Hourly Output</p>
-                                        <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 48 }}>
+                                        <p className="text-[13px] tracking-[0.10em] mb-2.5" style={{ color: T.text3 }}>Hourly Output</p>
+                                        <div className="flex items-end gap-0.5 h-12">
                                             {Array.from({ length: 24 }, (_, i) => {
                                                 const hourVal = hourlyProduction?.values?.[Math.floor(i * (hourlyProduction.values.length / 24))] ?? 0;
                                                 const maxVal = Math.max(...(hourlyProduction?.values ?? [1]), 1);
                                                 const h = Math.max(3, (hourVal / maxVal) * 48);
                                                 const isNow = i === new Date().getHours();
                                                 return (
-                                                    <div key={i} style={{
-                                                        flex: 1, height: h, borderRadius: 2,
+                                                    <div key={i} className="flex-1 rounded-sm [transition:height_0.5s_ease-out]" style={{
+                                                        height: h,
                                                         background: isNow ? T.amber : (hourVal > 0 ? T.amberDim : T.amberDim),
                                                         opacity: isNow ? 1 : hourVal > 0 ? 0.5 : 0.2,
-                                                        transition: "height 0.5s ease-out",
                                                     }} />
                                                 );
                                             })}
                                         </div>
-                                        <div className="flex justify-between mt-1" style={{ fontSize: 12, color: T.text3 }}>
+                                        <div className="flex justify-between mt-1 text-xs" style={{ color: T.text3 }}>
                                             <span>0</span><span>6</span><span>12</span><span>18</span><span>now</span>
                                         </div>
                                     </div>
@@ -885,23 +875,23 @@ export default function Dashboard() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
 
                                 {/* CO2 / Environmental Impact */}
-                                <div className="rounded-xl p-6 flex flex-col justify-between"
-                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, minHeight: 200 }}
+                                <div className="rounded-xl p-6 flex flex-col justify-between min-h-[200px]"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
                                     <div>
-                                        <p style={{ fontSize: 13, fontWeight: 700, color: T.text3, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 16 }}>
+                                        <p className="text-[13px] font-bold uppercase tracking-[0.15em] mb-4" style={{ color: T.text3 }}>
                                             Environmental Impact
                                         </p>
-                                        <p style={{ fontSize: 44, fontWeight: 200, color: T.amber, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                                            {carbonSaved} <span style={{ fontSize: 20, fontWeight: 300 }}>kg CO₂</span>
+                                        <p className="text-[44px] font-[200] leading-none tracking-[-0.02em]" style={{ color: T.amber }}>
+                                            {carbonSaved} <span className="text-xl font-light">kg CO₂</span>
                                         </p>
-                                        <p style={{ fontSize: 14, color: T.text3, marginTop: 8 }}>Carbon saved since installation</p>
+                                        <p className="text-sm mt-2" style={{ color: T.text3 }}>Carbon saved since installation</p>
                                     </div>
-                                    <p style={{ fontSize: 14, color: T.text2, marginTop: 16, marginBottom: 12 }}>
+                                    <p className="text-sm mt-4 mb-3" style={{ color: T.text2 }}>
                                         ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
                                     </p>
                                     <div>
-                                        <div className="flex justify-between mb-2" style={{ fontSize: 13, color: T.text3 }}>
+                                        <div className="flex justify-between mb-2 text-[13px]" style={{ color: T.text3 }}>
                                             <span>Monthly goal</span>
                                             <span>{Math.min(carbonSaved, 50)} / 50 kg</span>
                                         </div>
@@ -910,15 +900,15 @@ export default function Dashboard() {
                                 </div>
 
                                 {/* Today's Data chart */}
-                                <div className="rounded-xl p-5"
-                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius, minHeight: 200 }}
+                                <div className="rounded-xl p-5 min-h-[200px]"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
                                     <div className="flex items-center justify-between mb-1">
-                                        <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>Today&apos;s Data</p>
-                                        <p style={{ fontSize: 13, color: T.text3, letterSpacing: "0.08em" }}>Hourly production</p>
+                                        <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Today&apos;s Data</p>
+                                        <p className="text-[13px] tracking-[0.08em]" style={{ color: T.text3 }}>Hourly production</p>
                                     </div>
                                     {hourlyProduction?.values?.length && fullDayDates?.length ? (
-                                        <div style={{ height: 180 }}>
+                                        <div className="h-[180px]">
                                             <Line
                                                 data={{
                                                     datasets: [{
@@ -957,18 +947,18 @@ export default function Dashboard() {
                                             />
                                         </div>
                                     ) : (
-                                        <div style={{ height: 180, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                            <p style={{ fontSize: 14, color: T.text3 }}>Loading chart data...</p>
+                                        <div className="h-[180px] flex items-center justify-center">
+                                            <p className="text-sm" style={{ color: T.text3 }}>Loading chart data...</p>
                                         </div>
                                     )}
                                     <div className="flex justify-between mt-3 pt-3" style={{ borderTop: `0.5px solid ${T.border}` }}>
                                         <div>
-                                            <span style={{ fontSize: 13, color: T.text3 }}>Peak  </span>
-                                            <span style={{ fontSize: 14, fontWeight: 300, color: T.text1 }}>{maxHourlyPower} kW</span>
+                                            <span className="text-[13px]" style={{ color: T.text3 }}>Peak  </span>
+                                            <span className="text-sm font-light" style={{ color: T.text1 }}>{maxHourlyPower} kW</span>
                                         </div>
                                         <div>
-                                            <span style={{ fontSize: 13, color: T.text3 }}>Today  </span>
-                                            <span style={{ fontSize: 14, fontWeight: 300, color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</span>
+                                            <span className="text-[13px]" style={{ color: T.text3 }}>Today  </span>
+                                            <span className="text-sm font-light" style={{ color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</span>
                                         </div>
                                     </div>
                                 </div>
@@ -985,7 +975,7 @@ export default function Dashboard() {
                             style={{ background: T.section2Bg }}
                         >
                             {/* Section label */}
-                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 20 }}>System Diagnostics</p>
+                            <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-5" style={{ color: T.text3 }}>System Diagnostics</p>
 
                             {/* ── Diagnostics ── */}
                             <div className="rounded-xl overflow-hidden mb-6"
@@ -997,19 +987,19 @@ export default function Dashboard() {
                                         className="flex items-center px-5 py-4"
                                         style={i > 0 ? { borderTop: `0.5px solid ${T.border}` } : {}}
                                     >
-                                        <s.Icon style={{ width: 15, height: 15, color: s.color, opacity: 0.7, flexShrink: 0, marginRight: 14 }} />
+                                        <s.Icon className="w-[15px] h-[15px] opacity-70 shrink-0 mr-3.5" style={{ color: s.color }} />
                                         <div className="flex-1 min-w-0">
-                                            <p style={{ fontSize: 13, color: T.text1, fontWeight: 400 }}>{s.name}</p>
-                                            <p style={{ fontSize: 12, color: T.text3, marginTop: 1 }}>{s.description}</p>
+                                            <p className="text-[13px] font-normal" style={{ color: T.text1 }}>{s.name}</p>
+                                            <p className="text-xs mt-px" style={{ color: T.text3 }}>{s.description}</p>
                                         </div>
-                                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, flexShrink: 0 }} />
+                                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: T.green }} />
                                     </div>
                                 ))}
                             </div>
 
                             {/* ── System Controls ── */}
                             <div ref={controlRef} id="control" className="scroll-mt-24">
-                                <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 16, marginTop: 32 }}>System Controls</p>
+                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-4 mt-8" style={{ color: T.text3 }}>System Controls</p>
                                 <EnergyFlowPanel
                                     pvPower={pvPower}
                                     gridPower={gridPower}
@@ -1041,19 +1031,20 @@ export default function Dashboard() {
 
                             {/* ── Historical Data ── */}
                             <div ref={historicalRef} id="historical" className="scroll-mt-24">
-                                <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3, marginBottom: 16, marginTop: 32 }}>Historical Data</p>
+                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-4 mt-8" style={{ color: T.text3 }}>Historical Data</p>
                                 <div className="rounded-xl overflow-hidden mb-6"
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
                                     <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
                                         <div>
-                                            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: T.text3 }}>Historical Power Data</p>
-                                            <p style={{ fontSize: 13, color: T.text3, marginTop: 2 }}>Energy produced over time</p>
+                                            <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Historical Power Data</p>
+                                            <p className="text-[13px] mt-0.5" style={{ color: T.text3 }}>Energy produced over time</p>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             {[{ id: "monthly", label: "Monthly" }, { id: "yearly", label: "Yearly" }, { id: "total", label: "Total" }].map(({ id, label }) => (
                                                 <button key={id} type="button" onClick={() => setHistoricalPeriod(id)}
-                                                    style={{ fontSize: 13, fontWeight: 500, padding: "5px 12px", borderRadius: 4, cursor: "pointer", transition: "all 0.15s",
+                                                    className="text-[13px] font-medium py-[5px] px-3 rounded cursor-pointer transition-all duration-[150ms]"
+                                                    style={{
                                                         background: historicalPeriod === id ? T.amber : "transparent",
                                                         color: historicalPeriod === id ? (isDark ? "#000" : "#fff") : T.text2,
                                                         border: `0.5px solid ${historicalPeriod === id ? T.amber : T.border}`,
@@ -1062,31 +1053,31 @@ export default function Dashboard() {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="p-5" style={{ backgroundColor: T.chartBg, minHeight: 300 }}>
+                                    <div className="p-5 min-h-[300px]" style={{ backgroundColor: T.chartBg }}>
                                         {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
-                                            <div style={{ height: 260 }}>
+                                            <div className="h-[260px]">
                                                 <Bar data={{ labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length), datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
                                                     options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
                                                 />
                                             </div>
                                         )}
                                         {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
-                                            <div style={{ height: 260 }}>
+                                            <div className="h-[260px]">
                                                 <Bar data={{ labels: monthLabels.slice(0, (monthlyProduction.values || []).length), datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
                                                     options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
                                                 />
                                             </div>
                                         )}
                                         {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
-                                            <div style={{ height: 260 }}>
+                                            <div className="h-[260px]">
                                                 <Bar data={{ labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length), datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.4, categoryPercentage: 0.5 }] }}
                                                     options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
                                                 />
                                             </div>
                                         )}
                                         {((historicalPeriod === "monthly" && !dailyProduction?.values?.length) || (historicalPeriod === "yearly" && !monthlyProduction?.values?.length) || (historicalPeriod === "total" && !yearlyProduction?.values?.length)) && (
-                                            <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                <p style={{ fontSize: 14, color: T.text3 }}>Loading chart data...</p>
+                                            <div className="h-[260px] flex items-center justify-center">
+                                                <p className="text-sm" style={{ color: T.text3 }}>Loading chart data...</p>
                                             </div>
                                         )}
                                     </div>
@@ -1101,7 +1092,7 @@ export default function Dashboard() {
             {menuOpen && (
                 <div
                     className="fixed top-24 right-6 w-56 rounded-lg shadow-lg py-2 z-50"
-                    style={{ background: T.cardBg, border: T.cardBorder, borderRadius: 8 }}
+                    style={{ background: T.cardBg, border: T.cardBorder }}
                 >
                     <p className="px-4 py-2 text-base font-semibold" style={{ color: T.text1 }}>{user?.name || "Guest"}</p>
                     <div style={{ borderTop: `0.5px solid ${T.border}` }} aria-hidden />
@@ -1127,8 +1118,8 @@ export default function Dashboard() {
                             try { await fetch("/api/logout", { method: "GET" }); window.location.href = "/?loggedout=true"; }
                             catch (err) { console.error("Logout failed:", err); }
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm transition-colors cursor-pointer"
-                        style={{ color: T.text2, background: "transparent", border: "none" }}
+                        className="block w-full text-left px-4 py-2 text-sm transition-colors cursor-pointer bg-transparent border-0"
+                        style={{ color: T.text2 }}
                         onMouseEnter={e => { e.currentTarget.style.background = T.amberDim; }}
                         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                     >Log Out</button>

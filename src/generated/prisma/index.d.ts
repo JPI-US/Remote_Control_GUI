@@ -4040,7 +4040,6 @@ export namespace Prisma {
     status: string | null
     total_towers: number | null
     max_pv_kw: Decimal | null
-    software_version: string | null
     latitude: Decimal | null
     longitude: Decimal | null
     system_cipher: string | null
@@ -4058,7 +4057,6 @@ export namespace Prisma {
     status: string | null
     total_towers: number | null
     max_pv_kw: Decimal | null
-    software_version: string | null
     latitude: Decimal | null
     longitude: Decimal | null
     system_cipher: string | null
@@ -4076,7 +4074,6 @@ export namespace Prisma {
     status: number
     total_towers: number
     max_pv_kw: number
-    software_version: number
     latitude: number
     longitude: number
     system_cipher: number
@@ -4112,7 +4109,6 @@ export namespace Prisma {
     status?: true
     total_towers?: true
     max_pv_kw?: true
-    software_version?: true
     latitude?: true
     longitude?: true
     system_cipher?: true
@@ -4130,7 +4126,6 @@ export namespace Prisma {
     status?: true
     total_towers?: true
     max_pv_kw?: true
-    software_version?: true
     latitude?: true
     longitude?: true
     system_cipher?: true
@@ -4148,7 +4143,6 @@ export namespace Prisma {
     status?: true
     total_towers?: true
     max_pv_kw?: true
-    software_version?: true
     latitude?: true
     longitude?: true
     system_cipher?: true
@@ -4253,7 +4247,6 @@ export namespace Prisma {
     status: string | null
     total_towers: number | null
     max_pv_kw: Decimal | null
-    software_version: string | null
     latitude: Decimal
     longitude: Decimal
     system_cipher: string | null
@@ -4290,7 +4283,6 @@ export namespace Prisma {
     status?: boolean
     total_towers?: boolean
     max_pv_kw?: boolean
-    software_version?: boolean
     latitude?: boolean
     longitude?: boolean
     system_cipher?: boolean
@@ -4311,7 +4303,6 @@ export namespace Prisma {
     status?: boolean
     total_towers?: boolean
     max_pv_kw?: boolean
-    software_version?: boolean
     latitude?: boolean
     longitude?: boolean
     system_cipher?: boolean
@@ -4329,7 +4320,6 @@ export namespace Prisma {
     status?: boolean
     total_towers?: boolean
     max_pv_kw?: boolean
-    software_version?: boolean
     latitude?: boolean
     longitude?: boolean
     system_cipher?: boolean
@@ -4347,7 +4337,6 @@ export namespace Prisma {
     status?: boolean
     total_towers?: boolean
     max_pv_kw?: boolean
-    software_version?: boolean
     latitude?: boolean
     longitude?: boolean
     system_cipher?: boolean
@@ -4356,7 +4345,7 @@ export namespace Prisma {
     has_fronius_system?: boolean
   }
 
-  export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "software_version" | "latitude" | "longitude" | "system_cipher" | "system_iv" | "system_tag" | "has_fronius_system", ExtArgs["result"]["systems"]>
+  export type SystemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "system_name" | "inverter_type" | "timezone" | "installation_date" | "status" | "total_towers" | "max_pv_kw" | "latitude" | "longitude" | "system_cipher" | "system_iv" | "system_tag" | "has_fronius_system", ExtArgs["result"]["systems"]>
   export type SystemsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | Systems$customer_systemArgs<ExtArgs>
     towers?: boolean | Systems$towersArgs<ExtArgs>
@@ -4380,7 +4369,6 @@ export namespace Prisma {
       status: string | null
       total_towers: number | null
       max_pv_kw: Prisma.Decimal | null
-      software_version: string | null
       latitude: Prisma.Decimal
       longitude: Prisma.Decimal
       system_cipher: string | null
@@ -4820,7 +4808,6 @@ export namespace Prisma {
     readonly status: FieldRef<"Systems", 'String'>
     readonly total_towers: FieldRef<"Systems", 'Int'>
     readonly max_pv_kw: FieldRef<"Systems", 'Decimal'>
-    readonly software_version: FieldRef<"Systems", 'String'>
     readonly latitude: FieldRef<"Systems", 'Decimal'>
     readonly longitude: FieldRef<"Systems", 'Decimal'>
     readonly system_cipher: FieldRef<"Systems", 'String'>
@@ -5299,14 +5286,8 @@ export namespace Prisma {
     longitude: Decimal | null
     customer_id: number | null
     order_id: number | null
-    state: number | null
-    c_group: number | null
-    error_state: number | null
-    length: number | null
-    height: number | null
-    width: number | null
-    current_angle: Decimal | null
     system_id: number | null
+    state: number | null
   }
 
   export type TowersSumAggregateOutputType = {
@@ -5315,14 +5296,8 @@ export namespace Prisma {
     longitude: Decimal | null
     customer_id: number | null
     order_id: number | null
-    state: number | null
-    c_group: number | null
-    error_state: number | null
-    length: number | null
-    height: number | null
-    width: number | null
-    current_angle: Decimal | null
     system_id: number | null
+    state: number | null
   }
 
   export type TowersMinAggregateOutputType = {
@@ -5332,15 +5307,8 @@ export namespace Prisma {
     longitude: Decimal | null
     customer_id: number | null
     order_id: number | null
-    state: number | null
-    c_group: number | null
-    error_state: number | null
-    length: number | null
-    height: number | null
-    width: number | null
-    software_version: string | null
-    current_angle: Decimal | null
     system_id: number | null
+    state: number | null
   }
 
   export type TowersMaxAggregateOutputType = {
@@ -5350,15 +5318,8 @@ export namespace Prisma {
     longitude: Decimal | null
     customer_id: number | null
     order_id: number | null
-    state: number | null
-    c_group: number | null
-    error_state: number | null
-    length: number | null
-    height: number | null
-    width: number | null
-    software_version: string | null
-    current_angle: Decimal | null
     system_id: number | null
+    state: number | null
   }
 
   export type TowersCountAggregateOutputType = {
@@ -5368,15 +5329,8 @@ export namespace Prisma {
     longitude: number
     customer_id: number
     order_id: number
-    state: number
-    c_group: number
-    error_state: number
-    length: number
-    height: number
-    width: number
-    software_version: number
-    current_angle: number
     system_id: number
+    state: number
     _all: number
   }
 
@@ -5387,14 +5341,8 @@ export namespace Prisma {
     longitude?: true
     customer_id?: true
     order_id?: true
-    state?: true
-    c_group?: true
-    error_state?: true
-    length?: true
-    height?: true
-    width?: true
-    current_angle?: true
     system_id?: true
+    state?: true
   }
 
   export type TowersSumAggregateInputType = {
@@ -5403,14 +5351,8 @@ export namespace Prisma {
     longitude?: true
     customer_id?: true
     order_id?: true
-    state?: true
-    c_group?: true
-    error_state?: true
-    length?: true
-    height?: true
-    width?: true
-    current_angle?: true
     system_id?: true
+    state?: true
   }
 
   export type TowersMinAggregateInputType = {
@@ -5420,15 +5362,8 @@ export namespace Prisma {
     longitude?: true
     customer_id?: true
     order_id?: true
-    state?: true
-    c_group?: true
-    error_state?: true
-    length?: true
-    height?: true
-    width?: true
-    software_version?: true
-    current_angle?: true
     system_id?: true
+    state?: true
   }
 
   export type TowersMaxAggregateInputType = {
@@ -5438,15 +5373,8 @@ export namespace Prisma {
     longitude?: true
     customer_id?: true
     order_id?: true
-    state?: true
-    c_group?: true
-    error_state?: true
-    length?: true
-    height?: true
-    width?: true
-    software_version?: true
-    current_angle?: true
     system_id?: true
+    state?: true
   }
 
   export type TowersCountAggregateInputType = {
@@ -5456,15 +5384,8 @@ export namespace Prisma {
     longitude?: true
     customer_id?: true
     order_id?: true
-    state?: true
-    c_group?: true
-    error_state?: true
-    length?: true
-    height?: true
-    width?: true
-    software_version?: true
-    current_angle?: true
     system_id?: true
+    state?: true
     _all?: true
   }
 
@@ -5561,15 +5482,8 @@ export namespace Prisma {
     longitude: Decimal
     customer_id: number
     order_id: number
-    state: number | null
-    c_group: number
-    error_state: number
-    length: number
-    height: number
-    width: number
-    software_version: string | null
-    current_angle: Decimal | null
     system_id: number | null
+    state: number | null
     _count: TowersCountAggregateOutputType | null
     _avg: TowersAvgAggregateOutputType | null
     _sum: TowersSumAggregateOutputType | null
@@ -5598,15 +5512,8 @@ export namespace Prisma {
     longitude?: boolean
     customer_id?: boolean
     order_id?: boolean
-    state?: boolean
-    c_group?: boolean
-    error_state?: boolean
-    length?: boolean
-    height?: boolean
-    width?: boolean
-    software_version?: boolean
-    current_angle?: boolean
     system_id?: boolean
+    state?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     system?: boolean | Towers$systemArgs<ExtArgs>
   }, ExtArgs["result"]["towers"]>
@@ -5618,15 +5525,8 @@ export namespace Prisma {
     longitude?: boolean
     customer_id?: boolean
     order_id?: boolean
-    state?: boolean
-    c_group?: boolean
-    error_state?: boolean
-    length?: boolean
-    height?: boolean
-    width?: boolean
-    software_version?: boolean
-    current_angle?: boolean
     system_id?: boolean
+    state?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     system?: boolean | Towers$systemArgs<ExtArgs>
   }, ExtArgs["result"]["towers"]>
@@ -5638,15 +5538,8 @@ export namespace Prisma {
     longitude?: boolean
     customer_id?: boolean
     order_id?: boolean
-    state?: boolean
-    c_group?: boolean
-    error_state?: boolean
-    length?: boolean
-    height?: boolean
-    width?: boolean
-    software_version?: boolean
-    current_angle?: boolean
     system_id?: boolean
+    state?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     system?: boolean | Towers$systemArgs<ExtArgs>
   }, ExtArgs["result"]["towers"]>
@@ -5658,18 +5551,11 @@ export namespace Prisma {
     longitude?: boolean
     customer_id?: boolean
     order_id?: boolean
-    state?: boolean
-    c_group?: boolean
-    error_state?: boolean
-    length?: boolean
-    height?: boolean
-    width?: boolean
-    software_version?: boolean
-    current_angle?: boolean
     system_id?: boolean
+    state?: boolean
   }
 
-  export type TowersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "model" | "latitude" | "longitude" | "customer_id" | "order_id" | "state" | "c_group" | "error_state" | "length" | "height" | "width" | "software_version" | "current_angle" | "system_id", ExtArgs["result"]["towers"]>
+  export type TowersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "model" | "latitude" | "longitude" | "customer_id" | "order_id" | "system_id" | "state", ExtArgs["result"]["towers"]>
   export type TowersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     system?: boolean | Towers$systemArgs<ExtArgs>
@@ -5696,15 +5582,8 @@ export namespace Prisma {
       longitude: Prisma.Decimal
       customer_id: number
       order_id: number
-      state: number | null
-      c_group: number
-      error_state: number
-      length: number
-      height: number
-      width: number
-      software_version: string | null
-      current_angle: Prisma.Decimal | null
       system_id: number | null
+      state: number | null
     }, ExtArgs["result"]["towers"]>
     composites: {}
   }
@@ -6136,15 +6015,8 @@ export namespace Prisma {
     readonly longitude: FieldRef<"Towers", 'Decimal'>
     readonly customer_id: FieldRef<"Towers", 'Int'>
     readonly order_id: FieldRef<"Towers", 'Int'>
-    readonly state: FieldRef<"Towers", 'Int'>
-    readonly c_group: FieldRef<"Towers", 'Int'>
-    readonly error_state: FieldRef<"Towers", 'Int'>
-    readonly length: FieldRef<"Towers", 'Int'>
-    readonly height: FieldRef<"Towers", 'Int'>
-    readonly width: FieldRef<"Towers", 'Int'>
-    readonly software_version: FieldRef<"Towers", 'String'>
-    readonly current_angle: FieldRef<"Towers", 'Decimal'>
     readonly system_id: FieldRef<"Towers", 'Int'>
+    readonly state: FieldRef<"Towers", 'Int'>
   }
     
 
@@ -9899,7 +9771,6 @@ export namespace Prisma {
     status: 'status',
     total_towers: 'total_towers',
     max_pv_kw: 'max_pv_kw',
-    software_version: 'software_version',
     latitude: 'latitude',
     longitude: 'longitude',
     system_cipher: 'system_cipher',
@@ -9918,15 +9789,8 @@ export namespace Prisma {
     longitude: 'longitude',
     customer_id: 'customer_id',
     order_id: 'order_id',
-    state: 'state',
-    c_group: 'c_group',
-    error_state: 'error_state',
-    length: 'length',
-    height: 'height',
-    width: 'width',
-    software_version: 'software_version',
-    current_angle: 'current_angle',
-    system_id: 'system_id'
+    system_id: 'system_id',
+    state: 'state'
   };
 
   export type TowersScalarFieldEnum = (typeof TowersScalarFieldEnum)[keyof typeof TowersScalarFieldEnum]
@@ -10349,7 +10213,6 @@ export namespace Prisma {
     status?: StringNullableFilter<"Systems"> | string | null
     total_towers?: IntNullableFilter<"Systems"> | number | null
     max_pv_kw?: DecimalNullableFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
-    software_version?: StringNullableFilter<"Systems"> | string | null
     latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     system_cipher?: StringNullableFilter<"Systems"> | string | null
@@ -10369,7 +10232,6 @@ export namespace Prisma {
     status?: SortOrderInput | SortOrder
     total_towers?: SortOrderInput | SortOrder
     max_pv_kw?: SortOrderInput | SortOrder
-    software_version?: SortOrderInput | SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
     system_cipher?: SortOrderInput | SortOrder
@@ -10393,7 +10255,6 @@ export namespace Prisma {
     status?: StringNullableFilter<"Systems"> | string | null
     total_towers?: IntNullableFilter<"Systems"> | number | null
     max_pv_kw?: DecimalNullableFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
-    software_version?: StringNullableFilter<"Systems"> | string | null
     latitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     system_cipher?: StringNullableFilter<"Systems"> | string | null
@@ -10413,7 +10274,6 @@ export namespace Prisma {
     status?: SortOrderInput | SortOrder
     total_towers?: SortOrderInput | SortOrder
     max_pv_kw?: SortOrderInput | SortOrder
-    software_version?: SortOrderInput | SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
     system_cipher?: SortOrderInput | SortOrder
@@ -10439,7 +10299,6 @@ export namespace Prisma {
     status?: StringNullableWithAggregatesFilter<"Systems"> | string | null
     total_towers?: IntNullableWithAggregatesFilter<"Systems"> | number | null
     max_pv_kw?: DecimalNullableWithAggregatesFilter<"Systems"> | Decimal | DecimalJsLike | number | string | null
-    software_version?: StringNullableWithAggregatesFilter<"Systems"> | string | null
     latitude?: DecimalWithAggregatesFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     longitude?: DecimalWithAggregatesFilter<"Systems"> | Decimal | DecimalJsLike | number | string
     system_cipher?: StringNullableWithAggregatesFilter<"Systems"> | string | null
@@ -10458,15 +10317,8 @@ export namespace Prisma {
     longitude?: DecimalFilter<"Towers"> | Decimal | DecimalJsLike | number | string
     customer_id?: IntFilter<"Towers"> | number
     order_id?: IntFilter<"Towers"> | number
-    state?: IntNullableFilter<"Towers"> | number | null
-    c_group?: IntFilter<"Towers"> | number
-    error_state?: IntFilter<"Towers"> | number
-    length?: IntFilter<"Towers"> | number
-    height?: IntFilter<"Towers"> | number
-    width?: IntFilter<"Towers"> | number
-    software_version?: StringNullableFilter<"Towers"> | string | null
-    current_angle?: DecimalNullableFilter<"Towers"> | Decimal | DecimalJsLike | number | string | null
     system_id?: IntNullableFilter<"Towers"> | number | null
+    state?: IntNullableFilter<"Towers"> | number | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     system?: XOR<SystemsNullableScalarRelationFilter, SystemsWhereInput> | null
   }
@@ -10478,15 +10330,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrderInput | SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    software_version?: SortOrderInput | SortOrder
-    current_angle?: SortOrderInput | SortOrder
     system_id?: SortOrderInput | SortOrder
+    state?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
     system?: SystemsOrderByWithRelationInput
   }
@@ -10501,15 +10346,8 @@ export namespace Prisma {
     longitude?: DecimalFilter<"Towers"> | Decimal | DecimalJsLike | number | string
     customer_id?: IntFilter<"Towers"> | number
     order_id?: IntFilter<"Towers"> | number
-    state?: IntNullableFilter<"Towers"> | number | null
-    c_group?: IntFilter<"Towers"> | number
-    error_state?: IntFilter<"Towers"> | number
-    length?: IntFilter<"Towers"> | number
-    height?: IntFilter<"Towers"> | number
-    width?: IntFilter<"Towers"> | number
-    software_version?: StringNullableFilter<"Towers"> | string | null
-    current_angle?: DecimalNullableFilter<"Towers"> | Decimal | DecimalJsLike | number | string | null
     system_id?: IntNullableFilter<"Towers"> | number | null
+    state?: IntNullableFilter<"Towers"> | number | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     system?: XOR<SystemsNullableScalarRelationFilter, SystemsWhereInput> | null
   }, "id">
@@ -10521,15 +10359,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrderInput | SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    software_version?: SortOrderInput | SortOrder
-    current_angle?: SortOrderInput | SortOrder
     system_id?: SortOrderInput | SortOrder
+    state?: SortOrderInput | SortOrder
     _count?: TowersCountOrderByAggregateInput
     _avg?: TowersAvgOrderByAggregateInput
     _max?: TowersMaxOrderByAggregateInput
@@ -10547,15 +10378,8 @@ export namespace Prisma {
     longitude?: DecimalWithAggregatesFilter<"Towers"> | Decimal | DecimalJsLike | number | string
     customer_id?: IntWithAggregatesFilter<"Towers"> | number
     order_id?: IntWithAggregatesFilter<"Towers"> | number
-    state?: IntNullableWithAggregatesFilter<"Towers"> | number | null
-    c_group?: IntWithAggregatesFilter<"Towers"> | number
-    error_state?: IntWithAggregatesFilter<"Towers"> | number
-    length?: IntWithAggregatesFilter<"Towers"> | number
-    height?: IntWithAggregatesFilter<"Towers"> | number
-    width?: IntWithAggregatesFilter<"Towers"> | number
-    software_version?: StringNullableWithAggregatesFilter<"Towers"> | string | null
-    current_angle?: DecimalNullableWithAggregatesFilter<"Towers"> | Decimal | DecimalJsLike | number | string | null
     system_id?: IntNullableWithAggregatesFilter<"Towers"> | number | null
+    state?: IntNullableWithAggregatesFilter<"Towers"> | number | null
   }
 
   export type software_ticketsWhereInput = {
@@ -10960,7 +10784,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -10980,7 +10803,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -10999,7 +10821,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11019,7 +10840,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11039,7 +10859,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -11056,7 +10875,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11074,7 +10892,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11089,13 +10906,6 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
     state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     customer: CustomerCreateNestedOneWithoutTowerInput
     system?: SystemsCreateNestedOneWithoutTowersInput
   }
@@ -11107,15 +10917,8 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     customer_id: number
     order_id: number
-    state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
+    state?: number | null
   }
 
   export type TowersUpdateInput = {
@@ -11124,13 +10927,6 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
     state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
     system?: SystemsUpdateOneWithoutTowersNestedInput
   }
@@ -11142,15 +10938,8 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type TowersCreateManyInput = {
@@ -11160,15 +10949,8 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     customer_id: number
     order_id: number
-    state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
+    state?: number | null
   }
 
   export type TowersUpdateManyMutationInput = {
@@ -11177,13 +10959,6 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
     state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type TowersUncheckedUpdateManyInput = {
@@ -11193,15 +10968,8 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type software_ticketsCreateInput = {
@@ -11776,7 +11544,6 @@ export namespace Prisma {
     status?: SortOrder
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
-    software_version?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
     system_cipher?: SortOrder
@@ -11802,7 +11569,6 @@ export namespace Prisma {
     status?: SortOrder
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
-    software_version?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
     system_cipher?: SortOrder
@@ -11820,7 +11586,6 @@ export namespace Prisma {
     status?: SortOrder
     total_towers?: SortOrder
     max_pv_kw?: SortOrder
-    software_version?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
     system_cipher?: SortOrder
@@ -11908,15 +11673,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    software_version?: SortOrder
-    current_angle?: SortOrder
     system_id?: SortOrder
+    state?: SortOrder
   }
 
   export type TowersAvgOrderByAggregateInput = {
@@ -11925,14 +11683,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    current_angle?: SortOrder
     system_id?: SortOrder
+    state?: SortOrder
   }
 
   export type TowersMaxOrderByAggregateInput = {
@@ -11942,15 +11694,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    software_version?: SortOrder
-    current_angle?: SortOrder
     system_id?: SortOrder
+    state?: SortOrder
   }
 
   export type TowersMinOrderByAggregateInput = {
@@ -11960,15 +11705,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    software_version?: SortOrder
-    current_angle?: SortOrder
     system_id?: SortOrder
+    state?: SortOrder
   }
 
   export type TowersSumOrderByAggregateInput = {
@@ -11977,14 +11715,8 @@ export namespace Prisma {
     longitude?: SortOrder
     customer_id?: SortOrder
     order_id?: SortOrder
-    state?: SortOrder
-    c_group?: SortOrder
-    error_state?: SortOrder
-    length?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    current_angle?: SortOrder
     system_id?: SortOrder
+    state?: SortOrder
   }
 
   export type software_ticketsCountOrderByAggregateInput = {
@@ -13077,13 +12809,6 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
     state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     system?: SystemsCreateNestedOneWithoutTowersInput
   }
 
@@ -13093,15 +12818,8 @@ export namespace Prisma {
     latitude: Decimal | DecimalJsLike | number | string
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
-    state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
+    state?: number | null
   }
 
   export type TowersCreateOrConnectWithoutCustomerInput = {
@@ -13236,15 +12954,8 @@ export namespace Prisma {
     longitude?: DecimalFilter<"Towers"> | Decimal | DecimalJsLike | number | string
     customer_id?: IntFilter<"Towers"> | number
     order_id?: IntFilter<"Towers"> | number
-    state?: IntNullableFilter<"Towers"> | number | null
-    c_group?: IntFilter<"Towers"> | number
-    error_state?: IntFilter<"Towers"> | number
-    length?: IntFilter<"Towers"> | number
-    height?: IntFilter<"Towers"> | number
-    width?: IntFilter<"Towers"> | number
-    software_version?: StringNullableFilter<"Towers"> | string | null
-    current_angle?: DecimalNullableFilter<"Towers"> | Decimal | DecimalJsLike | number | string | null
     system_id?: IntNullableFilter<"Towers"> | number | null
+    state?: IntNullableFilter<"Towers"> | number | null
   }
 
   export type CustomerCreateWithoutSettingInput = {
@@ -13347,13 +13058,6 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
     state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     customer: CustomerCreateNestedOneWithoutTowerInput
   }
 
@@ -13365,13 +13069,6 @@ export namespace Prisma {
     customer_id: number
     order_id: number
     state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type TowersCreateOrConnectWithoutSystemInput = {
@@ -13458,7 +13155,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -13477,7 +13173,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -13551,7 +13246,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13570,7 +13264,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13696,7 +13389,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -13715,7 +13407,6 @@ export namespace Prisma {
     status?: string | null
     total_towers?: number | null
     max_pv_kw?: Decimal | DecimalJsLike | number | string | null
-    software_version?: string | null
     latitude?: Decimal | DecimalJsLike | number | string
     longitude?: Decimal | DecimalJsLike | number | string
     system_cipher?: string | null
@@ -13789,7 +13480,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13808,7 +13498,6 @@ export namespace Prisma {
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_towers?: NullableIntFieldUpdateOperationsInput | number | null
     max_pv_kw?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     system_cipher?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13838,15 +13527,8 @@ export namespace Prisma {
     latitude: Decimal | DecimalJsLike | number | string
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
-    state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
     system_id?: number | null
+    state?: number | null
   }
 
   export type customer_systemUpdateWithoutCustomersInput = {
@@ -13896,13 +13578,6 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
     state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system?: SystemsUpdateOneWithoutTowersNestedInput
   }
 
@@ -13912,15 +13587,8 @@ export namespace Prisma {
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type TowersUncheckedUpdateManyWithoutCustomerInput = {
@@ -13929,15 +13597,8 @@ export namespace Prisma {
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type customer_systemCreateManySystemsInput = {
@@ -13953,13 +13614,6 @@ export namespace Prisma {
     customer_id: number
     order_id: number
     state?: number | null
-    c_group?: number
-    error_state?: number
-    length: number
-    height: number
-    width: number
-    software_version?: string | null
-    current_angle?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type customer_systemUpdateWithoutSystemsInput = {
@@ -13983,13 +13637,6 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
     state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
   }
 
@@ -14001,13 +13648,6 @@ export namespace Prisma {
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
     state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type TowersUncheckedUpdateManyWithoutSystemInput = {
@@ -14018,13 +13658,6 @@ export namespace Prisma {
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
     state?: NullableIntFieldUpdateOperationsInput | number | null
-    c_group?: IntFieldUpdateOperationsInput | number
-    error_state?: IntFieldUpdateOperationsInput | number
-    length?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    software_version?: NullableStringFieldUpdateOperationsInput | string | null
-    current_angle?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
 

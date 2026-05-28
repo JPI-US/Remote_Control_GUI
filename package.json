@@ -58,5 +58,8 @@
   "bugs": {
     "url": "https://github.com/Janta-Power/Remote_Control_GUI/issues"
   },
-  "homepage": "https://github.com/Janta-Power/Remote_Control_GUI#readme"
+  "homepage": "https://github.com/Janta-Power/Remote_Control_GUI#readme",
+  "overrides": {
+    "postcss": "^8.5.10"
+  }
 }

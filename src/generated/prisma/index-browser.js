@@ -155,7 +155,6 @@ exports.Prisma.SystemsScalarFieldEnum = {
   status: 'status',
   total_towers: 'total_towers',
   max_pv_kw: 'max_pv_kw',
-  software_version: 'software_version',
   latitude: 'latitude',
   longitude: 'longitude',
   system_cipher: 'system_cipher',
@@ -171,15 +170,8 @@ exports.Prisma.TowersScalarFieldEnum = {
   longitude: 'longitude',
   customer_id: 'customer_id',
   order_id: 'order_id',
-  state: 'state',
-  c_group: 'c_group',
-  error_state: 'error_state',
-  length: 'length',
-  height: 'height',
-  width: 'width',
-  software_version: 'software_version',
-  current_angle: 'current_angle',
-  system_id: 'system_id'
+  system_id: 'system_id',
+  state: 'state'
 };
 
 exports.Prisma.Software_ticketsScalarFieldEnum = {

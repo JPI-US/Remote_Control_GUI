@@ -46,7 +46,6 @@ export async function GET(request) {
                         model: true,
                         order_id: true,
                         state: true,
-                        software_version: true,
                     },
                 },
             },

@@ -56,7 +56,6 @@ model Systems {
   status             String?           @default("ACTIVE") @db.VarChar(50)
   total_towers       Int?              @default(0)
   max_pv_kw          Decimal?          @default(0) @db.Decimal(10, 2)
-  software_version   String?           @db.VarChar(50)
   latitude           Decimal           @default(0) @db.Decimal(9, 7)
   longitude          Decimal           @default(0) @db.Decimal(10, 7)
   system_cipher      String?           @db.VarChar(512)
@@ -71,23 +70,16 @@ model Systems {
 }
 
 model Towers {
-  id               Int      @id @default(autoincrement())
-  model            String   @db.VarChar(255)
-  latitude         Decimal  @db.Decimal(8, 6)
-  longitude        Decimal  @db.Decimal(9, 6)
-  customer_id      Int
-  order_id         Int
-  state            Int?
-  c_group          Int      @default(0)
-  error_state      Int      @default(0)
-  length           Int
-  height           Int
-  width            Int
-  software_version String?
-  current_angle    Decimal? @db.Decimal(5, 2)
-  system_id        Int?
-  customer         Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_customer")
-  system           Systems? @relation(fields: [system_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_systems")
+  id          Int      @id @default(autoincrement())
+  model       String   @db.VarChar(255)
+  latitude    Decimal  @db.Decimal(8, 6)
+  longitude   Decimal  @db.Decimal(9, 6)
+  customer_id Int
+  order_id    Int
+  system_id   Int?
+  state       Int?
+  customer    Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_customer")
+  system      Systems? @relation(fields: [system_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_systems")
 
   @@map("towers")
 }
@@ -123,169 +115,72 @@ model tower_data {
   created_at  DateTime  @default(now()) @db.Timestamp(6)
 }
 
-// Tables that exist in the database but are not used by this application.
-// @@ignore prevents Prisma from dropping them or generating client code for them.
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model notifications {
+// @@ignore
+// }
 
-model notifications {
-  notifications_id           Int      @id @default(autoincrement())
-  customer_id                Int?     @unique(map: "notifications_customer_unique")
-  push_notifications_enabled Boolean?
-  push_notify_login          Boolean?
-  notification_tone          String?  @db.VarChar(100)
-  email_marketing            Boolean?
-  email_account_activity     Boolean?
-  email_newsletter           Boolean?
-  sms_password_changes       Boolean?
-  sms_login_attempts         Boolean?
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model orders {
+// @@ignore
+// }
 
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model telemetry {
+// @@ignore
+// }
 
-model orders {
-  id               Int      @id @default(autoincrement())
-  customer_id      Int
-  tower_count      Int
-  address_id       Int
-  price            Int
-  currency         String   @db.VarChar(255)
-  state            String   @db.VarChar(255)
-  date_time        DateTime @db.Timestamptz(6)
-  payment_received Boolean
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tower_component_status {
+// @@ignore
+// }
 
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tower_logs {
+// @@ignore
+// }
 
-model telemetry {
-  id           Int      @id @default(autoincrement())
-  date_time    DateTime @default(now()) @db.Timestamptz(6)
-  tower_id     Int
-  humidity     Float?
-  temperature  Float?
-  pressure     Float?
-  status       Int?
-  power_output Float
-  clouds       Boolean?
-  solar_flux   Int?
-  angle        Float?
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tower_status {
+// @@ignore
+// }
 
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model inverter_types {
+// @@ignore
+// }
 
-model tower_component_status {
-  id           BigInt   @id @default(autoincrement())
-  tower_id     BigInt
-  component    String   @db.VarChar(50)
-  status       String   @db.VarChar(20)
-  message      String?
-  last_updated DateTime @default(now()) @db.Timestamp(6)
-  metadata     Json?
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model solar_power_generation {
+// @@ignore
+// }
 
-  @@unique([tower_id, component])
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model energy {
+// @@ignore
+// }
 
-model tower_logs {
-  id         BigInt   @id @default(autoincrement())
-  tower_id   BigInt
-  type       String   @db.VarChar(50)
-  message    String
-  component  String?  @db.VarChar(50)
-  code       String?  @db.VarChar(50)
-  severity   String?  @db.VarChar(20)
-  metadata   Json?
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  closed     Boolean? @default(false)
-
-  @@ignore
-}
-
-model tower_status {
-  id               BigInt   @id @default(autoincrement())
-  tower_id         BigInt   @unique
-  firmware_version String   @db.VarChar(50)
-  last_seen        DateTime @default(now()) @db.Timestamp(6)
-  metadata         Json?
-  created_at       DateTime @default(now()) @db.Timestamp(6)
-
-  @@ignore
-}
-
-model inverter_types {
-  id                    Int      @id @default(autoincrement())
-  manufacturer          String   @db.VarChar(100)
-  model                 String?  @db.VarChar(100)
-  default_interval_mins Int?     @db.SmallInt
-  api_source            String?  @db.VarChar(100)
-  notes                 String?
-  created_at            DateTime @default(now()) @db.Timestamptz(6)
-
-  @@ignore
-}
-
-model solar_power_generation {
-  solar_system_id     Int
-  recorded_at         DateTime @db.Timestamptz(6)
-  power_generated_kwh Decimal  @db.Decimal(10, 3)
-  weather_condition   String?  @db.VarChar(50)
-  temperature_c       Decimal? @db.Decimal(5, 2)
-  cloud_cover_pct     Int?     @db.SmallInt
-  notes               String?
-
-  @@id([solar_system_id, recorded_at])
-  @@ignore
-}
-
-model energy {
-  id     Int    @id @default(autoincrement())
-  day    Int
-  month  Int
-  year   Int
-  tower  Int
-  energy Float?
-
-  @@ignore
-}
-
-model users {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
-
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model users {
+// @@ignore
+// }
 
 /// No valid unique identifier — cannot be managed by Prisma Client.
-model addresses {
-  id              Int
-  line_1          String? @db.VarChar(255)
-  line_2          String? @db.VarChar(255)
-  line_3          String? @db.VarChar(255)
-  line_4          String? @db.VarChar(255)
-  city            String? @db.VarChar(255)
-  county_province String? @db.VarChar(255)
-  zip_postcode    String? @db.VarChar(255)
-  country         String? @db.VarChar(255)
-  other           String? @db.VarChar(1000)
-
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model addresses {
+// @@ignore
+// }
 
 /// No valid unique identifier — cannot be managed by Prisma Client.
-model components {
-  id       Int
-  l_sensor Int
-  h_sensor Int
-  t_sensor Int
-  p_sensor Int
-  l_switch Int
-  compass  Int
-  motor    Int
-  panels   Int
-  relay    Int
-  wiper    Int
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model components {
+// @@ignore
+// }
 
-  @@ignore
-}
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model prisma_migrations {
+// @@map("_prisma_migrations")
+// }
 
 enum plan_tier {
   RESIDENTIAL
