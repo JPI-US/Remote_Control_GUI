@@ -16,7 +16,7 @@ export async function POST(request) {
     
     const loginSchema = z.object({
       email: z.string().email().max(254).transform(e => e.toLowerCase()),
-      password: z.string().max(128) // PRODUCTION ADDITION .min(8)
+      password: z.string().min(8).max(128)
     });
 
     const body = await request.json();
