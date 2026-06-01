@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Power, RotateCcw, X, Home } from "lucide-react";
-import TowerModelViewer from "@/components/TowerModelViewer";
 import { DateTime } from "luxon";
 
 function getFireflyCount(timezone) {
@@ -277,7 +276,6 @@ export default function EnergyFlowPanel({
     isCommercial = false,
 }) {
     const T = isDark ? DK : LT;
-    const [towerError, setTowerError] = useState(false);
     const [fireflyCount, setFireflyCount] = useState(() => getFireflyCount(systemTimezone));
     const diagramRef = useRef(null);
     // Start with a stable fallback so SVG lines don't "snap" from (0,0) on first paint.
@@ -544,16 +542,11 @@ export default function EnergyFlowPanel({
 
                     {/* Tower */}
                     <Node left={`${P.tower.x}px`} top={`${P.tower.y}px`}>
-                        {!towerError ? (
-                            <TowerModelViewer angleDeg={towerRotationDeg} bgColor={T.bg}
-                                width={towerSize} height={towerSize} isDark={isDark} onError={() => setTowerError(true)} />
-                        ) : (
-                            <div style={{ width: towerSize, height: towerSize, display: "flex",
-                                alignItems: "center", justifyContent: "center",
-                                background: T.bg, borderRadius: 8 }}>
-                                <TowerSVGFallback theme={T} />
-                            </div>
-                        )}
+                        <div style={{ width: towerSize, height: towerSize, display: "flex",
+                            alignItems: "center", justifyContent: "center",
+                            background: T.bg, borderRadius: 8 }}>
+                            <TowerSVGFallback theme={T} />
+                        </div>
                     </Node>
 
                     {/* Grid + House — hidden in compact mode */}
