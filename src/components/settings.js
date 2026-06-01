@@ -61,6 +61,7 @@ export default function Settings() {
     const [phone, setPhone] = useState("");
     const [showMessage, setShowMessage] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [editingProfile, setEditingProfile] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -96,11 +97,17 @@ export default function Settings() {
         else { setShowError(true); setTimeout(() => setShowError(false), 4000); }
     };
 
+    const showErr = (msg) => {
+        setErrorMessage(msg);
+        setShowError(true);
+        setTimeout(() => { setShowError(false); setErrorMessage(""); }, 4000);
+    };
+
     const handlePasswordChange = async (e) => {
         e.preventDefault();
-        if (!currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword || currentPassword === newPassword) {
-            setShowError(true); setTimeout(() => setShowError(false), 4000); return;
-        }
+        if (!currentPassword || !newPassword || !confirmPassword) { showErr("Please fill in all fields."); return; }
+        if (newPassword !== confirmPassword) { showErr("New passwords do not match."); return; }
+        if (currentPassword === newPassword) { showErr("New password must differ from the current password."); return; }
         try {
             const res = await fetch("/api/user/change-password", {
                 method: "PUT",
@@ -110,8 +117,11 @@ export default function Settings() {
             if (res.ok) {
                 setShowMessage(true); setTimeout(() => setShowMessage(false), 4000);
                 setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
-            } else { setShowError(true); setTimeout(() => setShowError(false), 4000); }
-        } catch { setShowError(true); setTimeout(() => setShowError(false), 4000); }
+            } else {
+                const data = await res.json().catch(() => ({}));
+                showErr(data.error || "Failed to update. Please try again.");
+            }
+        } catch { showErr("Failed to update. Please try again."); }
     };
 
     const handleSystemUpdate = async (e) => {
@@ -428,7 +438,7 @@ export default function Settings() {
                                     color: T.red, padding: "10px 16px",
                                     borderRadius: 8, marginBottom: 20, fontSize: 13, maxWidth: 640,
                                 }}>
-                                    Failed to update. Please try again.
+                                    {errorMessage || "Failed to update. Please try again."}
                                 </div>
                             )}
 

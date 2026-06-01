@@ -57,15 +57,22 @@ export async function PUT(request) {
     const customerId = Number(decoded.sub);
 
     const body = await request.json();
-    const { name, email, phone } = body;
+
+    // Whitelist the only columns this route is allowed to touch
+    const allowedFields = ["name", "email", "phone_number"];
+    const fieldMap = { name: body.name, email: body.email, phone_number: body.phone };
+    const safeData = Object.fromEntries(
+      Object.entries(fieldMap)
+        .filter(([key, val]) => allowedFields.includes(key) && val !== undefined)
+    );
+
+    if (Object.keys(safeData).length === 0) {
+      return NextResponse.json({ error: "No valid fields provided" }, { status: 400 });
+    }
 
     const updated = await prisma.customer.update({
       where: { id: customerId },
-      data: {
-        name: body.name,
-        email: body.email,
-        phone_number: body.phone,
-      },
+      data: safeData,
     });
 
     return NextResponse.json(updated);

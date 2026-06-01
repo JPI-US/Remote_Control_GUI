@@ -48,11 +48,17 @@ export async function PUT(req) {
       
         // Hash new password
         const newHash = await bcrypt.hash(newPassword, 10);
-      
-        // Update password in DB and clear forced reset flag
+
+        // Whitelist the only two columns this route is allowed to touch
+        const allowedFields = ["password_hash", "force_password_reset"];
+        const safeData = Object.fromEntries(
+            Object.entries({ password_hash: newHash, force_password_reset: false })
+                .filter(([key]) => allowedFields.includes(key))
+        );
+
         await prisma.customer.update({
             where: { id: authUserId },
-            data: { password_hash: newHash, force_password_reset: false },
+            data: safeData,
         });
 
         const newToken = jwt.sign(
