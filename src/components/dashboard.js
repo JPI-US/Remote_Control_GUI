@@ -260,11 +260,33 @@ export default function Dashboard() {
     const intervalRef = useRef(null);
     const intervalRef1 = useRef(null);
 
+    const isEG4 = String(system?.inverter_type).toUpperCase() === "EG4";
+
     // ── Live poll (every 10 s): live power + flow ──────────────────────────
     useEffect(() => {
         if (!system) return;
         async function fetchLive() {
             try {
+                if (isEG4) {
+                    const response = await fetch(`/api/eg4`, { cache: "no-store" });
+                    if (!response.ok) return;
+                    const json = await response.json();
+
+                    if (json.solar?.total_w != null) setPvPower(json.solar.total_w);
+
+                    const toUser = json.grid?.to_user_w ?? 0;
+                    const toGrid = json.grid?.to_grid_w ?? 0;
+                    setGridImport(toUser > 0);
+                    setGridPower(toUser > 0 ? toUser : toGrid);
+                    setLoadPower(json.consumption?.power_w ?? 0);
+                    setBattSoc(json.battery?.soc ?? null);
+                    setHasBattery(json.battery?.soc != null);
+                    const chargeW = json.battery?.charge_w ?? 0;
+                    const dischargeW = json.battery?.discharge_w ?? 0;
+                    setBattChargePower(chargeW > 0 ? chargeW : -dischargeW);
+                    return;
+                }
+
                 const response = await fetch(`/api/fronius`, { cache: "no-store" });
                 if (!response.ok) return;
                 const json = await response.json();
@@ -289,7 +311,7 @@ export default function Dashboard() {
         fetchLive();
         intervalRef.current = setInterval(fetchLive, 10000);
         return () => clearInterval(intervalRef.current);
-    }, [system]);
+    }, [system, isEG4]);
 
     const powerPercent = MAX_PV_POWER > 0
         ? Math.min(Math.max(pvPower / MAX_PV_POWER, 0), 1)
@@ -301,6 +323,7 @@ export default function Dashboard() {
     // ── Production poll (every 5 min): all chart / historical data in one call ──
     useEffect(() => {
         if (!system) return;
+        if (isEG4) return; // No historical chart data available for EG4 systems yet
         async function fetchProduction() {
             try {
                 const res = await fetch(`/api/fronius`, { cache: "no-store" });
@@ -324,7 +347,7 @@ export default function Dashboard() {
         fetchProduction();
         intervalRef1.current = setInterval(fetchProduction, 300000);
         return () => clearInterval(intervalRef1.current);
-    }, [system]);
+    }, [system, isEG4]);
 
     const todaysProduction = useMemo(() => {
         if (!dailyProduction || !system_tz) return null;

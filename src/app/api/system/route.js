@@ -71,6 +71,7 @@ export async function GET(request) {
         return NextResponse.json({
             system: {
                 system_name: system.system_name,
+                inverter_type: system.inverter_type,
                 towers,
                 timezone: system.timezone,
                 max_pv_kw: system.max_pv_kw,
