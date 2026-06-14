@@ -21,9 +21,30 @@ import 'chartjs-adapter-luxon';
 import { DateTime } from "luxon";
 import Sidebar, { SIDEBAR_COLLAPSED_W, SIDEBAR_EXPANDED_W } from '@/components/Sidebar';
 import EnergyFlowPanel from '@/components/EnergyFlowPanel';
+import TreeImpactIcon from '@/components/TreeImpactIcon';
+import { isFifaDallasSystem } from '@/lib/fifaDallasSystem';
+import {
+    getFifaDashboardTheme,
+    getFifaPageBackground,
+    getFifaHeaderStyle,
+    FIFA_ORANGE,
+} from '@/lib/fifaDashboardTheme';
+import FifaSoccerBackdrop from '@/components/FifaSoccerBackdrop';
 
 const RADIUS = 45;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+const CO2_KG_PER_KWH = 0.37;
+const KG_PER_TREE = 21;
+
+/** Next power-of-10 milestone above current carbon (e.g. 6,284 → 10,000). */
+function nextCarbonGoalKg(kg) {
+    if (kg <= 0) return 100;
+    const exp = Math.ceil(Math.log10(kg));
+    const milestone = 10 ** exp;
+    if (kg >= milestone) return 10 ** (exp + 1);
+    return milestone;
+}
 
 // Light mode palette (unchanged)
 const SIDEBAR_BG = "#374151";
@@ -156,6 +177,21 @@ function getTheme(isDark) {
     };
 }
 
+const TOOLBAR_ROW = "px-6 h-14 flex items-center shrink-0";
+const TOOLBAR_BTN = "text-[13px] font-medium py-[5px] px-3 rounded cursor-pointer transition-all duration-[150ms]";
+
+function toolbarBtnStyle(active, theme, isDark) {
+    return {
+        background: active ? theme.amber : "transparent",
+        color: active ? (isDark ? "#000" : "#fff") : theme.text2,
+        border: `0.5px solid ${active ? theme.amber : theme.border}`,
+    };
+}
+
+function chartAxisGrid(theme) {
+    return { color: theme.chartGrid ?? theme.border, lineWidth: 0.5, drawBorder: false };
+}
+
 // Helper: returns className string for a dark-mode-aware card
 function dkCard(isDark, extraLight = "", extraDark = "") {
     if (isDark) return `rounded-xl border ${extraDark}`;
@@ -216,16 +252,6 @@ function Sparkline({ values = [], color = DK.amber, unit = "", startHour = 0 }) 
                     </text>
                 </>}
             </svg>
-        </div>
-    );
-}
-
-// Progress bar component (dark mode only)
-function DkProgressBar({ value, max, color = DK.amber }) {
-    const pct = Math.min(100, (value / Math.max(max, 0.001)) * 100);
-    return (
-        <div className="h-[3px] rounded-full overflow-hidden w-full" style={{ background: DK.amberDim }}>
-            <div className="h-full rounded-full [transition:width_0.8s_ease-out]" style={{ width: `${pct}%`, background: color }} />
         </div>
     );
 }
@@ -422,6 +448,7 @@ export default function Dashboard() {
         Thunderstorms: { icon: '⛈️', title: 'Stormy', message: 'Solar generation disrupted' },
         'Slight Chance Showers And Thunderstorms': { icon: '⛈️', title: 'Slight Chance Storms', message: 'Possible showers or storms; solar output may vary' },
         'Chance Showers And Thunderstorms': { icon: '⛈️', title: 'Chance Storms', message: 'Showers and thunderstorms likely; reduced solar output' },
+        'Showers And Thunderstorms': { icon: '⛈️', title: 'Showers & Storms', message: 'Showers and thunderstorms expected; solar generation disrupted' },
         default: { icon: '🌡️', title: 'Weather Update', message: 'Conditions are changing' },
     };
 
@@ -479,10 +506,64 @@ export default function Dashboard() {
         const id = setInterval(tick, 1000);
         return () => clearInterval(id);
     }, [system_tz]);
-    const carbonSaved = useMemo(() =>
-        totalProduction != null ? (totalProduction * 0.37).toFixed(2) : "0",
-        [totalProduction]
+    const [pageVisible, setPageVisible] = useState(
+        () => (typeof document !== "undefined" ? !document.hidden : true),
     );
+
+    useEffect(() => {
+        const onVis = () => setPageVisible(!document.hidden);
+        document.addEventListener("visibilitychange", onVis);
+        return () => document.removeEventListener("visibilitychange", onVis);
+    }, []);
+
+    const [fifaBrandingOn, setFifaBrandingOn] = useState(() => {
+        if (typeof window !== "undefined") {
+            const stored = localStorage.getItem("fifaBranding");
+            if (stored !== null) return stored === "true";
+        }
+        return true;
+    });
+
+    const toggleFifaBranding = () => setFifaBrandingOn((prev) => {
+        const next = !prev;
+        if (typeof window !== "undefined") localStorage.setItem("fifaBranding", String(next));
+        return next;
+    });
+
+    const [liveCarbonKg, setLiveCarbonKg] = useState(0);
+    const carbonApiKwhRef = useRef(0);
+    const carbonLiveKwhRef = useRef(0);
+    const carbonLastTickRef = useRef(Date.now());
+
+    useEffect(() => {
+        if (totalProduction == null) return;
+        carbonApiKwhRef.current = totalProduction;
+        carbonLiveKwhRef.current = 0;
+        carbonLastTickRef.current = Date.now();
+        setLiveCarbonKg(totalProduction * CO2_KG_PER_KWH);
+    }, [totalProduction]);
+
+    useEffect(() => {
+        if (!pageVisible) return;
+        const tick = () => {
+            const now = Date.now();
+            const deltaHours = (now - carbonLastTickRef.current) / 3600000;
+            carbonLastTickRef.current = now;
+            if (pvPower > 50) {
+                carbonLiveKwhRef.current += (pvPower / 1000) * deltaHours;
+            }
+            setLiveCarbonKg(
+                (carbonApiKwhRef.current + carbonLiveKwhRef.current) * CO2_KG_PER_KWH,
+            );
+        };
+        tick();
+        const id = setInterval(tick, 1000);
+        return () => clearInterval(id);
+    }, [pageVisible, pvPower]);
+
+    const carbonGoalKg = nextCarbonGoalKg(liveCarbonKg);
+    const treesPlanted = Math.floor(liveCarbonKg / KG_PER_TREE);
+    const treeFillPercent = (liveCarbonKg % KG_PER_TREE) / KG_PER_TREE;
 
     useEffect(() => {
         const count = system?.towers?.length ?? 0;
@@ -625,8 +706,17 @@ export default function Dashboard() {
     // sectionLabel replaced by T.text3 inline — kept for safety
     const sectionLabel = { fontSize: 13, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "inherit" };
 
+    const isFifaPage = isFifaDallasSystem(system);
+    const isFifa = isFifaPage && fifaBrandingOn;
+
     // Resolved theme tokens for this render
-    const T = getTheme(isDark);
+    const T = isFifa ? getFifaDashboardTheme(isDark) : getTheme(isDark);
+    const pageBackground = isFifa ? getFifaPageBackground(isDark, T.pageBg) : T.pageBg;
+    const fifaHeaderRaw = isFifa ? getFifaHeaderStyle(isDark) : null;
+    const fifaHeaderIconColor = fifaHeaderRaw?.iconColor;
+    const fifaHeaderStyle = fifaHeaderRaw
+        ? (({ iconColor, ...css }) => css)(fifaHeaderRaw)
+        : null;
 
     const GAUGE_R = 54;
     const GAUGE_CIRC = 2 * Math.PI * GAUGE_R;
@@ -635,28 +725,31 @@ export default function Dashboard() {
     return (
         <div
             className="flex flex-col h-screen overflow-hidden w-full antialiased [text-rendering:optimizeLegibility]"
-            style={{ background: T.pageBg, color: T.text1 }}
+            style={{ background: pageBackground, color: T.text1 }}
         >
             <div className="flex flex-1 min-h-0">
                 <Sidebar activeSection={activeSection} onSectionChange={(id) => {
                     setActiveSection(id);
                     const refMap = { dashboard: section1Ref, diagnostics: diagnosticsRef, control: controlRef, historical: historicalRef };
                     scrollToSection(refMap[id], `/dashboard${id !== "dashboard" ? "#" + id : ""}`);
-                }} systemName={system?.system_name} isNarrow={isNarrow} onExpandedChange={setSidebarExpanded} />
+                }} systemName={system?.system_name} isNarrow={isNarrow} branding={isFifa ? 'fifa' : 'default'} onExpandedChange={setSidebarExpanded} />
 
                 <div
                     className="relative flex-1 flex flex-col min-w-0 min-h-0"
                     style={{
-                        background: T.pageBg,
+                        background: pageBackground,
                         marginLeft: isNarrow ? 0 : (sidebarExpanded ? SIDEBAR_EXPANDED_W : SIDEBAR_COLLAPSED_W),
                         transition: 'margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                 >
-                    <main ref={setMainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory pb-0 md:pb-0 [.mobile_&]:pb-16">
+                    {isFifa && <FifaSoccerBackdrop isDark={isDark} />}
+                    <main ref={setMainRef} className="relative z-[1] flex-1 min-h-0 overflow-y-auto overflow-x-hidden snap-y snap-mandatory pb-0 md:pb-0 [.mobile_&]:pb-16">
         {/* ── Header ── */}
                         <header
                             className="flex items-center justify-between px-6 h-14 shrink-0 overflow-hidden relative z-20"
-                            style={isDark
+                            style={isFifa
+                                ? fifaHeaderStyle
+                                : isDark
                                 ? {
                                     background: "rgba(20,17,15,0.75)",
                                     borderBottom: `0.5px solid ${T.border}`,
@@ -677,10 +770,31 @@ export default function Dashboard() {
                                 />
                             </div>
                             <div className="flex items-center gap-2">
+                                {isFifaPage && (
+                                    <button
+                                        type="button"
+                                        role="switch"
+                                        aria-checked={fifaBrandingOn}
+                                        aria-label={fifaBrandingOn ? "Turn off FIFA branding" : "Turn on FIFA branding"}
+                                        className="p-2 rounded-lg transition-opacity cursor-pointer"
+                                        style={{ opacity: fifaBrandingOn ? 1 : 0.45 }}
+                                        onClick={toggleFifaBranding}
+                                    >
+                                        <img
+                                            src="/images/soccer-ball-icon.png"
+                                            alt=""
+                                            className="w-5 h-5 object-contain pointer-events-none select-none"
+                                            draggable={false}
+                                        />
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     aria-label={isDark ? "Light mode" : "Dark mode"}
-                                    className={`p-2 rounded-lg transition-colors cursor-pointer ${isDark ? "text-[rgba(245,240,234,0.6)]" : "text-[#2F3E4D]"}`}
+                                    className="p-2 rounded-lg transition-colors cursor-pointer"
+                                    style={{ color: isFifa && fifaHeaderIconColor
+                                        ? fifaHeaderIconColor
+                                        : isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                     onClick={toggleDark}
                                 >
                                     {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -688,7 +802,10 @@ export default function Dashboard() {
                                 <button
                                     type="button"
                                     aria-label="Menu"
-                                    className={`p-2 rounded-lg transition-colors cursor-pointer ${isDark ? "text-[rgba(245,240,234,0.6)]" : "text-[#2F3E4D]"}`}
+                                    className="p-2 rounded-lg transition-colors cursor-pointer"
+                                    style={{ color: isFifa && fifaHeaderIconColor
+                                        ? fifaHeaderIconColor
+                                        : isDark ? "rgba(245,240,234,0.6)" : "#2F3E4D" }}
                                     onClick={() => setMenuOpen(!menuOpen)}
                                 >
                                     {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -708,14 +825,34 @@ export default function Dashboard() {
                         >
                             {/* TOWER STATUS label + live time */}
                             <div className="flex items-end justify-between gap-4 mb-5">
-                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Tower Status</p>
-                                <p
-                                    className="text-[13px] font-bold tracking-[0.15em] uppercase tabular-nums"
-                                    style={{ color: T.text3 }}
-                                    aria-live="polite"
-                                >
-                                    {currentTime}
-                                </p>
+                                <div className="flex flex-col gap-0.5">
+                                    {isFifa && (
+                                        <span
+                                            className="text-[10px] font-bold tracking-[0.14em] uppercase"
+                                            style={{ color: FIFA_ORANGE }}
+                                        >
+                                            Fair Park, TX
+                                        </span>
+                                    )}
+                                    <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Tower Status</p>
+                                </div>
+                                <div className="flex flex-col items-end gap-0.5">
+                                    {isFifa && (
+                                        <span
+                                            className="text-[10px] font-bold tracking-[0.14em] uppercase"
+                                            style={{ color: FIFA_ORANGE }}
+                                        >
+                                            WORLD CUP 26
+                                        </span>
+                                    )}
+                                    <p
+                                        className="text-[13px] font-bold tracking-[0.15em] uppercase tabular-nums"
+                                        style={{ color: T.text3 }}
+                                        aria-live="polite"
+                                    >
+                                        {currentTime}
+                                    </p>
+                                </div>
                             </div>
 
                             {/* ── Tower Status Cards ── */}
@@ -855,129 +992,8 @@ export default function Dashboard() {
                             {/* TODAY AT A GLANCE label */}
                             <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-5" style={{ color: T.text3 }}>Today at a Glance</p>
 
-                            {/* ── Environmental + Performance row ── */}
+                            {/* ── Performance + Today's Data row ── */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-
-                                {/* Environmental */}
-                                <div className="rounded-xl overflow-hidden"
-                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
-                                >
-                                    <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Environmental</p>
-                                        <button
-                                            type="button"
-                                            onClick={toggleTempUnit}
-                                            className="flex items-center rounded-full overflow-hidden text-[11px] font-semibold"
-                                            style={{ border: `0.5px solid ${T.border2}` }}
-                                            aria-label="Toggle temperature unit"
-                                        >
-                                            <span className="py-[2px] px-[7px] transition-all duration-200" style={{ background: tempUnit === "F" ? T.amber : "transparent", color: tempUnit === "F" ? (isDark ? "#000" : "#fff") : T.text3 }}>°F</span>
-                                            <span className="py-[2px] px-[7px] transition-all duration-200" style={{ background: tempUnit === "C" ? T.amber : "transparent", color: tempUnit === "C" ? (isDark ? "#000" : "#fff") : T.text3 }}>°C</span>
-                                        </button>
-                                    </div>
-                                    <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
-                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Humidity</p>
-                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>
-                                                {weather?.current?.humidity ?? "—"}<span className="text-sm font-light" style={{ color: T.text2 }}>%</span>
-                                            </p>
-                                        </div>
-                                        <div className="px-5 py-4">
-                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Temperature</p>
-                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>
-                                                {toDisplayTemp(weather?.current?.temp)}<span className="text-sm font-light" style={{ color: T.text2 }}>{tempSymbol}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="px-5 py-4">
-                                        <p className="text-[13px] tracking-[0.10em] mb-2.5" style={{ color: T.text3 }}>Today&apos;s Conditions</p>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <Sparkline
-                                                    values={weather?.hourly?.slice(0, 24).map(h => h.humidity ?? 0) ?? [weather?.current?.humidity ?? 0]}
-                                                    color="#7BAFD4" unit="%" startHour={new Date().getHours()}
-                                                />
-                                                <p className="text-[11px] mt-1" style={{ color: T.text3 }}>Updated {currentTime}</p>
-                                            </div>
-                                            <div>
-                                                <Sparkline
-                                                    values={weather?.hourly?.slice(0, 24).map(h => toDisplayTemp(h.temp) ?? 0) ?? [toDisplayTemp(weather?.current?.temp) ?? 0]}
-                                                    color="#f97316" unit={tempSymbol} startHour={new Date().getHours()}
-                                                />
-                                                <p className="text-[11px] mt-1" style={{ color: T.text3 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Performance */}
-                                <div className="rounded-xl overflow-hidden"
-                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
-                                >
-                                    <p className="px-5 pt-4 pb-3 text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3, borderBottom: `0.5px solid ${T.border}` }}>
-                                        Performance
-                                    </p>
-                                    <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
-                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Daily Peak</p>
-                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{maxHourlyPower} <span className="text-sm font-light" style={{ color: T.text2 }}>kW</span></p>
-                                        </div>
-                                        <div className="px-5 py-4">
-                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Power Output</p>
-                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{powerPercentDisplay.toFixed(1)}<span className="text-sm font-light" style={{ color: T.text2 }}>%</span></p>
-                                        </div>
-                                    </div>
-                                    <div className="px-5 py-4">
-                                        <p className="text-[13px] tracking-[0.10em] mb-2.5" style={{ color: T.text3 }}>Hourly Output</p>
-                                        <div className="flex items-end gap-0.5 h-12">
-                                            {Array.from({ length: 24 }, (_, i) => {
-                                                const hourVal = hourlyProduction?.values?.[Math.floor(i * (hourlyProduction.values.length / 24))] ?? 0;
-                                                const maxVal = Math.max(...(hourlyProduction?.values ?? [1]), 1);
-                                                const h = Math.max(3, (hourVal / maxVal) * 48);
-                                                const isNow = i === new Date().getHours();
-                                                return (
-                                                    <div key={i} className="flex-1 rounded-sm [transition:height_0.5s_ease-out]" style={{
-                                                        height: h,
-                                                        background: isNow ? T.amber : (hourVal > 0 ? T.amberDim : T.amberDim),
-                                                        opacity: isNow ? 1 : hourVal > 0 ? 0.5 : 0.2,
-                                                    }} />
-                                                );
-                                            })}
-                                        </div>
-                                        <div className="flex justify-between mt-1 text-xs" style={{ color: T.text3 }}>
-                                            <span>0</span><span>6</span><span>12</span><span>18</span><span>now</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* ── CO2 + Today's Data row ── */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-
-                                {/* CO2 / Environmental Impact */}
-                                <div className="rounded-xl p-6 flex flex-col justify-between min-h-[200px]"
-                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
-                                >
-                                    <div>
-                                        <p className="text-[13px] font-bold uppercase tracking-[0.15em] mb-4" style={{ color: T.text3 }}>
-                                            Environmental Impact
-                                        </p>
-                                        <p className="text-[44px] font-[200] leading-none tracking-[-0.02em]" style={{ color: T.amber }}>
-                                            {carbonSaved} <span className="text-xl font-light">kg CO₂</span>
-                                        </p>
-                                        <p className="text-sm mt-2" style={{ color: T.text3 }}>Carbon saved since installation</p>
-                                    </div>
-                                    <p className="text-sm mt-4 mb-3" style={{ color: T.text2 }}>
-                                        ≈ {Math.round(carbonSaved / 21)} trees planted · {Math.round(carbonSaved * 4.3)} km not driven
-                                    </p>
-                                    <div>
-                                        <div className="flex justify-between mb-2 text-[13px]" style={{ color: T.text3 }}>
-                                            <span>Monthly goal</span>
-                                            <span>{Math.min(carbonSaved, 50)} / 50 kg</span>
-                                        </div>
-                                        <DkProgressBar value={Math.min(parseFloat(carbonSaved), 50)} max={50} color={T.amber} />
-                                    </div>
-                                </div>
 
                                 {/* Today's Data chart */}
                                 <div className="rounded-xl p-5 min-h-[200px]"
@@ -1042,6 +1058,136 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Performance */}
+                                <div className="rounded-xl overflow-hidden"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <p className="px-5 pt-4 pb-3 text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3, borderBottom: `0.5px solid ${T.border}` }}>
+                                        Performance
+                                    </p>
+                                    <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Daily Peak</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{maxHourlyPower} <span className="text-sm font-light" style={{ color: T.text2 }}>kW</span></p>
+                                        </div>
+                                        <div className="px-5 py-4">
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Power Output</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{powerPercentDisplay.toFixed(1)}<span className="text-sm font-light" style={{ color: T.text2 }}>%</span></p>
+                                        </div>
+                                    </div>
+                                    <div className="px-5 py-4">
+                                        <p className="text-[13px] tracking-[0.10em] mb-2.5" style={{ color: T.text3 }}>Hourly Output</p>
+                                        <div className="flex items-end gap-0.5 h-12">
+                                            {Array.from({ length: 24 }, (_, i) => {
+                                                const hourVal = hourlyProduction?.values?.[Math.floor(i * (hourlyProduction.values.length / 24))] ?? 0;
+                                                const maxVal = Math.max(...(hourlyProduction?.values ?? [1]), 1);
+                                                const h = Math.max(3, (hourVal / maxVal) * 48);
+                                                const isNow = i === new Date().getHours();
+                                                return (
+                                                    <div key={i} className="flex-1 rounded-sm [transition:height_0.5s_ease-out]" style={{
+                                                        height: h,
+                                                        background: isNow ? T.amber : (hourVal > 0 ? T.amberDim : T.amberDim),
+                                                        opacity: isNow ? 1 : hourVal > 0 ? 0.5 : 0.2,
+                                                    }} />
+                                                );
+                                            })}
+                                        </div>
+                                        <div className="flex justify-between mt-1 text-xs" style={{ color: T.text3 }}>
+                                            <span>0</span><span>6</span><span>12</span><span>18</span><span>now</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ── CO2 + Climate row ── */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+
+                                {/* Environmental Impact */}
+                                <div className="rounded-xl overflow-hidden flex flex-col h-full min-h-0"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="px-5 h-12 flex items-center shrink-0" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <p className="text-[13px] font-bold tracking-[0.15em] uppercase leading-none" style={{ color: T.text3 }}>Environmental Impact</p>
+                                    </div>
+                                    <div className="p-5 flex flex-col justify-between flex-1 min-h-0 gap-4 relative overflow-hidden">
+                                        <div className="relative z-[1] max-w-[56%]">
+                                            <p className="text-[36px] font-[200] leading-none tracking-[-0.02em] tabular-nums" style={{ color: T.amber }}>
+                                                {liveCarbonKg.toFixed(2)}<span className="text-lg font-light ml-1">kg CO₂</span>
+                                            </p>
+                                            <p className="text-sm mt-1.5" style={{ color: T.text3 }}>Carbon saved since installation</p>
+                                        </div>
+                                        <div className="relative z-[1] max-w-[56%]">
+                                            <p className="text-sm tabular-nums" style={{ color: T.text2 }}>
+                                                ≈ {treesPlanted.toLocaleString()} trees planted
+                                            </p>
+                                            <p className="text-[11px] mt-1.5 tabular-nums" style={{ color: T.text3 }}>
+                                                {Math.round(carbonGoalKg).toLocaleString()} kg goal
+                                            </p>
+                                        </div>
+                                        <div className="absolute top-[calc(50%-6px)] left-[calc(36%+205px)] z-0 h-full max-h-full w-[72%] max-w-[228px] -translate-x-1/2 -translate-y-1/2 origin-center scale-[1.20] pointer-events-none">
+                                            <TreeImpactIcon
+                                                percent={treeFillPercent}
+                                                fillColor={T.amber}
+                                                trackColor={isDark ? T.amberDim : T.gaugeTrack}
+                                                isDark={isDark}
+                                                className="h-full w-full max-h-full min-h-0"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Climate */}
+                                <div className="rounded-xl overflow-hidden"
+                                    style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
+                                >
+                                    <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Climate</p>
+                                        <button
+                                            type="button"
+                                            onClick={toggleTempUnit}
+                                            className="flex items-center rounded-full overflow-hidden text-[11px] font-semibold"
+                                            style={{ border: `0.5px solid ${T.border2}` }}
+                                            aria-label="Toggle temperature unit"
+                                        >
+                                            <span className="py-[2px] px-[7px] transition-all duration-200" style={{ background: tempUnit === "F" ? T.amber : "transparent", color: tempUnit === "F" ? (isDark ? "#000" : "#fff") : T.text3 }}>°F</span>
+                                            <span className="py-[2px] px-[7px] transition-all duration-200" style={{ background: tempUnit === "C" ? T.amber : "transparent", color: tempUnit === "C" ? (isDark ? "#000" : "#fff") : T.text3 }}>°C</span>
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
+                                        <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Humidity</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>
+                                                {weather?.current?.humidity ?? "—"}<span className="text-sm font-light" style={{ color: T.text2 }}>%</span>
+                                            </p>
+                                        </div>
+                                        <div className="px-5 py-4">
+                                            <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Temperature</p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>
+                                                {toDisplayTemp(weather?.current?.temp)}<span className="text-sm font-light" style={{ color: T.text2 }}>{tempSymbol}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="px-5 py-4">
+                                        <p className="text-[13px] tracking-[0.10em] mb-2.5" style={{ color: T.text3 }}>Today&apos;s Conditions</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <Sparkline
+                                                    values={weather?.hourly?.slice(0, 24).map(h => h.humidity ?? 0) ?? [weather?.current?.humidity ?? 0]}
+                                                    color="#7BAFD4" unit="%" startHour={new Date().getHours()}
+                                                />
+                                                <p className="text-[11px] mt-1" style={{ color: T.text3 }}>Updated {currentTime}</p>
+                                            </div>
+                                            <div>
+                                                <Sparkline
+                                                    values={weather?.hourly?.slice(0, 24).map(h => toDisplayTemp(h.temp) ?? 0) ?? [toDisplayTemp(weather?.current?.temp) ?? 0]}
+                                                    color="#f97316" unit={tempSymbol} startHour={new Date().getHours()}
+                                                />
+                                                <p className="text-[11px] mt-1" style={{ color: T.text3 }}>Feels like {toDisplayTemp((weather?.current?.temp ?? 15) - 2)}{tempSymbol}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
 
@@ -1079,7 +1225,7 @@ export default function Dashboard() {
 
                             {/* ── System Controls ── */}
                             <div ref={controlRef} id="control" className="scroll-mt-24">
-                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-4 mt-8" style={{ color: T.text3 }}>System Controls</p>
+                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-5 mt-12" style={{ color: T.text3 }}>System Controls</p>
                                 <EnergyFlowPanel
                                     pvPower={pvPower}
                                     gridPower={gridPower}
@@ -1095,6 +1241,8 @@ export default function Dashboard() {
                                     onTowerSelect={setSelectedTowerIndex}
                                     towerRotationDeg={towerRotationDeg}
                                     orientationAngleNum={orientationAngleNum}
+                                    latitude={lat}
+                                    longitude={lon}
                                     canAccessControlPanel={canAccessControlPanel}
                                     showAutonomousToggle={session?.role === "ADMIN"}
                                     autonomousMode={autonomousMode}
@@ -1103,55 +1251,51 @@ export default function Dashboard() {
                                     setMaintenanceMode={setMaintenanceMode}
                                     controlActions={controlActions}
                                     isDark={isDark}
+                                    branding={isFifa ? "fifa" : "default"}
                                     systemTimezone={system_tz}
                                     isCommercial={session?.planTier === "COMMERCIAL"}
+                                    cardBorder={T.cardBorder}
+                                    cardRadius={T.cardRadius}
+                                    cardShadow={T.cardShadow}
                                 />
                             </div>
 
 
                             {/* ── Historical Data ── */}
                             <div ref={historicalRef} id="historical" className="scroll-mt-24">
-                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-4 mt-8" style={{ color: T.text3 }}>Historical Data</p>
+                                <p className="text-[13px] font-bold tracking-[0.15em] uppercase mb-5 mt-12" style={{ color: T.text3 }}>Historical Data</p>
                                 <div className="rounded-xl overflow-hidden mb-6"
                                     style={{ background: T.cardBg, border: T.cardBorder, boxShadow: T.cardShadow, borderRadius: T.cardRadius }}
                                 >
-                                    <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                                        <div>
-                                            <p className="text-[13px] font-bold tracking-[0.15em] uppercase" style={{ color: T.text3 }}>Historical Power Data</p>
-                                            <p className="text-[13px] mt-0.5" style={{ color: T.text3 }}>Energy produced over time</p>
-                                        </div>
+                                    <div className={TOOLBAR_ROW} style={{ borderBottom: `0.5px solid ${T.border}` }}>
                                         <div className="flex items-center gap-1">
                                             {[{ id: "monthly", label: "Monthly" }, { id: "yearly", label: "Yearly" }, { id: "total", label: "Total" }].map(({ id, label }) => (
                                                 <button key={id} type="button" onClick={() => setHistoricalPeriod(id)}
-                                                    className="text-[13px] font-medium py-[5px] px-3 rounded cursor-pointer transition-all duration-[150ms]"
-                                                    style={{
-                                                        background: historicalPeriod === id ? T.amber : "transparent",
-                                                        color: historicalPeriod === id ? (isDark ? "#000" : "#fff") : T.text2,
-                                                        border: `0.5px solid ${historicalPeriod === id ? T.amber : T.border}`,
-                                                    }}
+                                                    className={TOOLBAR_BTN}
+                                                    style={toolbarBtnStyle(historicalPeriod === id, T, isDark)}
                                                 >{label}</button>
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="p-5 min-h-[300px]" style={{ backgroundColor: T.chartBg }}>
+                                    <div className="p-5 min-h-[300px]">
                                         {historicalPeriod === "monthly" && dailyProduction?.values?.length > 0 && (
                                             <div className="h-[260px]">
                                                 <Bar data={{ labels: (dailyProduction.labels || dailyProduction.values.map((_, i) => i + 1)).slice(0, dailyProduction.values.length), datasets: [{ label: "Energy (kWh)", data: (dailyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
+                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: chartAxisGrid(T), border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
                                                 />
                                             </div>
                                         )}
                                         {historicalPeriod === "yearly" && monthlyProduction?.values?.length > 0 && (
                                             <div className="h-[260px]">
                                                 <Bar data={{ labels: monthLabels.slice(0, (monthlyProduction.values || []).length), datasets: [{ label: "Energy (kWh)", data: (monthlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9 }] }}
-                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
+                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: chartAxisGrid(T), border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
                                                 />
                                             </div>
                                         )}
                                         {historicalPeriod === "total" && yearlyProduction?.values?.length > 0 && (
                                             <div className="h-[260px]">
                                                 <Bar data={{ labels: (yearlyProduction.labels || yearlyProduction.values.map((_, i) => `${i + 1}`)).slice(0, (yearlyProduction.values || []).length), datasets: [{ label: "Energy (MWh)", data: (yearlyProduction.values || []).map(v => Math.round((v ?? 0) * 100) / 100), backgroundColor: T.amber, borderRadius: 3, barPercentage: 0.4, categoryPercentage: 0.5 }] }}
-                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: T.chartGrid, drawBorder: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
+                                                    options={{ responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: chartAxisGrid(T), border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: T.text3, font: { size: 13 } } } }, plugins: { legend: { display: false } } }}
                                                 />
                                             </div>
                                         )}

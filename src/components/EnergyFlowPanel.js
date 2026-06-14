@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Power, RotateCcw, X, Home } from "lucide-react";
 import { DateTime } from "luxon";
+import { getSolarPosition, getSolarDateTime, sunPositionOnDiagram } from "@/lib/solarPosition";
+import { getFifaEnergyPanelTheme } from "@/lib/fifaDashboardTheme";
 
 function getFireflyCount(timezone) {
     const now = DateTime.now().setZone(timezone || "America/Chicago");
@@ -19,16 +20,25 @@ function getFireflyCount(timezone) {
     return Math.min(52, 25 + intervals * 3);
 }
 
-function FireflyCanvas({ count = 0 }) {
+function FireflyCanvas({ count = 0, palette = "amber" }) {
+    const colors = palette === "orange"
+        ? { core: "255,120,60", mid: "240,78,35", hot: "255,200,140" }
+        : { core: "255,215,80", mid: "212,168,83", hot: "255,230,120" };
     const canvasRef  = useRef(null);
     const countRef   = useRef(count);
+    const visibleRef = useRef(true);
     countRef.current = count;
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+        const io = new IntersectionObserver(
+            ([entry]) => { visibleRef.current = entry.isIntersecting; },
+            { threshold: 0.05 },
+        );
+        io.observe(canvas);
         const ctx = canvas.getContext("2d");
-        let animId, t = 0;
+        let animId, t = 0, lastDraw = 0;
 
         function resize() {
             canvas.width  = canvas.offsetWidth;
@@ -65,9 +75,12 @@ function FireflyCanvas({ count = 0 }) {
         const w = canvas.width || 800, h = canvas.height || 420;
         for (let i = 0; i < countRef.current; i++) flies.push(spawnFly(w, h));
 
-        function draw() {
+        function draw(now = 0) {
             animId = requestAnimationFrame(draw);
-            t += 0.016;
+            if (!visibleRef.current) return;
+            if (now - lastDraw < 1000 / 30) return;
+            lastDraw = now;
+            t += 0.033;
             const cw = canvas.width, ch = canvas.height;
             if (flies.length < countRef.current) flies.push(spawnFly(cw, ch));
             else if (flies.length > countRef.current) flies.pop();
@@ -81,19 +94,19 @@ function FireflyCanvas({ count = 0 }) {
                     f.baseX = nf.baseX; f.x = f.baseX;
                 }
                 const alpha = f.baseAlpha * (0.5 + 0.5 * Math.sin(t * f.pulseFreq + f.pulseOff));
-                const glow = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.radius * 7);
-                glow.addColorStop(0,   `rgba(255,215,80,${alpha})`);
-                glow.addColorStop(0.3, `rgba(212,168,83,${alpha * 0.7})`);
-                glow.addColorStop(0.7, `rgba(212,168,83,${alpha * 0.15})`);
-                glow.addColorStop(1,   "rgba(0,0,0,0)");
+                const radial = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.radius * 7);
+                radial.addColorStop(0,   `rgba(${colors.core},${alpha})`);
+                radial.addColorStop(0.3, `rgba(${colors.mid},${alpha * 0.7})`);
+                radial.addColorStop(0.7, `rgba(${colors.mid},${alpha * 0.15})`);
+                radial.addColorStop(1,   "rgba(0,0,0,0)");
                 ctx.beginPath(); ctx.arc(f.x, f.y, f.radius * 7, 0, Math.PI * 2);
-                ctx.fillStyle = glow; ctx.fill();
+                ctx.fillStyle = radial; ctx.fill();
                 ctx.beginPath(); ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,230,120,${Math.min(1, alpha * 1.4)})`; ctx.fill();
+                ctx.fillStyle = `rgba(${colors.hot},${Math.min(1, alpha * 1.4)})`; ctx.fill();
             }
         }
         draw();
-        return () => { cancelAnimationFrame(animId); ro.disconnect(); };
+        return () => { cancelAnimationFrame(animId); ro.disconnect(); io.disconnect(); };
     }, []);
 
     if (count === 0) return null;
@@ -107,14 +120,14 @@ function FireflyCanvas({ count = 0 }) {
 }
 
 const DK = {
-    bg:       "#14110f",
+    bg:       "#161310",
     surface:  "#1c1814",
     surface2: "#221e19",
     border:   "rgba(255,245,235,0.07)",
     border2:  "rgba(255,245,235,0.12)",
     text1:    "#f5f0ea",
-    text2:    "rgba(245,240,234,0.5)",
-    text3:    "rgba(245,240,234,0.28)",
+    text2:    "rgba(245,240,234,0.80)",
+    text3:    "rgba(245,240,234,0.58)",
     amber:    "#e6b85c",
     amberDim: "rgba(230,184,92,0.14)",
     green:    "rgba(74,222,128,0.75)",
@@ -125,7 +138,7 @@ const DK = {
 };
 
 const LT = {
-    bg:       "#F2F2F2",
+    bg:       "#FAFBFD",
     surface:  "#FFFFFF",
     surface2: "#F8F8F8",
     border:   "rgba(0,0,0,0.08)",
@@ -133,8 +146,8 @@ const LT = {
     text1:    "#2F3E4D",
     text2:    "#6A7B8F",
     text3:    "#9AABB8",
-    amber:    "#D97706",
-    amberDim: "rgba(217,119,6,0.08)",
+    amber:    "#E8A020",
+    amberDim: "rgba(232,160,32,0.12)",
     green:    "#2A9D8F",
     red:      "#dc2626",
     orange:   "#ea580c",
@@ -143,26 +156,85 @@ const LT = {
 };
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+/** White PNG → #2F3E4D navy for light-mode default (non-FIFA) system controls */
+const TOWER_ICON_FILTER_NAVY = "brightness(0) saturate(100%) invert(20%) sepia(28%) saturate(1100%) hue-rotate(186deg) brightness(88%) contrast(90%)";
+/** White PNG → FIFA lime (dark mode system controls) */
+const TOWER_ICON_FILTER_FIFA_LIME = "brightness(0) saturate(100%) invert(88%) sepia(47%) saturate(4260%) hue-rotate(22deg) brightness(104%) contrast(101%)";
+/** White PNG → FIFA orange (light mode system controls) */
+const TOWER_ICON_FILTER_FIFA_TEAL = "brightness(0) saturate(100%) invert(15%) sepia(42%) saturate(1800%) hue-rotate(142deg) brightness(92%) contrast(98%)";
+
+function diagramBoxBackground(T, isFifa, isDark) {
+    const gradientCount = (T.bg.match(/gradient\(/g) || []).length;
+    if (gradientCount > 1) {
+        // Grid + multi-layer gradients breaks background-size and tiles into a harsh checkerboard
+        return { background: T.bg };
+    }
+
+    const gridLine = isFifa
+        ? (isDark ? "rgba(255,255,255,0.03)" : "rgba(0, 75, 77, 0.025)")
+        : (isDark ? "rgba(255,255,255,0.03)" : "rgba(26, 37, 53, 0.025)");
+    const grid = `linear-gradient(${gridLine} 1px, transparent 1px), linear-gradient(90deg, ${gridLine} 1px, transparent 1px)`;
+
+    if (gradientCount === 1) {
+        return {
+            backgroundImage: `${grid}, ${T.bg}`,
+            backgroundSize: "64px 64px, auto",
+        };
+    }
+
+    return {
+        backgroundColor: T.bg,
+        backgroundImage: grid,
+        backgroundSize: "64px 64px",
+    };
+}
+
+function towerIconFilter(isFifa, isDark) {
+    if (!isFifa) return isDark ? "none" : TOWER_ICON_FILTER_NAVY;
+    return isDark ? TOWER_ICON_FILTER_FIFA_LIME : TOWER_ICON_FILTER_FIFA_TEAL;
+}
 const degToRad = (d) => (d * Math.PI) / 180;
 const DIAGRAM_ASPECT_W = 520;
 const DIAGRAM_ASPECT_H = 300;
-const CENTER_BIAS_Y_FRAC = -0.04; // shift center slightly upward to reduce bottom dead space
-// Solar node: icon 72px + gap 5 + label block; line starts below "SOLAR" text
-const SOLAR_LINE_START_OFFSET = 64;
+const DIAGRAM_ASPECT_H_ADMIN = 285; // taller ratio so full-width layout doesn't look squished
+const CENTER_BIAS_Y_FRAC = -0.06; // shift diagram up to center tower + compass
 
-function SunIcon({ active, size = 56, theme = DK, isDark = true }) {
-    const c = active ? theme.amber : (isDark ? "rgba(255,255,255,0.18)" : theme.text3);
+const ACTION_ICON_COLORS = {
+    start:   "#4A9E78",
+    restart: "#E8A020",
+    stop:    "#dc2626",
+    reset:   "#b91c1c",
+    home:    "#4a5568",
+};
+
+function azimuthToCardinal(az) {
+    const d = ((Number(az) % 360) + 360) % 360;
+    if (d >= 337.5 || d < 22.5) return "N";
+    if (d < 67.5) return "NE";
+    if (d < 112.5) return "E";
+    if (d < 157.5) return "SE";
+    if (d < 202.5) return "S";
+    if (d < 247.5) return "SW";
+    if (d < 292.5) return "W";
+    return "NW";
+}
+
+function SunIcon({ active, size = 56, theme = DK, isDark = true, elevated = false }) {
+    const c = theme.amber;
+    const coreOpacity = active ? 0.95 : (isDark ? 0.58 : 0.72);
+    const rayOpacity = active ? 0.88 : (isDark ? 0.48 : 0.62);
     const cx = size/2, cy = size/2, rc = size*0.21, r1 = size*0.33, r2 = size*0.45;
     return (
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-            <circle cx={cx} cy={cy} r={rc} fill={c} opacity={active ? 0.92 : 0.35} />
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}
+            style={elevated ? { filter: `drop-shadow(0 -6px 10px ${c}55)` } : undefined}>
+            <circle cx={cx} cy={cy} r={rc} fill={c} opacity={coreOpacity} />
             {[0,45,90,135,180,225,270,315].map(a => {
                 const r = (a * Math.PI) / 180;
                 return <line key={a}
                     x1={cx+Math.cos(r)*r1} y1={cy+Math.sin(r)*r1}
                     x2={cx+Math.cos(r)*r2} y2={cy+Math.sin(r)*r2}
                     stroke={c} strokeWidth={size*0.055} strokeLinecap="round"
-                    opacity={active ? 0.72 : 0.28} />;
+                    opacity={rayOpacity} />;
             })}
         </svg>
     );
@@ -220,21 +292,6 @@ function BatteryIcon({ soc, active, size = 52, theme = DK, isDark = true }) {
     );
 }
 
-function TowerSVGFallback({ theme = DK }) {
-    return (
-        <svg width="96" height="96" viewBox="0 0 96 96">
-            <rect x="13" y="12" width="70" height="44" rx="6"
-                fill="#1e3a5f" stroke={theme.amber} strokeWidth="1.4" opacity="0.85" />
-            <line x1="13" y1="26" x2="83" y2="26" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
-            <line x1="13" y1="40" x2="83" y2="40" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
-            <line x1="36" y1="12" x2="36" y2="56" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
-            <line x1="60" y1="12" x2="60" y2="56" stroke={theme.amber} strokeWidth="0.7" opacity="0.4" />
-            <rect x="44" y="56" width="8" height="26" rx="2" fill={theme.text3} />
-            <rect x="32" y="80" width="32" height="6" rx="3" fill={theme.text3} opacity="0.6" />
-        </svg>
-    );
-}
-
 function Node({ left, top, children }) {
     return (
         <div style={{
@@ -261,25 +318,46 @@ function NodeLabel({ value, unit, label, sub, color, theme = DK }) {
     );
 }
 
+const TOOLBAR_ROW = "px-6 h-14 flex items-center shrink-0";
+const TOOLBAR_BTN = "text-[13px] font-medium py-[5px] px-3 rounded cursor-pointer transition-all duration-[150ms]";
+
+function toolbarBtnStyle(active, theme, isDark) {
+    return {
+        background: active ? theme.amber : "transparent",
+        color: active ? (isDark ? "#000" : "#fff") : theme.text2,
+        border: `0.5px solid ${active ? theme.amber : theme.border}`,
+    };
+}
+
 export default function EnergyFlowPanel({
     pvPower = 0, gridPower = 0, gridImport = false, loadPower = 0,
     battSoc = null, hasBattery = false, battChargePower = null,
     todaysProduction = null, maxHourlyPower = 0,
     towerCount = 1, selectedTowerIndex = 0, onTowerSelect,
     towerRotationDeg = 0, orientationAngleNum = "—",
+    latitude, longitude,
     canAccessControlPanel = false,
     showAutonomousToggle = false,
     autonomousMode, setAutonomousMode, maintenanceMode, setMaintenanceMode,
     controlActions = [],
     isDark = true,
+    branding = "default",
     systemTimezone = "America/Chicago",
     isCommercial = false,
+    cardBorder,
+    cardRadius,
+    cardShadow,
 }) {
-    const T = isDark ? DK : LT;
+    const isFifa = branding === "fifa";
+    const T = isFifa
+        ? getFifaEnergyPanelTheme(isDark)
+        : (isDark ? DK : LT);
+    const [solar, setSolar] = useState({ azimuth: 90, elevation: 45, visible: true });
     const [fireflyCount, setFireflyCount] = useState(() => getFireflyCount(systemTimezone));
     const diagramRef = useRef(null);
     // Start with a stable fallback so SVG lines don't "snap" from (0,0) on first paint.
     const [diagramSize, setDiagramSize] = useState({ w: DIAGRAM_ASPECT_W, h: DIAGRAM_ASPECT_H });
+    const [hoveredActionId, setHoveredActionId] = useState(null);
 
     useEffect(() => {
         if (!isDark) return;
@@ -288,6 +366,16 @@ export default function EnergyFlowPanel({
         const id = setInterval(tick, 60000);
         return () => clearInterval(id);
     }, [isDark, systemTimezone]);
+
+    useEffect(() => {
+        const lat = Number(latitude);
+        const lon = Number(longitude);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+        const tick = () => setSolar(getSolarPosition(lat, lon, getSolarDateTime(systemTimezone)));
+        tick();
+        const id = setInterval(tick, 30000);
+        return () => clearInterval(id);
+    }, [latitude, longitude, systemTimezone]);
 
     const pvKw   = (pvPower   / 1000).toFixed(2);
     const gridKw = (gridPower / 1000).toFixed(2);
@@ -300,6 +388,12 @@ export default function EnergyFlowPanel({
     const battCharging = (battChargePower ?? 0) > 0;
     const gridColor    = gridImport ? T.orange : T.teal;
     const TOWER_HALF   = 100;
+
+    const rightPanelStyle = !isCommercial ? {
+        flex: "0 0 30%",
+        minWidth: 260,
+        maxWidth: 400,
+    } : null;
 
     useEffect(() => {
         const el = diagramRef.current;
@@ -335,27 +429,68 @@ export default function EnergyFlowPanel({
         return clamp(r, 120, 320);
     })();
 
-    // Keep the same "directions" as the old hardcoded layout, but normalize all nodes
-    // to the same radius from the tower center so spacing scales with the panel size.
-    const ANG = {
-        sun: -90,
-        grid: -21,
-        house: 40,
-        battery: 152,
-    };
+    const hasCoords = Number.isFinite(Number(latitude)) && Number.isFinite(Number(longitude));
+    const sensorAzimuth = !isNaN(parseFloat(orientationAngleNum))
+        ? parseFloat(orientationAngleNum)
+        : null;
+    const solarAzimuth = hasCoords ? solar.azimuth : towerRotationDeg;
+    const towerFacingAzimuth = sensorAzimuth ?? towerRotationDeg;
+
+    // Shared center — compass, tower, sun azimuth, and tracking line
+    const diagramCx = cx;
+    const diagramCy = cy;
+    const compassR = haloSize * 0.4;
+    const sunRadius = compassR + 58;
 
     const pos = (angleDeg) => ({
         x: cx + nodeRadius * Math.cos(degToRad(angleDeg)),
         y: cy + nodeRadius * Math.sin(degToRad(angleDeg)),
     });
 
+    const sunAz = hasCoords ? solarAzimuth : towerRotationDeg;
     const P = {
-        tower: { x: cx, y: cy },
-        sun: pos(ANG.sun),
-        grid: pos(ANG.grid),
-        house: pos(ANG.house),
-        battery: pos(ANG.battery),
+        tower: { x: diagramCx, y: diagramCy },
+        sun: sunPositionOnDiagram(diagramCx, diagramCy, sunRadius, sunAz),
+        grid: pos(-21),
+        house: pos(40),
+        battery: pos(152),
     };
+
+    const switchTrackOff = isDark ? "rgba(255,255,255,0.18)" : "rgba(0,75,77,0.14)";
+    const switchTrackBorder = isDark ? "rgba(255,255,255,0.14)" : T.border2;
+
+    const modeToggles = [
+        ...(showAutonomousToggle ? [{
+            id: "autonomous",
+            label: "Autonomous",
+            sub: "Default",
+            active: autonomousMode,
+            activeColor: T.green,
+            onClick: () => {
+                setAutonomousMode((prev) => {
+                    const next = !prev;
+                    if (next) setMaintenanceMode(false);
+                    return next;
+                });
+            },
+        }] : []),
+        ...(canAccessControlPanel ? [{
+            id: "maintenance",
+            label: "Maintenance",
+            sub: "Requires confirmation",
+            active: maintenanceMode,
+            activeColor: T.red,
+            onClick: () => {
+                setMaintenanceMode((prev) => {
+                    const next = !prev;
+                    if (next) setAutonomousMode(false);
+                    return next;
+                });
+            },
+        }] : []),
+    ];
+
+    const effectiveTowerCount = Math.max(towerCount, 1);
 
     const statsRows = [
         { label: "Solar",  value: pvKw,  unit: "kW",
@@ -376,56 +511,102 @@ export default function EnergyFlowPanel({
     ];
 
     return (
-        <div className="rounded-2xl overflow-hidden mb-6"
-            style={isDark
-                ? { background: T.surface, border: `0.5px solid ${T.border}` }
-                : { background: T.surface, borderRadius: 20, boxShadow: "0 4px 6px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.04)" }
-            }>
+        <div className="overflow-hidden w-full"
+            style={{
+                background: T.surface,
+                border: cardBorder ?? `0.5px solid ${T.border}`,
+                borderRadius: cardRadius ?? 12,
+                boxShadow: cardShadow,
+            }}>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3"
+            <div className="flex items-stretch"
                 style={{ borderBottom: `0.5px solid ${T.border}` }}>
-                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.15em",
-                    textTransform: "uppercase", color: T.text3 }}>Energy Flow</span>
-                <div className="flex items-center gap-4">
-                    {towerCount > 1 && (
-                        <div className="flex items-center gap-1">
-                            {Array.from({ length: towerCount }, (_, i) => (
-                                <button key={i} type="button" onClick={() => onTowerSelect?.(i)}
-                                    style={{
-                                        fontSize: 11, fontWeight: 500, padding: "3px 10px",
-                                        borderRadius: 4, cursor: "pointer", transition: "all 0.15s",
-                                        background: selectedTowerIndex === i ? T.amber : "transparent",
-                                        color: selectedTowerIndex === i ? "#000" : T.text2,
-                                        borderTop: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
-                                        borderRight: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
-                                        borderBottom: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
-                                        borderLeft: `0.5px solid ${selectedTowerIndex === i ? T.amber : T.border}`,
-                                    }}>Tower {i + 1}</button>
-                            ))}
-                        </div>
-                    )}
-                    <span style={{ fontSize: 22, fontWeight: 200, color: T.text1, letterSpacing: "-0.02em" }}>
-                        {orientationAngleNum}
-                        <span style={{ fontSize: 13, fontWeight: 300, color: T.text2 }}>°</span>
-                    </span>
+                <div className={`${TOOLBAR_ROW} gap-1 flex-1 min-w-0`}
+                    style={!isCommercial ? { flex: "1 1 70%" } : undefined}>
+                    {Array.from({ length: effectiveTowerCount }, (_, i) => (
+                        <button key={i} type="button" onClick={() => onTowerSelect?.(i)}
+                            className={TOOLBAR_BTN}
+                            style={{
+                                ...toolbarBtnStyle(selectedTowerIndex === i, T, isDark),
+                                cursor: effectiveTowerCount > 1 ? "pointer" : "default",
+                            }}>Tower {i + 1}</button>
+                    ))}
                 </div>
+                {!isCommercial && modeToggles.length > 0 && (
+                    <div
+                        className={`${TOOLBAR_ROW} justify-center gap-4 flex-wrap`}
+                        style={rightPanelStyle}
+                    >
+                        {modeToggles.map(({ id, label, sub, active, onClick, activeColor }) => (
+                            <div key={id} className="flex items-center gap-2.5">
+                                <button
+                                    type="button"
+                                    role="switch"
+                                    aria-checked={active}
+                                    aria-label={label}
+                                    onClick={onClick}
+                                    style={{
+                                        position: "relative",
+                                        width: 44,
+                                        height: 24,
+                                        borderRadius: 12,
+                                        background: active ? activeColor : switchTrackOff,
+                                        border: `0.5px solid ${active ? activeColor : switchTrackBorder}`,
+                                        transition: "background 0.2s, border-color 0.2s",
+                                        cursor: "pointer",
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    <span style={{
+                                        position: "absolute",
+                                        top: 2,
+                                        left: active ? 22 : 2,
+                                        width: 18,
+                                        height: 18,
+                                        borderRadius: "50%",
+                                        background: "#fff",
+                                        transition: "left 0.2s",
+                                        boxShadow: "0 1px 4px rgba(0,0,0,0.28)",
+                                    }} />
+                                </button>
+                                <div style={{ lineHeight: 1.2 }}>
+                                    <p style={{ fontSize: 11, fontWeight: 600, color: T.text1 }}>{label}</p>
+                                    <p style={{ fontSize: 9, color: T.text3 }}>{sub}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Body */}
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", alignItems: "stretch" }}>
 
-                {/* LEFT: Diagram */}
+                {/* LEFT: Diagram — grows with window; aspect ratio keeps proportions */}
                 <div style={{
-                    flex: isCommercial ? "1" : "0 0 65%",
+                    flex: isCommercial ? "1 1 0" : "1 1 70%",
+                    minWidth: 0,
                     position: "relative",
-                    aspectRatio: `${DIAGRAM_ASPECT_W} / ${DIAGRAM_ASPECT_H}`,
-                    background: isDark ? T.bg : T.bg,
-                    backgroundImage: isDark ? "none" : "linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)",
-                    backgroundSize: isDark ? "auto" : "32px 32px",
+                    aspectRatio: `${DIAGRAM_ASPECT_W} / ${isCommercial ? DIAGRAM_ASPECT_H : DIAGRAM_ASPECT_H_ADMIN}`,
+                    ...diagramBoxBackground(T, isFifa, isDark),
                     overflow: "hidden",
                 }} ref={diagramRef}>
-                    {isDark && <FireflyCanvas count={fireflyCount} />}
+                    {isDark && <FireflyCanvas count={fireflyCount} palette={isFifa ? "orange" : "amber"} />}
+
+                    <div style={{
+                        position: "absolute",
+                        bottom: 14,
+                        left: 16,
+                        zIndex: 5,
+                        lineHeight: 1,
+                        pointerEvents: "none",
+                    }}>
+                        <span style={{ fontSize: 22, fontWeight: 200, color: T.text1, letterSpacing: "-0.02em" }}>
+                            {orientationAngleNum}
+                            <span style={{ fontSize: 13, fontWeight: 300, color: T.text2 }}>°</span>
+                        </span>
+                    </div>
 
                     <svg viewBox={`0 0 ${Math.max(1, W)} ${Math.max(1, H)}`} preserveAspectRatio="none"
                         style={{ position: "absolute", inset: 0, width: "100%", height: "100%",
@@ -452,8 +633,8 @@ export default function EnergyFlowPanel({
                             `}</style>
                         </defs>
                         {/* Ghost traces */}
-                        <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF}
-                            stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
+                        {solar.visible && <line x1={P.tower.x} y1={P.tower.y} x2={P.sun.x} y2={P.sun.y}
+                            stroke={T.amberDim} strokeWidth="1.2" strokeDasharray="5 5" opacity={isDark ? 0.55 : 0.45} />}
                         {!isCompact && <>
                         <line x1={P.tower.x+TOWER_HALF} y1={P.tower.y-14} x2={P.grid.x-28} y2={P.grid.y+10}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />
@@ -462,10 +643,11 @@ export default function EnergyFlowPanel({
                         {hasBattery && <line x1={P.battery.x+22} y1={P.battery.y-14} x2={P.tower.x-TOWER_HALF} y2={P.tower.y+22}
                             stroke={isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.12)"} strokeWidth="1.2" strokeDasharray="5 5" />}
                         </>}
-                        {/* Active lines */}
-                        {solarActive && <line x1={P.sun.x} y1={P.sun.y+SOLAR_LINE_START_OFFSET} x2={P.tower.x} y2={P.tower.y-TOWER_HALF+2}
+                        {/* Active lines — tower to sun */}
+                        {solar.visible && <line x1={P.tower.x} y1={P.tower.y} x2={P.sun.x} y2={P.sun.y}
                             stroke={T.amber} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-amb)"
-                            style={{ animation: "solarFlow 12s linear infinite" }} />}
+                            opacity={solarActive ? 1 : 0.45}
+                            style={solarActive ? { animation: "solarFlow 12s linear infinite" } : undefined} />}
                         {gridActive && gridImport && <line x1={P.grid.x-26} y1={P.grid.y+8} x2={P.tower.x+TOWER_HALF} y2={P.tower.y-12}
                             stroke={T.orange} strokeWidth="2.2" strokeDasharray="9 5" strokeLinecap="round" markerEnd="url(#ef-org)"
                             style={{ animation: "lineFlow 18s linear infinite" }} />}
@@ -483,46 +665,59 @@ export default function EnergyFlowPanel({
                             style={{ animation: "lineFlow 22s linear infinite 1s" }} />}
                     </svg>
 
-                    {/* Sun — always show icon, only show value when producing */}
-                    <Node left={`${P.sun.x}px`} top={`${P.sun.y}px`}>
-                        <SunIcon active={solarActive} size={72} theme={T} isDark={isDark} />
-                        {solarActive && !isCompact && <NodeLabel value={pvKw} unit="kW" label="Solar"
-                            sub={`Today ${(todaysProduction ?? 0).toFixed(1)} kWh`}
-                            color={T.amber} theme={T} />}
-                    </Node>
+                    {/* Sun — live position (independent of compass) */}
+                    {solar.visible && (
+                        <Node left={`${P.sun.x}px`} top={`${P.sun.y}px`}>
+                            <SunIcon active={solarActive || solar.elevation > 5} size={72} theme={T} isDark={isDark} />
+                            {!isCompact && (
+                                <NodeLabel
+                                    value={solar.elevation.toFixed(0)}
+                                    unit="° el"
+                                    label="Solar"
+                                    sub={`Az ${solar.azimuth.toFixed(0)}°`}
+                                    color={T.amber}
+                                    theme={T}
+                                />
+                            )}
+                        </Node>
+                    )}
 
                     {/* Tower halo */}
                     <div style={{
                         position: "absolute", left: `${P.tower.x}px`, top: `${P.tower.y}px`,
                         transform: "translate(-50%, -50%)", width: haloSize, height: haloSize,
                         borderRadius: "50%",
-                        background: isDark ? "radial-gradient(circle, rgba(212,168,83,0.12) 0%, rgba(212,168,83,0.05) 40%, transparent 70%)" : "radial-gradient(circle, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.02) 40%, transparent 70%)",
+                        background: isDark
+                            ? `radial-gradient(circle, ${T.amberDim} 0%, transparent 70%)`
+                            : `radial-gradient(circle, ${T.amberDim} 0%, transparent 70%)`,
                         pointerEvents: "none", zIndex: 2,
                     }} />
 
-                    {/* Compass — ring, E/W/S labels, rotating needle, angle readout */}
+                    {/* Compass — tower facing direction only */}
                     {(() => {
-                        const r = haloSize * 0.48; // compass ring radius
-                        const cx2 = P.tower.x;
-                        const cy2 = P.tower.y - towerSize * 0.08; // offset up to tower mast midpoint
-                        // needle angle: 90°=E(right), 180°=S(down), 270°=W(left)
-                        const needleRad = ((towerRotationDeg - 90) * Math.PI) / 180;
+                        const r = compassR;
+                        const cx2 = diagramCx;
+                        const cy2 = diagramCy;
+                        const needleRad = ((towerFacingAzimuth - 90) * Math.PI) / 180;
                         const needleLen = r * 0.52;
                         const nx = cx2 + Math.cos(needleRad) * needleLen;
                         const ny = cy2 + Math.sin(needleRad) * needleLen;
-                        const labelColor = isDark ? "rgba(245,240,234,0.5)" : "rgba(60,40,20,0.5)";
+                        const labelColor = T.text2;
                         const needleColor = T.amber;
-                        const ringColor = isDark ? "rgba(255,245,235,0.08)" : "rgba(0,0,0,0.08)";
+                        const ringColor = isDark
+                            ? (isFifa ? T.green : T.amber)
+                            : (isFifa ? T.border2 : T.amber);
+                        const labelPad = 20;
                         return (
                             <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 3, overflow: "visible" }}
                                 viewBox={`0 0 ${Math.max(1,W)} ${Math.max(1,H)}`} preserveAspectRatio="none">
                                 {/* Compass ring */}
                                 <circle cx={cx2} cy={cy2} r={r} fill="none" stroke={ringColor} strokeWidth="1" strokeDasharray="3 6" strokeLinecap="round" />
-                                {/* Cardinal labels — E, S, W only */}
-                                {[{ label: "E", a: 0 }, { label: "S", a: 90 }, { label: "W", a: 180 }].map(({ label, a }) => {
+                                {/* Cardinal labels — N, E, S, W */}
+                                {[{ label: "N", a: -90 }, { label: "E", a: 0 }, { label: "S", a: 90 }, { label: "W", a: 180 }].map(({ label, a }) => {
                                     const rad = (a * Math.PI) / 180;
-                                    const lx = cx2 + Math.cos(rad) * (r + 13);
-                                    const ly = cy2 + Math.sin(rad) * (r + 13);
+                                    const lx = cx2 + Math.cos(rad) * (r + labelPad);
+                                    const ly = cy2 + Math.sin(rad) * (r + labelPad);
                                     return <text key={label} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
                                         fontSize="17" fontWeight="700" letterSpacing="0.1em" fill={labelColor}>{label}</text>;
                                 })}
@@ -530,22 +725,44 @@ export default function EnergyFlowPanel({
                                 <line x1={cx2} y1={cy2} x2={nx} y2={ny}
                                     stroke={needleColor} strokeWidth="1.5" strokeLinecap="round" opacity="0.75" />
                                 <circle cx={cx2} cy={cy2} r="3" fill={needleColor} opacity="0.6" />
-                                {/* Angle readout below tower — hidden when compact */}
-                                {!isCompact && <text x={cx2} y={cy2 + towerSize * 0.52}
-                                    textAnchor="middle" dominantBaseline="middle"
-                                    fontSize="15" fontWeight="600" fill={isDark ? "rgba(245,240,234,0.65)" : "rgba(60,40,20,0.65)"}>
-                                    {orientationAngleNum}°
-                                </text>}
+                                {/* Facing direction + azimuth — hidden when compact */}
+                                {!isCompact && <>
+                                    <text x={cx2} y={cy2 + towerSize * 0.46}
+                                        textAnchor="middle" dominantBaseline="middle"
+                                        fontSize="17" fontWeight="700" letterSpacing="0.12em" fill={needleColor}>
+                                        {azimuthToCardinal(towerFacingAzimuth)}
+                                    </text>
+                                    <text x={cx2} y={cy2 + towerSize * 0.54}
+                                        textAnchor="middle" dominantBaseline="middle"
+                                        fontSize="13" fontWeight="500" fill={T.text2}>
+                                        {towerFacingAzimuth.toFixed(0)}° facing
+                                    </text>
+                                </>}
                             </svg>
                         );
                     })()}
 
-                    {/* Tower */}
+                    {/* Tower — top-down illustration (compass needle shows facing) */}
                     <Node left={`${P.tower.x}px`} top={`${P.tower.y}px`}>
-                        <div style={{ width: towerSize, height: towerSize, display: "flex",
-                            alignItems: "center", justifyContent: "center",
-                            background: T.bg, borderRadius: 8 }}>
-                            <TowerSVGFallback theme={T} />
+                        <div style={{
+                            width: towerSize,
+                            height: towerSize,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            position: "relative",
+                            zIndex: 4,
+                        }}>
+                            <img
+                                src="/images/tower_icon_silhouette.png"
+                                alt="Tower"
+                                style={{
+                                    width: Math.round(towerSize * 0.58),
+                                    height: Math.round(towerSize * 0.58),
+                                    objectFit: "contain",
+                                    filter: towerIconFilter(isFifa, isDark),
+                                }}
+                            />
                         </div>
                     </Node>
 
@@ -578,33 +795,57 @@ export default function EnergyFlowPanel({
                 {/* RIGHT: Admin/Non-commercial only */}
                 {!isCommercial && (
                     <div style={{
-                        flex: "0 0 35%", borderLeft: `0.5px solid ${T.border}`,
+                        ...rightPanelStyle,
                         display: "flex", flexDirection: "column", background: T.surface,
+                        borderLeft: `0.5px solid ${T.border}`,
                     }}>
                         {canAccessControlPanel ? (
-                            <>
-                                <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${T.border}` }}>
-                                    <p style={{ fontSize: 11, fontWeight: 500, color: T.text1 }}>Control Panel</p>
-                                </div>
-                                {controlActions.map((action, i) => (
-                                    <button key={action.id} type="button"
-                                        className="w-full text-left flex items-center cursor-pointer"
-                                        style={{
-                                            padding: "15px 20px", background: "transparent",
-                                            borderTop: i > 0 ? `0.5px solid ${T.border}` : "none",
-                                            borderRight: "none", borderBottom: "none", borderLeft: "none",
-                                        }}
-                                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.025)"; }}
-                                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
-                                        <action.Icon style={{ width: 15, height: 15, marginRight: 14, flexShrink: 0,
-                                            color: action.id === "stop" ? T.red : T.text3 }} />
-                                        <div>
-                                            <p style={{ fontSize: 13, color: T.text1, lineHeight: 1.3 }}>{action.label}</p>
-                                            <p style={{ fontSize: 10, color: T.text3, marginTop: 2 }}>{action.description}</p>
-                                        </div>
-                                    </button>
-                                ))}
-                            </>
+                            <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+                                {controlActions.map((action, i) => {
+                                    const isHovered = hoveredActionId === action.id;
+                                    const iconColor = isHovered || (isDark && action.id === "home")
+                                        ? "#fff"
+                                        : (ACTION_ICON_COLORS[action.id] ?? T.text3);
+                                    const actionHoverBg = isFifa ? T.orange : T.amber;
+                                    return (
+                                        <button
+                                            key={action.id}
+                                            type="button"
+                                            className="w-full text-left flex items-center cursor-pointer"
+                                            style={{
+                                                flex: 1,
+                                                padding: "16px 20px",
+                                                background: isHovered ? actionHoverBg : "transparent",
+                                                borderTop: i > 0 ? `0.5px solid ${T.border}` : "none",
+                                                borderRight: "none",
+                                                borderBottom: "none",
+                                                borderLeft: "none",
+                                                transition: "background 0.18s ease, color 0.18s ease",
+                                            }}
+                                            onMouseEnter={() => setHoveredActionId(action.id)}
+                                            onMouseLeave={() => setHoveredActionId(null)}
+                                        >
+                                            <action.Icon style={{
+                                                width: 16, height: 16, marginRight: 14, flexShrink: 0,
+                                                color: iconColor,
+                                                transition: "color 0.18s ease",
+                                            }} />
+                                            <div>
+                                                <p style={{
+                                                    fontSize: 13, fontWeight: 600, lineHeight: 1.3,
+                                                    color: isHovered ? "#fff" : T.text1,
+                                                    transition: "color 0.18s ease",
+                                                }}>{action.label}</p>
+                                                <p style={{
+                                                    fontSize: 10, marginTop: 2,
+                                                    color: isHovered ? "rgba(255,255,255,0.88)" : T.text3,
+                                                    transition: "color 0.18s ease",
+                                                }}>{action.description}</p>
+                                            </div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         ) : (
                             <>
                                 <div style={{ padding: "14px 20px", borderBottom: `0.5px solid ${T.border}` }}>
@@ -681,7 +922,7 @@ export default function EnergyFlowPanel({
                         {/* Amber glow */}
                         <div style={{
                             position: "absolute", inset: 0, borderRadius: 18, pointerEvents: "none",
-                            background: "radial-gradient(ellipse at 50% 0%, rgba(230,184,92,0.06) 0%, transparent 70%)",
+                            background: `radial-gradient(ellipse at 50% 0%, ${T.amberDim} 0%, transparent 70%)`,
                         }} />
 
                         {/* Centered message */}
@@ -700,8 +941,8 @@ export default function EnergyFlowPanel({
                             <div style={{
                                 display: "inline-flex", alignItems: "center", gap: 5,
                                 padding: "4px 10px", borderRadius: 99, marginTop: 4,
-                                background: "rgba(230,184,92,0.08)",
-                                border: "0.5px solid rgba(230,184,92,0.2)",
+                                background: T.amberDim,
+                                border: `0.5px solid ${T.border}`,
                             }}>
                                 <span style={{ width: 5, height: 5, borderRadius: "50%",
                                     background: T.amber, boxShadow: `0 0 5px ${T.amber}` }} />
@@ -727,42 +968,6 @@ export default function EnergyFlowPanel({
                 );
             })()}
 
-            {/* Bottom bar */}
-            {(() => {
-                const modeToggles = [
-                    ...(showAutonomousToggle ? [{ label: "Autonomous", sub: "Default", active: autonomousMode,
-                        onClick: () => { setAutonomousMode(true); setMaintenanceMode(false); },
-                        activeColor: T.green }] : []),
-                    ...(canAccessControlPanel ? [{ label: "Maintenance", sub: "Requires confirmation", active: maintenanceMode,
-                        onClick: () => setMaintenanceMode(prev => !prev),
-                        activeColor: T.red }] : []),
-                ];
-                if (modeToggles.length === 0) return null;
-                return (
-                    <div className="flex items-center gap-8 flex-wrap"
-                        style={{ padding: "12px 20px", borderTop: `0.5px solid ${T.border}`, background: T.surface }}>
-                        {modeToggles.map(({ label, sub, active, onClick, activeColor }) => (
-                            <div key={label} className="flex items-center gap-3">
-                                <button type="button" onClick={onClick} style={{
-                                    position: "relative", width: 40, height: 22, borderRadius: 11,
-                                    background: active ? activeColor : "rgba(255,255,255,0.10)",
-                                    transition: "background 0.2s", border: "none", cursor: "pointer", flexShrink: 0,
-                                }}>
-                                    <span style={{
-                                        position: "absolute", top: 2, left: active ? 20 : 2,
-                                        width: 18, height: 18, borderRadius: "50%", background: "#fff",
-                                        transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
-                                    }} />
-                                </button>
-                                <div>
-                                    <p style={{ fontSize: 12, fontWeight: 500, color: T.text1 }}>{label}</p>
-                                    <p style={{ fontSize: 10, color: T.text3 }}>{sub}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                );
-            })()}
         </div>
     );
 }
