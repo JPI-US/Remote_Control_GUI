@@ -60,6 +60,7 @@
   },
   "homepage": "https://github.com/Janta-Power/Remote_Control_GUI#readme",
   "overrides": {
-    "postcss": "^8.5.10"
+    "postcss": "^8.5.10",
+    "esbuild": "^0.28.1"
   }
 }
