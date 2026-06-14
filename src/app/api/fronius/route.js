@@ -1,77 +1,18 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { DateTime } from 'luxon';
-import jwt from "jsonwebtoken";
-import { decryptSystemId } from "@/lib/froniusCrypto";
+import { SOLARWEB_BASE_URL, fetchSolar, resolveFroniusSystem } from "@/lib/froniusApi";
 
 export const dynamic = 'force-dynamic';
 
-const BASE_URL = "https://api.solarweb.com/swqapi/pvsystems";
-
-/**
- * Generic SolarWeb fetch helper
- */
-async function fetchSolar(url, label) {
-    const headers = {
-        accept: "application/json",
-        AccessKeyId: process.env.SOLAR_KEY_ID,
-        AccessKeyValue: process.env.SOLAR_KEY_VALUE,
-    };
-    const res = await fetch(url, {
-        method: "GET",
-        headers,
-        cache: "no-store",
-    });
-
-    if (!res.ok) {
-        throw new Error(`${label} failed (${res.status})`);
-    }
-
-    return res.json();
-}
+const BASE_URL = SOLARWEB_BASE_URL;
 
 export async function GET(request) {
     try {
-        const headers = {
-            accept: "application/json",
-            AccessKeyId: process.env.SOLAR_KEY_ID,
-            AccessKeyValue: process.env.SOLAR_KEY_VALUE,
-        };
-        const JWT_SECRET = process.env.JWT_SECRET;
-        if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-        
-        const token = request.cookies.get("session")?.value;
-        
-        if (!token) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        const resolved = await resolveFroniusSystem(request);
+        if (resolved.error) {
+            return NextResponse.json({ error: resolved.error.message }, { status: resolved.error.status });
         }
-        
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const customerId = Number(decoded.sub);
-        const userRole = String(decoded.role).toUpperCase();
-        const activeSystemId = Number(decoded.activeSystemId) || null;
-
-        if (!headers.AccessKeyId || !headers.AccessKeyValue) {
-            throw new Error("Missing SolarWeb API credentials");
-        }
-
-        // Admins can access any system; users must be linked via customer_system
-        const systemRecord = await prisma.systems.findFirst({
-            where: {
-                id: activeSystemId,
-                ...(userRole !== "ADMIN" && {
-                    customer_system: { some: { customer_id: customerId } },
-                }),
-            },
-            select: { timezone: true },
-        });
-
-        if (!systemRecord) {
-            return NextResponse.json({ error: "System not found for this customer" }, { status: 404 });
-        }
-
-        // Get System timezone
-        const systemTZ = systemRecord.timezone ?? "America/Chicago";
+        const { systemId, systemTZ } = resolved;
 
         // Get current time based on system timezone
         const nowSystem = DateTime.now().setZone(systemTZ);
@@ -94,42 +35,16 @@ export async function GET(request) {
         const fromISO = fromUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         const toISO   = toUTC.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-        const encryptedSystem = await prisma.systems.findFirst({
-            where: {
-                id: activeSystemId,
-                has_fronius_system: true,
-                system_cipher: { not: null },
-                system_iv:     { not: null },
-                system_tag:    { not: null },
-                ...(userRole !== "ADMIN" && {
-                    customer_system: { some: { customer_id: customerId } },
-                }),
-            },
-            select: { system_cipher: true, system_iv: true, system_tag: true },
-        });
-
-        if (!encryptedSystem) {
-            return NextResponse.json({ error: "No Fronius system found" }, { status: 404 });
-        }
-
-        const systemId = decryptSystemId({
-            system_cipher: encryptedSystem.system_cipher,
-            system_iv:     encryptedSystem.system_iv,
-            system_tag:    encryptedSystem.system_tag,
-        });
-
         const endpoints = {
-            live: `${BASE_URL}/${systemId}/LiveData`,
-            flowData: `${BASE_URL}/${systemId}/FlowData`,
             dailyProduction: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/${m}/days`,
             monthlyProduction: `${BASE_URL}/${systemId}/aggdata/years/${y}/months/`,
             yearlyProduction: `${BASE_URL}/${systemId}/aggdata/years/`,
             hourlyProduction:`${BASE_URL}/${systemId}/histdata` +
                 `?From=${encodeURIComponent(fromISO)}` +
-                `&To=${encodeURIComponent(toISO)}` + 
+                `&To=${encodeURIComponent(toISO)}` +
                 `&Channel=EnergyProductionTotal&Limit=10000&Offset=0`,
             total: `${BASE_URL}/${systemId}/aggdata`,
-        }; 
+        };
 
         const results = await Promise.allSettled(
             Object.entries(endpoints).map(([key, url]) =>
@@ -160,12 +75,6 @@ export async function GET(request) {
                 }
                 else if (key === "yearlyProduction") {
                     response.data.yearlyproduction = normalizeYearlyProduction(data);
-                }
-                else if (key === "live") {
-                    response.data.live = normalizeLiveData(data);
-                }
-                else if (key === "flowData") {
-                    response.data.flow = normalizeFlowData(data);
                 }
                 else if (key === "total") {
                     response.data.total = normalizetotalData(data);
@@ -274,101 +183,6 @@ function normalizeDailyProduction(data, systemTZ) {
     return { labels, values };
 }
 
-/**
- * Normalize real-time LiveData power flow
- * (structure may vary slightly per system)
- */
-function normalizeLiveData(data) {
-    if (!data?.systemChannels) {
-        return { pvPower: 0 };
-    }
-    
-    const channels = Object.fromEntries(
-        data.systemChannels.map(ch => [
-            ch.channelName,
-            ch.value ?? 0,
-        ])
-    );
-
-    return {
-        timestamp: new Date().toISOString(),
-        pvPower: channels.PowerPV ?? 0, 
-        online: data.status?.isOnline ?? false,
-    };
-}
-
-/**
- * Normalize FlowData — grid, load, battery, self-consumption rates
- * Channel names confirmed from live API probe:
- *   PowerFeedIn    — power exported TO the grid (W), positive = exporting
- *   PowerLoad      — house consumption (W)
- *   PowerBattCharge — battery charge power (W), positive = charging, negative = discharging
- *   PowerPV        — solar production (W)
- *   PowerOutput    — total inverter output (W)
- *   BattSOC        — battery state of charge (%), null if no battery
- *   RateSelfConsumption  — % of solar used on-site
- *   RateSelfSufficiency  — % of load covered by solar
- */
-function normalizeFlowData(data) {
-    if (!data?.data?.channels) {
-        return {
-            pvPower: 0,
-            gridPower: 0,
-            gridImport: false,
-            loadPower: 0,
-            battChargePower: 0,
-            battSoc: null,
-            hasBattery: false,
-            selfConsumptionRate: null,
-            selfSufficiencyRate: null,
-            timestamp: new Date().toISOString(),
-        };
-    }
-
-    // Build a lookup map from the channels array
-    const ch = Object.fromEntries(
-        data.data.channels.map(c => [c.channelName, c.value])
-    );
-
-    const pvPower        = ch.PowerPV         ?? 0;
-    const feedIn         = ch.PowerFeedIn     ?? null; // positive = exporting
-    const loadPower      = ch.PowerLoad       ?? 0;
-    const battCharge     = ch.PowerBattCharge ?? null;
-    const battSoc        = ch.BattSOC         ?? null;  // null = no battery
-    const selfConsump    = ch.RateSelfConsumption ?? null;
-    const selfSuffic     = ch.RateSelfSufficiency ?? null;
-
-    // Derive grid power and direction:
-    // - If PowerFeedIn > 0  → exporting to grid, gridPower = feedIn
-    // - If PowerFeedIn <= 0 → likely importing; derive from load - pv
-    // - If feedIn is null   → use load - pv as best estimate
-    let gridPower  = 0;
-    let gridImport = false;
-
-    if (feedIn !== null && feedIn > 0) {
-        // Actively exporting
-        gridPower  = feedIn;
-        gridImport = false;
-    } else {
-        // Importing or zero — derive: what load needs beyond what PV covers
-        const netDemand = loadPower - pvPower;
-        gridPower  = Math.max(0, netDemand);
-        gridImport = gridPower > 0;
-    }
-
-    return {
-        pvPower,
-        gridPower:           Math.round(gridPower),
-        gridImport,
-        loadPower:           Math.round(loadPower),
-        battChargePower:     battCharge !== null ? Math.round(battCharge) : null,
-        battSoc,
-        hasBattery:          battSoc !== null,
-        selfConsumptionRate: selfConsump,
-        selfSufficiencyRate: selfSuffic,
-        timestamp:           data.data.logDateTime ?? new Date().toISOString(),
-    };
-}
 //Normalized total data
 function normalizetotalData(data){
     if (!data?.data?.channels){
