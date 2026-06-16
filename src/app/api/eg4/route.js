@@ -129,7 +129,7 @@ export async function GET(request) {
                 pv2_w: currentState.ppv2,
                 pv3_w: currentState.ppv3,
                 total_w: (currentState.ppv1 || 0) + (currentState.ppv2 || 0) + (currentState.ppv3 || 0),
-                today_kwh: energyInfo.eTodayPV1 / 10,
+                today_kwh: ((energyInfo.eTodayPV1 || 0) + (energyInfo.eTodayPV2 || 0)) / 10,
                 total_kwh: energyInfo.eTotalPV1 / 10,
             },
             battery: {

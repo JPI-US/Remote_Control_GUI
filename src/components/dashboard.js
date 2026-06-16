@@ -270,6 +270,7 @@ export default function Dashboard() {
     const lon = system?.longitude;
 
     const [pvPower, setPvPower] = useState(0);
+    const [eg4DailyTotal, setEg4DailyTotal] = useState(null);
     const [maxHourlyPower, setMaxHourlyPower] = useState(0);
     const [dailyProduction, setDailyProduction] = useState(null);
     const [hourlyProduction, setHourlyProduction] = useState(null);
@@ -285,6 +286,7 @@ export default function Dashboard() {
     const [battChargePower, setBattChargePower] = useState(null);
     const intervalRef = useRef(null);
     const intervalRef1 = useRef(null);
+    const intervalRef2 = useRef(null);
 
     const isEG4 = String(system?.inverter_type).toUpperCase() === "EG4";
 
@@ -299,6 +301,8 @@ export default function Dashboard() {
                     const json = await response.json();
 
                     if (json.solar?.total_w != null) setPvPower(json.solar.total_w);
+                    if (json.solar?.today_kwh != null) setEg4DailyTotal(json.solar.today_kwh);
+                    if (json.solar?.total_kwh != null) setTotalProduction(json.solar.total_kwh);
 
                     const toUser = json.grid?.to_user_w ?? 0;
                     const toGrid = json.grid?.to_grid_w ?? 0;
@@ -354,21 +358,27 @@ export default function Dashboard() {
         return Math.round(Math.max(histMaxKw, pvPowerKw) * 100) / 100;
     }, [hourlyProduction, pvPowerKw]);
 
-    // ── Production poll (every 5 min): all chart / historical data in one call ──
+    // ── Fast poll (every 5 min): hourly chart data only ──
     useEffect(() => {
         if (!system) return;
-        if (isEG4) return; // No historical chart data available for EG4 systems yet
-        async function fetchProduction() {
+        async function fetchHourly() {
             try {
+                if (isEG4) {
+                    const res = await fetch(`/api/eg4/history`, { cache: "no-store" });
+                    if (!res.ok) return;
+                    const json = await res.json();
+                    const energyData = json.data?.hourlyproduction ?? null;
+                    setHourlyProduction(energyData);
+                    setMaxHourlyPower(
+                        energyData?.values?.length
+                            ? Math.round(Math.max(...energyData.values) / 1000)
+                            : 0
+                    );
+                    return;
+                }
                 const res = await fetch(`/api/fronius`, { cache: "no-store" });
                 if (!res.ok) return;
                 const json = await res.json();
-
-                setDailyProduction(json.data?.dailyproduction ?? null);
-                setMonthlyProduction(json.data?.monthlyproduction ?? null);
-                setYearlyProduction(json.data?.yearlyproduction ?? null);
-                setTotalProduction(json.data?.total ?? null);
-
                 const energyData = json.data?.hourlyproduction ?? null;
                 setHourlyProduction(energyData);
                 setMaxHourlyPower(
@@ -376,11 +386,39 @@ export default function Dashboard() {
                         ? Math.round(Math.max(...energyData.values) / 1000)
                         : 0
                 );
-            } catch (error) { console.error('Production fetch error:', error); }
+            } catch (error) { console.error('Hourly fetch error:', error); }
         }
-        fetchProduction();
-        intervalRef1.current = setInterval(fetchProduction, 300000);
+        fetchHourly();
+        intervalRef1.current = setInterval(fetchHourly, 300000);
         return () => clearInterval(intervalRef1.current);
+    }, [system, isEG4]);
+
+    // ── Slow poll (every 60 min): monthly / yearly / total historical data ──
+    useEffect(() => {
+        if (!system) return;
+        async function fetchHistorical() {
+            try {
+                if (isEG4) {
+                    const res = await fetch(`/api/eg4/monitor`, { cache: "no-store" });
+                    if (!res.ok) return;
+                    const json = await res.json();
+                    setDailyProduction(json.data?.dailyproduction ?? null);
+                    setMonthlyProduction(json.data?.monthlyproduction ?? null);
+                    setYearlyProduction(json.data?.yearlyproduction ?? null);
+                    return;
+                }
+                const res = await fetch(`/api/fronius`, { cache: "no-store" });
+                if (!res.ok) return;
+                const json = await res.json();
+                setDailyProduction(json.data?.dailyproduction ?? null);
+                setMonthlyProduction(json.data?.monthlyproduction ?? null);
+                setYearlyProduction(json.data?.yearlyproduction ?? null);
+                setTotalProduction(json.data?.total ?? null);
+            } catch (error) { console.error('Historical fetch error:', error); }
+        }
+        fetchHistorical();
+        intervalRef2.current = setInterval(fetchHistorical, 3600000);
+        return () => clearInterval(intervalRef2.current);
     }, [system, isEG4]);
 
     const todaysProduction = useMemo(() => {
@@ -388,6 +426,8 @@ export default function Dashboard() {
         const systemDay = DateTime.now().setZone(system_tz).day;
         return dailyProduction.values[systemDay - 1] ?? null;
     }, [dailyProduction, system_tz]);
+
+    const displayDailyTotal = isEG4 ? eg4DailyTotal : todaysProduction;
 
     const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const monthLabels = monthlyProduction?.labels
@@ -901,7 +941,7 @@ export default function Dashboard() {
                                     <div className="w-full mt-5 pt-4 flex justify-around" style={{ borderTop: `0.5px solid ${T.border}` }}>
                                         <div className="text-center">
                                             <p className="text-[13px] uppercase tracking-[0.10em] mb-1" style={{ color: T.text3 }}>Daily Total</p>
-                                            <p className="text-[15px] font-light" style={{ color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</p>
+                                            <p className="text-[15px] font-light" style={{ color: T.text1 }}>{(displayDailyTotal ?? 0).toFixed(1)} kWh</p>
                                         </div>
                                         <div className="w-px self-stretch" style={{ background: T.border }} />
                                         <div className="text-center">
@@ -1054,7 +1094,7 @@ export default function Dashboard() {
                                         </div>
                                         <div>
                                             <span className="text-[13px]" style={{ color: T.text3 }}>Today  </span>
-                                            <span className="text-sm font-light" style={{ color: T.text1 }}>{(todaysProduction ?? 0).toFixed(1)} kWh</span>
+                                            <span className="text-sm font-light" style={{ color: T.text1 }}>{(displayDailyTotal ?? 0).toFixed(1)} kWh</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1234,7 +1274,7 @@ export default function Dashboard() {
                                     battSoc={battSoc}
                                     hasBattery={hasBattery}
                                     battChargePower={battChargePower}
-                                    todaysProduction={todaysProduction}
+                                    todaysProduction={displayDailyTotal}
                                     maxHourlyPower={maxHourlyPower}
                                     towerCount={towerCount}
                                     selectedTowerIndex={selectedTowerIndex}
