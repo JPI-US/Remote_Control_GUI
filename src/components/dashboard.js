@@ -1109,7 +1109,7 @@ export default function Dashboard() {
                                     <div className="grid grid-cols-2" style={{ borderBottom: `0.5px solid ${T.border}` }}>
                                         <div className="px-5 py-4" style={{ borderRight: `0.5px solid ${T.border}` }}>
                                             <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Daily Peak</p>
-                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{maxHourlyPower} <span className="text-sm font-light" style={{ color: T.text2 }}>kW</span></p>
+                                            <p className="text-[28px] font-[200] leading-none" style={{ color: T.text1 }}>{peakTodayKw.toFixed(2)} <span className="text-sm font-light" style={{ color: T.text2 }}>kW</span></p>
                                         </div>
                                         <div className="px-5 py-4">
                                             <p className="text-[13px] tracking-[0.10em] mb-1.5" style={{ color: T.text3 }}>Power Output</p>

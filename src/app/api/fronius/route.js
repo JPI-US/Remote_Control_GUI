@@ -156,7 +156,7 @@ function normalizeDailyProduction(data, systemTZ) {
     }
 
     const channel = channels.find(
-        c => c.channelName === "EnergyOutput"
+        c => c.channelName === "EnergyProductionTotal"
     );
 
     if (!channel?.values) {
@@ -209,7 +209,7 @@ function normalizeMonthlyProduction(data) {
     }
 
     const channel = channels.find(
-        c => c.channelName === "EnergyOutput"
+        c => c.channelName === "EnergyProductionTotal"
     );
 
     if (!channel?.values) {
@@ -241,7 +241,7 @@ function normalizeYearlyProduction(data) {
     }
 
     const channel = channels.find(
-        c => c.channelName === "EnergyOutput"
+        c => c.channelName === "EnergyProductionTotal"
     );
 
     if (!channel?.values) {
