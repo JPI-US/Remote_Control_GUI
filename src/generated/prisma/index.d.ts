@@ -5287,7 +5287,6 @@ export namespace Prisma {
     customer_id: number | null
     order_id: number | null
     system_id: number | null
-    state: number | null
   }
 
   export type TowersSumAggregateOutputType = {
@@ -5297,7 +5296,6 @@ export namespace Prisma {
     customer_id: number | null
     order_id: number | null
     system_id: number | null
-    state: number | null
   }
 
   export type TowersMinAggregateOutputType = {
@@ -5308,7 +5306,7 @@ export namespace Prisma {
     customer_id: number | null
     order_id: number | null
     system_id: number | null
-    state: number | null
+    state: string | null
   }
 
   export type TowersMaxAggregateOutputType = {
@@ -5319,7 +5317,7 @@ export namespace Prisma {
     customer_id: number | null
     order_id: number | null
     system_id: number | null
-    state: number | null
+    state: string | null
   }
 
   export type TowersCountAggregateOutputType = {
@@ -5342,7 +5340,6 @@ export namespace Prisma {
     customer_id?: true
     order_id?: true
     system_id?: true
-    state?: true
   }
 
   export type TowersSumAggregateInputType = {
@@ -5352,7 +5349,6 @@ export namespace Prisma {
     customer_id?: true
     order_id?: true
     system_id?: true
-    state?: true
   }
 
   export type TowersMinAggregateInputType = {
@@ -5483,7 +5479,7 @@ export namespace Prisma {
     customer_id: number
     order_id: number
     system_id: number | null
-    state: number | null
+    state: string | null
     _count: TowersCountAggregateOutputType | null
     _avg: TowersAvgAggregateOutputType | null
     _sum: TowersSumAggregateOutputType | null
@@ -5583,7 +5579,7 @@ export namespace Prisma {
       customer_id: number
       order_id: number
       system_id: number | null
-      state: number | null
+      state: string | null
     }, ExtArgs["result"]["towers"]>
     composites: {}
   }
@@ -6016,7 +6012,7 @@ export namespace Prisma {
     readonly customer_id: FieldRef<"Towers", 'Int'>
     readonly order_id: FieldRef<"Towers", 'Int'>
     readonly system_id: FieldRef<"Towers", 'Int'>
-    readonly state: FieldRef<"Towers", 'Int'>
+    readonly state: FieldRef<"Towers", 'String'>
   }
     
 
@@ -10318,7 +10314,7 @@ export namespace Prisma {
     customer_id?: IntFilter<"Towers"> | number
     order_id?: IntFilter<"Towers"> | number
     system_id?: IntNullableFilter<"Towers"> | number | null
-    state?: IntNullableFilter<"Towers"> | number | null
+    state?: StringNullableFilter<"Towers"> | string | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     system?: XOR<SystemsNullableScalarRelationFilter, SystemsWhereInput> | null
   }
@@ -10347,7 +10343,7 @@ export namespace Prisma {
     customer_id?: IntFilter<"Towers"> | number
     order_id?: IntFilter<"Towers"> | number
     system_id?: IntNullableFilter<"Towers"> | number | null
-    state?: IntNullableFilter<"Towers"> | number | null
+    state?: StringNullableFilter<"Towers"> | string | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     system?: XOR<SystemsNullableScalarRelationFilter, SystemsWhereInput> | null
   }, "id">
@@ -10379,7 +10375,7 @@ export namespace Prisma {
     customer_id?: IntWithAggregatesFilter<"Towers"> | number
     order_id?: IntWithAggregatesFilter<"Towers"> | number
     system_id?: IntNullableWithAggregatesFilter<"Towers"> | number | null
-    state?: IntNullableWithAggregatesFilter<"Towers"> | number | null
+    state?: StringNullableWithAggregatesFilter<"Towers"> | string | null
   }
 
   export type software_ticketsWhereInput = {
@@ -10525,16 +10521,16 @@ export namespace Prisma {
 
   export type tower_dataWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
-    tower_id?: bigint | number
     AND?: tower_dataWhereInput | tower_dataWhereInput[]
     OR?: tower_dataWhereInput[]
     NOT?: tower_dataWhereInput | tower_dataWhereInput[]
+    tower_id?: BigIntFilter<"tower_data"> | bigint | number
     recorded_at?: DateTimeNullableFilter<"tower_data"> | Date | string | null
     tower_angle?: FloatNullableFilter<"tower_data"> | number | null
     error_ticks?: IntNullableFilter<"tower_data"> | number | null
     metadata?: JsonNullableFilter<"tower_data">
     created_at?: DateTimeFilter<"tower_data"> | Date | string
-  }, "id" | "tower_id">
+  }, "id">
 
   export type tower_dataOrderByWithAggregationInput = {
     id?: SortOrder
@@ -10905,7 +10901,7 @@ export namespace Prisma {
     latitude: Decimal | DecimalJsLike | number | string
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
-    state?: number | null
+    state?: string | null
     customer: CustomerCreateNestedOneWithoutTowerInput
     system?: SystemsCreateNestedOneWithoutTowersInput
   }
@@ -10918,7 +10914,7 @@ export namespace Prisma {
     customer_id: number
     order_id: number
     system_id?: number | null
-    state?: number | null
+    state?: string | null
   }
 
   export type TowersUpdateInput = {
@@ -10926,7 +10922,7 @@ export namespace Prisma {
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
     system?: SystemsUpdateOneWithoutTowersNestedInput
   }
@@ -10939,7 +10935,7 @@ export namespace Prisma {
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TowersCreateManyInput = {
@@ -10950,7 +10946,7 @@ export namespace Prisma {
     customer_id: number
     order_id: number
     system_id?: number | null
-    state?: number | null
+    state?: string | null
   }
 
   export type TowersUpdateManyMutationInput = {
@@ -10958,7 +10954,7 @@ export namespace Prisma {
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TowersUncheckedUpdateManyInput = {
@@ -10969,7 +10965,7 @@ export namespace Prisma {
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type software_ticketsCreateInput = {
@@ -11684,7 +11680,6 @@ export namespace Prisma {
     customer_id?: SortOrder
     order_id?: SortOrder
     system_id?: SortOrder
-    state?: SortOrder
   }
 
   export type TowersMaxOrderByAggregateInput = {
@@ -11716,7 +11711,6 @@ export namespace Prisma {
     customer_id?: SortOrder
     order_id?: SortOrder
     system_id?: SortOrder
-    state?: SortOrder
   }
 
   export type software_ticketsCountOrderByAggregateInput = {
@@ -12808,7 +12802,7 @@ export namespace Prisma {
     latitude: Decimal | DecimalJsLike | number | string
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
-    state?: number | null
+    state?: string | null
     system?: SystemsCreateNestedOneWithoutTowersInput
   }
 
@@ -12819,7 +12813,7 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
     system_id?: number | null
-    state?: number | null
+    state?: string | null
   }
 
   export type TowersCreateOrConnectWithoutCustomerInput = {
@@ -12955,7 +12949,7 @@ export namespace Prisma {
     customer_id?: IntFilter<"Towers"> | number
     order_id?: IntFilter<"Towers"> | number
     system_id?: IntNullableFilter<"Towers"> | number | null
-    state?: IntNullableFilter<"Towers"> | number | null
+    state?: StringNullableFilter<"Towers"> | string | null
   }
 
   export type CustomerCreateWithoutSettingInput = {
@@ -13057,7 +13051,7 @@ export namespace Prisma {
     latitude: Decimal | DecimalJsLike | number | string
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
-    state?: number | null
+    state?: string | null
     customer: CustomerCreateNestedOneWithoutTowerInput
   }
 
@@ -13068,7 +13062,7 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     customer_id: number
     order_id: number
-    state?: number | null
+    state?: string | null
   }
 
   export type TowersCreateOrConnectWithoutSystemInput = {
@@ -13528,7 +13522,7 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     order_id: number
     system_id?: number | null
-    state?: number | null
+    state?: string | null
   }
 
   export type customer_systemUpdateWithoutCustomersInput = {
@@ -13577,7 +13571,7 @@ export namespace Prisma {
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
     system?: SystemsUpdateOneWithoutTowersNestedInput
   }
 
@@ -13588,7 +13582,7 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TowersUncheckedUpdateManyWithoutCustomerInput = {
@@ -13598,7 +13592,7 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
     system_id?: NullableIntFieldUpdateOperationsInput | number | null
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type customer_systemCreateManySystemsInput = {
@@ -13613,7 +13607,7 @@ export namespace Prisma {
     longitude: Decimal | DecimalJsLike | number | string
     customer_id: number
     order_id: number
-    state?: number | null
+    state?: string | null
   }
 
   export type customer_systemUpdateWithoutSystemsInput = {
@@ -13636,7 +13630,7 @@ export namespace Prisma {
     latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutTowerNestedInput
   }
 
@@ -13647,7 +13641,7 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TowersUncheckedUpdateManyWithoutSystemInput = {
@@ -13657,7 +13651,7 @@ export namespace Prisma {
     longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     customer_id?: IntFieldUpdateOperationsInput | number
     order_id?: IntFieldUpdateOperationsInput | number
-    state?: NullableIntFieldUpdateOperationsInput | number | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

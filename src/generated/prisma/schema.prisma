@@ -77,7 +77,7 @@ model Towers {
   customer_id Int
   order_id    Int
   system_id   Int?
-  state       Int?
+  state       String?  @db.VarChar
   customer    Customer @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_customer")
   system      Systems? @relation(fields: [system_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_towers_systems")
 
@@ -107,7 +107,7 @@ model customer_system {
 
 model tower_data {
   id          BigInt    @id @default(autoincrement())
-  tower_id    BigInt    @unique(map: "tower_data_tower_id_unique")
+  tower_id    BigInt
   recorded_at DateTime? @db.Timestamp(6)
   tower_angle Float?
   error_ticks Int?
@@ -116,70 +116,65 @@ model tower_data {
 }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model notifications {
-// @@ignore
+// model prisma_migrations {
+// @@map("_prisma_migrations")
 // }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model orders {
-// @@ignore
+// model addresses {
 // }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model telemetry {
-// @@ignore
+// model components {
 // }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model tower_component_status {
-// @@ignore
-// }
-
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model tower_logs {
-// @@ignore
-// }
-
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model tower_status {
-// @@ignore
-// }
-
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model inverter_types {
-// @@ignore
-// }
-
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model solar_power_generation {
-// @@ignore
+// model daytime_uptime {
 // }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
 // model energy {
-// @@ignore
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model inverter_types {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model lifetime_uptime {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model notifications {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model orders {
+// }
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model solar_power_generation {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model telemetry {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tower_component_status {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tower_logs {
+// }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tower_status {
 // }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
 // model users {
-// @@ignore
-// }
-
-/// No valid unique identifier — cannot be managed by Prisma Client.
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model addresses {
-// @@ignore
-// }
-
-/// No valid unique identifier — cannot be managed by Prisma Client.
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model components {
-// @@ignore
-// }
-
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model prisma_migrations {
-// @@map("_prisma_migrations")
 // }
 
 enum plan_tier {

@@ -177,7 +177,7 @@ export default function Login() {
                                         onChange={(e) => setAcceptTerms(e.target.checked)}
                                         className="sr-only"
                                     />
-                                    <span>You accept the terms of service.</span>
+                                    <span>Please accept the terms of service.</span>
                                 </label>
                             </div>
 
