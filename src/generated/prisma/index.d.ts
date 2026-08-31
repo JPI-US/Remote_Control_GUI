@@ -1546,19 +1546,16 @@ export namespace Prisma {
 
   export type CustomerAvgAggregateOutputType = {
     id: number | null
-    address_id: number | null
   }
 
   export type CustomerSumAggregateOutputType = {
     id: number | null
-    address_id: number | null
   }
 
   export type CustomerMinAggregateOutputType = {
     id: number | null
     name: string | null
     email: string | null
-    address_id: number | null
     phone_number: string | null
     password_hash: string | null
     plan_tier: $Enums.plan_tier | null
@@ -1570,7 +1567,6 @@ export namespace Prisma {
     id: number | null
     name: string | null
     email: string | null
-    address_id: number | null
     phone_number: string | null
     password_hash: string | null
     plan_tier: $Enums.plan_tier | null
@@ -1582,7 +1578,6 @@ export namespace Prisma {
     id: number
     name: number
     email: number
-    address_id: number
     phone_number: number
     password_hash: number
     plan_tier: number
@@ -1594,19 +1589,16 @@ export namespace Prisma {
 
   export type CustomerAvgAggregateInputType = {
     id?: true
-    address_id?: true
   }
 
   export type CustomerSumAggregateInputType = {
     id?: true
-    address_id?: true
   }
 
   export type CustomerMinAggregateInputType = {
     id?: true
     name?: true
     email?: true
-    address_id?: true
     phone_number?: true
     password_hash?: true
     plan_tier?: true
@@ -1618,7 +1610,6 @@ export namespace Prisma {
     id?: true
     name?: true
     email?: true
-    address_id?: true
     phone_number?: true
     password_hash?: true
     plan_tier?: true
@@ -1630,7 +1621,6 @@ export namespace Prisma {
     id?: true
     name?: true
     email?: true
-    address_id?: true
     phone_number?: true
     password_hash?: true
     plan_tier?: true
@@ -1729,7 +1719,6 @@ export namespace Prisma {
     id: number
     name: string
     email: string
-    address_id: number | null
     phone_number: string | null
     password_hash: string
     plan_tier: $Enums.plan_tier | null
@@ -1760,7 +1749,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
-    address_id?: boolean
     phone_number?: boolean
     password_hash?: boolean
     plan_tier?: boolean
@@ -1777,7 +1765,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
-    address_id?: boolean
     phone_number?: boolean
     password_hash?: boolean
     plan_tier?: boolean
@@ -1789,7 +1776,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
-    address_id?: boolean
     phone_number?: boolean
     password_hash?: boolean
     plan_tier?: boolean
@@ -1801,7 +1787,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
-    address_id?: boolean
     phone_number?: boolean
     password_hash?: boolean
     plan_tier?: boolean
@@ -1809,7 +1794,7 @@ export namespace Prisma {
     force_password_reset?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "address_id" | "phone_number" | "password_hash" | "plan_tier" | "role" | "force_password_reset", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone_number" | "password_hash" | "plan_tier" | "role" | "force_password_reset", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer_system?: boolean | Customer$customer_systemArgs<ExtArgs>
     setting?: boolean | Customer$settingArgs<ExtArgs>
@@ -1832,7 +1817,6 @@ export namespace Prisma {
       id: number
       name: string
       email: string
-      address_id: number | null
       phone_number: string | null
       password_hash: string
       plan_tier: $Enums.plan_tier | null
@@ -2268,7 +2252,6 @@ export namespace Prisma {
     readonly id: FieldRef<"Customer", 'Int'>
     readonly name: FieldRef<"Customer", 'String'>
     readonly email: FieldRef<"Customer", 'String'>
-    readonly address_id: FieldRef<"Customer", 'Int'>
     readonly phone_number: FieldRef<"Customer", 'String'>
     readonly password_hash: FieldRef<"Customer", 'String'>
     readonly plan_tier: FieldRef<"Customer", 'plan_tier'>
@@ -9727,7 +9710,6 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     email: 'email',
-    address_id: 'address_id',
     phone_number: 'phone_number',
     password_hash: 'password_hash',
     plan_tier: 'plan_tier',
@@ -10016,7 +9998,6 @@ export namespace Prisma {
     id?: IntFilter<"Customer"> | number
     name?: StringFilter<"Customer"> | string
     email?: StringFilter<"Customer"> | string
-    address_id?: IntNullableFilter<"Customer"> | number | null
     phone_number?: StringNullableFilter<"Customer"> | string | null
     password_hash?: StringFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
@@ -10032,7 +10013,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
-    address_id?: SortOrderInput | SortOrder
     phone_number?: SortOrderInput | SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrderInput | SortOrder
@@ -10051,7 +10031,6 @@ export namespace Prisma {
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     name?: StringFilter<"Customer"> | string
-    address_id?: IntNullableFilter<"Customer"> | number | null
     phone_number?: StringNullableFilter<"Customer"> | string | null
     password_hash?: StringFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableFilter<"Customer"> | $Enums.plan_tier | null
@@ -10067,7 +10046,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
-    address_id?: SortOrderInput | SortOrder
     phone_number?: SortOrderInput | SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrderInput | SortOrder
@@ -10087,7 +10065,6 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Customer"> | number
     name?: StringWithAggregatesFilter<"Customer"> | string
     email?: StringWithAggregatesFilter<"Customer"> | string
-    address_id?: IntNullableWithAggregatesFilter<"Customer"> | number | null
     phone_number?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     password_hash?: StringWithAggregatesFilter<"Customer"> | string
     plan_tier?: Enumplan_tierNullableWithAggregatesFilter<"Customer"> | $Enums.plan_tier | null
@@ -10563,7 +10540,6 @@ export namespace Prisma {
   export type CustomerCreateInput = {
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -10579,7 +10555,6 @@ export namespace Prisma {
     id?: number
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -10594,7 +10569,6 @@ export namespace Prisma {
   export type CustomerUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -10610,7 +10584,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -10626,7 +10599,6 @@ export namespace Prisma {
     id?: number
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -10637,7 +10609,6 @@ export namespace Prisma {
   export type CustomerUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -10649,7 +10620,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -11170,17 +11140,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11259,7 +11218,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
-    address_id?: SortOrder
     phone_number?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrder
@@ -11269,14 +11227,12 @@ export namespace Prisma {
 
   export type CustomerAvgOrderByAggregateInput = {
     id?: SortOrder
-    address_id?: SortOrder
   }
 
   export type CustomerMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
-    address_id?: SortOrder
     phone_number?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrder
@@ -11288,7 +11244,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
-    address_id?: SortOrder
     phone_number?: SortOrder
     password_hash?: SortOrder
     plan_tier?: SortOrder
@@ -11298,7 +11253,6 @@ export namespace Prisma {
 
   export type CustomerSumOrderByAggregateInput = {
     id?: SortOrder
-    address_id?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -11333,22 +11287,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -11395,6 +11333,17 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -11472,6 +11421,22 @@ export namespace Prisma {
   export type SettingsSumOrderByAggregateInput = {
     settings_id?: SortOrder
     customer_id?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -11994,14 +11959,6 @@ export namespace Prisma {
     set?: string
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -12148,6 +12105,14 @@ export namespace Prisma {
     delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutSettingInput, CustomerUpdateWithoutSettingInput>, CustomerUncheckedUpdateWithoutSettingInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type customer_systemCreateNestedManyWithoutSystemsInput = {
@@ -12371,17 +12336,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -12459,33 +12413,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -12501,6 +12428,17 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumplan_tierNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -12540,6 +12478,33 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -12955,7 +12920,6 @@ export namespace Prisma {
   export type CustomerCreateWithoutSettingInput = {
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -12970,7 +12934,6 @@ export namespace Prisma {
     id?: number
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13000,7 +12963,6 @@ export namespace Prisma {
   export type CustomerUpdateWithoutSettingInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13015,7 +12977,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13110,7 +13071,6 @@ export namespace Prisma {
   export type CustomerCreateWithoutTowerInput = {
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13125,7 +13085,6 @@ export namespace Prisma {
     id?: number
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13195,7 +13154,6 @@ export namespace Prisma {
   export type CustomerUpdateWithoutTowerInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13210,7 +13168,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13270,7 +13227,6 @@ export namespace Prisma {
   export type CustomerCreateWithoutSoftware_ticketsInput = {
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13285,7 +13241,6 @@ export namespace Prisma {
     id?: number
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13315,7 +13270,6 @@ export namespace Prisma {
   export type CustomerUpdateWithoutSoftware_ticketsInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13330,7 +13284,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13344,7 +13297,6 @@ export namespace Prisma {
   export type CustomerCreateWithoutCustomer_systemInput = {
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13359,7 +13311,6 @@ export namespace Prisma {
     id?: number
     name: string
     email: string
-    address_id?: number | null
     phone_number?: string | null
     password_hash: string
     plan_tier?: $Enums.plan_tier | null
@@ -13429,7 +13380,6 @@ export namespace Prisma {
   export type CustomerUpdateWithoutCustomer_systemInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null
@@ -13444,7 +13394,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    address_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone_number?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     plan_tier?: NullableEnumplan_tierFieldUpdateOperationsInput | $Enums.plan_tier | null

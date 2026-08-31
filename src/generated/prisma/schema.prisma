@@ -13,7 +13,6 @@ model Customer {
   id                   Int                @id @default(autoincrement())
   name                 String             @db.VarChar(255)
   email                String             @unique(map: "customers_unique") @db.VarChar(255)
-  address_id           Int?
   phone_number         String?            @db.VarChar(255)
   password_hash        String             @db.VarChar(255)
   plan_tier            plan_tier?
@@ -118,10 +117,6 @@ model tower_data {
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
 // model prisma_migrations {
 // @@map("_prisma_migrations")
-// }
-
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model addresses {
 // }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
