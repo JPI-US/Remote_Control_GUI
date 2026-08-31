@@ -30,6 +30,16 @@ export async function POST(request) {
             return NextResponse.json({ error: "System ID is required" }, { status: 400 });
         }
 
+        // Only allow selecting systems that are active
+        const system = await prisma.systems.findUnique({
+            where: { id: systemId },
+            select: { status: true },
+        });
+
+        if (!system || system.status !== "ACTIVE") {
+            return NextResponse.json({ error: "System is not available" }, { status: 403 });
+        }
+
         // Check user has access to this system (unless admin)
         if (userRole !== "ADMIN") {
             const allowed = await prisma.customer_system.findFirst({

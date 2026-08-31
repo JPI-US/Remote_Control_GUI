@@ -24,11 +24,14 @@ export async function GET(request) {
 
         
         let systems;
-        if (userRole === "ADMIN"){// Admin sees all systems
-            systems = await prisma.systems.findMany();
-        }else if ((userRole === "USER")){ // Regular users see only systems linked via customer_system
+        if (userRole === "ADMIN"){// Admin sees all active systems
+            systems = await prisma.systems.findMany({
+                where: { status: "ACTIVE" },
+            });
+        }else if ((userRole === "USER")){ // Regular users see only active systems linked via customer_system
             systems = await prisma.systems.findMany({
                 where: {
+                    status: "ACTIVE",
                     customer_system: {
                         some: { customer_id: customerId },
                     },
